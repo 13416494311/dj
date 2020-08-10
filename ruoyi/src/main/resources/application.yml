@@ -10,6 +10,7 @@ ruoyi:
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
   profile: H:/ruoyi/uploadPath
+  # rofile: /dj/upload
   # 获取ip地址开关
   addressEnabled: true
 
@@ -57,7 +58,7 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: localhost
+    host: 127.0.0.1
     # 端口，默认为6379
     port: 6379
     # 密码
