@@ -1,57 +1,86 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.activity.mapper.DjActivityPlanMapper">
 
     <resultMap type="DjActivityPlan" id="DjActivityPlanResult">
-        <result property="planId"    column="plan_id"    />
-        <result property="planUuid"    column="plan_uuid"    />
-        <result property="activitySources"    column="activity_sources"    />
-        <result property="activityTheme"    column="activity_theme"    />
-        <result property="activityType"    column="activity_type"    />
-        <result property="conveneCycle"    column="convene_cycle"    />
-        <result property="cycleStartTime"    column="cycle_start_time"    />
-        <result property="cycleEndTime"    column="cycle_end_time"    />
-        <result property="cycleStartYear"    column="cycle_start_year"    />
-        <result property="cycleStartYearUnit"    column="cycle_start_year_unit"    />
-        <result property="cycleEndYear"    column="cycle_end_year"    />
-        <result property="cycleEndYearUnit"    column="cycle_end_year_unit"    />
-        <result property="actPlanRequirements"    column="act_plan_requirements"    />
-        <result property="status"    column="status"    />
-        <result property="delFlag"    column="del_flag"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="planId" column="plan_id"/>
+        <result property="planUuid" column="plan_uuid"/>
+        <result property="activitySources" column="activity_sources"/>
+        <result property="activityTheme" column="activity_theme"/>
+        <result property="activityType" column="activity_type"/>
+        <result property="conveneCycle" column="convene_cycle"/>
+        <result property="cycleStartTime" column="cycle_start_time"/>
+        <result property="cycleEndTime" column="cycle_end_time"/>
+        <result property="cycleStartYear" column="cycle_start_year"/>
+        <result property="cycleEndYear" column="cycle_end_year"/>
+        <result property="cycleStartMonthUnit" column="cycle_start_month_unit"/>
+        <result property="cycleEndMonthUnit" column="cycle_end_month_unit"/>
+        <result property="cycleStartQuarterUnit" column="cycle_start_quarter_unit"/>
+        <result property="cycleEndQuarterUnit" column="cycle_end_quarter_unit"/>
+        <result property="actPlanRequirements" column="act_plan_requirements"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="selectDjActivityPlanVo">
-        select plan_id, plan_uuid, activity_sources, activity_theme, activity_type, convene_cycle, cycle_start_time, cycle_end_time, cycle_start_year, cycle_start_year_unit, cycle_end_year, cycle_end_year_unit, act_plan_requirements, status, del_flag, create_by, create_time, update_by, update_time from dj_activity_plan
+        select plan_id, plan_uuid, activity_sources, activity_theme, activity_type,
+         convene_cycle, cycle_start_time, cycle_end_time, cycle_start_year,
+         cycle_end_year, cycle_start_month_unit,cycle_end_month_unit,
+          cycle_start_quarter_unit,cycle_end_quarter_unit,
+         act_plan_requirements, status, del_flag, create_by,
+          create_time, update_by, update_time
+          from dj_activity_plan
     </sql>
 
     <select id="selectDjActivityPlanList" parameterType="DjActivityPlan" resultMap="DjActivityPlanResult">
         <include refid="selectDjActivityPlanVo"/>
         <where>
-            <if test="planUuid != null  and planUuid != ''"> and plan_uuid = #{planUuid}</if>
-            <if test="activitySources != null  and activitySources != ''"> and activity_sources = #{activitySources}</if>
-            <if test="activityTheme != null  and activityTheme != ''"> and activity_theme = #{activityTheme}</if>
-            <if test="activityType != null  and activityType != ''"> and activity_type = #{activityType}</if>
-            <if test="conveneCycle != null  and conveneCycle != ''"> and convene_cycle = #{conveneCycle}</if>
-            <if test="cycleStartTime != null "> and cycle_start_time = #{cycleStartTime}</if>
-            <if test="cycleEndTime != null "> and cycle_end_time = #{cycleEndTime}</if>
-            <if test="cycleStartYear != null  and cycleStartYear != ''"> and cycle_start_year = #{cycleStartYear}</if>
-            <if test="cycleStartYearUnit != null  and cycleStartYearUnit != ''"> and cycle_start_year_unit = #{cycleStartYearUnit}</if>
-            <if test="cycleEndYear != null  and cycleEndYear != ''"> and cycle_end_year = #{cycleEndYear}</if>
-            <if test="cycleEndYearUnit != null  and cycleEndYearUnit != ''"> and cycle_end_year_unit = #{cycleEndYearUnit}</if>
-            <if test="actPlanRequirements != null  and actPlanRequirements != ''"> and act_plan_requirements = #{actPlanRequirements}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="planUuid != null  and planUuid != ''">and plan_uuid = #{planUuid}</if>
+            <if test="activitySources != null  and activitySources != ''">and activity_sources = #{activitySources}</if>
+            <if test="activityTheme != null  and activityTheme != ''">
+                and activity_theme like concat('%', #{activityTheme}, '%')
+            </if>
+            <if test="activityType != null  and activityType != ''">and activity_type = #{activityType}</if>
+            <if test="conveneCycle != null  and conveneCycle != ''">and convene_cycle = #{conveneCycle}</if>
+            <if test="cycleStartTime != null ">and cycle_start_time = #{cycleStartTime}</if>
+            <if test="cycleEndTime != null ">and cycle_end_time = #{cycleEndTime}</if>
+            <if test="cycleStartYear != null  and cycleStartYear != ''">and cycle_start_year = #{cycleStartYear}</if>
+            <if test="cycleEndYear != null  and cycleEndYear != ''">and cycle_end_year = #{cycleEndYear}</if>
+
+            <if test="cycleStartMonthUnit != null  and cycleStartMonthUnit != ''">and cycle_start_month_unit =
+                #{cycleStartMonthUnit}
+            </if>
+            <if test="cycleEndMonthUnit != null  and cycleEndMonthUnit != ''">and cycle_end_month_unit =
+                #{cycleEndMonthUnit}
+            </if>
+            <if test="cycleStartQuarterUnit != null  and cycleStartQuarterUnit != ''">and cycle_start_quarter_unit =
+                #{cycleStartQuarterUnit}
+            </if>
+            <if test="cycleEndQuarterUnit != null  and cycleEndQuarterUnit != ''">and cycle_end_quarter_unit =
+                #{cycleEndQuarterUnit}
+            </if>
+
+            <if test="actPlanRequirements != null  and actPlanRequirements != ''">and act_plan_requirements =
+                #{actPlanRequirements}
+            </if>
+            <if test="status != null  and status != ''">and status = #{status}</if>
         </where>
     </select>
 
     <select id="selectDjActivityPlanById" parameterType="Long" resultMap="DjActivityPlanResult">
         <include refid="selectDjActivityPlanVo"/>
         where plan_id = #{planId}
+    </select>
+
+    <select id="selectDjActivityPlanByPlanUuid" parameterType="String" resultMap="DjActivityPlanResult">
+        <include refid="selectDjActivityPlanVo"/>
+        where plan_uuid = #{planUuid}
     </select>
 
     <insert id="insertDjActivityPlan" parameterType="DjActivityPlan" useGeneratedKeys="true" keyProperty="planId">
@@ -65,9 +94,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cycleStartTime != null ">cycle_start_time,</if>
             <if test="cycleEndTime != null ">cycle_end_time,</if>
             <if test="cycleStartYear != null  and cycleStartYear != ''">cycle_start_year,</if>
-            <if test="cycleStartYearUnit != null  and cycleStartYearUnit != ''">cycle_start_year_unit,</if>
             <if test="cycleEndYear != null  and cycleEndYear != ''">cycle_end_year,</if>
-            <if test="cycleEndYearUnit != null  and cycleEndYearUnit != ''">cycle_end_year_unit,</if>
+            <if test="cycleStartMonthUnit != null  and cycleStartMonthUnit != ''">cycle_start_month_unit,</if>
+            <if test="cycleEndMonthUnit != null  and cycleEndMonthUnit != ''">cycle_end_month_unit,</if>
+            <if test="cycleStartQuarterUnit != null  and cycleStartQuarterUnit != ''">cycle_start_quarter_unit,</if>
+            <if test="cycleEndQuarterUnit != null  and cycleEndQuarterUnit != ''">cycle_end_quarter_unit,</if>
             <if test="actPlanRequirements != null  and actPlanRequirements != ''">act_plan_requirements,</if>
             <if test="status != null  and status != ''">status,</if>
             <if test="delFlag != null  and delFlag != ''">del_flag,</if>
@@ -75,7 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null ">create_time,</if>
             <if test="updateBy != null  and updateBy != ''">update_by,</if>
             <if test="updateTime != null ">update_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="planUuid != null  and planUuid != ''">#{planUuid},</if>
             <if test="activitySources != null  and activitySources != ''">#{activitySources},</if>
@@ -85,9 +116,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cycleStartTime != null ">#{cycleStartTime},</if>
             <if test="cycleEndTime != null ">#{cycleEndTime},</if>
             <if test="cycleStartYear != null  and cycleStartYear != ''">#{cycleStartYear},</if>
-            <if test="cycleStartYearUnit != null  and cycleStartYearUnit != ''">#{cycleStartYearUnit},</if>
             <if test="cycleEndYear != null  and cycleEndYear != ''">#{cycleEndYear},</if>
-            <if test="cycleEndYearUnit != null  and cycleEndYearUnit != ''">#{cycleEndYearUnit},</if>
+            <if test="cycleStartMonthUnit != null  and cycleStartMonthUnit != ''">#{cycleStartMonthUnit},</if>
+            <if test="cycleEndMonthUnit != null  and cycleEndMonthUnit != ''">#{cycleEndMonthUnit},</if>
+            <if test="cycleStartQuarterUnit != null  and cycleStartQuarterUnit != ''">#{cycleStartQuarterUnit},</if>
+            <if test="cycleEndQuarterUnit != null  and cycleEndQuarterUnit != ''">#{cycleEndQuarterUnit},</if>
             <if test="actPlanRequirements != null  and actPlanRequirements != ''">#{actPlanRequirements},</if>
             <if test="status != null  and status != ''">#{status},</if>
             <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
@@ -95,7 +128,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null ">#{createTime},</if>
             <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
             <if test="updateTime != null ">#{updateTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateDjActivityPlan" parameterType="DjActivityPlan">
@@ -109,10 +142,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cycleStartTime != null ">cycle_start_time = #{cycleStartTime},</if>
             <if test="cycleEndTime != null ">cycle_end_time = #{cycleEndTime},</if>
             <if test="cycleStartYear != null  and cycleStartYear != ''">cycle_start_year = #{cycleStartYear},</if>
-            <if test="cycleStartYearUnit != null  and cycleStartYearUnit != ''">cycle_start_year_unit = #{cycleStartYearUnit},</if>
             <if test="cycleEndYear != null  and cycleEndYear != ''">cycle_end_year = #{cycleEndYear},</if>
-            <if test="cycleEndYearUnit != null  and cycleEndYearUnit != ''">cycle_end_year_unit = #{cycleEndYearUnit},</if>
-            <if test="actPlanRequirements != null  and actPlanRequirements != ''">act_plan_requirements = #{actPlanRequirements},</if>
+            <if test="cycleStartMonthUnit != null  and cycleStartMonthUnit != ''"> cycle_start_month_unit =
+                #{cycleStartMonthUnit},
+            </if>
+            <if test="cycleEndMonthUnit != null  and cycleEndMonthUnit != ''"> cycle_end_month_unit =
+                #{cycleEndMonthUnit},
+            </if>
+            <if test="cycleStartQuarterUnit != null  and cycleStartQuarterUnit != ''"> cycle_start_quarter_unit =
+                #{cycleStartQuarterUnit},
+            </if>
+            <if test="cycleEndQuarterUnit != null  and cycleEndQuarterUnit != ''"> cycle_end_quarter_unit =
+                #{cycleEndQuarterUnit},
+            </if>
+            <if test="actPlanRequirements != null  and actPlanRequirements != ''">act_plan_requirements =
+                #{actPlanRequirements},
+            </if>
             <if test="status != null  and status != ''">status = #{status},</if>
             <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
             <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>

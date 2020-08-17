@@ -26,6 +26,8 @@ public class DjPartyOrg extends TreeEntity
     @Excel(name = "党组织名称")
     private String partyOrgName;
 
+    private String partyOrgFullName;
+
     /** 组织类型 */
     @Excel(name = "组织类型")
     private String orgType;

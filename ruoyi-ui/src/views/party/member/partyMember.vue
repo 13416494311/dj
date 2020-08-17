@@ -893,7 +893,7 @@
     },
     created() {
       this.getList();
-      this.getPartyOrgTreeselect();
+      this.getPartyOrgTreeSelect();
       this.getDeptTreeselect();
       this.postOptionSelect();
       this.getDicts("sys_user_sex").then(response => {
@@ -1010,7 +1010,7 @@
         });
       },
       /** 查询党组织下拉树结构 */
-      getPartyOrgTreeselect() {
+      getPartyOrgTreeSelect() {
         partyOrgTreeselect().then(response => {
           this.partyOrgOptions = this.treeInitData(response.data);
         });

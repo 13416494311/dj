@@ -20,6 +20,14 @@ public interface DjActivityPlanMapper
     public DjActivityPlan selectDjActivityPlanById(Long planId);
 
     /**
+     * 查询活动计划
+     *
+     * @param planUuid 活动计划UUID
+     * @return 活动计划
+     */
+    public DjActivityPlan selectDjActivityPlanByPlanUuid(String planUuid);
+
+    /**
      * 查询活动计划列表
      *
      * @param djActivityPlan 活动计划

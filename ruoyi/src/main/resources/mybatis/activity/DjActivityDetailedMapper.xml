@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.activity.mapper.DjActivityDetailedMapper">
+
+    <resultMap type="DjActivityDetailed" id="DjActivityDetailedResult">
+        <result property="activityId"    column="activity_id"    />
+        <result property="planUuid"    column="plan_uuid"    />
+        <result property="partyOrgId"    column="party_org_id"    />
+        <result property="cycle"    column="cycle"    />
+        <result property="partyMemberId"    column="party_member_id"    />
+        <result property="venue"    column="venue"    />
+        <result property="activityContent"    column="activity_content"    />
+        <result property="planStartTime"    column="plan_start_time"    />
+        <result property="planEndTime"    column="plan_end_time"    />
+        <result property="activityPlanStartTime"    column="activity_plan_start_time"    />
+        <result property="activityPlanEndTime"    column="activity_plan_end_time"    />
+        <result property="actualStartTime"    column="actual_start_time"    />
+        <result property="actualEndTime"    column="actual_end_time"    />
+        <result property="recorder"    column="recorder"    />
+        <result property="mentors"    column="mentors"    />
+        <result property="presenter"    column="presenter"    />
+        <result property="speaker"    column="speaker"    />
+        <result property="allowComment"    column="allow_comment"    />
+        <result property="activityVoteId"    column="activity_vote_id"    />
+        <result property="activityExamId"    column="activity_exam_id"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjActivityDetailedVo">
+        select activity_id, plan_uuid,party_org_id, cycle, party_member_id, venue, activity_content, plan_start_time, plan_end_time, activity_plan_start_time, activity_plan_end_time, actual_start_time, actual_end_time, recorder, mentors, presenter, speaker, allow_comment, activity_vote_id, activity_exam_id, status, del_flag, create_by, create_time, update_by, update_time from dj_activity_detailed
+    </sql>
+
+    <sql id="selectDjActivityDetailed">
+        select detailed.activity_id, detailed.plan_uuid,detailed.party_org_id, detailed.cycle,
+        detailed.party_member_id, detailed.venue, detailed.activity_content,
+        detailed.plan_start_time, detailed.plan_end_time, detailed.activity_plan_start_time,
+        detailed.activity_plan_end_time,
+        detailed.actual_start_time, detailed.actual_end_time, detailed.recorder, detailed.mentors,
+        detailed.presenter, detailed.speaker, detailed.allow_comment,
+        detailed.activity_vote_id, detailed.activity_exam_id, detailed.status,
+        detailed.del_flag, detailed.create_by, detailed.create_time,detailed. update_by,
+        detailed.update_time
+        from dj_activity_detailed detailed
+    </sql>
+
+    <select id="selectDjActivityDetailedList" parameterType="DjActivityDetailed" resultMap="DjActivityDetailedResult">
+        <include refid="selectDjActivityDetailed"/>
+        left join dj_activity_arrange arrange
+             on arrange.plan_uuid = detailed.plan_uuid  and arrange.party_org_id = detailed.party_org_id
+        left join dj_activity_plan plan on arrange.plan_uuid = plan.plan_uuid
+        <where>
+            <if test="planUuid != null  and planUuid != ''"> and detailed.plan_uuid = #{planUuid}</if>
+            <if test="partyOrgId != null "> and detailed.party_org_id = #{partyOrgId}</if>
+            <if test="cycle != null  and cycle != ''"> and detailed.cycle = #{cycle}</if>
+            <if test="partyMemberId != null "> and detailed.party_member_id = #{partyMemberId}</if>
+            <if test="venue != null  and venue != ''"> and detailed.venue = #{venue}</if>
+            <if test="activityContent != null  and activityContent != ''">
+             and detailed.activity_content = #{activityContent}</if>
+            <if test="planStartTime != null "> and detailed.plan_start_time = #{planStartTime}</if>
+            <if test="planEndTime != null "> and detailed.plan_end_time = #{planEndTime}</if>
+            <if test="activityPlanStartTime != null "> and detailed.activity_plan_start_time = #{activityPlanStartTime}</if>
+            <if test="activityPlanEndTime != null "> and detailed.activity_plan_end_time = #{activityPlanEndTime}</if>
+            <if test="actualStartTime != null "> and detailed.actual_start_time = #{actualStartTime}</if>
+            <if test="actualEndTime != null "> and detailed.actual_end_time = #{actualEndTime}</if>
+            <if test="recorder != null  and recorder != ''"> and detailed.recorder = #{recorder}</if>
+            <if test="mentors != null  and mentors != ''"> and detailed.mentors = #{mentors}</if>
+            <if test="presenter != null  and presenter != ''"> and detailed.presenter = #{presenter}</if>
+            <if test="speaker != null  and speaker != ''"> and detailed.speaker = #{speaker}</if>
+            <if test="allowComment != null  and allowComment != ''"> and detailed.allow_comment = #{allowComment}</if>
+            <if test="activityVoteId != null "> and detailed.activity_vote_id = #{activityVoteId}</if>
+            <if test="activityExamId != null "> and detailed.activity_exam_id = #{activityExamId}</if>
+            <if test="status != null  and status != ''"> and detailed.status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectDetailedListByParamMap" parameterType="Map" resultMap="DjActivityDetailedResult">
+        <include refid="selectDjActivityDetailed"/>
+        left join dj_activity_arrange arrange
+        on arrange.plan_uuid = detailed.plan_uuid  and arrange.party_org_id = detailed.party_org_id
+        left join dj_activity_plan plan on arrange.plan_uuid = plan.plan_uuid
+        <where>
+            arrange.status ='2'
+            <if test="planUuid != null  and planUuid != ''"> and detailed.plan_uuid = #{planUuid}</if>
+            <if test="partyOrgId != null "> and detailed.party_org_id = #{partyOrgId}</if>
+            <if test="cycle != null  and cycle != ''"> and detailed.cycle = #{cycle}</if>
+            <if test="partyMemberId != null "> and detailed.party_member_id = #{partyMemberId}</if>
+            <if test="venue != null  and venue != ''"> and detailed.venue = #{venue}</if>
+            <if test="activityContent != null  and activityContent != ''">
+                and detailed.activity_content = #{activityContent}</if>
+            <if test="planStartTime != null "> and detailed.plan_start_time = #{planStartTime}</if>
+            <if test="planEndTime != null "> and detailed.plan_end_time = #{planEndTime}</if>
+            <if test="activityPlanStartTime != null "> and detailed.activity_plan_start_time = #{activityPlanStartTime}</if>
+            <if test="activityPlanEndTime != null "> and detailed.activity_plan_end_time = #{activityPlanEndTime}</if>
+            <if test="actualStartTime != null "> and detailed.actual_start_time = #{actualStartTime}</if>
+            <if test="actualEndTime != null "> and detailed.actual_end_time = #{actualEndTime}</if>
+            <if test="recorder != null  and recorder != ''"> and detailed.recorder = #{recorder}</if>
+            <if test="mentors != null  and mentors != ''"> and detailed.mentors = #{mentors}</if>
+            <if test="presenter != null  and presenter != ''"> and detailed.presenter = #{presenter}</if>
+            <if test="speaker != null  and speaker != ''"> and detailed.speaker = #{speaker}</if>
+            <if test="allowComment != null  and allowComment != ''"> and detailed.allow_comment = #{allowComment}</if>
+            <if test="activityVoteId != null "> and detailed.activity_vote_id = #{activityVoteId}</if>
+            <if test="activityExamId != null "> and detailed.activity_exam_id = #{activityExamId}</if>
+            <if test="status != null  and status != ''"> and detailed.status = #{status}</if>
+            <if test="activityTheme != null  and activityTheme != ''">
+                and plan.activity_theme like concat('%', #{activityTheme}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectDjActivityDetailedById" parameterType="Long" resultMap="DjActivityDetailedResult">
+        <include refid="selectDjActivityDetailedVo"/>
+        where activity_id = #{activityId}
+    </select>
+
+    <insert id="insertDjActivityDetailed" parameterType="DjActivityDetailed">
+        insert into dj_activity_detailed
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="activityId != null ">activity_id,</if>
+            <if test="planUuid != null  and planUuid != ''">plan_uuid,</if>
+            <if test="partyOrgId != null ">party_org_id,</if>
+            <if test="cycle != null  and cycle != ''">cycle,</if>
+            <if test="partyMemberId != null ">party_member_id,</if>
+            <if test="venue != null  and venue != ''">venue,</if>
+            <if test="activityContent != null  and activityContent != ''">activity_content,</if>
+            <if test="planStartTime != null ">plan_start_time,</if>
+            <if test="planEndTime != null ">plan_end_time,</if>
+            <if test="activityPlanStartTime != null ">activity_plan_start_time,</if>
+            <if test="activityPlanEndTime != null ">activity_plan_end_time,</if>
+            <if test="actualStartTime != null ">actual_start_time,</if>
+            <if test="actualEndTime != null ">actual_end_time,</if>
+            <if test="recorder != null  and recorder != ''">recorder,</if>
+            <if test="mentors != null  and mentors != ''">mentors,</if>
+            <if test="presenter != null  and presenter != ''">presenter,</if>
+            <if test="speaker != null  and speaker != ''">speaker,</if>
+            <if test="allowComment != null  and allowComment != ''">allow_comment,</if>
+            <if test="activityVoteId != null ">activity_vote_id,</if>
+            <if test="activityExamId != null ">activity_exam_id,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="activityId != null ">#{activityId},</if>
+            <if test="planUuid != null  and planUuid != ''">#{planUuid},</if>
+            <if test="partyOrgId != null ">#{partyOrgId},</if>
+            <if test="cycle != null  and cycle != ''">#{cycle},</if>
+            <if test="partyMemberId != null ">#{partyMemberId},</if>
+            <if test="venue != null  and venue != ''">#{venue},</if>
+            <if test="activityContent != null  and activityContent != ''">#{activityContent},</if>
+            <if test="planStartTime != null ">#{planStartTime},</if>
+            <if test="planEndTime != null ">#{planEndTime},</if>
+            <if test="activityPlanStartTime != null ">#{activityPlanStartTime},</if>
+            <if test="activityPlanEndTime != null ">#{activityPlanEndTime},</if>
+            <if test="actualStartTime != null ">#{actualStartTime},</if>
+            <if test="actualEndTime != null ">#{actualEndTime},</if>
+            <if test="recorder != null  and recorder != ''">#{recorder},</if>
+            <if test="mentors != null  and mentors != ''">#{mentors},</if>
+            <if test="presenter != null  and presenter != ''">#{presenter},</if>
+            <if test="speaker != null  and speaker != ''">#{speaker},</if>
+            <if test="allowComment != null  and allowComment != ''">#{allowComment},</if>
+            <if test="activityVoteId != null ">#{activityVoteId},</if>
+            <if test="activityExamId != null ">#{activityExamId},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjActivityDetailed" parameterType="DjActivityDetailed">
+        update dj_activity_detailed
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planUuid != null  and planUuid != ''">plan_uuid = #{planUuid},</if>
+            <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
+            <if test="cycle != null  and cycle != ''">cycle = #{cycle},</if>
+            <if test="partyMemberId != null ">party_member_id = #{partyMemberId},</if>
+            <if test="venue != null  and venue != ''">venue = #{venue},</if>
+            <if test="activityContent != null  and activityContent != ''">activity_content = #{activityContent},</if>
+            <if test="planStartTime != null ">plan_start_time = #{planStartTime},</if>
+            <if test="planEndTime != null ">plan_end_time = #{planEndTime},</if>
+            <if test="activityPlanStartTime != null ">activity_plan_start_time = #{activityPlanStartTime},</if>
+            <if test="activityPlanEndTime != null ">activity_plan_end_time = #{activityPlanEndTime},</if>
+            <if test="actualStartTime != null ">actual_start_time = #{actualStartTime},</if>
+            <if test="actualEndTime != null ">actual_end_time = #{actualEndTime},</if>
+            <if test="recorder != null  and recorder != ''">recorder = #{recorder},</if>
+            <if test="mentors != null  and mentors != ''">mentors = #{mentors},</if>
+            <if test="presenter != null  and presenter != ''">presenter = #{presenter},</if>
+            <if test="speaker != null  and speaker != ''">speaker = #{speaker},</if>
+            <if test="allowComment != null  and allowComment != ''">allow_comment = #{allowComment},</if>
+            <if test="activityVoteId != null ">activity_vote_id = #{activityVoteId},</if>
+            <if test="activityExamId != null ">activity_exam_id = #{activityExamId},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where activity_id = #{activityId}
+    </update>
+
+    <update id="updateByPlanUuidAndPartyOrgId" parameterType="DjActivityDetailed">
+        update dj_activity_detailed
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planUuid != null  and planUuid != ''">plan_uuid = #{planUuid},</if>
+            <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
+            <if test="cycle != null  and cycle != ''">cycle = #{cycle},</if>
+            <if test="partyMemberId != null ">party_member_id = #{partyMemberId},</if>
+            <if test="venue != null  and venue != ''">venue = #{venue},</if>
+            <if test="activityContent != null  and activityContent != ''">activity_content = #{activityContent},</if>
+            <if test="planStartTime != null ">plan_start_time = #{planStartTime},</if>
+            <if test="planEndTime != null ">plan_end_time = #{planEndTime},</if>
+            <if test="activityPlanStartTime != null ">activity_plan_start_time = #{activityPlanStartTime},</if>
+            <if test="activityPlanEndTime != null ">activity_plan_end_time = #{activityPlanEndTime},</if>
+            <if test="actualStartTime != null ">actual_start_time = #{actualStartTime},</if>
+            <if test="actualEndTime != null ">actual_end_time = #{actualEndTime},</if>
+            <if test="recorder != null  and recorder != ''">recorder = #{recorder},</if>
+            <if test="mentors != null  and mentors != ''">mentors = #{mentors},</if>
+            <if test="presenter != null  and presenter != ''">presenter = #{presenter},</if>
+            <if test="speaker != null  and speaker != ''">speaker = #{speaker},</if>
+            <if test="allowComment != null  and allowComment != ''">allow_comment = #{allowComment},</if>
+            <if test="activityVoteId != null ">activity_vote_id = #{activityVoteId},</if>
+            <if test="activityExamId != null ">activity_exam_id = #{activityExamId},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where plan_uuid = #{planUuid} and party_org_id = #{partyOrgId}
+    </update>
+
+    <delete id="deleteDjActivityDetailedById" parameterType="Long">
+        delete from dj_activity_detailed where activity_id = #{activityId}
+    </delete>
+
+    <delete id="deleteDjActivityDetailedByIds" parameterType="String">
+        delete from dj_activity_detailed where activity_id in
+        <foreach item="activityId" collection="array" open="(" separator="," close=")">
+            #{activityId}
+        </foreach>
+    </delete>
+
+</mapper>

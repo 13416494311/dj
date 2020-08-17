@@ -8,6 +8,13 @@ export function listPartyOrg(query) {
     params: query
   })
 }
+// 查询党组织架构列表
+export function childrenListPartyOrg(partyOrgId) {
+  return request({
+    url: '/party/org/childrenList/' + partyOrgId,
+    method: 'get',
+  })
+}
 // 查询党组织架构列表tree
 export function partyOrgTree(query) {
   return request({
@@ -30,6 +37,13 @@ export function partyOrgTreeselect(query) {
 export function getPartyOrg(partyOrgId) {
   return request({
     url: '/party/org/' + partyOrgId,
+    method: 'get'
+  })
+}
+// 查询党组织架构详细
+export function getPartyOrgs(partyOrgIds) {
+  return request({
+    url: '/party/org/getPartyOrgs/' + partyOrgIds,
     method: 'get'
   })
 }

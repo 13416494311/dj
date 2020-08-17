@@ -19,6 +19,7 @@ public interface IDjActivityPlanService
      */
     public DjActivityPlan selectDjActivityPlanById(Long planId);
 
+    public DjActivityPlan selectDjActivityPlanByPlanUuid(String planUuid);
     /**
      * 查询活动计划列表
      *

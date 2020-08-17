@@ -34,7 +34,17 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
     @Override
     public DjPartyOrg selectDjPartyOrgById(Long partyOrgId)
     {
-        return djPartyOrgMapper.selectDjPartyOrgById(partyOrgId);
+
+        DjPartyOrg djPartyOrg = djPartyOrgMapper.selectDjPartyOrgById(partyOrgId);
+        String[] djPartyOrgIds =djPartyOrg.getAncestors().split(",");
+        String partyOrgFullName ="";
+        for(String djPartyOrgId:djPartyOrgIds){
+            if(!"0".equals(djPartyOrgId)){
+                partyOrgFullName+=djPartyOrgMapper.selectDjPartyOrgById(Long.parseLong(djPartyOrgId)).getPartyOrgName()+"/";
+            }
+        }
+        djPartyOrg.setPartyOrgFullName(partyOrgFullName+djPartyOrg.getPartyOrgName());
+        return djPartyOrg;
     }
 
     /**
@@ -47,6 +57,18 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
     public List<DjPartyOrg> selectDjPartyOrgList(DjPartyOrg djPartyOrg)
     {
         return djPartyOrgMapper.selectDjPartyOrgList(djPartyOrg);
+    }
+
+    /**
+     * 查询党组织架构下属列表
+     *
+     * @param partyOrgId 党组织架构Id
+     * @return 党组织架构集合
+     */
+    @Override
+    public List<DjPartyOrg> selectChildrenPartyOrgById(Long partyOrgId)
+    {
+        return djPartyOrgMapper.selectChildrenPartyOrgById(partyOrgId);
     }
 
     /**

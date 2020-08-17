@@ -78,7 +78,7 @@ public class DjPartyMemberController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody DjPartyMember djPartyMember)
     {
-        djPartyMember.setUpdateBy(SecurityUtils.getUsername());
+        djPartyMember.setCreateBy(SecurityUtils.getUsername());
         djPartyMember.setCreateTime(DateUtils.getNowDate());
         return toAjax(djPartyMemberService.insertDjPartyMember(djPartyMember));
     }

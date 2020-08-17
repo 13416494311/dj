@@ -4,6 +4,7 @@ import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
+import com.ruoyi.project.party.service.IDjPartyMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjPartyOrgPostMapper;
@@ -22,7 +23,7 @@ public class DjPartyOrgPostServiceImpl implements IDjPartyOrgPostService
     @Autowired
     private DjPartyOrgPostMapper djPartyOrgPostMapper;
     @Autowired
-    private DjPartyMemberMapper djPartyMemberMapper;
+    private IDjPartyMemberService djPartyMemberService;
 
     /**
      * 查询党组织职务
@@ -35,7 +36,7 @@ public class DjPartyOrgPostServiceImpl implements IDjPartyOrgPostService
     {
         DjPartyOrgPost partyOrgPost = djPartyOrgPostMapper.selectDjPartyOrgPostById(id);
         partyOrgPost.setDjPartyMember(
-                djPartyMemberMapper.selectDjPartyMemberById(partyOrgPost.getPartyMemberId()));
+                djPartyMemberService.selectDjPartyMemberById(partyOrgPost.getPartyMemberId()));
         return partyOrgPost;
     }
 
@@ -52,7 +53,7 @@ public class DjPartyOrgPostServiceImpl implements IDjPartyOrgPostService
         List<DjPartyOrgPost> list= djPartyOrgPostMapper.selectDjPartyOrgPostList(djPartyOrgPost);
         list.stream().forEach(partyOrgPost ->{
             partyOrgPost.setDjPartyMember(
-                    djPartyMemberMapper.selectDjPartyMemberById(partyOrgPost.getPartyMemberId()));
+                    djPartyMemberService.selectDjPartyMemberById(partyOrgPost.getPartyMemberId()));
         });
         return list;
     }

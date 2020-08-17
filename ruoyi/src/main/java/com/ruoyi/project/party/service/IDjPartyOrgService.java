@@ -29,6 +29,15 @@ public interface IDjPartyOrgService
     public List<DjPartyOrg> selectDjPartyOrgList(DjPartyOrg djPartyOrg);
 
     /**
+     * 查询党组织架构下属列表
+     *
+     * @param partyOrgId 党组织架构Id
+     * @return 党组织架构集合
+     */
+    public List<DjPartyOrg> selectChildrenPartyOrgById(Long partyOrgId);
+
+
+    /**
      * 新增党组织架构
      *
      * @param djPartyOrg 党组织架构

@@ -100,7 +100,7 @@
     exportPartyOrgPost
   } from "@/api/party/orgPost";
   import treeTransfer from 'el-tree-transfer'
-  import PartyMember from "./partyMember";
+  import PartyMember from "./partyMemberChoose";
 
   export default {
     name: "PartyOrgPost",

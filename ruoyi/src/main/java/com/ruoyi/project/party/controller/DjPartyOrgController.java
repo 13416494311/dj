@@ -1,5 +1,6 @@
 package com.ruoyi.project.party.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ruoyi.common.constant.UserConstants;
@@ -50,6 +51,17 @@ public class DjPartyOrgController extends BaseController
     }
 
     /**
+     * 查询党组织架构列表
+     */
+    @PreAuthorize("@ss.hasPermi('party:org:list')")
+    @GetMapping("/childrenList/{partyOrgId}")
+    public AjaxResult childrenList(@PathVariable("partyOrgId") Long partyOrgId)
+    {
+        List<DjPartyOrg> list = djPartyOrgService.selectChildrenPartyOrgById(partyOrgId);
+        return AjaxResult.success(list);
+    }
+
+    /**
      * 查询党组织架构列表tree
      */
     @GetMapping("/tree")
@@ -74,6 +86,21 @@ public class DjPartyOrgController extends BaseController
         List<DjPartyOrg> list = djPartyOrgService.selectDjPartyOrgList(djPartyOrg);
         ExcelUtil<DjPartyOrg> util = new ExcelUtil<DjPartyOrg>(DjPartyOrg.class);
         return util.exportExcel(list, "partyOrg");
+    }
+
+    /**
+     * 获取党组织架构详细信息
+     */
+    @PreAuthorize("@ss.hasPermi('party:org:query')")
+    @GetMapping(value = "/getPartyOrgs/{partyOrgIds}")
+    public AjaxResult getInfo(@PathVariable("partyOrgIds") Long[] partyOrgIds)
+    {
+
+        List<DjPartyOrg> list = new ArrayList<DjPartyOrg>();
+        for(Long partyOrgId:partyOrgIds){
+            list.add(djPartyOrgService.selectDjPartyOrgById(partyOrgId));
+        }
+        return AjaxResult.success(list);
     }
 
     /**

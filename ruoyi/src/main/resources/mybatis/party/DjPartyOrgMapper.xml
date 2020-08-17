@@ -34,7 +34,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDjPartyOrgVo">
-        select party_org_id,party_org_uuid, parent_id, ancestors, party_org_name, org_type,party_org_type, build_time, leader, phone,
+        select party_org_id,party_org_uuid, parent_id, ancestors, party_org_name, org_type,party_org_type,
+        build_time, leader, phone,
         email, address ,description, order_num, status, del_flag, create_by, create_time, update_by, update_time
         from dj_party_org
     </sql>
@@ -46,7 +47,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="parentId != null "> and parent_id = #{parentId}</if>
             <if test="partyOrgUuid != null "> and party_org_uuid = #{partyOrgUuid}</if>
             <if test="ancestors != null  and ancestors != ''"> and ancestors = #{ancestors}</if>
-            <if test="partyOrgName != null  and partyOrgName != ''"> and party_org_name like concat('%', #{partyOrgName}, '%')</if>
+            <if test="partyOrgName != null  and partyOrgName != ''">
+             and party_org_name like concat('%', #{partyOrgName}, '%')
+             </if>
             <if test="orgType != null  and orgType != ''"> and org_type = #{orgType}</if>
             <if test="partyOrgType != null  and partyOrgType != ''"> and party_org_type = #{partyOrgType}</if>
             <if test="buildTime != null "> and build_time = #{buildTime}</if>

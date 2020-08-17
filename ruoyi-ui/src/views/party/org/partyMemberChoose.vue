@@ -93,6 +93,7 @@
         queryParams: {
           memberName: undefined,
           memberType: undefined,
+          partyOrgId: undefined,
         },
         defaultProps: {
           value: 'id',          // 唯一标识
@@ -128,11 +129,14 @@
       'queryParams.memberName'(val) {
         this.getList();
       },
+      'queryParams.partyOrgId'(val) {
+        this.getList();
+      },
 
     },
     created() {
       this.getList();
-      this.getPartyOrgTreeselect();
+      this.getPartyOrgTreeSelect();
 
     },
     methods: {
@@ -144,14 +148,13 @@
       // 节点单击事件
       handleNodeClick(data) {
         this.queryParams.partyOrgId = data.id;
-        this.getList();
       },
       /** 对话框自适应高度 */
       getHeight() {
         this.bodyStyle.height = window.innerHeight - 281 + 'px';
       },
       /** 查询党组织下拉树结构 */
-      getPartyOrgTreeselect() {
+      getPartyOrgTreeSelect() {
         partyOrgTreeselect().then(response => {
           this.partyOrgOptions = this.treeInitData(response.data);
         });

@@ -8,7 +8,9 @@ import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
+import com.ruoyi.project.party.service.IDjPartyOrgService;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
+import com.ruoyi.project.system.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +26,9 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     @Autowired
     private DjPartyMemberMapper djPartyMemberMapper;
     @Autowired
-    private DjPartyOrgMapper djPartyOrgMapper;
+    private IDjPartyOrgService djPartyOrgService;
     @Autowired
-    private SysDeptMapper deptMapper;
+    private ISysDeptService deptService;
 
     /**
      * 查询党员信息
@@ -37,7 +39,9 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     @Override
     public DjPartyMember selectDjPartyMemberById(Long memberId)
     {
-        return djPartyMemberMapper.selectDjPartyMemberById(memberId);
+        DjPartyMember partyMember = djPartyMemberMapper.selectDjPartyMemberById(memberId);
+        partyMember.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(partyMember.getPartyOrgId()));
+        return partyMember;
     }
 
     /**
@@ -53,10 +57,10 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
         List<DjPartyMember> list = djPartyMemberMapper.selectDjPartyMemberList(djPartyMember);
         list.stream().forEach( member ->{
             if(member.getPartyOrgId()!=null){
-                member.setDjPartyOrg(djPartyOrgMapper.selectDjPartyOrgById(member.getPartyOrgId()));
+                member.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(member.getPartyOrgId()));
             }
             if(member.getDeptId()!=null){
-                member.setSysDept(deptMapper.selectDeptById(member.getDeptId()));
+                member.setSysDept(deptService.selectDeptById(member.getDeptId()));
             }
         });
         return list;
