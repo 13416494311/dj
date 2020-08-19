@@ -396,6 +396,7 @@
       /**显示地图 获取地址**/
       openMap() {
         this.mapOpen = !this.mapOpen
+        this.$forceUpdate();
       },
       /**显示组织架构图**/
       showPartyOrg() {
@@ -453,6 +454,7 @@
       // 取消按钮
       cancel() {
         this.open = false;
+        this.mapOpen = false;
         this.reset();
       },
       // 表单重置
@@ -496,6 +498,7 @@
       handleAdd() {
         this.reset();
         this.form.partyOrgUuid = this.uuid();
+        this.mapOpen = false;
         this.disabled = false;
         this.getTreeselect();
         this.open = true;
@@ -504,6 +507,7 @@
       /** 查看按钮操作 */
       handleSee(row) {
         this.reset();
+        this.mapOpen = false;
         this.disabled = true;
         this.getTreeselect();
         if (row != undefined) {
@@ -518,6 +522,7 @@
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
+        this.mapOpen = false;
         this.disabled = false;
         this.getTreeselect();
         if (row != undefined) {

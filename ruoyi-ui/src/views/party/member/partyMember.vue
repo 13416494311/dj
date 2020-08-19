@@ -1054,7 +1054,11 @@
       },
       // 部门id翻译
       deptIdFormat(row, column,value){
-        return row.sysDept.deptName;
+        if(row.sysDept!=null){
+          return row.sysDept.deptName;
+        }else{
+          return "";
+        }
       },
       // 党组织id翻译
       partyOrgIdFormat(row, column){

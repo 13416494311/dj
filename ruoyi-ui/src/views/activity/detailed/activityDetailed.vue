@@ -37,13 +37,13 @@
                        :formatter="detailedStatusFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button
+         <!-- <el-button
             size="small"
             type="text"
             icon="el-icon-search"
             @click="handleSee(scope.row)"
           >查看
-          </el-button>
+          </el-button>-->
           <el-button
             size="small"
             type="text"
@@ -167,7 +167,7 @@
 
             <el-row>
               <el-col :span="24">
-                <el-form-item label="" prop="description" v-show="mapOpen" style="height: 500px">
+                <el-form-item label="" prop="description" v-if="mapOpen" style="height: 500px">
                   <address-map ref="addressMap" @callbackAddress="setVenue"></address-map>
                 </el-form-item>
               </el-col>
@@ -470,6 +470,7 @@
       /**显示地图 获取地址**/
       openMap() {
         this.mapOpen = !this.mapOpen
+        this.$forceUpdate();
       },
       setMember(member) {
         this.form.partyMemberId = member.memberId;
@@ -504,6 +505,7 @@
       // 取消按钮
       cancel() {
         this.open = false;
+        this.mapOpen = false;
         this.reset();
       },
       // 表单重置
@@ -605,11 +607,14 @@
       handleAdd() {
         this.reset();
         this.open = true;
+        this.mapOpen = false;
         this.title = "添加活动详情";
       },
+
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
+        this.mapOpen = false;
         const activityId = row.activityId || this.ids
         getDetailed(activityId).then(response => {
           this.form = response.data;

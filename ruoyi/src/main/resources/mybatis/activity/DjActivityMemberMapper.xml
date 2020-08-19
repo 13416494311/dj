@@ -23,7 +23,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from dj_activity_member
     </sql>
 
-    <select id="selectDjActivityMemberList" parameterType="DjActivityMember" resultMap="DjActivityMemberResult">
+    <select id="selectDjActivityMemberList" parameterType="DjActivityMember"
+            resultMap="DjActivityMemberResult">
         <include refid="selectDjActivityMemberVo"/>
         <where>
             <if test="planUuid != null "> and plan_uuid = #{planUuid}</if>

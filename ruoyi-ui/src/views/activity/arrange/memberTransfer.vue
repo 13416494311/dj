@@ -136,6 +136,7 @@
       /** 查询党组织成员 */
       getPartyMemberSelect(partyOrgId) {
         this.data = []
+        this.value = []
         listPartyMember({"partyOrgId":partyOrgId}).then(response => {
           let partyMemberList = response.rows;
           partyMemberList.forEach(partyMember => {

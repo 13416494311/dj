@@ -804,6 +804,7 @@
         this.form.activitySources = activitySources;
         this.form.planUuid = this.uuid();
         this.fileList = [];
+        this.arrangeList = [];
         this.open = true;
         this.orgLoading = false;
         this.title = "添加活动计划";

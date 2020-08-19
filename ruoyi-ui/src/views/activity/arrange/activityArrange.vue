@@ -167,7 +167,7 @@
                 </el-row>
                 <el-row>
                   <el-col :span="24">
-                    <el-form-item label="" prop="description" v-show="mapOpen" style="height: 500px">
+                    <el-form-item label="" prop="description" v-if="mapOpen" style="height: 500px">
                       <address-map ref="addressMap" @callbackAddress="setVenue"></address-map>
                     </el-form-item>
                   </el-col>
@@ -371,7 +371,7 @@
         this.$refs.memberTransfer.title = "选择活动参与人";
         this.$refs.memberTransfer.planUuid = this.form.planUuid;
         this.$refs.memberTransfer.partyOrgId = this.form.partyOrgId;
-        this.$refs.memberTransfer.getPartyMemberSelect(this.form.partyOrgId);
+        this.$refs.memberTransfer.getPartyMemberSelect();
       },
       /**返回地址*/
       setVenue(val) {
@@ -382,6 +382,7 @@
       /**显示地图 获取地址**/
       openMap() {
         this.mapOpen = !this.mapOpen
+        this.$forceUpdate();
       },
       setMember(member) {
         this.form.partyMemberId = member.memberId;
@@ -391,7 +392,7 @@
       openMemberChoose() {
         this.$refs.partyMember.open = true;
         this.$refs.partyMember.title = "选择负责人";
-        this.$refs.partyMember.queryParams.partyOrgId = this.form.partyOrgId;
+        //this.$refs.partyMember.queryParams.partyOrgId = this.form.partyOrgId;
       },
       // 活动来源字典翻译
       activitySourcesFormat(row, column) {
@@ -413,21 +414,24 @@
         this.bodyStyle.height = window.innerHeight - 281 + 'px';
       },
       getDetailedList(){
+        this.detailedList =[];
         this.activityLoading = true;
-        listDetailed({"planUuid":this.form.planUuid,"planOrgId":this.form.planOrgId}).then(response => {
+        listDetailed({"planUuid":this.form.planUuid,"partyOrgId":this.form.partyOrgId}).then(response => {
           this.detailedList = response.rows;
           this.activityLoading = false;
         });
       },
       getJoinMemberList(){
-        this.memberLoading = true;
-        listMember({"planUuid":this.form.planUuid,"planOrgId":this.form.planOrgId}).then(response => {
+        this.memberList =[];
+          this.memberLoading = true;
+        listMember({"planUuid":this.form.planUuid,"partyOrgId":this.form.partyOrgId}).then(response => {
           this.memberList = response.rows;
           this.memberLoading = false;
         });
       },
       /** 查询活动安排列表 */
       getList() {
+        this.arrangeList=[];
         this.loading = true;
         listArrangeByParam(this.queryParams).then(response => {
           this.arrangeList = response.rows;
@@ -438,6 +442,7 @@
       // 取消按钮
       cancel() {
         this.open = false;
+        this.mapOpen = false;
         this.reset();
       },
       // 表单重置
@@ -478,11 +483,13 @@
       handleAdd() {
         this.reset();
         this.open = true;
+        this.mapOpen = false;
         this.title = "添加活动安排";
       },
       /** 修改按钮操作 */
       handleSee(row) {
         this.reset();
+        this.mapOpen = false;
         this.disabled = true;
         const id = row.id || this.ids
         getArrange(id).then(response => {
@@ -502,6 +509,7 @@
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
+        this.mapOpen = false;
         this.disabled = false;
         const id = row.id || this.ids
         getArrange(id).then(response => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="mapContainer">
     <div class="search-box">
       <input
         v-model="searchKey"
@@ -35,7 +35,7 @@
 
 <style>
 
-  .container {
+  .mapContainer {
     /*width: 700px;
     height: 500px;
     position: absolute;
