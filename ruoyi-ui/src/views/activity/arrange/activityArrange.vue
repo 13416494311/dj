@@ -182,7 +182,7 @@
                     type="primary"
                     icon="el-icon-plus"
                     size="mini"
-                    @click="openOrgMemberTransfer"
+                    @click="openOrgMemberTransfer('1')"
                     style="float: right;margin-top: -5px"
                   >新增
                   </el-button>
@@ -366,11 +366,12 @@
       });
     },
     methods: {
-      openOrgMemberTransfer() {
+      openOrgMemberTransfer(type) {
         this.$refs.memberTransfer.open = true;
         this.$refs.memberTransfer.title = "选择活动参与人";
         this.$refs.memberTransfer.planUuid = this.form.planUuid;
         this.$refs.memberTransfer.partyOrgId = this.form.partyOrgId;
+        this.$refs.memberTransfer.type = type;
         this.$refs.memberTransfer.getPartyMemberSelect();
       },
       /**返回地址*/
@@ -424,7 +425,7 @@
       getJoinMemberList(){
         this.memberList =[];
           this.memberLoading = true;
-        listMember({"planUuid":this.form.planUuid,"partyOrgId":this.form.partyOrgId}).then(response => {
+        listMember({"planUuid":this.form.planUuid,"partyOrgId":this.form.partyOrgId,"type":"1"}).then(response => {
           this.memberList = response.rows;
           this.memberLoading = false;
         });

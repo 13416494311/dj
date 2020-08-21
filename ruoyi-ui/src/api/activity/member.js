@@ -43,6 +43,15 @@ export function updateMember(data) {
     data: data
   })
 }
+// 修改活动参与人
+export function updateMembers(data) {
+  return request({
+    url: '/activity/member/updateMembers',
+    method: 'post',
+    data: data
+  })
+}
+
 
 // 删除活动参与人
 export function delMember(memberId) {

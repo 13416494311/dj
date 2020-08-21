@@ -26,6 +26,8 @@ public class SysFile extends BaseEntity
 
     private String fileType;
 
+    private String fileTypeValue;
+
     /** 文件名 */
     @Excel(name = "文件名")
     private String fileName;

@@ -35,6 +35,8 @@ public class DjActivityMember extends BaseEntity
 
     private DjPartyMember djPartyMember;
 
+    private String type;
+
     /** 活动参与人参与状态 */
     @Excel(name = "活动参与人参与状态")
     private String status;

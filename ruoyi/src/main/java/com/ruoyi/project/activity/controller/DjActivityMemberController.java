@@ -85,13 +85,14 @@ public class DjActivityMemberController extends BaseController
 
     @Log(title = "活动参与人", businessType = BusinessType.INSERT)
     @PostMapping("/addByArrange")
-    public AjaxResult addByArrange(String planUuid,String partyOrgId,String partyMemberIds)
+    public AjaxResult addByArrange(String planUuid,String partyOrgId,String partyMemberIds,String type)
     {
         for(String partyMemberId:partyMemberIds.split(",")){
             DjActivityMember activityMember = new DjActivityMember();
             activityMember.setPlanUuid(planUuid);
             activityMember.setPartyOrgId(Long.parseLong(partyOrgId));
             activityMember.setPartyMemberId(Long.parseLong(partyMemberId));
+            activityMember.setType(type);
             activityMember.setStatus("1");
             djActivityMemberService.insertDjActivityMember(activityMember);
         }
@@ -106,6 +107,19 @@ public class DjActivityMemberController extends BaseController
     public AjaxResult edit(@RequestBody DjActivityMember djActivityMember)
     {
         return toAjax(djActivityMemberService.updateDjActivityMember(djActivityMember));
+    }
+
+    @Log(title = "活动参与人", businessType = BusinessType.UPDATE)
+    @PostMapping("/updateMembers")
+    public AjaxResult updateMembers(String memberIds,String status)
+    {
+        for(String memberId:memberIds.split(",")){
+            DjActivityMember activityMember = new DjActivityMember();
+            activityMember.setMemberId(Long.parseLong(memberId));
+            activityMember.setStatus(status);
+            djActivityMemberService.updateDjActivityMember(activityMember);
+        }
+        return AjaxResult.success();
     }
 
     /**

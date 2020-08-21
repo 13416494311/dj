@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap type="DjActivityDetailed" id="DjActivityDetailedResult">
         <result property="activityId"    column="activity_id"    />
+        <result property="activityUuid"    column="activity_uuid"    />
         <result property="planUuid"    column="plan_uuid"    />
         <result property="partyOrgId"    column="party_org_id"    />
         <result property="cycle"    column="cycle"    />
@@ -34,11 +35,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDjActivityDetailedVo">
-        select activity_id, plan_uuid,party_org_id, cycle, party_member_id, venue, activity_content, plan_start_time, plan_end_time, activity_plan_start_time, activity_plan_end_time, actual_start_time, actual_end_time, recorder, mentors, presenter, speaker, allow_comment, activity_vote_id, activity_exam_id, status, del_flag, create_by, create_time, update_by, update_time from dj_activity_detailed
+        select activity_id, activity_uuid,plan_uuid,party_org_id, cycle, party_member_id, venue, activity_content, plan_start_time, plan_end_time, activity_plan_start_time, activity_plan_end_time, actual_start_time, actual_end_time, recorder, mentors, presenter, speaker, allow_comment, activity_vote_id, activity_exam_id, status, del_flag, create_by, create_time, update_by, update_time from dj_activity_detailed
     </sql>
 
     <sql id="selectDjActivityDetailed">
-        select detailed.activity_id, detailed.plan_uuid,detailed.party_org_id, detailed.cycle,
+        select detailed.activity_id, detailed.activity_uuid,detailed.plan_uuid,detailed.party_org_id, detailed.cycle,
         detailed.party_member_id, detailed.venue, detailed.activity_content,
         detailed.plan_start_time, detailed.plan_end_time, detailed.activity_plan_start_time,
         detailed.activity_plan_end_time,
@@ -56,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              on arrange.plan_uuid = detailed.plan_uuid  and arrange.party_org_id = detailed.party_org_id
         left join dj_activity_plan plan on arrange.plan_uuid = plan.plan_uuid
         <where>
+            <if test="activityUuid != null  and activityUuid != ''"> and detailed.activity_uuid = #{activityUuid}</if>
             <if test="planUuid != null  and planUuid != ''"> and detailed.plan_uuid = #{planUuid}</if>
             <if test="partyOrgId != null "> and detailed.party_org_id = #{partyOrgId}</if>
             <if test="cycle != null  and cycle != ''"> and detailed.cycle = #{cycle}</if>
@@ -87,6 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join dj_activity_plan plan on arrange.plan_uuid = plan.plan_uuid
         <where>
             arrange.status ='2'
+            <if test="activityUuid != null  and activityUuid != ''"> and detailed.activity_uuid = #{activityUuid}</if>
             <if test="planUuid != null  and planUuid != ''"> and detailed.plan_uuid = #{planUuid}</if>
             <if test="partyOrgId != null "> and detailed.party_org_id = #{partyOrgId}</if>
             <if test="cycle != null  and cycle != ''"> and detailed.cycle = #{cycle}</if>
@@ -123,6 +126,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into dj_activity_detailed
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="activityId != null ">activity_id,</if>
+            <if test="activityUuid != null  and activityUuid != ''">activity_uuid,</if>
             <if test="planUuid != null  and planUuid != ''">plan_uuid,</if>
             <if test="partyOrgId != null ">party_org_id,</if>
             <if test="cycle != null  and cycle != ''">cycle,</if>
@@ -151,6 +155,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="activityId != null ">#{activityId},</if>
+            <if test="activityUuid != null  and activityUuid != ''">#{activityUuid},</if>
             <if test="planUuid != null  and planUuid != ''">#{planUuid},</if>
             <if test="partyOrgId != null ">#{partyOrgId},</if>
             <if test="cycle != null  and cycle != ''">#{cycle},</if>

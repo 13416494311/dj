@@ -17,18 +17,18 @@
     </el-form>
 
 
-    <el-table v-loading="loading" :data="detailedList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="detailedList">
       <el-table-column label="活动名称" align="center" prop="djActivityPlan.activityTheme"/>
       <el-table-column label="活动类型" align="center" prop="djActivityPlan.activityType"
                        :formatter="activityTypeFormat"/>
       <el-table-column label="活动党组织" align="center" prop="djPartyOrg.partyOrgFullName"/>
       <el-table-column label="负责人" align="center" prop="djPartyMember.memberName"/>
-      <el-table-column label="计划开始时间" align="center" prop="planStartTime" >
+      <el-table-column label="计划开始时间" align="center" prop="planStartTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.planStartTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="计划截止时间" align="center" prop="planEndTime" >
+      <el-table-column label="计划截止时间" align="center" prop="planEndTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.planEndTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -37,13 +37,13 @@
                        :formatter="detailedStatusFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-         <!-- <el-button
-            size="small"
-            type="text"
-            icon="el-icon-search"
-            @click="handleSee(scope.row)"
-          >查看
-          </el-button>-->
+          <!-- <el-button
+             size="small"
+             type="text"
+             icon="el-icon-search"
+             @click="handleSee(scope.row)"
+           >查看
+           </el-button>-->
           <el-button
             size="small"
             type="text"
@@ -65,14 +65,14 @@
     />
 
     <!-- 添加或修改活动详情对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="80%" append-to-body
+    <el-dialog :title="title" :visible.sync="open" width="90%" append-to-body
                @open="getHeight" :close-on-click-modal="false">
       <div :style="bodyStyle">
         <el-card shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">活动进度</span>
           </div>
-          <el-steps  :active="Number(form.status)-1" finish-status="success">
+          <el-steps :active="Number(form.status)-1" finish-status="success">
             <el-step title="完善活动信息"></el-step>
             <el-step title="启动活动"></el-step>
             <el-step title="开始活动"></el-step>
@@ -84,7 +84,7 @@
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">活动信息</span>
           </div>
-          <el-form ref="form" :model="form" :rules="rules"  label-width="150px">
+          <el-form ref="form" :model="form" :rules="rules" label-width="150px">
 
             <el-row>
               <el-col :span="24">
@@ -151,7 +151,7 @@
 
             <el-row>
               <el-col :span="12">
-                <el-form-item label="活动党组织" >
+                <el-form-item label="活动党组织">
                   <el-input :disabled="true" v-model="djPartyOrg.partyOrgFullName" placeholder="请输入活动地点"/>
                 </el-form-item>
               </el-col>
@@ -176,7 +176,8 @@
             <el-row>
               <el-col :span="24">
                 <el-form-item label="活动内容" prop="activityContent">
-                  <el-input :disabled="disabled" v-model="form.activityContent" type="textarea" :autosize="{ minRows: 3, maxRows: 6}"
+                  <el-input :disabled="disabled" v-model="form.activityContent" type="textarea"
+                            :autosize="{ minRows: 3, maxRows: 6}"
                             placeholder="请输入内容"/>
                 </el-form-item>
               </el-col>
@@ -257,7 +258,48 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="主讲人及身份" prop="speaker">
-                  <el-input :disabled="disabled"v-model="form.speaker" placeholder="请输入主讲人及身份"/>
+                  <el-input :disabled="disabled" v-model="form.speaker" placeholder="请输入主讲人及身份"/>
+                </el-form-item>
+              </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="活动资料">
+                  <el-upload
+                    action="#"
+                    list-type="picture-card"
+                    :file-list="planFileList"
+                    :http-request="uploadFileNull"
+                    :class="{hide:true}"
+                    accept="image/*,.doc,.docx,.xls,.xlsx,.pdf,.ppt,.zip,.txt">
+                    <i slot="default" class="el-icon-plus"></i>
+                    <div slot="file" slot-scope="{file}" style="display: inline">
+                      <div style="height: 70%">
+                        <img v-if="'jpeg,jpg,gif,png'.indexOf(file.name.split('.')[1]) != -1"
+                             class="el-upload-list__item-thumbnail"
+                             :src="file.url" :alt="file.name"/>
+                        <img v-else
+                             class="el-upload-list__item-thumbnail"
+                             :src="defaultFilePicUrl" :alt="file.name"/>
+                        <span class="el-upload-list__item-actions">
+                          <span v-if="'jpeg,jpg,gif,png'.indexOf(file.name.split('.')[1]) != -1"
+                                class="el-upload-list__item-preview"
+                                @click="handlePictureCardPreview(file)">
+                            <i class="el-icon-zoom-in"></i>
+                          </span>
+                          <span
+                            class="el-upload-list__item-delete"
+                            @click="handleDownload(file)">
+                            <i class="el-icon-download"></i>
+                          </span>
+                        </span>
+                      </div>
+                      <div style="height: 30%">
+                        <span class="file-name">{{file.name}}</span>
+                      </div>
+                    </div>
+                  </el-upload>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -268,24 +310,104 @@
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">活动参与情况</span>
           </div>
-          <el-tabs v-model="activeTab">
-            <el-tab-pane label="活动参与人" name="1">
+          <div style="position: relative">
+            <el-tabs v-model="activeTab" @tab-click="handleTabClick">
 
-            </el-tab-pane>
-            <el-tab-pane label="签到情况" name="2">
+              <el-tab-pane label="活动参与人" name="1">
+                <el-table v-loading="memberLoading" :data="memberList">
 
-            </el-tab-pane>
-            <el-tab-pane label="建言献策" name="3">
+                  <el-table-column label="姓名" align="center" prop="djPartyMember.memberName"/>
+                  <el-table-column label="所属党组织" align="center" prop="djPartyMember.djPartyOrg.partyOrgFullName"/>
+                  <el-table-column label="联系方式" align="center" prop="djPartyMember.mobile"/>
+                  <el-table-column v-if="!disabled" label="操作" align="center" class-name="small-padding fixed-width">
+                    <template slot-scope="scope">
+                      <el-button
+                        v-if="scope.row.type=='2'"
+                        size="small"
+                        type="text"
+                        icon="el-icon-delete"
+                        @click="handleMemberDelete(scope.row)"
+                      >删除
+                      </el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-tab-pane>
 
-            </el-tab-pane>
-            <el-tab-pane label="心得体会" name="4">
+              <el-tab-pane label="签到情况" name="2">
+                <el-table v-loading="memberLoading" :data="memberList" @selection-change="handleSelectionChange">
+                  <el-table-column type="selection" width="55" align="center"/>
+                  <el-table-column label="姓名" align="center" prop="djPartyMember.memberName"/>
+                  <el-table-column label="所属党组织" align="center" prop="djPartyMember.djPartyOrg.partyOrgFullName"/>
+                  <el-table-column label="联系方式" align="center" prop="djPartyMember.mobile"/>
+                  <el-table-column label="状态" align="center" prop="djPartyMember.status"
+                                   :formatter="memberStatusFormat"/>
+                  <el-table-column v-if="!disabled" label="操作" align="center" class-name="small-padding fixed-width">
+                    <template slot-scope="scope">
+                      <el-dropdown split-button size="small" type="primary">签到
+                        <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item
+                            v-for="dict in memberStatusOptions"
+                            :key="dict.dictValue"
+                            @click.native="handleMemberUpdate(scope.row,dict.dictValue)"
+                          >{{dict.dictLabel}}
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </el-dropdown>
+                    </template>
+                  </el-table-column>
+                </el-table>
 
-            </el-tab-pane>
-            <el-tab-pane label="请假记录" name="5">
+                <div style="margin-top: 10px">
+                  <el-radio-group v-model="memberStatus">
+                    <el-radio
+                      v-for="dict in memberStatusOptions"
+                      :key="dict.dictValue"
+                      :label="dict.dictValue"
+                    >{{dict.dictLabel}}
+                    </el-radio>
+                  </el-radio-group>
+                  <el-button
+                    :disabled="multiple"
+                    type="primary"
+                    size="mini"
+                    @click="handleMembersUpdate"
+                    style="float:right;top: 5px"
+                  >签到
+                  </el-button>
+                </div>
 
-            </el-tab-pane>
+              </el-tab-pane>
+              <el-tab-pane label="建言献策" name="3">
 
-          </el-tabs>
+              </el-tab-pane>
+              <el-tab-pane label="心得体会" name="4">
+
+              </el-tab-pane>
+              <el-tab-pane label="请假记录" name="5">
+                <el-table v-loading="memberLoading" :data="leaveMemberList">
+                  <el-table-column label="姓名" align="center" prop="djPartyMember.memberName"/>
+                  <el-table-column label="所属党组织" align="center" prop="djPartyMember.djPartyOrg.partyOrgFullName"/>
+                  <el-table-column label="联系方式" align="center" prop="djPartyMember.mobile"/>
+                  <el-table-column label="状态" align="center" prop="djPartyMember.status"
+                                   :formatter="memberStatusFormat"/>
+                </el-table>
+              </el-tab-pane>
+
+            </el-tabs>
+
+            <el-button
+              v-if="!disabled&&activeTab=='1'"
+              type="primary"
+              icon="el-icon-plus"
+              size="mini"
+              @click="openOrgMemberTransfer('2')"
+              style="position: absolute ;right: 10px;top: 5px"
+            >新增
+            </el-button>
+          </div>
+
+
         </el-card>
 
 
@@ -308,15 +430,89 @@
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">活动图片</span>
           </div>
+          <el-upload
+            action="#"
+            list-type="picture-card"
+            :file-list="picFileList"
+            :http-request="uploadPicFile"
+            :class="{hide:disabled}"
+            accept="image/*,">
+            <i slot="default" class="el-icon-plus"></i>
+            <div slot="file" slot-scope="{file}" style="display: inline">
+              <img v-if="'jpeg,jpg,gif,png'.indexOf(file.name.split('.')[1]) != -1"
+                   class="el-upload-list__item-thumbnail"
+                   :src="file.url" :alt="file.name"/>
+              <img v-else
+                   class="el-upload-list__item-thumbnail"
+                   :src="defaultFilePicUrl" :alt="file.name"/>
+              <span class="el-upload-list__item-actions">
+                    <span v-if="'jpeg,jpg,gif,png'.indexOf(file.name.split('.')[1]) != -1"
+                          class="el-upload-list__item-preview"
+                          @click="handlePictureCardPreview(file)">
+                       <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span
+                      class="el-upload-list__item-delete"
+                      @click="handleDownload(file)">
+                      <i class="el-icon-download"></i>
+                    </span>
+                    <span
+                      v-if="!disabled"
+                      class="el-upload-list__item-delete"
+                      @click="handleRemove(file)">
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
 
-
+            </div>
+          </el-upload>
         </el-card>
 
         <el-card shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">活动资料</span>
           </div>
+          <el-upload
+            action="#"
+            list-type="picture-card"
+            :file-list="fileList"
+            :http-request="uploadFile"
+            :class="{hide:disabled}"
+            accept="image/*,.doc,.docx,.xls,.xlsx,.pdf,.ppt,.zip,.txt">
+            <i slot="default" class="el-icon-plus"></i>
+            <div slot="file" slot-scope="{file}" style="display: inline">
+              <div style="height: 70%">
+                <img v-if="'jpeg,jpg,gif,png'.indexOf(file.name.split('.')[1]) != -1"
+                     class="el-upload-list__item-thumbnail"
 
+                     :src="file.url" :alt="file.name"/>
+                <img v-else
+                     class="el-upload-list__item-thumbnail"
+                     :src="defaultFilePicUrl" :alt="file.name"/>
+                <span class="el-upload-list__item-actions">
+                    <span v-if="'jpeg,jpg,gif,png'.indexOf(file.name.split('.')[1]) != -1"
+                          class="el-upload-list__item-preview"
+                          @click="handlePictureCardPreview(file)">
+                       <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span
+                      class="el-upload-list__item-delete"
+                      @click="handleDownload(file)">
+                      <i class="el-icon-download"></i>
+                    </span>
+                    <span
+                      v-if="!disabled"
+                      class="el-upload-list__item-delete"
+                      @click="handleRemove(file)">
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
+              </div>
+              <div style="height: 30%">
+                <span class="file-name">{{file.name}}</span>
+              </div>
+            </div>
+          </el-upload>
 
         </el-card>
       </div>
@@ -329,9 +525,15 @@
     </el-dialog>
 
     <party-member ref="partyMember" @callbackMember="setMember"/>
-
+    <member-transfer ref="memberTransfer" @callback="getJoinMemberList"/>
+    <el-dialog :visible.sync="dialogVisible"
+               append-to-body
+               :close-on-click-modal="false">
+      <img width="100%" :src="dialogImageUrl" alt="">
+    </el-dialog>
   </div>
 </template>
+
 
 <script>
   import {
@@ -343,20 +545,27 @@
     updateDetailed,
     exportDetailed
   } from "@/api/activity/detailed";
+  import {delMember, listMember, updateMember, updateMembers} from "@/api/activity/member";
+  import {listFile, upload, delFile} from "@/api/system/file";
+  import {downLoadZip} from "@/utils/zipdownload";
   import partyMember from "../../party/org/partyMemberChoose";
   import addressMap from "../../party/org/addressMap";
+  import memberTransfer from "../arrange/memberTransfer";
+
 
   export default {
     name: "Detailed",
     components: {
-      partyMember, addressMap
+      partyMember, addressMap, memberTransfer
     },
     data() {
       return {
         // 遮罩层
         loading: true,
+        memberLoading: true,
         // 选中数组
         ids: [],
+        memberIds: [],
         // 非单个禁用
         single: true,
         // 非多个禁用
@@ -365,6 +574,16 @@
         total: 0,
         // 活动详情表格数据
         detailedList: [],
+        memberList: [],
+        leaveMemberList: [],
+        memberStatusOptions: [],
+        planFileList: [],
+        picFileList: [],
+        fileList: [],
+        dialogImageUrl: '',
+        dialogVisible: false,
+        defaultFilePicUrl: undefined,
+        memberStatus: '1',
         // 弹出层标题
         title: "",
         // 是否显示弹出层
@@ -411,27 +630,6 @@
           activityPlanEndTime: [
             {required: true, message: "活动计划结束时间不能为空", trigger: "blur"}
           ],
-          /*activityContent: [
-            {required: true, message: "活动内容不能为空", trigger: "blur"}
-          ],
-          actualStartTime: [
-            {required: true, message: "活动实际开始时间不能为空", trigger: "blur"}
-          ],
-          actualEndTime: [
-            {required: true, message: "活动实际结束时间不能为空", trigger: "blur"}
-          ],
-          recorder: [
-            {required: true, message: "记录人不能为空", trigger: "blur"}
-          ],
-          mentors: [
-            {required: true, message: "到会指导人员不能为空", trigger: "blur"}
-          ],
-          presenter: [
-            {required: true, message: "主持人不能为空", trigger: "blur"}
-          ],
-          speaker: [
-            {required: true, message: "主讲人及身份不能为空", trigger: "blur"}
-          ],*/
         },
         bodyStyle: {
           overflowY: 'auto',
@@ -444,14 +642,16 @@
         //活动详情状态
         arrangeStatusOptions: [],
         activeTab: "1",
-        disabled:false,
+        disabled: false,
         mapOpen: false,
+
       };
     },
     mounted() {
       window.addEventListener('resize', this.getHeight);
     },
     created() {
+      this.defaultFilePicUrl = require("@/assets/image/file.png");
       this.getList();
       this.getDicts("activity_type").then(response => {
         this.activityTypeOptions = response.data;
@@ -459,8 +659,206 @@
       this.getDicts("activity_detailed_status").then(response => {
         this.detailedStatusOptions = response.data;
       });
+      this.getDicts("activity_member_status").then(response => {
+        this.memberStatusOptions = response.data;
+      });
     },
     methods: {
+
+      /**附件上传*/
+      uploadPicFile(file) {
+        const loading = this.$loading({
+          lock: true,
+          text: '上传中……',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        let formData = new FormData();
+        formData.append("uuid", this.form.activityUuid);
+        formData.append("file", file.file);
+        formData.append("fileType", "activityDetailed");
+        formData.append("fileTypeValue", "pic");
+        upload(formData).then(response => {
+          if (response.code === 200) {
+            this.getPicFileList();
+            loading.close();
+            this.msgSuccess("上传成功！")
+          } else {
+            loading.close();
+            this.msgError(response.msg);
+          }
+        }).catch(function (err) {
+          loading.close();
+        });
+      },
+      uploadFile(file) {
+        const loading = this.$loading({
+          lock: true,
+          text: '上传中……',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        let formData = new FormData();
+        formData.append("uuid", this.form.activityUuid);
+        formData.append("file", file.file);
+        formData.append("fileType", "activityDetailed");
+        formData.append("fileTypeValue", "file");
+        upload(formData).then(response => {
+          if (response.code === 200) {
+            this.getFileList();
+            loading.close();
+            this.msgSuccess("上传成功！")
+          } else {
+            loading.close();
+            this.msgError(response.msg);
+          }
+        }).catch(function (err) {
+          loading.close();
+        });
+      },
+      handleTabClick(tab, event) {
+        switch (tab.name) {
+          case "1":
+            this.getJoinMemberList();
+            break;
+          case "2":
+            this.getJoinMemberList();
+            break;
+          case "3":
+            ;
+            break;
+          case "4":
+            ;
+            break;
+          case "5":
+            this.getLeaveMemberList();
+            break;
+          default:
+            break;
+        }
+      },
+      uploadFileNull(file) {
+
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },
+      handleDownload(file) {
+        //console.log(file);
+        downLoadZip("/system/file/download/" + file.uid);
+
+      },
+      getPlanFileList() {
+        this.planFileList = [];
+        listFile({'uuid': this.form.planUuid}).then(response => {
+          let files = response.rows;
+          for (let i = 0; i < files.length; i++) {
+            let file = {};
+            file.name = files[i].fileName;
+            file.url = process.env.VUE_APP_BASE_API + files[i].filePath;
+            file.uid = files[i].id;
+            this.planFileList.push(file);
+          }
+        });
+      },
+      getPicFileList() {
+        this.picFileList = [];
+        listFile({'uuid': this.form.activityUuid, 'fileTypeValue': 'pic'}).then(response => {
+          let files = response.rows;
+          for (let i = 0; i < files.length; i++) {
+            let file = {};
+            file.name = files[i].fileName;
+            file.url = process.env.VUE_APP_BASE_API + files[i].filePath;
+            file.uid = files[i].id;
+            this.picFileList.push(file);
+          }
+        });
+      },
+      getFileList() {
+        this.fileList = [];
+        listFile({'uuid': this.form.activityUuid, 'fileTypeValue': 'file'}).then(response => {
+          let files = response.rows;
+          for (let i = 0; i < files.length; i++) {
+            let file = {};
+            file.name = files[i].fileName;
+            file.url = process.env.VUE_APP_BASE_API + files[i].filePath;
+            file.uid = files[i].id;
+            this.fileList.push(file);
+          }
+        });
+      },
+      memberStatusFormat(row, column) {
+        return this.selectDictLabel(this.memberStatusOptions, row.status);
+      },
+      getJoinMemberList() {
+        this.memberList = [];
+        this.memberLoading = true;
+        listMember({"planUuid": this.form.planUuid, "partyOrgId": this.form.partyOrgId}).then(response => {
+          this.memberList = response.rows;
+          this.memberLoading = false;
+        });
+      },
+      getLeaveMemberList() {
+        this.leaveMemberList = [];
+        this.memberLoading = true;
+        listMember({
+          "planUuid": this.form.planUuid,
+          "partyOrgId": this.form.partyOrgId,
+          "status": "5"
+        }).then(response => {
+          this.leaveMemberList = response.rows;
+          this.memberLoading = false;
+        });
+      },
+      openOrgMemberTransfer(type) {
+        this.$refs.memberTransfer.open = true;
+        this.$refs.memberTransfer.title = "选择活动参与人";
+        this.$refs.memberTransfer.planUuid = this.form.planUuid;
+        this.$refs.memberTransfer.partyOrgId = this.form.partyOrgId;
+        this.$refs.memberTransfer.type = type;
+        this.$refs.memberTransfer.getPartyMemberSelect();
+      },
+      handleMemberUpdate(row, status) {
+        row.status = status
+        updateMember(row).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("修改成功");
+            this.getJoinMemberList();
+          } else {
+            this.msgError(response.msg);
+          }
+        });
+      },
+      handleMembersUpdate() {
+        let formData = new FormData();
+        formData.append("status", this.memberStatus);
+        formData.append("memberIds", this.memberIds.join(","));
+        updateMembers(formData).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("修改成功");
+            this.getJoinMemberList();
+          } else {
+            this.msgError(response.msg);
+          }
+        });
+
+      },
+      /** 删除按钮操作 */
+      handleMemberDelete(row) {
+        const memberIds = row.memberId || this.ids;
+        this.$confirm('是否确认删除该参与人?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function () {
+          return delMember(memberIds);
+        }).then(() => {
+          this.getJoinMemberList();
+          this.msgSuccess("删除成功");
+        }).catch(function () {
+        });
+      },
       /**返回地址*/
       setVenue(val) {
         this.form.venue = '';
@@ -512,6 +910,7 @@
       reset() {
         this.form = {
           activityId: undefined,
+          activityUuid: undefined,
           planUuid: undefined,
           cycle: undefined,
           partyMemberId: undefined,
@@ -564,7 +963,7 @@
 
         this.djPartyOrg = {
           partyOrgId: undefined,
-          partyOrgUuid:undefined,
+          partyOrgUuid: undefined,
           parentId: undefined,
           ancestors: undefined,
           partyOrgName: undefined,
@@ -585,6 +984,14 @@
           updateBy: undefined,
           updateTime: undefined
         };
+
+        this.planFileList = [];
+        this.picFileList = [];
+        this.fileList = [];
+        this.memberStatus = '1';
+        this.activeTab = "1";
+        this.mapOpen = false;
+
         this.resetForm("form");
       },
       /** 搜索按钮操作 */
@@ -599,7 +1006,7 @@
       },
       // 多选框选中数据
       handleSelectionChange(selection) {
-        this.ids = selection.map(item => item.activityId)
+        this.memberIds = selection.map(item => item.memberId)
         this.single = selection.length != 1
         this.multiple = !selection.length
       },
@@ -614,7 +1021,6 @@
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
-        this.mapOpen = false;
         const activityId = row.activityId || this.ids
         getDetailed(activityId).then(response => {
           this.form = response.data;
@@ -623,6 +1029,11 @@
           this.djPartyOrg = response.data.djPartyOrg;
           this.open = true;
           this.title = "活动管理";
+        }).then(() => {
+          this.getPlanFileList();
+          this.getJoinMemberList();
+          this.getPicFileList();
+          this.getFileList();
         });
       },
       /** 提交按钮 */
@@ -650,6 +1061,12 @@
                 }
               });
             }
+          } else {
+            setTimeout(() => {
+              var isError = document.getElementsByClassName("is-error");
+              isError[0].querySelector('input').focus();
+            }, 100);
+            return false;
           }
         });
       },

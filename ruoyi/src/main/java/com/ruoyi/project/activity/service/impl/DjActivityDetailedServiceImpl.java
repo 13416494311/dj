@@ -2,6 +2,7 @@ package com.ruoyi.project.activity.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -106,6 +107,7 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     @Override
     public int insertDjActivityDetailed(DjActivityDetailed djActivityDetailed)
     {
+        djActivityDetailed.setActivityUuid(UUID.randomUUID().toString());
         djActivityDetailed.setCreateBy(SecurityUtils.getUsername());
         djActivityDetailed.setCreateTime(DateUtils.getNowDate());
         return djActivityDetailedMapper.insertDjActivityDetailed(djActivityDetailed);

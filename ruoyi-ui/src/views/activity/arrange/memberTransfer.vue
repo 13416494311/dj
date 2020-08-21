@@ -59,6 +59,7 @@
       return {
         planUuid:undefined,
         partyOrgId:undefined,
+        type:undefined,
         // 弹出层标题
         title: "选择党组织",
         titles: ["未选成员", "已选成员"],
@@ -160,6 +161,7 @@
         formData.append("planUuid", this.planUuid);
         formData.append("partyOrgId", this.partyOrgId);
         formData.append("partyMemberIds", this.value.join(","));
+        formData.append("type", this.type);
         addMemberList(formData).then(response => {
           if (response.code === 200) {
             this.msgSuccess("新增成功");

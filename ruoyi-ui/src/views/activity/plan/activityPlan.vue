@@ -336,7 +336,8 @@
             :class="{hide:disabled}"
             accept="image/*,.doc,.docx,.xls,.xlsx,.pdf,.ppt,.zip,.txt">
             <i slot="default" class="el-icon-plus"></i>
-            <div slot="file" slot-scope="{file}">
+            <div slot="file" slot-scope="{file}" style="display: inline">
+              <div style="height: 70%">
               <img v-if="'jpeg,jpg,gif,png'.indexOf(file.name.split('.')[1]) != -1"
                    class="el-upload-list__item-thumbnail"
 
@@ -361,9 +362,11 @@
                       @click="handleRemove(file)">
                       <i class="el-icon-delete"></i>
                     </span>
-                    <span class="el-upload-list__item-file-name">{{file.name}}</span>
                   </span>
-
+              </div>
+              <div style="height: 30%">
+                <span class="file-name">{{file.name}}</span>
+              </div>
             </div>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible"
