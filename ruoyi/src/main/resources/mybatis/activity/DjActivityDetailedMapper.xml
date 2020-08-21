@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         detailed.actual_start_time, detailed.actual_end_time, detailed.recorder, detailed.mentors,
         detailed.presenter, detailed.speaker, detailed.allow_comment,
         detailed.activity_vote_id, detailed.activity_exam_id, detailed.status,
-        detailed.del_flag, detailed.create_by, detailed.create_time,detailed. update_by,
+        detailed.del_flag, detailed.create_by, detailed.create_time,detailed.update_by,
         detailed.update_time
         from dj_activity_detailed detailed
     </sql>
@@ -79,41 +79,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="activityVoteId != null "> and detailed.activity_vote_id = #{activityVoteId}</if>
             <if test="activityExamId != null "> and detailed.activity_exam_id = #{activityExamId}</if>
             <if test="status != null  and status != ''"> and detailed.status = #{status}</if>
+            ${dataScope}
         </where>
     </select>
 
-    <select id="selectDetailedListByParamMap" parameterType="Map" resultMap="DjActivityDetailedResult">
+    <select id="selectDetailedListByParam" parameterType="DjActivityParams" resultMap="DjActivityDetailedResult">
         <include refid="selectDjActivityDetailed"/>
         left join dj_activity_arrange arrange
         on arrange.plan_uuid = detailed.plan_uuid  and arrange.party_org_id = detailed.party_org_id
         left join dj_activity_plan plan on arrange.plan_uuid = plan.plan_uuid
         <where>
             arrange.status ='2'
-            <if test="activityUuid != null  and activityUuid != ''"> and detailed.activity_uuid = #{activityUuid}</if>
-            <if test="planUuid != null  and planUuid != ''"> and detailed.plan_uuid = #{planUuid}</if>
-            <if test="partyOrgId != null "> and detailed.party_org_id = #{partyOrgId}</if>
-            <if test="cycle != null  and cycle != ''"> and detailed.cycle = #{cycle}</if>
-            <if test="partyMemberId != null "> and detailed.party_member_id = #{partyMemberId}</if>
-            <if test="venue != null  and venue != ''"> and detailed.venue = #{venue}</if>
-            <if test="activityContent != null  and activityContent != ''">
-                and detailed.activity_content = #{activityContent}</if>
-            <if test="planStartTime != null "> and detailed.plan_start_time = #{planStartTime}</if>
-            <if test="planEndTime != null "> and detailed.plan_end_time = #{planEndTime}</if>
-            <if test="activityPlanStartTime != null "> and detailed.activity_plan_start_time = #{activityPlanStartTime}</if>
-            <if test="activityPlanEndTime != null "> and detailed.activity_plan_end_time = #{activityPlanEndTime}</if>
-            <if test="actualStartTime != null "> and detailed.actual_start_time = #{actualStartTime}</if>
-            <if test="actualEndTime != null "> and detailed.actual_end_time = #{actualEndTime}</if>
-            <if test="recorder != null  and recorder != ''"> and detailed.recorder = #{recorder}</if>
-            <if test="mentors != null  and mentors != ''"> and detailed.mentors = #{mentors}</if>
-            <if test="presenter != null  and presenter != ''"> and detailed.presenter = #{presenter}</if>
-            <if test="speaker != null  and speaker != ''"> and detailed.speaker = #{speaker}</if>
-            <if test="allowComment != null  and allowComment != ''"> and detailed.allow_comment = #{allowComment}</if>
-            <if test="activityVoteId != null "> and detailed.activity_vote_id = #{activityVoteId}</if>
-            <if test="activityExamId != null "> and detailed.activity_exam_id = #{activityExamId}</if>
-            <if test="status != null  and status != ''"> and detailed.status = #{status}</if>
             <if test="activityTheme != null  and activityTheme != ''">
                 and plan.activity_theme like concat('%', #{activityTheme}, '%')
             </if>
+            ${dataScope}
         </where>
     </select>
 

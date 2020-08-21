@@ -38,38 +38,52 @@
           from dj_activity_plan
     </sql>
 
-    <select id="selectDjActivityPlanList" parameterType="DjActivityPlan" resultMap="DjActivityPlanResult">
-        <include refid="selectDjActivityPlanVo"/>
-        <where>
-            <if test="planUuid != null  and planUuid != ''">and plan_uuid = #{planUuid}</if>
-            <if test="activitySources != null  and activitySources != ''">and activity_sources = #{activitySources}</if>
-            <if test="activityTheme != null  and activityTheme != ''">
-                and activity_theme like concat('%', #{activityTheme}, '%')
-            </if>
-            <if test="activityType != null  and activityType != ''">and activity_type = #{activityType}</if>
-            <if test="conveneCycle != null  and conveneCycle != ''">and convene_cycle = #{conveneCycle}</if>
-            <if test="cycleStartTime != null ">and cycle_start_time = #{cycleStartTime}</if>
-            <if test="cycleEndTime != null ">and cycle_end_time = #{cycleEndTime}</if>
-            <if test="cycleStartYear != null  and cycleStartYear != ''">and cycle_start_year = #{cycleStartYear}</if>
-            <if test="cycleEndYear != null  and cycleEndYear != ''">and cycle_end_year = #{cycleEndYear}</if>
+    <sql id="selectDjActivityPlan">
+        select p.plan_id, p.plan_uuid, p.activity_sources, p.activity_theme, p.activity_type,
+         p.convene_cycle, p.cycle_start_time, p.cycle_end_time, p.cycle_start_year,
+         p.cycle_end_year, p.cycle_start_month_unit,p.cycle_end_month_unit,
+          p.cycle_start_quarter_unit,p.cycle_end_quarter_unit,
+         p.act_plan_requirements, p.status, p.del_flag, p.create_by,
+         p. create_time, p.update_by,p.update_time
+          from dj_activity_plan p
+    </sql>
 
-            <if test="cycleStartMonthUnit != null  and cycleStartMonthUnit != ''">and cycle_start_month_unit =
+    <select id="selectDjActivityPlanList" parameterType="DjActivityPlan" resultMap="DjActivityPlanResult">
+        <include refid="selectDjActivityPlan"/>
+        left join sys_user u on u.user_id = p.create_by
+        left join dj_party_member m on m.member_id = u.party_member_id
+        left join dj_party_org o on o.party_org_id = m.party_org_id
+        <where>
+            <if test="planUuid != null  and planUuid != ''">and p.plan_uuid = #{planUuid}</if>
+            <if test="activitySources != null  and activitySources != ''">and p.activity_sources = #{activitySources}</if>
+            <if test="activityTheme != null  and activityTheme != ''">
+                and p.activity_theme like concat('%', #{activityTheme}, '%')
+            </if>
+            <if test="activityType != null  and activityType != ''">and p.activity_type = #{activityType}</if>
+            <if test="conveneCycle != null  and conveneCycle != ''">and p.convene_cycle = #{conveneCycle}</if>
+            <if test="cycleStartTime != null ">and p.cycle_start_time = #{cycleStartTime}</if>
+            <if test="cycleEndTime != null ">and p.cycle_end_time = #{cycleEndTime}</if>
+            <if test="cycleStartYear != null  and cycleStartYear != ''">and p.cycle_start_year = #{cycleStartYear}</if>
+            <if test="cycleEndYear != null  and cycleEndYear != ''">and p.cycle_end_year = #{cycleEndYear}</if>
+
+            <if test="cycleStartMonthUnit != null  and cycleStartMonthUnit != ''">and p.cycle_start_month_unit =
                 #{cycleStartMonthUnit}
             </if>
-            <if test="cycleEndMonthUnit != null  and cycleEndMonthUnit != ''">and cycle_end_month_unit =
+            <if test="cycleEndMonthUnit != null  and cycleEndMonthUnit != ''">and p.cycle_end_month_unit =
                 #{cycleEndMonthUnit}
             </if>
-            <if test="cycleStartQuarterUnit != null  and cycleStartQuarterUnit != ''">and cycle_start_quarter_unit =
+            <if test="cycleStartQuarterUnit != null  and cycleStartQuarterUnit != ''">and p.cycle_start_quarter_unit =
                 #{cycleStartQuarterUnit}
             </if>
-            <if test="cycleEndQuarterUnit != null  and cycleEndQuarterUnit != ''">and cycle_end_quarter_unit =
+            <if test="cycleEndQuarterUnit != null  and cycleEndQuarterUnit != ''">and p.cycle_end_quarter_unit =
                 #{cycleEndQuarterUnit}
             </if>
 
-            <if test="actPlanRequirements != null  and actPlanRequirements != ''">and act_plan_requirements =
+            <if test="actPlanRequirements != null  and actPlanRequirements != ''">and p.act_plan_requirements =
                 #{actPlanRequirements}
             </if>
-            <if test="status != null  and status != ''">and status = #{status}</if>
+            <if test="status != null  and status != ''">and p.status = #{status}</if>
+            ${dataScope}
         </where>
     </select>
 

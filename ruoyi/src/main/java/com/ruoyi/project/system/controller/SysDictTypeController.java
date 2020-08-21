@@ -25,7 +25,7 @@ import com.ruoyi.project.system.service.ISysDictTypeService;
 
 /**
  * 数据字典信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -76,7 +76,7 @@ public class SysDictTypeController extends BaseController
         {
             return AjaxResult.error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
-        dict.setCreateBy(SecurityUtils.getUsername());
+        dict.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         return toAjax(dictTypeService.insertDictType(dict));
     }
 
@@ -92,7 +92,7 @@ public class SysDictTypeController extends BaseController
         {
             return AjaxResult.error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
-        dict.setUpdateBy(SecurityUtils.getUsername());
+        dict.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         return toAjax(dictTypeService.updateDictType(dict));
     }
 

@@ -67,7 +67,7 @@ public class DjPartyOrgPostServiceImpl implements IDjPartyOrgPostService
     @Override
     public int insertDjPartyOrgPost(DjPartyOrgPost djPartyOrgPost)
     {
-        djPartyOrgPost.setCreateBy(SecurityUtils.getUsername());
+        djPartyOrgPost.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         djPartyOrgPost.setCreateTime(DateUtils.getNowDate());
         return djPartyOrgPostMapper.insertDjPartyOrgPost(djPartyOrgPost);
     }
@@ -81,7 +81,7 @@ public class DjPartyOrgPostServiceImpl implements IDjPartyOrgPostService
     @Override
     public int updateDjPartyOrgPost(DjPartyOrgPost djPartyOrgPost)
     {
-        djPartyOrgPost.setUpdateBy(SecurityUtils.getUsername());
+        djPartyOrgPost.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djPartyOrgPost.setUpdateTime(DateUtils.getNowDate());
         return djPartyOrgPostMapper.updateDjPartyOrgPost(djPartyOrgPost);
     }

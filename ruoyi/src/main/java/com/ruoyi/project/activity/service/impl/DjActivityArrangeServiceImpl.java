@@ -7,6 +7,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.activity.domain.DjActivityDetailed;
+import com.ruoyi.project.activity.domain.DjActivityParams;
 import com.ruoyi.project.activity.mapper.DjActivityPlanMapper;
 import com.ruoyi.project.activity.service.IDjActivityDetailedService;
 import com.ruoyi.project.activity.service.IDjActivityPlanService;
@@ -92,9 +93,9 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
      * @return 活动安排
      */
     @Override
-    public List<DjActivityArrange> selectArrangeListByParamMap(Map<String,Object> map)
+    public List<DjActivityArrange> selectArrangeListByParam(DjActivityParams params)
     {
-        List<DjActivityArrange> list = djActivityArrangeMapper.selectArrangeListByParamMap(map);
+        List<DjActivityArrange> list = djActivityArrangeMapper.selectArrangeListByParam(params);
         list.stream().forEach(arrange->{
             if(StringUtils.isNotNull(arrange.getPartyMemberId())){
                 arrange.setDjPartyMember(djPartyMemberService.selectDjPartyMemberById(arrange.getPartyMemberId()));
@@ -118,7 +119,7 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
     @Override
     public int insertDjActivityArrange(DjActivityArrange djActivityArrange)
     {
-        djActivityArrange.setCreateBy(SecurityUtils.getUsername());
+        djActivityArrange.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         djActivityArrange.setCreateTime(DateUtils.getNowDate());
         return djActivityArrangeMapper.insertDjActivityArrange(djActivityArrange);
     }
@@ -143,7 +144,7 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
             activityDetailed.setStatus("0");
             djActivityDetailedService.updateByPlanUuidAndPartyOrgId(activityDetailed);
         }
-        djActivityArrange.setUpdateBy(SecurityUtils.getUsername());
+        djActivityArrange.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djActivityArrange.setUpdateTime(DateUtils.getNowDate());
         return djActivityArrangeMapper.updateDjActivityArrange(djActivityArrange);
     }

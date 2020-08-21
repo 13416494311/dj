@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.activity.domain.DjActivityParams;
 import com.ruoyi.project.activity.service.IDjActivityPlanService;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
@@ -81,9 +82,9 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     }
 
     @Override
-    public List<DjActivityDetailed> selectDetailedListByParamMap(Map<String,Object> map)
+    public List<DjActivityDetailed> selectDetailedListByParam(DjActivityParams params)
     {
-        List<DjActivityDetailed> list = djActivityDetailedMapper.selectDetailedListByParamMap(map);
+        List<DjActivityDetailed> list = djActivityDetailedMapper.selectDetailedListByParam(params);
         list.stream().forEach(detailed->{
             if(StringUtils.isNotNull(detailed.getPartyMemberId())){
                 detailed.setDjPartyMember(djPartyMemberService.selectDjPartyMemberById(detailed.getPartyMemberId()));
@@ -108,7 +109,7 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     public int insertDjActivityDetailed(DjActivityDetailed djActivityDetailed)
     {
         djActivityDetailed.setActivityUuid(UUID.randomUUID().toString());
-        djActivityDetailed.setCreateBy(SecurityUtils.getUsername());
+        djActivityDetailed.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         djActivityDetailed.setCreateTime(DateUtils.getNowDate());
         return djActivityDetailedMapper.insertDjActivityDetailed(djActivityDetailed);
     }
@@ -122,7 +123,7 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     @Override
     public int updateDjActivityDetailed(DjActivityDetailed djActivityDetailed)
     {
-        djActivityDetailed.setUpdateBy(SecurityUtils.getUsername());
+        djActivityDetailed.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djActivityDetailed.setUpdateTime(DateUtils.getNowDate());
         return djActivityDetailedMapper.updateDjActivityDetailed(djActivityDetailed);
     }
@@ -131,7 +132,7 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     public int updateByPlanUuidAndPartyOrgId(DjActivityDetailed djActivityDetailed)
     {
 
-        djActivityDetailed.setUpdateBy(SecurityUtils.getUsername());
+        djActivityDetailed.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djActivityDetailed.setUpdateTime(DateUtils.getNowDate());
         return djActivityDetailedMapper.updateByPlanUuidAndPartyOrgId(djActivityDetailed);
     }

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
+import com.ruoyi.project.activity.domain.DjActivityParams;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,12 +38,11 @@ public class DjActivityArrangeController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('activity:arrange:list')")
     @GetMapping("/listByParam")
-    public TableDataInfo listByParam(String activityTheme)
+    @DataScope(partyOrgAlias = "arrange")
+    public TableDataInfo listByParam(DjActivityParams params)
     {
         startPage();
-        Map<String,Object> map = new HashMap<>();
-        map.put("activityTheme",activityTheme);
-        List<DjActivityArrange> list = djActivityArrangeService.selectArrangeListByParamMap(map);
+        List<DjActivityArrange> list = djActivityArrangeService.selectArrangeListByParam(params);
         return getDataTable(list);
     }
 

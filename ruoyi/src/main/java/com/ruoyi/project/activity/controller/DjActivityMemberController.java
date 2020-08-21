@@ -36,7 +36,7 @@ public class DjActivityMemberController extends BaseController
     /**
      * 查询活动参与人列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:member:list')")
+
     @GetMapping("/list")
     public TableDataInfo list(DjActivityMember djActivityMember)
     {
@@ -48,7 +48,7 @@ public class DjActivityMemberController extends BaseController
     /**
      * 导出活动参与人列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:member:export')")
+
     @Log(title = "活动参与人", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(DjActivityMember djActivityMember)
@@ -61,7 +61,7 @@ public class DjActivityMemberController extends BaseController
     /**
      * 获取活动参与人详细信息
      */
-    @PreAuthorize("@ss.hasPermi('activity:member:query')")
+
     @GetMapping(value = "/{memberId}")
     public AjaxResult getInfo(@PathVariable("memberId") Long memberId)
     {
@@ -71,7 +71,7 @@ public class DjActivityMemberController extends BaseController
     /**
      * 新增活动参与人
      */
-    @PreAuthorize("@ss.hasPermi('activity:member:add')")
+
     @Log(title = "活动参与人", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody DjActivityMember djActivityMember)
@@ -101,7 +101,7 @@ public class DjActivityMemberController extends BaseController
     /**
      * 修改活动参与人
      */
-    @PreAuthorize("@ss.hasPermi('activity:member:edit')")
+
     @Log(title = "活动参与人", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody DjActivityMember djActivityMember)
@@ -125,7 +125,7 @@ public class DjActivityMemberController extends BaseController
     /**
      * 删除活动参与人
      */
-    @PreAuthorize("@ss.hasPermi('activity:member:remove')")
+
     @Log(title = "活动参与人", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{memberIds}")
     public AjaxResult remove(@PathVariable Long[] memberIds)

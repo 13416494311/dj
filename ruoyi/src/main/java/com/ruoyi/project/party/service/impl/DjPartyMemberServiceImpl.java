@@ -3,14 +3,19 @@ package com.ruoyi.project.party.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.constant.UserConstants;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
+import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
+import com.ruoyi.project.system.service.ISysConfigService;
 import com.ruoyi.project.system.service.ISysDeptService;
+import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +34,10 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     private IDjPartyOrgService djPartyOrgService;
     @Autowired
     private ISysDeptService deptService;
+    @Autowired
+    private ISysConfigService configService;
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 查询党员信息
@@ -40,7 +49,9 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     public DjPartyMember selectDjPartyMemberById(Long memberId)
     {
         DjPartyMember partyMember = djPartyMemberMapper.selectDjPartyMemberById(memberId);
-        partyMember.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(partyMember.getPartyOrgId()));
+        if(StringUtils.isNotNull(partyMember.getPartyOrgId())){
+            partyMember.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(partyMember.getPartyOrgId()));
+        }
         return partyMember;
     }
 
@@ -75,7 +86,26 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     @Override
     public int insertDjPartyMember(DjPartyMember djPartyMember)
     {
-        return djPartyMemberMapper.insertDjPartyMember(djPartyMember);
+        djPartyMember.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        djPartyMember.setCreateTime(DateUtils.getNowDate());
+        djPartyMemberMapper.insertDjPartyMember(djPartyMember);
+
+        SysUser sysUser = new SysUser();
+        sysUser.setAvatar(djPartyMember.getAvatar());
+        sysUser.setDeptId(djPartyMember.getDeptId());
+        sysUser.setUserName(djPartyMember.getMemberName());
+        sysUser.setNickName(djPartyMember.getMemberName());
+        sysUser.setPartyMemberId(djPartyMember.getMemberId());
+        sysUser.setSex(djPartyMember.getSex());
+        sysUser.setPhonenumber(djPartyMember.getMobile());
+        sysUser.setEmail(djPartyMember.getEmail());
+        String password = configService.selectConfigByKey("sys.user.initPassword");
+        sysUser.setPassword(SecurityUtils.encryptPassword(password));
+        sysUser.setRoleIds(new Long[]{Long.valueOf(2)});  //设置普通角色
+        sysUser.setPostIds(new Long[]{Long.valueOf(4)});  //设置普通员工
+        sysUser.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        sysUser.setCreateTime(DateUtils.getNowDate());
+        return userService.insertUser(sysUser);
     }
 
     /**
@@ -87,6 +117,22 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     @Override
     public int updateDjPartyMember(DjPartyMember djPartyMember)
     {
+
+        SysUser sysUser = userService.selectUserByPartyMemberId(djPartyMember.getMemberId());
+        sysUser.setAvatar(djPartyMember.getAvatar());
+        sysUser.setDeptId(djPartyMember.getDeptId());
+        sysUser.setUserName(djPartyMember.getMemberName());
+        sysUser.setNickName(djPartyMember.getMemberName());
+        sysUser.setPartyMemberId(djPartyMember.getMemberId());
+        sysUser.setSex(djPartyMember.getSex());
+        sysUser.setPhonenumber(djPartyMember.getMobile());
+        sysUser.setEmail(djPartyMember.getEmail());
+        sysUser.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        sysUser.setUpdateTime(DateUtils.getNowDate());
+        userService.updateUser(sysUser);
+
+        djPartyMember.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        djPartyMember.setUpdateTime(DateUtils.getNowDate());
         return djPartyMemberMapper.updateDjPartyMember(djPartyMember);
     }
 

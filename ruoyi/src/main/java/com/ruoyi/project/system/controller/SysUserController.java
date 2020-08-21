@@ -32,7 +32,7 @@ import com.ruoyi.project.system.service.ISysUserService;
 
 /**
  * 用户信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -132,7 +132,7 @@ public class SysUserController extends BaseController
         {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
-        user.setCreateBy(SecurityUtils.getUsername());
+        user.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         return toAjax(userService.insertUser(user));
     }
@@ -154,7 +154,7 @@ public class SysUserController extends BaseController
         {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
-        user.setUpdateBy(SecurityUtils.getUsername());
+        user.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         return toAjax(userService.updateUser(user));
     }
 
@@ -179,7 +179,7 @@ public class SysUserController extends BaseController
     {
         userService.checkUserAllowed(user);
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        user.setUpdateBy(SecurityUtils.getUsername());
+        user.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         return toAjax(userService.resetPwd(user));
     }
 
@@ -192,7 +192,7 @@ public class SysUserController extends BaseController
     public AjaxResult changeStatus(@RequestBody SysUser user)
     {
         userService.checkUserAllowed(user);
-        user.setUpdateBy(SecurityUtils.getUsername());
+        user.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         return toAjax(userService.updateUserStatus(user));
     }
 }

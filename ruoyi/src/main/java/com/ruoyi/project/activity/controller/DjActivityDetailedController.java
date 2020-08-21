@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
+import com.ruoyi.project.activity.domain.DjActivityParams;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,12 +55,11 @@ public class DjActivityDetailedController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('activity:detailed:list')")
     @GetMapping("/listByParam")
-    public TableDataInfo list(String activityTheme)
+    @DataScope(partyOrgAlias = "detailed")
+    public TableDataInfo list(DjActivityParams params)
     {
         startPage();
-        Map<String,Object> map = new HashMap<>();
-        map.put("activityTheme",activityTheme);
-        List<DjActivityDetailed> list = djActivityDetailedService.selectDetailedListByParamMap(map);
+        List<DjActivityDetailed> list = djActivityDetailedService.selectDetailedListByParam(params);
         return getDataTable(list);
     }
 

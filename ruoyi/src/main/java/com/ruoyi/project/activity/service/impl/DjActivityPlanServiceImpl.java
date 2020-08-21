@@ -69,7 +69,7 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
      */
     @Override
     public int insertDjActivityPlan(DjActivityPlan djActivityPlan) {
-        djActivityPlan.setCreateBy(SecurityUtils.getUsername());
+        djActivityPlan.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         djActivityPlan.setCreateTime(DateUtils.getNowDate());
         createActivityDetailed(djActivityPlan);
         return djActivityPlanMapper.insertDjActivityPlan(djActivityPlan);
@@ -83,7 +83,7 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
      */
     @Override
     public int updateDjActivityPlan(DjActivityPlan djActivityPlan) {
-        djActivityPlan.setUpdateBy(SecurityUtils.getUsername());
+        djActivityPlan.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djActivityPlan.setUpdateTime(DateUtils.getNowDate());
         createActivityDetailed(djActivityPlan);
         return djActivityPlanMapper.updateDjActivityPlan(djActivityPlan);

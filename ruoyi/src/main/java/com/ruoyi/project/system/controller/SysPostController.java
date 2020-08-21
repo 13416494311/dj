@@ -25,7 +25,7 @@ import com.ruoyi.project.system.service.ISysPostService;
 
 /**
  * 岗位信息操作处理
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -46,7 +46,7 @@ public class SysPostController extends BaseController
         List<SysPost> list = postService.selectPostList(post);
         return getDataTable(list);
     }
-    
+
     @Log(title = "岗位管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:config:export')")
     @GetMapping("/export")
@@ -83,7 +83,7 @@ public class SysPostController extends BaseController
         {
             return AjaxResult.error("新增岗位'" + post.getPostName() + "'失败，岗位编码已存在");
         }
-        post.setCreateBy(SecurityUtils.getUsername());
+        post.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         return toAjax(postService.insertPost(post));
     }
 
@@ -103,7 +103,7 @@ public class SysPostController extends BaseController
         {
             return AjaxResult.error("修改岗位'" + post.getPostName() + "'失败，岗位编码已存在");
         }
-        post.setUpdateBy(SecurityUtils.getUsername());
+        post.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         return toAjax(postService.updatePost(post));
     }
 

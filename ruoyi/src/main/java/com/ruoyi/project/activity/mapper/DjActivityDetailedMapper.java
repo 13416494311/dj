@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.project.activity.domain.DjActivityDetailed;
+import com.ruoyi.project.activity.domain.DjActivityParams;
 
 /**
  * 活动详情Mapper接口
@@ -35,7 +36,7 @@ public interface DjActivityDetailedMapper
      * @param map 活动详情
      * @return 活动详情集合
      */
-    public List<DjActivityDetailed> selectDetailedListByParamMap(Map<String,Object> map);
+    public List<DjActivityDetailed> selectDetailedListByParam(DjActivityParams params);
 
     /**
      * 新增活动详情

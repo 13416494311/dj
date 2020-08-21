@@ -25,7 +25,7 @@ import com.ruoyi.project.system.service.ISysRoleService;
 
 /**
  * 角色信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -80,7 +80,7 @@ public class SysRoleController extends BaseController
         {
             return AjaxResult.error("新增角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
-        role.setCreateBy(SecurityUtils.getUsername());
+        role.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         return toAjax(roleService.insertRole(role));
 
     }
@@ -102,7 +102,7 @@ public class SysRoleController extends BaseController
         {
             return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
-        role.setUpdateBy(SecurityUtils.getUsername());
+        role.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         return toAjax(roleService.updateRole(role));
     }
 
@@ -127,7 +127,7 @@ public class SysRoleController extends BaseController
     public AjaxResult changeStatus(@RequestBody SysRole role)
     {
         roleService.checkRoleAllowed(role);
-        role.setUpdateBy(SecurityUtils.getUsername());
+        role.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         return toAjax(roleService.updateRoleStatus(role));
     }
 

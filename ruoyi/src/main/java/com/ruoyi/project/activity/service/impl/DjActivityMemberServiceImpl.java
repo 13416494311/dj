@@ -65,7 +65,7 @@ public class DjActivityMemberServiceImpl implements IDjActivityMemberService
     @Override
     public int insertDjActivityMember(DjActivityMember djActivityMember)
     {
-        djActivityMember.setCreateBy(SecurityUtils.getUsername());
+        djActivityMember.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         djActivityMember.setCreateTime(DateUtils.getNowDate());
         return djActivityMemberMapper.insertDjActivityMember(djActivityMember);
     }
@@ -79,7 +79,7 @@ public class DjActivityMemberServiceImpl implements IDjActivityMemberService
     @Override
     public int updateDjActivityMember(DjActivityMember djActivityMember)
     {
-        djActivityMember.setUpdateBy(SecurityUtils.getUsername());
+        djActivityMember.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djActivityMember.setUpdateTime(DateUtils.getNowDate());
         return djActivityMemberMapper.updateDjActivityMember(djActivityMember);
     }

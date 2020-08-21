@@ -54,7 +54,7 @@ public class SysFileServiceImpl implements ISysFileService
     @Override
     public int insertSysFile(SysFile sysFile)
     {
-        sysFile.setCreateBy(SecurityUtils.getUsername());
+        sysFile.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         sysFile.setCreateTime(DateUtils.getNowDate());
         return sysFileMapper.insertSysFile(sysFile);
     }
@@ -68,7 +68,7 @@ public class SysFileServiceImpl implements ISysFileService
     @Override
     public int updateSysFile(SysFile sysFile)
     {
-        sysFile.setUpdateBy(SecurityUtils.getUsername());
+        sysFile.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         sysFile.setUpdateTime(DateUtils.getNowDate());
         return sysFileMapper.updateSysFile(sysFile);
     }

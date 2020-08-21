@@ -10,6 +10,8 @@ import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.config.RuoYiConfig;
 import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
+import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.service.ISysConfigService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -78,8 +80,6 @@ public class DjPartyMemberController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody DjPartyMember djPartyMember)
     {
-        djPartyMember.setCreateBy(SecurityUtils.getUsername());
-        djPartyMember.setCreateTime(DateUtils.getNowDate());
         return toAjax(djPartyMemberService.insertDjPartyMember(djPartyMember));
     }
 
@@ -91,8 +91,7 @@ public class DjPartyMemberController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody DjPartyMember djPartyMember)
     {
-        djPartyMember.setUpdateBy(SecurityUtils.getUsername());
-        djPartyMember.setUpdateTime(DateUtils.getNowDate());
+
         return toAjax(djPartyMemberService.updateDjPartyMember(djPartyMember));
     }
 

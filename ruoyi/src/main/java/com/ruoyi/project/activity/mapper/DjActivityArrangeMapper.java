@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ruoyi.project.activity.domain.DjActivityArrange;
+import com.ruoyi.project.activity.domain.DjActivityParams;
 
 /**
  * 活动安排Mapper接口
@@ -29,7 +30,7 @@ public interface DjActivityArrangeMapper
      */
     public List<DjActivityArrange> selectDjActivityArrangeList(DjActivityArrange djActivityArrange);
 
-    public List<DjActivityArrange> selectArrangeListByParamMap(Map<String,Object> map);
+    public List<DjActivityArrange> selectArrangeListByParam(DjActivityParams params);
 
     /**
      * 新增活动安排

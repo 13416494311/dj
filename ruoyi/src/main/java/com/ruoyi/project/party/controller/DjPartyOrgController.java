@@ -125,7 +125,7 @@ public class DjPartyOrgController extends BaseController
         {
             return AjaxResult.error("新增党组织架构'" + djPartyOrg.getPartyOrgName() + "'失败，党组织架构名称已存在");
         }
-        djPartyOrg.setCreateBy(SecurityUtils.getUsername());
+        djPartyOrg.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         djPartyOrg.setCreateTime(DateUtils.getNowDate());
         return toAjax(djPartyOrgService.insertDjPartyOrg(djPartyOrg));
     }
@@ -151,7 +151,7 @@ public class DjPartyOrgController extends BaseController
         {
             return AjaxResult.error("该党组织架构包含未停用的子党组织架构！");
         }
-        djPartyOrg.setUpdateBy(SecurityUtils.getUsername());
+        djPartyOrg.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djPartyOrg.setUpdateTime(DateUtils.getNowDate());
         return toAjax(djPartyOrgService.updateDjPartyOrg(djPartyOrg));
     }

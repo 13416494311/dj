@@ -20,7 +20,7 @@ import com.ruoyi.project.system.domain.SysUser;
 
 /**
  * 数据过滤处理
- * 
+ *
  * @author ruoyi
  */
 @Aspect
@@ -52,6 +52,16 @@ public class DataScopeAspect
      */
     public static final String DATA_SCOPE_SELF = "5";
 
+    /**
+     * 党组织数据权限
+     */
+    public static final String DATA_SCOPE_PARTY_ORG = "6";
+
+    /**
+     * 党组织及以下数据权限
+     */
+    public static final String DATA_SCOPE_PARTY_ORG_AND_CHILD = "7";
+
     // 配置织入点
     @Pointcut("@annotation(com.ruoyi.framework.aspectj.lang.annotation.DataScope)")
     public void dataScopePointCut()
@@ -81,19 +91,20 @@ public class DataScopeAspect
             if (!currentUser.isAdmin())
             {
                 dataScopeFilter(joinPoint, currentUser, controllerDataScope.deptAlias(),
-                        controllerDataScope.userAlias());
+                        controllerDataScope.userAlias(),controllerDataScope.partyOrgAlias());
             }
         }
     }
 
     /**
      * 数据范围过滤
-     * 
+     *
      * @param joinPoint 切点
      * @param user 用户
      * @param alias 别名
      */
-    public static void dataScopeFilter(JoinPoint joinPoint, SysUser user, String deptAlias, String userAlias)
+    public static void dataScopeFilter(JoinPoint joinPoint, SysUser user,
+                                       String deptAlias, String userAlias, String partyOrgAlias)
     {
         StringBuilder sqlString = new StringBuilder();
 
@@ -132,6 +143,23 @@ public class DataScopeAspect
                     // 数据权限为仅本人且没有userAlias别名不查询任何数据
                     sqlString.append(" OR 1=0 ");
                 }
+            }
+            else if (DATA_SCOPE_PARTY_ORG.equals(dataScope))
+            {
+                if(StringUtils.isNotNull(user.getDjPartyMember())&&StringUtils.isNotNull(user.getDjPartyMember().getDjPartyOrg())){
+                    sqlString.append(StringUtils.format(" OR {}.party_org_id = {} ", partyOrgAlias,
+                            user.getDjPartyMember().getDjPartyOrg().getPartyOrgId()));
+                }
+
+            }
+            else if (DATA_SCOPE_PARTY_ORG_AND_CHILD.equals(dataScope))
+            {
+                if(StringUtils.isNotNull(user.getDjPartyMember())&&StringUtils.isNotNull(user.getDjPartyMember().getDjPartyOrg())){
+                    sqlString.append(StringUtils.format(
+                            " OR {}.party_org_id IN ( SELECT party_org_id FROM dj_party_org WHERE party_org_id = {} or find_in_set( {} , ancestors ) )",
+                            partyOrgAlias, user.getDjPartyMember().getDjPartyOrg().getPartyOrgId(),  user.getDjPartyMember().getDjPartyOrg().getPartyOrgId()));
+                }
+
             }
         }
 

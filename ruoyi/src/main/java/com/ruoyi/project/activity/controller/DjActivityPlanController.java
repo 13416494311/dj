@@ -1,6 +1,8 @@
 package com.ruoyi.project.activity.controller;
 
 import java.util.List;
+
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +40,7 @@ public class DjActivityPlanController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('activity:plan:list')")
     @GetMapping("/list")
+    @DataScope(partyOrgAlias = "o")
     public TableDataInfo list(DjActivityPlan djActivityPlan)
     {
         startPage();

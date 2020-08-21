@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * 数据权限过滤注解
- * 
+ *
  * @author ruoyi
  */
 @Target(ElementType.METHOD)
@@ -25,4 +25,9 @@ public @interface DataScope
      * 用户表的别名
      */
     public String userAlias() default "";
+
+    /**
+     * 党组织表的别名
+     */
+    public String partyOrgAlias() default "";
 }

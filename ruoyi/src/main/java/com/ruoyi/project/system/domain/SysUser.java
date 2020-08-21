@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import com.ruoyi.project.party.domain.DjPartyMember;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,7 +18,7 @@ import com.ruoyi.framework.web.domain.BaseEntity;
 
 /**
  * 用户对象 sys_user
- * 
+ *
  * @author ruoyi
  */
 public class SysUser extends BaseEntity
@@ -34,6 +36,10 @@ public class SysUser extends BaseEntity
     /** 用户账号 */
     @Excel(name = "登录名称")
     private String userName;
+
+    private Long partyMemberId ;
+
+    private DjPartyMember djPartyMember ;
 
     /** 用户昵称 */
     @Excel(name = "用户名称")
@@ -152,6 +158,22 @@ public class SysUser extends BaseEntity
     public void setUserName(String userName)
     {
         this.userName = userName;
+    }
+
+    public Long getPartyMemberId() {
+        return partyMemberId;
+    }
+
+    public void setPartyMemberId(Long partyMemberId) {
+        this.partyMemberId = partyMemberId;
+    }
+
+    public DjPartyMember getDjPartyMember() {
+        return djPartyMember;
+    }
+
+    public void setDjPartyMember(DjPartyMember djPartyMember) {
+        this.djPartyMember = djPartyMember;
     }
 
     @Email(message = "邮箱格式不正确")
@@ -297,7 +319,7 @@ public class SysUser extends BaseEntity
     {
         this.postIds = postIds;
     }
-    
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)

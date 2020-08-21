@@ -43,7 +43,7 @@ public class SysFileController extends BaseController
     /**
      * 查询附件列表
      */
-    @PreAuthorize("@ss.hasPermi('system:file:list')")
+
     @GetMapping("/list")
     public TableDataInfo list(SysFile sysFile)
     {
@@ -55,7 +55,7 @@ public class SysFileController extends BaseController
     /**
      * 导出附件列表
      */
-    @PreAuthorize("@ss.hasPermi('system:file:export')")
+
     @Log(title = "附件", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(SysFile sysFile)
@@ -68,7 +68,7 @@ public class SysFileController extends BaseController
     /**
      * 获取附件详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:file:query')")
+
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -78,7 +78,7 @@ public class SysFileController extends BaseController
     /**
      * 新增附件
      */
-    @PreAuthorize("@ss.hasPermi('system:file:add')")
+
     @Log(title = "附件", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysFile sysFile)
@@ -89,7 +89,7 @@ public class SysFileController extends BaseController
     /**
      * 修改附件
      */
-    @PreAuthorize("@ss.hasPermi('system:file:edit')")
+
     @Log(title = "附件", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysFile sysFile)
@@ -100,7 +100,7 @@ public class SysFileController extends BaseController
     /**
      * 删除附件
      */
-    @PreAuthorize("@ss.hasPermi('system:file:remove')")
+
     @Log(title = "附件", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

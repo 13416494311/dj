@@ -24,7 +24,7 @@ import com.ruoyi.project.system.service.ISysDictDataService;
 
 /**
  * 数据字典信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -80,7 +80,7 @@ public class SysDictDataController extends BaseController
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysDictData dict)
     {
-        dict.setCreateBy(SecurityUtils.getUsername());
+        dict.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         return toAjax(dictDataService.insertDictData(dict));
     }
 
@@ -92,7 +92,7 @@ public class SysDictDataController extends BaseController
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysDictData dict)
     {
-        dict.setUpdateBy(SecurityUtils.getUsername());
+        dict.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         return toAjax(dictDataService.updateDictData(dict));
     }
 

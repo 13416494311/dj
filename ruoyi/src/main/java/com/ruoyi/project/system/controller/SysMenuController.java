@@ -26,7 +26,7 @@ import com.ruoyi.project.system.service.ISysMenuService;
 
 /**
  * 菜单信息
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -100,7 +100,7 @@ public class SysMenuController extends BaseController
         {
             return AjaxResult.error("新增菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
         }
-        menu.setCreateBy(SecurityUtils.getUsername());
+        menu.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         return toAjax(menuService.insertMenu(menu));
     }
 
@@ -116,7 +116,7 @@ public class SysMenuController extends BaseController
         {
             return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
         }
-        menu.setUpdateBy(SecurityUtils.getUsername());
+        menu.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         return toAjax(menuService.updateMenu(menu));
     }
 

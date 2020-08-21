@@ -282,6 +282,14 @@ export default {
           label: "本部门及以下数据权限"
         },
         {
+          value: "6",
+          label: "本党组织数据权限"
+        },
+        {
+          value: "7",
+          label: "本党组织及以下数据权限"
+        },
+        {
           value: "5",
           label: "仅本人数据权限"
         }
