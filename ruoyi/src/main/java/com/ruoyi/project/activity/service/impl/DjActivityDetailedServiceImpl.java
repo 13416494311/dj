@@ -1,16 +1,25 @@
 package com.ruoyi.project.activity.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.activity.domain.DjActivityMember;
 import com.ruoyi.project.activity.domain.DjActivityParams;
+import com.ruoyi.project.activity.domain.DjActivityPlan;
+import com.ruoyi.project.activity.service.IDjActivityMemberService;
 import com.ruoyi.project.activity.service.IDjActivityPlanService;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
+import com.ruoyi.project.sys.domain.DjSysTodo;
+import com.ruoyi.project.sys.service.IDjSysTodoService;
+import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivityDetailedMapper;
@@ -31,9 +40,15 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     @Autowired
     private IDjActivityPlanService djActivityPlanService;
     @Autowired
+    private IDjActivityMemberService djActivityMemberService;
+    @Autowired
     private IDjPartyOrgService djPartyOrgService;
     @Autowired
     private IDjPartyMemberService djPartyMemberService;
+    @Autowired
+    private ISysUserService userService;
+    @Autowired
+    private IDjSysTodoService djSysTodoService;
 
     /**
      * 查询活动详情
@@ -45,6 +60,27 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     public DjActivityDetailed selectDjActivityDetailedById(Long activityId)
     {
         DjActivityDetailed detailed = djActivityDetailedMapper.selectDjActivityDetailedById(activityId);
+        if(StringUtils.isNotNull(detailed.getPartyMemberId())){
+            detailed.setDjPartyMember(djPartyMemberService.selectDjPartyMemberById(detailed.getPartyMemberId()));
+        }
+        if(StringUtils.isNotNull(detailed.getPartyOrgId())){
+            detailed.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(detailed.getPartyOrgId()));
+        }
+        if(StringUtils.isNotNull(detailed.getPlanUuid())){
+            detailed.setDjActivityPlan(djActivityPlanService.selectDjActivityPlanByPlanUuid(detailed.getPlanUuid()));
+        }
+        return detailed;
+    }
+
+    /**
+     * 查询活动详情
+     *
+     * @param detailedUuid 活动详情UUID
+     * @return 活动详情
+     */
+    @Override
+    public DjActivityDetailed selectDjActivityDetailedByDetailedUuid(String detailedUuid){
+        DjActivityDetailed detailed = djActivityDetailedMapper.selectDjActivityDetailedByDetailedUuid(detailedUuid);
         if(StringUtils.isNotNull(detailed.getPartyMemberId())){
             detailed.setDjPartyMember(djPartyMemberService.selectDjPartyMemberById(detailed.getPartyMemberId()));
         }
@@ -123,9 +159,66 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     @Override
     public int updateDjActivityDetailed(DjActivityDetailed djActivityDetailed)
     {
+        createTodo(djActivityDetailed);
         djActivityDetailed.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djActivityDetailed.setUpdateTime(DateUtils.getNowDate());
         return djActivityDetailedMapper.updateDjActivityDetailed(djActivityDetailed);
+    }
+
+    private void createTodo(DjActivityDetailed detailed){
+        DjActivityPlan activityPlan= djActivityPlanService.selectDjActivityPlanByPlanUuid(detailed.getPlanUuid());
+
+        DjActivityMember activityMember = new DjActivityMember();
+        activityMember.setPlanUuid(detailed.getPlanUuid());
+        activityMember.setPartyOrgId(detailed.getPartyOrgId());
+        List<DjActivityMember> activityMemberList = djActivityMemberService.selectDjActivityMemberList(activityMember);
+
+        switch (detailed.getStatus()){
+           case "2":
+               activityMemberList.stream().forEach(member->{
+                   SysUser user =userService.selectUserByPartyMemberId(member.getPartyMemberId());
+                   if(StringUtils.isNotNull(user)){
+                       DjSysTodo sysTodo = new DjSysTodo();
+                       sysTodo.setUuid(detailed.getDetailedUuid());
+                       sysTodo.setType("1"); //建言献策
+                       sysTodo.setTitle(activityPlan.getActivityTheme());
+                       sysTodo.setUrlName("ActivitySuggestions");
+                       sysTodo.setUrlPath("todo/activitySuggestions");
+                       sysTodo.setUserId(user.getUserId());
+                       sysTodo.setStatus("0");
+                       Map<String,String> map = new HashMap<String,String>();
+                       map.put("detailedUuid",detailed.getDetailedUuid());
+                       map.put("partyMemberId",member.getPartyMemberId().toString());
+                       sysTodo.setUrlParams(JSON.toJSONString(map));
+                       djSysTodoService.insertDjSysTodo(sysTodo);
+                   }
+               });
+               break;
+           case "4":
+               activityMemberList.stream().forEach(member->{
+                   SysUser user =userService.selectUserByPartyMemberId(member.getPartyMemberId());
+                   if(StringUtils.isNotNull(user)){
+                       DjSysTodo sysTodo = new DjSysTodo();
+                       sysTodo.setUuid(detailed.getDetailedUuid());
+                       sysTodo.setType("2"); //心得体会
+                       sysTodo.setTitle(activityPlan.getActivityTheme());
+                       sysTodo.setUrlName("ActivityExperience");
+                       sysTodo.setUrlPath("todo/activityExperience");
+                       sysTodo.setUserId(user.getUserId());
+                       sysTodo.setStatus("0");
+                       Map<String,String> map = new HashMap<String,String>();
+                       map.put("detailedUuid",detailed.getDetailedUuid());
+                       map.put("partyMemberId",member.getPartyMemberId().toString());
+                       sysTodo.setUrlParams(JSON.toJSONString(map));
+                       djSysTodoService.insertDjSysTodo(sysTodo);
+                   }
+               });
+               break;
+           case "6":
+               djSysTodoService.cancelDjSysTodoBatch(detailed.getDetailedUuid());
+               break;
+           default:break;
+       }
     }
 
     @Override

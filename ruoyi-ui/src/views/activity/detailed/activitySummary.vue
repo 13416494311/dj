@@ -20,7 +20,7 @@
             <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="20%">
+        <el-table-column v-if="!disabled" label="操作" align="center" class-name="small-padding fixed-width" min-width="20%">
           <template slot-scope="scope">
             <el-button
               size="mini"

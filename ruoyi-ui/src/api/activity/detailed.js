@@ -25,6 +25,13 @@ export function getDetailed(detailedId) {
     method: 'get'
   })
 }
+// 查询活动详情详细
+export function getDetailedByUuid(detailedUuid) {
+  return request({
+    url: '/activity/detailed/getByUuid/' + detailedUuid,
+    method: 'get'
+  })
+}
 
 // 新增活动详情
 export function addDetailed(data) {

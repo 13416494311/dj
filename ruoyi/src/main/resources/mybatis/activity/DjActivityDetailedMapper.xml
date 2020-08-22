@@ -102,6 +102,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where detailed_id = #{detailedId}
     </select>
 
+    <select id="selectDjActivityDetailedByDetailedUuid" parameterType="String" resultMap="DjActivityDetailedResult">
+        <include refid="selectDjActivityDetailedVo"/>
+        where detailed_uuid = #{detailedUuid}
+    </select>
+
     <insert id="insertDjActivityDetailed" parameterType="DjActivityDetailed">
         insert into dj_activity_detailed
         <trim prefix="(" suffix=")" suffixOverrides=",">

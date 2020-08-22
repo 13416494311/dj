@@ -83,6 +83,15 @@ public class DjActivityDetailedController extends BaseController
     }
 
     /**
+     * 获取活动详情详细信息
+     */
+    @GetMapping(value = "/getByUuid/{detailedUuid}")
+    public AjaxResult getByUuid(@PathVariable("detailedUuid") String detailedUuid)
+    {
+        return AjaxResult.success(djActivityDetailedService.selectDjActivityDetailedByDetailedUuid(detailedUuid));
+    }
+
+    /**
      * 新增活动详情
      */
     @PreAuthorize("@ss.hasPermi('activity:detailed:add')")

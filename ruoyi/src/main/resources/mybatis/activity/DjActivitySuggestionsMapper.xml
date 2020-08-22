@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.activity.mapper.DjActivitySuggestionsMapper">
+    
+    <resultMap type="DjActivitySuggestions" id="DjActivitySuggestionsResult">
+        <result property="suggestionsId"    column="suggestions_id"    />
+        <result property="suggestionsUuid"    column="suggestions_uuid"    />
+        <result property="detailedUuid"    column="detailed_uuid"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="partyMemberId"    column="party_member_id"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjActivitySuggestionsVo">
+        select suggestions_id, suggestions_uuid, detailed_uuid, title, content, party_member_id, del_flag, create_by, create_time, update_by, update_time from dj_activity_suggestions
+    </sql>
+
+    <select id="selectDjActivitySuggestionsList" parameterType="DjActivitySuggestions" resultMap="DjActivitySuggestionsResult">
+        <include refid="selectDjActivitySuggestionsVo"/>
+        <where>  
+            <if test="suggestionsUuid != null  and suggestionsUuid != ''"> and suggestions_uuid = #{suggestionsUuid}</if>
+            <if test="detailedUuid != null "> and detailed_uuid = #{detailedUuid}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="partyMemberId != null "> and party_member_id = #{partyMemberId}</if>
+        </where>
+    </select>
+    
+    <select id="selectDjActivitySuggestionsById" parameterType="Long" resultMap="DjActivitySuggestionsResult">
+        <include refid="selectDjActivitySuggestionsVo"/>
+        where suggestions_id = #{suggestionsId}
+    </select>
+        
+    <insert id="insertDjActivitySuggestions" parameterType="DjActivitySuggestions" useGeneratedKeys="true" keyProperty="suggestionsId">
+        insert into dj_activity_suggestions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="suggestionsUuid != null  and suggestionsUuid != ''">suggestions_uuid,</if>
+            <if test="detailedUuid != null ">detailed_uuid,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="partyMemberId != null ">party_member_id,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="suggestionsUuid != null  and suggestionsUuid != ''">#{suggestionsUuid},</if>
+            <if test="detailedUuid != null ">#{detailedUuid},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="partyMemberId != null ">#{partyMemberId},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjActivitySuggestions" parameterType="DjActivitySuggestions">
+        update dj_activity_suggestions
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="suggestionsUuid != null  and suggestionsUuid != ''">suggestions_uuid = #{suggestionsUuid},</if>
+            <if test="detailedUuid != null ">detailed_uuid = #{detailedUuid},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="partyMemberId != null ">party_member_id = #{partyMemberId},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where suggestions_id = #{suggestionsId}
+    </update>
+
+    <delete id="deleteDjActivitySuggestionsById" parameterType="Long">
+        delete from dj_activity_suggestions where suggestions_id = #{suggestionsId}
+    </delete>
+
+    <delete id="deleteDjActivitySuggestionsByIds" parameterType="String">
+        delete from dj_activity_suggestions where suggestions_id in 
+        <foreach item="suggestionsId" collection="array" open="(" separator="," close=")">
+            #{suggestionsId}
+        </foreach>
+    </delete>
+    
+</mapper>

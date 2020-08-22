@@ -23,6 +23,14 @@ public interface IDjActivityDetailedService
     public DjActivityDetailed selectDjActivityDetailedById(Long activityId);
 
     /**
+     * 查询活动详情
+     *
+     * @param detailedUuid 活动详情uuID
+     * @return 活动详情
+     */
+    public DjActivityDetailed selectDjActivityDetailedByDetailedUuid(String detailedUuid);
+
+    /**
      * 查询活动详情列表
      *
      * @param djActivityDetailed 活动详情

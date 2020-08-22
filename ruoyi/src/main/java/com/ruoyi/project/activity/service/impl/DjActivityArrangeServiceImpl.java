@@ -141,7 +141,7 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
             activityDetailed.setPlanUuid(djActivityArrange.getPlanUuid());
             activityDetailed.setPartyMemberId(djActivityArrange.getPartyMemberId());
             activityDetailed.setVenue(djActivityArrange.getVenue());
-            activityDetailed.setStatus("0");
+            activityDetailed.setStatus("1");
             djActivityDetailedService.updateByPlanUuidAndPartyOrgId(activityDetailed);
         }
         djActivityArrange.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());

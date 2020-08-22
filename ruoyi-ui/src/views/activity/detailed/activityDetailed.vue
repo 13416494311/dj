@@ -37,20 +37,29 @@
                        :formatter="detailedStatusFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <!-- <el-button
-             size="small"
-             type="text"
-             icon="el-icon-search"
-             @click="handleSee(scope.row)"
-           >查看
-           </el-button>-->
           <el-button
+            size="small"
+            type="text"
+            icon="el-icon-search"
+            @click="handleSee(scope.row)"
+          >查看
+          </el-button>
+          <el-button
+            v-if="scope.row.status !='5' "
             size="small"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['activity:detailed:edit']"
           >活动管理
+          </el-button>
+          <el-button
+            v-if="scope.row.status =='5' "
+            size="small"
+            type="text"
+            icon="el-icon-download"
+            @click="handleExport(scope.row)"
+          >下载
           </el-button>
         </template>
       </el-table-column>
@@ -72,12 +81,17 @@
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">活动进度</span>
           </div>
-          <el-steps :active="activeStep" finish-status="success">
+          <el-steps v-if="!disabled6" :active="activeStep" finish-status="success">
             <el-step title="完善活动信息"></el-step>
             <el-step title="启动活动"></el-step>
             <el-step title="开始活动"></el-step>
             <el-step title="结束活动"></el-step>
             <el-step title="活动归档"></el-step>
+          </el-steps>
+          <el-steps v-if="disabled6" :active="activeStep" finish-status="success">
+            <el-step title="完善活动信息"></el-step>
+            <el-step title="启动活动"></el-step>
+            <el-step title="活动取消"></el-step>
           </el-steps>
         </el-card>
         <el-card shadow="always" style="margin-bottom: 30px;">
@@ -113,8 +127,9 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="负责人" prop="partyMemberName">
-                  <el-input :disabled="disabled" v-model="form.partyMemberName" placeholder="请输入负责人">
-                    <el-button :disabled="disabled" slot="append" icon="el-icon-search"
+                  <el-input :disabled="disabled || !disabled1" v-model="form.partyMemberName"
+                            placeholder="请输入负责人">
+                    <el-button :disabled="disabled || !disabled1" slot="append" icon="el-icon-search"
                                @click="openMemberChoose"></el-button>
                   </el-input>
                 </el-form-item>
@@ -152,13 +167,13 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="活动党组织">
-                  <el-input :disabled="true" v-model="djPartyOrg.partyOrgFullName" placeholder="请输入活动地点"/>
+                  <el-input :disabled="true" v-model="djPartyOrg.partyOrgFullName" placeholder="请输入活动党组织"/>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="活动地点" prop="venue">
-                  <el-input :disabled="disabled" v-model="form.venue" placeholder="请输入活动地点">
-                    <el-button :disabled="disabled" slot="append" icon="el-icon-map-location"
+                  <el-input :disabled="disabled || !disabled1" v-model="form.venue" placeholder="请输入活动地点">
+                    <el-button :disabled="disabled || !disabled1" slot="append" icon="el-icon-map-location"
                                @click="openMap"></el-button>
                   </el-input>
                 </el-form-item>
@@ -176,7 +191,8 @@
             <el-row>
               <el-col :span="24">
                 <el-form-item label="活动内容" prop="activityContent">
-                  <el-input :disabled="disabled" v-model="form.activityContent" type="textarea"
+                  <el-input :disabled="disabled || !disabled1  " v-model="form.activityContent"
+                            type="textarea"
                             :autosize="{ minRows: 3, maxRows: 6}"
                             placeholder="请输入内容"/>
                 </el-form-item>
@@ -186,7 +202,7 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="活动计划召开时间" prop="activityPlanStartTime">
-                  <el-date-picker :disabled="disabled"
+                  <el-date-picker :disabled="disabled  || !disabled1 "
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.activityPlanStartTime"
@@ -198,7 +214,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="活动计划结束时间" prop="activityPlanEndTime">
-                  <el-date-picker :disabled="disabled"
+                  <el-date-picker :disabled="disabled  || !disabled1 "
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.activityPlanEndTime"
@@ -212,8 +228,9 @@
 
             <el-row>
               <el-col :span="12">
-                <el-form-item label="活动实际开始时间" prop="actualStartTime">
-                  <el-date-picker :disabled="disabled"
+                <el-form-item label="活动实际开始时间" prop="actualStartTime"
+                              :rules="[{required: actualRequired ,message: `请选择周期结束季度`,trigger: 'blur'}]">
+                  <el-date-picker :disabled="disabled  || !disabled2 "
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.actualStartTime"
@@ -224,8 +241,9 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="活动实际结束时间" prop="actualEndTime">
-                  <el-date-picker :disabled="disabled"
+                <el-form-item label="活动实际结束时间" prop="actualEndTime"
+                              :rules="[{required: actualRequired,message: `请选择周期结束季度`,trigger: 'blur'}]">
+                  <el-date-picker :disabled="disabled || !disabled2"
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.actualEndTime"
@@ -240,12 +258,14 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="记录人" prop="recorder">
-                  <el-input :disabled="disabled" v-model="form.recorder" placeholder="请输入记录人"/>
+                  <el-input :disabled="disabled " v-model="form.recorder"
+                            placeholder="请输入记录人"/>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="到会指导人员" prop="mentors">
-                  <el-input :disabled="disabled" v-model="form.mentors" placeholder="请输入到会指导人员"/>
+                  <el-input :disabled="disabled " v-model="form.mentors"
+                            placeholder="请输入到会指导人员"/>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -253,12 +273,14 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="主持人" prop="presenter">
-                  <el-input :disabled="disabled" v-model="form.presenter" placeholder="请输入主持人"/>
+                  <el-input :disabled="disabled " v-model="form.presenter"
+                            placeholder="请输入主持人"/>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="主讲人及身份" prop="speaker">
-                  <el-input :disabled="disabled" v-model="form.speaker" placeholder="请输入主讲人及身份"/>
+                  <el-input :disabled="disabled " v-model="form.speaker"
+                            placeholder="请输入主讲人及身份"/>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -358,7 +380,7 @@
                   </el-table-column>
                 </el-table>
 
-                <div style="margin-top: 10px">
+                <div v-if="!disabled" style="margin-top: 10px">
                   <el-radio-group v-model="memberStatus">
                     <el-radio
                       v-for="dict in memberStatusOptions"
@@ -379,10 +401,10 @@
 
               </el-tab-pane>
               <el-tab-pane label="建言献策" name="3">
-
+                <activity-suggestions ref="activitySuggestions"/>
               </el-tab-pane>
               <el-tab-pane label="心得体会" name="4">
-
+                <activity-experience ref="activityExperience"/>
               </el-tab-pane>
               <el-tab-pane label="请假记录" name="5">
                 <el-table v-loading="memberLoading" :data="leaveMemberList">
@@ -505,7 +527,25 @@
 
 
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm(this.form.status)">保 存</el-button>
+        <el-button type="primary"
+                   v-if="this.form.status =='1'" @click="submitForm('2')">启动活动
+        </el-button>
+        <el-button type="primary"
+                   v-if="this.form.status =='2'" @click="submitForm('3')">开始活动
+        </el-button>
+        <el-button type="primary"
+                   v-if="this.form.status =='2'||this.form.status =='3'" @click="submitForm('6')">取消活动
+        </el-button>
+        <el-button type="primary"
+                   v-if="this.form.status =='6'" @click="submitForm('2')">重新启动
+        </el-button>
+        <el-button type="primary"
+                   v-if="this.form.status =='3'" @click="submitForm('4')">结束启动
+        </el-button>
+        <el-button type="primary"
+                   v-if="this.form.status =='4'" @click="submitForm('5')">活动归档
+        </el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -539,11 +579,14 @@
   import memberTransfer from "../arrange/memberTransfer";
   import activitySummary from "./activitySummary";
   import activityResolution from "./activityResolution";
+  import activitySuggestions from "./activitySuggestions";
+  import activityExperience from "./activityExperience";
 
   export default {
     name: "Detailed",
     components: {
-      partyMember, addressMap, memberTransfer,activitySummary,activityResolution
+      partyMember, addressMap, memberTransfer, activitySummary,
+      activityResolution,activitySuggestions,activityExperience
     },
     data() {
       return {
@@ -629,10 +672,16 @@
         //活动详情状态
         arrangeStatusOptions: [],
         activeTab: "1",
+        activeStep: undefined,
         disabled: false,
+        disabled1: false,
+        disabled2: false,
+        disabled3: false,
+        disabled4: false,
+        disabled5: false,
+        disabled6: false,
         mapOpen: false,
-
-
+        actualRequired: false,
 
       };
     },
@@ -1007,10 +1056,9 @@
         this.title = "添加活动详情";
 
       },
-
-      /** 修改按钮操作 */
-      handleUpdate(row) {
+      handleSee(row) {
         this.reset();
+        this.disabled = true;
         const detailedId = row.detailedId || this.ids
         getDetailed(detailedId).then(response => {
           this.form = response.data;
@@ -1020,19 +1068,87 @@
           this.open = true;
           this.title = "活动管理";
         }).then(() => {
+          this.changeByDetailedStatus();
           this.getPlanFileList();
           this.getJoinMemberList();
           this.getPicFileList();
           this.getFileList();
+          this.$refs.activitySummary.disabled = this.disabled;
           this.$refs.activitySummary.init(this.form.detailedUuid);
+          this.$refs.activityResolution.disabled = this.disabled;
           this.$refs.activityResolution.init(this.form.detailedUuid);
-          this
+
         });
       },
+      /** 修改按钮操作 */
+      handleUpdate(row) {
+        this.reset();
+        this.disabled = false;
+        const detailedId = row.detailedId || this.ids
+        getDetailed(detailedId).then(response => {
+          this.form = response.data;
+          this.form.partyMemberName = response.data.djPartyMember.memberName
+          this.djActivityPlan = response.data.djActivityPlan;
+          this.djPartyOrg = response.data.djPartyOrg;
+          this.open = true;
+          this.title = "活动管理";
+        }).then(() => {
+          this.changeByDetailedStatus();
+          this.getPlanFileList();
+          this.getJoinMemberList();
+          this.getPicFileList();
+          this.getFileList();
+          this.$refs.activitySummary.disabled = this.disabled;
+          this.$refs.activitySummary.init(this.form.detailedUuid);
+          this.$refs.activityResolution.disabled = this.disabled;
+          this.$refs.activityResolution.init(this.form.detailedUuid);
+
+        });
+      },
+      changeByDetailedStatus() {
+        this.actualRequired = false;
+        this.disabled1= false;
+        this.disabled2= false;
+        this.disabled3= false;
+        this.disabled4= false;
+        this.disabled5= false;
+        this.disabled6= false;
+        this.activeStep = undefined;
+        switch (this.form.status) {
+          case "1":
+            this.activeStep = 1;
+            this.disabled1=true;
+            break;
+          case "2":
+            this.activeStep = 2;
+            this.actualRequired = true;
+            this.disabled2=true;
+            break;
+          case "3":
+            this.activeStep = 3;
+            this.disabled3=true;
+            break;
+          case "4":
+            this.activeStep = 4;
+            this.disabled4=true;
+            break;
+          case "5":
+            this.activeStep = 5;
+            this.disabled5=true;
+            break;
+          case "6":
+            this.activeStep = 3;
+            this.disabled6=true;
+            break;
+          default:
+            break;
+        }
+      },
       /** 提交按钮 */
-      submitForm: function () {
+      submitForm: function (status) {
         this.$refs["form"].validate(valid => {
           if (valid) {
+            this.form.status = status;
             if (this.form.detailedId != undefined) {
               updateDetailed(this.form).then(response => {
                 if (response.code === 200) {
