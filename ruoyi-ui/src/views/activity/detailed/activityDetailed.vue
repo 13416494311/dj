@@ -58,7 +58,7 @@
             size="small"
             type="text"
             icon="el-icon-download"
-            @click="handleExport(scope.row)"
+            @click="handleExportArchives(scope.row)"
           >下载
           </el-button>
         </template>
@@ -206,8 +206,8 @@
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.activityPlanStartTime"
-                                  type="date"
-                                  value-format="yyyy-MM-dd"
+                                  type="datetime"
+                                  value-format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择活动计划召开时间">
                   </el-date-picker>
                 </el-form-item>
@@ -218,8 +218,8 @@
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.activityPlanEndTime"
-                                  type="date"
-                                  value-format="yyyy-MM-dd"
+                                  type="datetime"
+                                  value-format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择活动计划结束时间">
                   </el-date-picker>
                 </el-form-item>
@@ -234,8 +234,8 @@
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.actualStartTime"
-                                  type="date"
-                                  value-format="yyyy-MM-dd"
+                                  type="datetime"
+                                  value-format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择活动实际开始时间">
                   </el-date-picker>
                 </el-form-item>
@@ -247,8 +247,8 @@
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.actualEndTime"
-                                  type="date"
-                                  value-format="yyyy-MM-dd"
+                                  type="datetime"
+                                  value-format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择活动实际结束时间">
                   </el-date-picker>
                 </el-form-item>
@@ -586,7 +586,7 @@
     name: "Detailed",
     components: {
       partyMember, addressMap, memberTransfer, activitySummary,
-      activityResolution,activitySuggestions,activityExperience
+      activityResolution, activitySuggestions, activityExperience
     },
     data() {
       return {
@@ -757,19 +757,16 @@
       handleTabClick(tab, event) {
         switch (tab.name) {
           case "1":
-            this.getJoinMemberList();
             break;
           case "2":
-            this.getJoinMemberList();
             break;
           case "3":
-            ;
+            break;
             break;
           case "4":
-            ;
+            break;
             break;
           case "5":
-            this.getLeaveMemberList();
             break;
           default:
             break;
@@ -876,6 +873,7 @@
           if (response.code === 200) {
             this.msgSuccess("修改成功");
             this.getJoinMemberList();
+            this.getLeaveMemberList();
           } else {
             this.msgError(response.msg);
           }
@@ -1107,38 +1105,38 @@
       },
       changeByDetailedStatus() {
         this.actualRequired = false;
-        this.disabled1= false;
-        this.disabled2= false;
-        this.disabled3= false;
-        this.disabled4= false;
-        this.disabled5= false;
-        this.disabled6= false;
+        this.disabled1 = false;
+        this.disabled2 = false;
+        this.disabled3 = false;
+        this.disabled4 = false;
+        this.disabled5 = false;
+        this.disabled6 = false;
         this.activeStep = undefined;
         switch (this.form.status) {
           case "1":
             this.activeStep = 1;
-            this.disabled1=true;
+            this.disabled1 = true;
             break;
           case "2":
             this.activeStep = 2;
             this.actualRequired = true;
-            this.disabled2=true;
+            this.disabled2 = true;
             break;
           case "3":
             this.activeStep = 3;
-            this.disabled3=true;
+            this.disabled3 = true;
             break;
           case "4":
             this.activeStep = 4;
-            this.disabled4=true;
+            this.disabled4 = true;
             break;
           case "5":
             this.activeStep = 5;
-            this.disabled5=true;
+            this.disabled5 = true;
             break;
           case "6":
             this.activeStep = 3;
-            this.disabled6=true;
+            this.disabled6 = true;
             break;
           default:
             break;
@@ -1207,7 +1205,10 @@
           this.download(response.msg);
         }).catch(function () {
         });
-      }
+      },
+      handleExportArchives(row) {
+        downLoadZip("/activity/detailed/exportArchives?detailedId=" + row.detailedId);
+      },
     }
   };
 </script>

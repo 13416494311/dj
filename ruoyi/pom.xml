@@ -49,6 +49,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- freemarker 模板  docx导出 -->
+        <dependency>
+            <groupId>freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.8</version>
+        </dependency>
+
 		<!-- SpringBoot 核心包 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -1,11 +1,21 @@
 package com.ruoyi.project.activity.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.FileUtil;
+import com.ruoyi.common.utils.WordUtils;
+import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
-import com.ruoyi.project.activity.domain.DjActivityParams;
+import com.ruoyi.project.activity.domain.*;
+import com.ruoyi.project.activity.service.*;
+import com.ruoyi.project.system.service.ISysDictDataService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +28,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.project.activity.domain.DjActivityDetailed;
-import com.ruoyi.project.activity.service.IDjActivityDetailedService;
 import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 活动详情Controller
@@ -37,6 +48,16 @@ public class DjActivityDetailedController extends BaseController
 {
     @Autowired
     private IDjActivityDetailedService djActivityDetailedService;
+    @Autowired
+    private IDjActivityPlanService djActivityPlanService;
+    @Autowired
+    private IDjActivitySummaryService djActivitySummaryService;
+    @Autowired
+    private IDjActivityResolutionService djActivityResolutionService;
+    @Autowired
+    private ISysDictDataService dictDataService;
+    @Autowired
+    private IDjActivityMemberService djActivityMemberService;
 
     /**
      * 查询活动详情列表
@@ -72,6 +93,9 @@ public class DjActivityDetailedController extends BaseController
         ExcelUtil<DjActivityDetailed> util = new ExcelUtil<DjActivityDetailed>(DjActivityDetailed.class);
         return util.exportExcel(list, "detailed");
     }
+
+
+
 
     /**
      * 获取活动详情详细信息
@@ -121,5 +145,125 @@ public class DjActivityDetailedController extends BaseController
     public AjaxResult remove(@PathVariable Long[] detailedIds)
     {
         return toAjax(djActivityDetailedService.deleteDjActivityDetailedByIds(detailedIds));
+    }
+
+    @Log(title = "档案下载", businessType = BusinessType.EXPORT)
+    @GetMapping("/exportArchives")
+    public void exportArchives(HttpServletRequest request, HttpServletResponse response, String detailedId) throws IOException
+    {
+        Map<String, Object> dataMap = new HashMap<>();
+        DjActivityDetailed activityDetailed = djActivityDetailedService.
+                selectDjActivityDetailedById(Long.parseLong(detailedId));
+
+        DjActivityPlan activityPlan =djActivityPlanService.
+                selectDjActivityPlanByPlanUuid(activityDetailed.getPlanUuid());
+        String activityTypeText = dictDataService.selectDictLabel("activity_type",activityPlan.getActivityType());
+        dataMap.put("planTypeText",activityTypeText);
+        dataMap.put("planActivityTheme",activityPlan.getActivityTheme());
+
+        dataMap.put("detailedActualStartTime",
+                DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,activityDetailed.getActivityPlanStartTime()));
+        dataMap.put("detailedActualEndTime",
+                DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,activityDetailed.getActivityPlanEndTime()));
+        dataMap.put("detailedVenue",activityDetailed.getVenue()==null?"":activityDetailed.getVenue());
+        dataMap.put("detailedPresenter",activityDetailed.getPresenter()==null?"":activityDetailed.getPresenter());
+        dataMap.put("detailedRecorder",activityDetailed.getRecorder()==null?"":activityDetailed.getRecorder());
+        dataMap.put("detailedMentors",activityDetailed.getMentors()==null?"":activityDetailed.getMentors());
+
+        DjActivityMember activityMember = new DjActivityMember();
+        activityMember.setPlanUuid(activityDetailed.getPlanUuid());
+        activityMember.setPartyOrgId(activityDetailed.getPartyOrgId());
+        List<DjActivityMember> memberList = djActivityMemberService.selectDjActivityMemberList(activityMember);
+        dataMap.put("memberTotal",memberList.size());
+        StringBuilder memberNames= new StringBuilder();
+        StringBuilder memberLeaveNames= new StringBuilder();
+        StringBuilder memberTruancyNames= new StringBuilder();
+        StringBuilder memberLateNames= new StringBuilder();
+        final int[] memberActualNum = {0};
+        final int[] memberLateNum = { 0 };
+        memberList.stream().forEach(member->{
+            memberNames.append(member.getDjPartyMember().getMemberName()+"、");
+            switch (member.getStatus()){
+                case "1" :
+                    memberTruancyNames.append(member.getDjPartyMember().getMemberName()+"、");
+                    break;
+                case "2" :
+                    memberActualNum[0] += 1;
+                break;
+                case "3" :
+                    memberLateNum[0] += 1;
+                    memberLateNames.append(member.getDjPartyMember().getMemberName()+"、");
+                    break;
+                case "4" : break;
+                case "5" :
+                    memberLeaveNames.append(member.getDjPartyMember().getMemberName()+"、");
+                    break;
+                case "6" :
+                    memberTruancyNames.append(member.getDjPartyMember().getMemberName()+"、");
+                    break;
+                default:break;
+            }
+        });
+        dataMap.put("memberActualNum",memberActualNum[0]);
+        NumberFormat nt = NumberFormat.getPercentInstance();//获取格式化对象
+        nt.setMinimumFractionDigits(0);//设置百分数精确度2即保留两位小数
+        dataMap.put("memberAttendanceRate",nt.format((float)memberActualNum[0]/memberList.size()));
+        dataMap.put("memberLateNum",memberLateNum[0]);
+
+
+        dataMap.put("memberNames","".equals(memberNames.toString())?"":memberNames.toString().substring(0,memberNames.toString().length()-1));
+        dataMap.put("memberLeaveNames","".equals(memberLeaveNames.toString())?"":memberLeaveNames.toString().substring(0,memberLeaveNames.toString().length()-1));
+        dataMap.put("memberTruancyNames","".equals(memberTruancyNames.toString())?"":memberTruancyNames.toString().substring(0,memberTruancyNames.toString().length()-1));
+        dataMap.put("memberLateNames","".equals(memberLateNames.toString())?"":memberLateNames.toString().substring(0,memberLateNames.toString().length()-1));
+
+        DjActivitySummary summary = new DjActivitySummary();
+        summary.setDetailedUuid(activityDetailed.getDetailedUuid());
+        List<DjActivitySummary> summaryList = djActivitySummaryService.selectDjActivitySummaryList(summary);
+        final int[] activitySummaryIndex = {0};
+        summaryList.stream().forEach(activitySummary->{
+            activitySummaryIndex[0] +=1;
+            activitySummary.setRecordContent(activitySummaryIndex[0]+"、"+activitySummary.getRecordContent());
+        });
+        dataMap.put("summaryList",summaryList);
+        DjActivityResolution resolution = new DjActivityResolution();
+        resolution.setDetailedUuid(activityDetailed.getDetailedUuid());
+        List<DjActivityResolution> resolutionList = djActivityResolutionService.selectDjActivityResolutionList(resolution);
+        dataMap.put("resolutionList",resolutionList);
+        final int[] activityResolutionIndex = {0};
+        resolutionList.stream().forEach(activityResolution->{
+            activityResolutionIndex[0]+=1;
+            activityResolution.setRecordContent(activityResolutionIndex[0]+"、"+activityResolution.getRecordContent());
+        });
+
+        File docx = null ;
+        try {
+            String docxName = activityPlan.getActivityTheme() + System.currentTimeMillis() + ".docx";
+            docx = new File(docxName);
+            WordUtils.createWordDocx("activityDetailed/template.xml",dataMap,
+                    null, null,"activityDetailed/template.docx",docx);
+            download(request,response, docx);
+
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
+        }finally {
+            if(docx.exists()){
+                docx.delete();
+            }
+        }
+
+    }
+
+    /**
+     * 生成zip文件
+     */
+    private void download(HttpServletRequest request,HttpServletResponse response, File file) throws IOException
+    {
+        byte[] data= FileUtil.readFileByBytes(file);
+        response.reset();
+        response.setHeader("Content-Disposition", "attachment; filename="
+                + FileUtils.setFileDownloadHeader(request,file.getName()));
+        response.addHeader("Content-Length", "" + data.length);
+        response.setContentType("application/octet-stream; charset=UTF-8");
+        IOUtils.write(data, response.getOutputStream());
     }
 }
