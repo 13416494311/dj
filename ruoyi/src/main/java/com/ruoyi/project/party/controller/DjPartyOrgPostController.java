@@ -36,7 +36,6 @@ public class DjPartyOrgPostController extends BaseController
     /**
      * 查询党组织职务列表
      */
-
     @GetMapping("/list")
     public TableDataInfo list(DjPartyOrgPost djPartyOrgPost)
     {
@@ -48,7 +47,6 @@ public class DjPartyOrgPostController extends BaseController
     /**
      * 导出党组织职务列表
      */
-
     @Log(title = "党组织职务", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(DjPartyOrgPost djPartyOrgPost)
@@ -61,7 +59,6 @@ public class DjPartyOrgPostController extends BaseController
     /**
      * 获取党组织职务详细信息
      */
-
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -71,7 +68,6 @@ public class DjPartyOrgPostController extends BaseController
     /**
      * 新增党组织职务
      */
-
     @Log(title = "党组织职务", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody DjPartyOrgPost djPartyOrgPost)
@@ -82,7 +78,6 @@ public class DjPartyOrgPostController extends BaseController
     /**
      * 修改党组织职务
      */
-
     @Log(title = "党组织职务", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody DjPartyOrgPost djPartyOrgPost)
@@ -93,7 +88,6 @@ public class DjPartyOrgPostController extends BaseController
     /**
      * 删除党组织职务
      */
-
     @Log(title = "党组织职务", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

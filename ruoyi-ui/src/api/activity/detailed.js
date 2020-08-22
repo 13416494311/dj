@@ -19,9 +19,9 @@ export function listDetailedByParam(query) {
 }
 
 // 查询活动详情详细
-export function getDetailed(activityId) {
+export function getDetailed(detailedId) {
   return request({
-    url: '/activity/detailed/' + activityId,
+    url: '/activity/detailed/' + detailedId,
     method: 'get'
   })
 }

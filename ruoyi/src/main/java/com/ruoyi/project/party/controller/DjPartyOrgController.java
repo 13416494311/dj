@@ -42,7 +42,6 @@ public class DjPartyOrgController extends BaseController
     /**
      * 查询党组织架构列表
      */
-    @PreAuthorize("@ss.hasPermi('party:org:list')")
     @GetMapping("/list")
     public AjaxResult list(DjPartyOrg djPartyOrg)
     {
@@ -53,7 +52,6 @@ public class DjPartyOrgController extends BaseController
     /**
      * 查询党组织架构列表
      */
-    @PreAuthorize("@ss.hasPermi('party:org:list')")
     @GetMapping("/childrenList/{partyOrgId}")
     public AjaxResult childrenList(@PathVariable("partyOrgId") Long partyOrgId)
     {
@@ -78,7 +76,6 @@ public class DjPartyOrgController extends BaseController
     /**
      * 导出党组织架构列表
      */
-    @PreAuthorize("@ss.hasPermi('party:org:export')")
     @Log(title = "党组织架构", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(DjPartyOrg djPartyOrg)
@@ -91,7 +88,6 @@ public class DjPartyOrgController extends BaseController
     /**
      * 获取党组织架构详细信息
      */
-    @PreAuthorize("@ss.hasPermi('party:org:query')")
     @GetMapping(value = "/getPartyOrgs/{partyOrgIds}")
     public AjaxResult getInfo(@PathVariable("partyOrgIds") Long[] partyOrgIds)
     {
@@ -106,7 +102,6 @@ public class DjPartyOrgController extends BaseController
     /**
      * 获取党组织架构详细信息
      */
-    @PreAuthorize("@ss.hasPermi('party:org:query')")
     @GetMapping(value = "/{partyOrgId}")
     public AjaxResult getInfo(@PathVariable("partyOrgId") Long partyOrgId)
     {
@@ -116,7 +111,6 @@ public class DjPartyOrgController extends BaseController
     /**
      * 新增党组织架构
      */
-    @PreAuthorize("@ss.hasPermi('party:org:add')")
     @Log(title = "党组织架构", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody DjPartyOrg djPartyOrg)
@@ -133,7 +127,6 @@ public class DjPartyOrgController extends BaseController
     /**
      * 修改党组织架构
      */
-    @PreAuthorize("@ss.hasPermi('party:org:edit')")
     @Log(title = "党组织架构", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody DjPartyOrg djPartyOrg)
@@ -159,7 +152,6 @@ public class DjPartyOrgController extends BaseController
     /**
      * 删除党组织架构
      */
-    @PreAuthorize("@ss.hasPermi('party:org:remove')")
     @Log(title = "党组织架构", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{partyOrgId}")
     public AjaxResult remove(@PathVariable Long partyOrgId)

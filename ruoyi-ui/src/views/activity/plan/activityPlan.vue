@@ -17,22 +17,13 @@
     </el-form>
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-dropdown
-          v-hasPermi="['activity:plan:add']">
-          <el-button
-            type="primary"
-            size="mini">
-            新增<i class="el-icon-arrow-down el-icon-plus"></i>
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item
-              v-for="dict in activitySourcesOptions"
-              :key="dict.dictValue"
-              @click.native="handleAdd(dict.dictValue)"
-            >{{dict.dictLabel}}
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['activity:plan:add']"
+        >新增</el-button>
       </el-col>
     </el-row>
     <el-table v-loading="loading" :data="planList" @selection-change="handleSelectionChange">
@@ -290,7 +281,7 @@
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">计划参与党组织</span>
             <el-button
-              v-if="!disabled"
+              v-if="!disabled&&this.form.activitySources =='3'"
               type="primary"
               icon="el-icon-plus"
               size="mini"
@@ -310,7 +301,7 @@
               </template>
             </el-table-column>
             <el-table-column label="党组织简介" align="center" prop="djPartyOrg.description"/>
-            <el-table-column v-if="!disabled" label="操作" align="center" class-name="small-padding fixed-width">
+            <el-table-column  v-if="!disabled && this.form.activitySources =='3'" label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -378,8 +369,11 @@
 
       </el-form>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button v-show="!disabled" type="primary" @click="submitForm(1)">保 存</el-button>
-        <el-button v-show="!disabled" type="primary" @click="submitForm(2)">备 案</el-button>
+        <el-button v-show="!disabled  " type="primary" @click="submitForm(1)">保 存</el-button>
+        <el-button v-show="!disabled && this.form.activitySources =='1'" type="primary"
+                   @click="submitForm(2)">备 案</el-button>
+        <el-button v-show="!disabled&& (this.form.activitySources =='2'||this.form.activitySources =='3')" type="primary"
+                   @click="submitForm(2)">发 布</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -395,8 +389,8 @@
   import {getPartyOrgs} from "@/api/party/org";
   import {downLoadZip} from "@/utils/zipdownload";
   import OrgTransfer from "./orgTransfer";
-  import {listArrange, delArrange} from "@/api/activity/arrange";
-
+  import {addArrange,listArrange, delArrange} from "@/api/activity/arrange";
+  import { getUserProfile } from "@/api/system/user";
 
   export default {
     name: "Plan",
@@ -501,6 +495,7 @@
             return date.getTime() <= Date.now() - 24 * 60 * 60 * 1000;
           }
         },
+        user: {},
 
       };
     },
@@ -508,6 +503,7 @@
       window.addEventListener('resize', this.getHeight);
     },
     created() {
+      this.getUser();
       this.defaultFilePicUrl = require("@/assets/image/file.png");
       this.getList();
       this.getDicts("activity_sources").then(response => {
@@ -532,7 +528,6 @@
       this.getDicts("month_type").then(response => {
         this.cycleYearMonthUnitOptions = response.data;
       });
-
     },
     methods: {
       orgTypeFormat(row, column) {
@@ -542,6 +537,13 @@
         this.$refs.orgTransfer.open = true;
         this.$refs.orgTransfer.title = "选择计划参与党组织";
         this.$refs.orgTransfer.planUuid = this.form.planUuid;
+        /*if(this.user.djPartyMember){
+          this.$refs.orgTransfer.getPartyOrgSelect(this.user.djPartyMember.djPartyOrg.partyOrgId);
+        }else{
+          this.$refs.orgTransfer.getPartyOrgSelect(1);
+        }*/
+        this.$refs.orgTransfer.getPartyOrgSelect(1);
+
       },
       //周期开始季度校验
       checkCycleQuarter(rule, value, callback) {
@@ -783,6 +785,7 @@
           updateTime: undefined
         };
         this.resetForm("form");
+        this.show =true ;
       },
       /** 搜索按钮操作 */
       handleQuery() {
@@ -804,13 +807,46 @@
       handleAdd(activitySources) {
         this.reset();
         this.disabled = false;
-        this.form.activitySources = activitySources;
         this.form.planUuid = this.uuid();
+        this.changeByActivitySources();
+
         this.fileList = [];
         this.arrangeList = [];
         this.open = true;
         this.orgLoading = false;
         this.title = "添加活动计划";
+      },
+      changeByActivitySources(){
+        let path = this.$route.path;
+        switch (path) {
+          case "/activity/plan/1" :
+            this.form.activitySources = "1";
+            this.addOrgArrange();
+            this.show = false;
+            break;
+          case "/activity/plan/2" :
+            this.form.activitySources = "2";
+            this.addOrgArrange();
+            this.show = false;
+            break;
+          case "/activity/plan/3" :
+            this.form.activitySources = "3";
+            break;
+          default:
+            break;
+        }
+      },
+      addOrgArrange(){
+        if(this.user.djPartyMember){
+          addArrange({"planUuid":this.form.planUuid,"partyOrgId":this.user.djPartyMember.partyOrgId})
+            .then(response => {
+              if (response.code === 200) {
+                this.getJoinOrgList();
+              } else {
+                this.msgError(response.msg);
+              }
+            });
+        }
       },
       /** 按钮操作 */
       handleSee(row) {
@@ -908,6 +944,11 @@
         }).then(response => {
           this.download(response.msg);
         }).catch(function () {
+        });
+      },
+      getUser() {
+        getUserProfile().then(response => {
+          this.user = response.data;
         });
       }
     }

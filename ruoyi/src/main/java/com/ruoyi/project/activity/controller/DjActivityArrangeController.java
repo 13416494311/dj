@@ -36,7 +36,6 @@ public class DjActivityArrangeController extends BaseController
     /**
      * 查询活动安排列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:arrange:list')")
     @GetMapping("/listByParam")
     @DataScope(partyOrgAlias = "arrange")
     public TableDataInfo listByParam(DjActivityParams params)
@@ -49,7 +48,6 @@ public class DjActivityArrangeController extends BaseController
     /**
      * 查询活动安排列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:arrange:list')")
     @GetMapping("/list")
     public TableDataInfo list(DjActivityArrange djActivityArrange)
     {
@@ -61,7 +59,6 @@ public class DjActivityArrangeController extends BaseController
     /**
      * 导出活动安排列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:arrange:export')")
     @Log(title = "活动安排", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(DjActivityArrange djActivityArrange)
@@ -74,7 +71,6 @@ public class DjActivityArrangeController extends BaseController
     /**
      * 获取活动安排详细信息
      */
-    @PreAuthorize("@ss.hasPermi('activity:arrange:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -84,7 +80,6 @@ public class DjActivityArrangeController extends BaseController
     /**
      * 新增活动安排
      */
-    @PreAuthorize("@ss.hasPermi('activity:arrange:add')")
     @Log(title = "活动安排", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody DjActivityArrange djActivityArrange)
@@ -113,7 +108,6 @@ public class DjActivityArrangeController extends BaseController
     /**
      * 修改活动安排
      */
-    @PreAuthorize("@ss.hasPermi('activity:arrange:edit')")
     @Log(title = "活动安排", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody DjActivityArrange djActivityArrange)
@@ -124,7 +118,6 @@ public class DjActivityArrangeController extends BaseController
     /**
      * 删除活动安排
      */
-    @PreAuthorize("@ss.hasPermi('activity:arrange:remove')")
     @Log(title = "活动安排", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

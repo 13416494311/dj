@@ -38,7 +38,6 @@ public class DjActivityPlanController extends BaseController
     /**
      * 查询活动计划列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:plan:list')")
     @GetMapping("/list")
     @DataScope(partyOrgAlias = "o")
     public TableDataInfo list(DjActivityPlan djActivityPlan)
@@ -51,7 +50,6 @@ public class DjActivityPlanController extends BaseController
     /**
      * 导出活动计划列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:plan:export')")
     @Log(title = "活动计划", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(DjActivityPlan djActivityPlan)
@@ -64,7 +62,6 @@ public class DjActivityPlanController extends BaseController
     /**
      * 获取活动计划详细信息
      */
-    @PreAuthorize("@ss.hasPermi('activity:plan:query')")
     @GetMapping(value = "/{planId}")
     public AjaxResult getInfo(@PathVariable("planId") Long planId)
     {
@@ -74,7 +71,6 @@ public class DjActivityPlanController extends BaseController
     /**
      * 新增活动计划
      */
-    @PreAuthorize("@ss.hasPermi('activity:plan:add')")
     @Log(title = "活动计划", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody DjActivityPlan djActivityPlan)
@@ -85,7 +81,6 @@ public class DjActivityPlanController extends BaseController
     /**
      * 修改活动计划
      */
-    @PreAuthorize("@ss.hasPermi('activity:plan:edit')")
     @Log(title = "活动计划", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody DjActivityPlan djActivityPlan)
@@ -96,7 +91,6 @@ public class DjActivityPlanController extends BaseController
     /**
      * 删除活动计划
      */
-    @PreAuthorize("@ss.hasPermi('activity:plan:remove')")
     @Log(title = "活动计划", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{planIds}")
     public AjaxResult remove(@PathVariable Long[] planIds)

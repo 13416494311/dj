@@ -41,7 +41,6 @@ public class DjActivityDetailedController extends BaseController
     /**
      * 查询活动详情列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:detailed:list')")
     @GetMapping("/list")
     public TableDataInfo list(DjActivityDetailed djActivityDetailed)
     {
@@ -53,7 +52,6 @@ public class DjActivityDetailedController extends BaseController
     /**
      * 查询活动详情列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:detailed:list')")
     @GetMapping("/listByParam")
     @DataScope(partyOrgAlias = "detailed")
     public TableDataInfo list(DjActivityParams params)
@@ -66,7 +64,6 @@ public class DjActivityDetailedController extends BaseController
     /**
      * 导出活动详情列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:detailed:export')")
     @Log(title = "活动详情", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(DjActivityDetailed djActivityDetailed)
@@ -79,11 +76,10 @@ public class DjActivityDetailedController extends BaseController
     /**
      * 获取活动详情详细信息
      */
-    @PreAuthorize("@ss.hasPermi('activity:detailed:query')")
-    @GetMapping(value = "/{activityId}")
-    public AjaxResult getInfo(@PathVariable("activityId") Long activityId)
+    @GetMapping(value = "/{detailedId}")
+    public AjaxResult getInfo(@PathVariable("detailedId") Long detailedId)
     {
-        return AjaxResult.success(djActivityDetailedService.selectDjActivityDetailedById(activityId));
+        return AjaxResult.success(djActivityDetailedService.selectDjActivityDetailedById(detailedId));
     }
 
     /**
@@ -100,7 +96,6 @@ public class DjActivityDetailedController extends BaseController
     /**
      * 修改活动详情
      */
-    @PreAuthorize("@ss.hasPermi('activity:detailed:edit')")
     @Log(title = "活动详情", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody DjActivityDetailed djActivityDetailed)
@@ -113,9 +108,9 @@ public class DjActivityDetailedController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('activity:detailed:remove')")
     @Log(title = "活动详情", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{activityIds}")
-    public AjaxResult remove(@PathVariable Long[] activityIds)
+	@DeleteMapping("/{detailedIds}")
+    public AjaxResult remove(@PathVariable Long[] detailedIds)
     {
-        return toAjax(djActivityDetailedService.deleteDjActivityDetailedByIds(activityIds));
+        return toAjax(djActivityDetailedService.deleteDjActivityDetailedByIds(detailedIds));
     }
 }

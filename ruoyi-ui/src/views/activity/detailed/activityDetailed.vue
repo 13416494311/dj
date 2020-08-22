@@ -72,7 +72,7 @@
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">活动进度</span>
           </div>
-          <el-steps :active="Number(form.status)-1" finish-status="success">
+          <el-steps :active="activeStep" finish-status="success">
             <el-step title="完善活动信息"></el-step>
             <el-step title="启动活动"></el-step>
             <el-step title="开始活动"></el-step>
@@ -319,7 +319,7 @@
                   <el-table-column label="姓名" align="center" prop="djPartyMember.memberName"/>
                   <el-table-column label="所属党组织" align="center" prop="djPartyMember.djPartyOrg.partyOrgFullName"/>
                   <el-table-column label="联系方式" align="center" prop="djPartyMember.mobile"/>
-                  <el-table-column v-if="!disabled" label="操作" align="center" class-name="small-padding fixed-width">
+                  <!--<el-table-column v-if="!disabled" label="操作" align="center" class-name="small-padding fixed-width">
                     <template slot-scope="scope">
                       <el-button
                         v-if="scope.row.type=='2'"
@@ -330,7 +330,7 @@
                       >删除
                       </el-button>
                     </template>
-                  </el-table-column>
+                  </el-table-column>-->
                 </el-table>
               </el-tab-pane>
 
@@ -406,25 +406,11 @@
             >新增
             </el-button>
           </div>
-
-
         </el-card>
 
+        <activity-summary ref="activitySummary"/>
 
-        <el-card shadow="always" style="margin-bottom: 30px;">
-          <div slot="header" style="height: 25px">
-            <span style="font-weight: bold;font-size: 16px">活动纪要</span>
-          </div>
-
-        </el-card>
-
-        <el-card shadow="always" style="margin-bottom: 30px;">
-          <div slot="header" style="height: 25px">
-            <span style="font-weight: bold;font-size: 16px">活动决议</span>
-          </div>
-
-
-        </el-card>
+        <activity-resolution ref="activityResolution"/>
 
         <el-card shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
@@ -551,12 +537,13 @@
   import partyMember from "../../party/org/partyMemberChoose";
   import addressMap from "../../party/org/addressMap";
   import memberTransfer from "../arrange/memberTransfer";
-
+  import activitySummary from "./activitySummary";
+  import activityResolution from "./activityResolution";
 
   export default {
     name: "Detailed",
     components: {
-      partyMember, addressMap, memberTransfer
+      partyMember, addressMap, memberTransfer,activitySummary,activityResolution
     },
     data() {
       return {
@@ -645,6 +632,8 @@
         disabled: false,
         mapOpen: false,
 
+
+
       };
     },
     mounted() {
@@ -674,7 +663,7 @@
           background: 'rgba(0, 0, 0, 0.7)'
         });
         let formData = new FormData();
-        formData.append("uuid", this.form.activityUuid);
+        formData.append("uuid", this.form.detailedUuid);
         formData.append("file", file.file);
         formData.append("fileType", "activityDetailed");
         formData.append("fileTypeValue", "pic");
@@ -699,7 +688,7 @@
           background: 'rgba(0, 0, 0, 0.7)'
         });
         let formData = new FormData();
-        formData.append("uuid", this.form.activityUuid);
+        formData.append("uuid", this.form.detailedUuid);
         formData.append("file", file.file);
         formData.append("fileType", "activityDetailed");
         formData.append("fileTypeValue", "file");
@@ -764,7 +753,7 @@
       },
       getPicFileList() {
         this.picFileList = [];
-        listFile({'uuid': this.form.activityUuid, 'fileTypeValue': 'pic'}).then(response => {
+        listFile({'uuid': this.form.detailedUuid, 'fileTypeValue': 'pic'}).then(response => {
           let files = response.rows;
           for (let i = 0; i < files.length; i++) {
             let file = {};
@@ -777,7 +766,7 @@
       },
       getFileList() {
         this.fileList = [];
-        listFile({'uuid': this.form.activityUuid, 'fileTypeValue': 'file'}).then(response => {
+        listFile({'uuid': this.form.detailedUuid, 'fileTypeValue': 'file'}).then(response => {
           let files = response.rows;
           for (let i = 0; i < files.length; i++) {
             let file = {};
@@ -909,8 +898,8 @@
       // 表单重置
       reset() {
         this.form = {
-          activityId: undefined,
-          activityUuid: undefined,
+          detailedId: undefined,
+          detailedUuid: undefined,
           planUuid: undefined,
           cycle: undefined,
           partyMemberId: undefined,
@@ -1016,13 +1005,14 @@
         this.open = true;
         this.mapOpen = false;
         this.title = "添加活动详情";
+
       },
 
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
-        const activityId = row.activityId || this.ids
-        getDetailed(activityId).then(response => {
+        const detailedId = row.detailedId || this.ids
+        getDetailed(detailedId).then(response => {
           this.form = response.data;
           this.form.partyMemberName = response.data.djPartyMember.memberName
           this.djActivityPlan = response.data.djActivityPlan;
@@ -1034,13 +1024,16 @@
           this.getJoinMemberList();
           this.getPicFileList();
           this.getFileList();
+          this.$refs.activitySummary.init(this.form.detailedUuid);
+          this.$refs.activityResolution.init(this.form.detailedUuid);
+          this
         });
       },
       /** 提交按钮 */
       submitForm: function () {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            if (this.form.activityId != undefined) {
+            if (this.form.detailedId != undefined) {
               updateDetailed(this.form).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("修改成功");
@@ -1072,13 +1065,13 @@
       },
       /** 删除按钮操作 */
       handleDelete(row) {
-        const activityIds = row.activityId || this.ids;
-        this.$confirm('是否确认删除活动详情编号为"' + activityIds + '"的数据项?', "警告", {
+        const detailedIds = row.detailedId || this.ids;
+        this.$confirm('是否确认删除活动详情编号为"' + detailedIds + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function () {
-          return delDetailed(activityIds);
+          return delDetailed(detailedIds);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");

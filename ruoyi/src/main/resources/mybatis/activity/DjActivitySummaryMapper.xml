@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.activity.mapper.DjActivitySummaryMapper">
+    
+    <resultMap type="DjActivitySummary" id="DjActivitySummaryResult">
+        <result property="summaryId"    column="summary_id"    />
+        <result property="detailedUuid"    column="detailed_uuid"    />
+        <result property="recordContent"    column="record_content"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjActivitySummaryVo">
+        select summary_id, detailed_uuid, record_content, del_flag, create_by, create_time, update_by, update_time from dj_activity_summary
+    </sql>
+
+    <select id="selectDjActivitySummaryList" parameterType="DjActivitySummary" resultMap="DjActivitySummaryResult">
+        <include refid="selectDjActivitySummaryVo"/>
+        <where>  
+            <if test="detailedUuid != null  and detailedUuid != ''"> and detailed_uuid = #{detailedUuid}</if>
+            <if test="recordContent != null  and recordContent != ''"> and record_content = #{recordContent}</if>
+            <if test="delFlag != null  and delFlag != ''"> and del_flag = #{delFlag}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''"> and update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectDjActivitySummaryById" parameterType="Long" resultMap="DjActivitySummaryResult">
+        <include refid="selectDjActivitySummaryVo"/>
+        where summary_id = #{summaryId}
+    </select>
+        
+    <insert id="insertDjActivitySummary" parameterType="DjActivitySummary" useGeneratedKeys="true" keyProperty="summaryId">
+        insert into dj_activity_summary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="detailedUuid != null  and detailedUuid != ''">detailed_uuid,</if>
+            <if test="recordContent != null  and recordContent != ''">record_content,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="detailedUuid != null  and detailedUuid != ''">#{detailedUuid},</if>
+            <if test="recordContent != null  and recordContent != ''">#{recordContent},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjActivitySummary" parameterType="DjActivitySummary">
+        update dj_activity_summary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="detailedUuid != null  and detailedUuid != ''">detailed_uuid = #{detailedUuid},</if>
+            <if test="recordContent != null  and recordContent != ''">record_content = #{recordContent},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where summary_id = #{summaryId}
+    </update>
+
+    <delete id="deleteDjActivitySummaryById" parameterType="Long">
+        delete from dj_activity_summary where summary_id = #{summaryId}
+    </delete>
+
+    <delete id="deleteDjActivitySummaryByIds" parameterType="String">
+        delete from dj_activity_summary where summary_id in 
+        <foreach item="summaryId" collection="array" open="(" separator="," close=")">
+            #{summaryId}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -108,7 +108,7 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     @Override
     public int insertDjActivityDetailed(DjActivityDetailed djActivityDetailed)
     {
-        djActivityDetailed.setActivityUuid(UUID.randomUUID().toString());
+        djActivityDetailed.setDetailedUuid(UUID.randomUUID().toString());
         djActivityDetailed.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         djActivityDetailed.setCreateTime(DateUtils.getNowDate());
         return djActivityDetailedMapper.insertDjActivityDetailed(djActivityDetailed);

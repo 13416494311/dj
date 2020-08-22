@@ -5,8 +5,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.project.activity.mapper.DjActivityDetailedMapper">
 
     <resultMap type="DjActivityDetailed" id="DjActivityDetailedResult">
-        <result property="activityId"    column="activity_id"    />
-        <result property="activityUuid"    column="activity_uuid"    />
+        <result property="detailedId"    column="detailed_id"    />
+        <result property="detailedUuid"    column="detailed_uuid"    />
         <result property="planUuid"    column="plan_uuid"    />
         <result property="partyOrgId"    column="party_org_id"    />
         <result property="cycle"    column="cycle"    />
@@ -35,11 +35,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDjActivityDetailedVo">
-        select activity_id, activity_uuid,plan_uuid,party_org_id, cycle, party_member_id, venue, activity_content, plan_start_time, plan_end_time, activity_plan_start_time, activity_plan_end_time, actual_start_time, actual_end_time, recorder, mentors, presenter, speaker, allow_comment, activity_vote_id, activity_exam_id, status, del_flag, create_by, create_time, update_by, update_time from dj_activity_detailed
+        select detailed_id, detailed_uuid,plan_uuid,party_org_id, cycle, party_member_id, venue, activity_content, plan_start_time, plan_end_time, activity_plan_start_time, activity_plan_end_time, actual_start_time, actual_end_time, recorder, mentors, presenter, speaker, allow_comment, activity_vote_id, activity_exam_id, status, del_flag, create_by, create_time, update_by, update_time from dj_activity_detailed
     </sql>
 
     <sql id="selectDjActivityDetailed">
-        select detailed.activity_id, detailed.activity_uuid,detailed.plan_uuid,detailed.party_org_id, detailed.cycle,
+        select detailed.detailed_id, detailed.detailed_uuid,detailed.plan_uuid,detailed.party_org_id, detailed.cycle,
         detailed.party_member_id, detailed.venue, detailed.activity_content,
         detailed.plan_start_time, detailed.plan_end_time, detailed.activity_plan_start_time,
         detailed.activity_plan_end_time,
@@ -57,7 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              on arrange.plan_uuid = detailed.plan_uuid  and arrange.party_org_id = detailed.party_org_id
         left join dj_activity_plan plan on arrange.plan_uuid = plan.plan_uuid
         <where>
-            <if test="activityUuid != null  and activityUuid != ''"> and detailed.activity_uuid = #{activityUuid}</if>
+            <if test="detailedUuid != null  and detailedUuid != ''"> and detailed.detailed_uuid = #{detailedUuid}</if>
             <if test="planUuid != null  and planUuid != ''"> and detailed.plan_uuid = #{planUuid}</if>
             <if test="partyOrgId != null "> and detailed.party_org_id = #{partyOrgId}</if>
             <if test="cycle != null  and cycle != ''"> and detailed.cycle = #{cycle}</if>
@@ -99,14 +99,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectDjActivityDetailedById" parameterType="Long" resultMap="DjActivityDetailedResult">
         <include refid="selectDjActivityDetailedVo"/>
-        where activity_id = #{activityId}
+        where detailed_id = #{detailedId}
     </select>
 
     <insert id="insertDjActivityDetailed" parameterType="DjActivityDetailed">
         insert into dj_activity_detailed
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="activityId != null ">activity_id,</if>
-            <if test="activityUuid != null  and activityUuid != ''">activity_uuid,</if>
+            <if test="detailedId != null ">detailed_id,</if>
+            <if test="detailedUuid != null  and detailedUuid != ''">detailed_uuid,</if>
             <if test="planUuid != null  and planUuid != ''">plan_uuid,</if>
             <if test="partyOrgId != null ">party_org_id,</if>
             <if test="cycle != null  and cycle != ''">cycle,</if>
@@ -134,8 +134,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null ">update_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="activityId != null ">#{activityId},</if>
-            <if test="activityUuid != null  and activityUuid != ''">#{activityUuid},</if>
+            <if test="detailedId != null ">#{detailedId},</if>
+            <if test="detailedUuid != null  and detailedUuid != ''">#{detailedUuid},</if>
             <if test="planUuid != null  and planUuid != ''">#{planUuid},</if>
             <if test="partyOrgId != null ">#{partyOrgId},</if>
             <if test="cycle != null  and cycle != ''">#{cycle},</if>
@@ -193,7 +193,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
         </trim>
-        where activity_id = #{activityId}
+        where detailed_id = #{detailedId}
     </update>
 
     <update id="updateByPlanUuidAndPartyOrgId" parameterType="DjActivityDetailed">
@@ -229,13 +229,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteDjActivityDetailedById" parameterType="Long">
-        delete from dj_activity_detailed where activity_id = #{activityId}
+        delete from dj_activity_detailed where detailed_id = #{detailedId}
     </delete>
 
     <delete id="deleteDjActivityDetailedByIds" parameterType="String">
-        delete from dj_activity_detailed where activity_id in
-        <foreach item="activityId" collection="array" open="(" separator="," close=")">
-            #{activityId}
+        delete from dj_activity_detailed where detailed_id in
+        <foreach item="detailedId" collection="array" open="(" separator="," close=")">
+            #{detailedId}
         </foreach>
     </delete>
 

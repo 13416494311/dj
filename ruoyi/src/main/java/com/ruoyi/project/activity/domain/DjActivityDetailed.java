@@ -22,9 +22,9 @@ public class DjActivityDetailed extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 活动ID */
-    private Long activityId;
+    private Long detailedId;
 
-    private String activityUuid;
+    private String detailedUuid;
 
     /** 计划uuid */
     @Excel(name = "计划uuid")

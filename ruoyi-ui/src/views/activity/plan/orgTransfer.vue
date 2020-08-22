@@ -83,7 +83,7 @@
     },
     created() {
       this.getPartyOrgTreeSelect();
-      this.getPartyOrgSelect(1);
+      //this.getPartyOrgSelect(1);
     },
     methods: {
       //双击穿梭
