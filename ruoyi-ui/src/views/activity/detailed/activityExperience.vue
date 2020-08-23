@@ -98,6 +98,7 @@
       /** 查询心得体会列表 */
       getList() {
         this.loading = true;
+        this.experienceList = [];
         listExperience(this.queryParams).then(response => {
           this.experienceList = response.rows;
           this.total = response.total;

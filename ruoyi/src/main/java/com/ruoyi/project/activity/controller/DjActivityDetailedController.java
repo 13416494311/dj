@@ -118,7 +118,6 @@ public class DjActivityDetailedController extends BaseController
     /**
      * 新增活动详情
      */
-    @PreAuthorize("@ss.hasPermi('activity:detailed:add')")
     @Log(title = "活动详情", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody DjActivityDetailed djActivityDetailed)
@@ -139,7 +138,6 @@ public class DjActivityDetailedController extends BaseController
     /**
      * 删除活动详情
      */
-    @PreAuthorize("@ss.hasPermi('activity:detailed:remove')")
     @Log(title = "活动详情", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{detailedIds}")
     public AjaxResult remove(@PathVariable Long[] detailedIds)

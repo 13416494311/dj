@@ -267,7 +267,7 @@
 
     <div :style="{textAlign:'center'}">
       <el-button type="primary" @click="submitForm('1')">提 交</el-button>
-      <el-button @click="submitTodo('0')">无意见</el-button>
+      <el-button @click="submitTodo('1')">无意见</el-button>
     </div>
 
 

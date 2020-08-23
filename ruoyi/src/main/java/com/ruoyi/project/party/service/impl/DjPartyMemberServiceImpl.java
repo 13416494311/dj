@@ -101,7 +101,7 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
         sysUser.setEmail(djPartyMember.getEmail());
         String password = configService.selectConfigByKey("sys.user.initPassword");
         sysUser.setPassword(SecurityUtils.encryptPassword(password));
-        sysUser.setRoleIds(new Long[]{Long.valueOf(2)});  //设置普通角色
+        sysUser.setRoleIds(new Long[]{Long.valueOf(3)});  //设置普通角色
         sysUser.setPostIds(new Long[]{Long.valueOf(4)});  //设置普通员工
         sysUser.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         sysUser.setCreateTime(DateUtils.getNowDate());

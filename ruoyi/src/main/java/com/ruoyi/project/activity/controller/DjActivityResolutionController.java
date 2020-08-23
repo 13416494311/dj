@@ -22,7 +22,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 活动决议Controller
- * 
+ *
  * @author ruoyi
  * @date 2020-08-22
  */
@@ -36,7 +36,6 @@ public class DjActivityResolutionController extends BaseController
     /**
      * 查询活动决议列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:resolution:list')")
     @GetMapping("/list")
     public TableDataInfo list(DjActivityResolution djActivityResolution)
     {
@@ -48,7 +47,6 @@ public class DjActivityResolutionController extends BaseController
     /**
      * 导出活动决议列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:resolution:export')")
     @Log(title = "活动决议", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(DjActivityResolution djActivityResolution)
@@ -61,7 +59,6 @@ public class DjActivityResolutionController extends BaseController
     /**
      * 获取活动决议详细信息
      */
-    @PreAuthorize("@ss.hasPermi('activity:resolution:query')")
     @GetMapping(value = "/{resolutionId}")
     public AjaxResult getInfo(@PathVariable("resolutionId") Long resolutionId)
     {
@@ -71,7 +68,6 @@ public class DjActivityResolutionController extends BaseController
     /**
      * 新增活动决议
      */
-    @PreAuthorize("@ss.hasPermi('activity:resolution:add')")
     @Log(title = "活动决议", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody DjActivityResolution djActivityResolution)
@@ -82,7 +78,6 @@ public class DjActivityResolutionController extends BaseController
     /**
      * 修改活动决议
      */
-    @PreAuthorize("@ss.hasPermi('activity:resolution:edit')")
     @Log(title = "活动决议", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody DjActivityResolution djActivityResolution)
@@ -93,7 +88,6 @@ public class DjActivityResolutionController extends BaseController
     /**
      * 删除活动决议
      */
-    @PreAuthorize("@ss.hasPermi('activity:resolution:remove')")
     @Log(title = "活动决议", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{resolutionIds}")
     public AjaxResult remove(@PathVariable Long[] resolutionIds)

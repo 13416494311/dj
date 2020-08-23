@@ -118,7 +118,6 @@
         this.queryParams.detailedUuid = detailedUuid;
         this.getList();
         this.detailedUuid = detailedUuid;
-
       },
       /** 对话框自适应高度 */
       getHeight() {
@@ -127,6 +126,7 @@
       /** 查询活动纪要列表 */
       getList() {
         this.loading = true;
+        this.summaryList = [];
         listSummary(this.queryParams).then(response => {
           this.summaryList = response.rows;
           this.total = response.total;

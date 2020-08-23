@@ -98,7 +98,8 @@
       /** 查询建言献策列表 */
       getList() {
         this.loading = true;
-        listSuggestions(this.queryParams).then(response => {
+        this.suggestionsList = [];
+          listSuggestions(this.queryParams).then(response => {
           this.suggestionsList = response.rows;
           this.total = response.total;
           this.loading = false;

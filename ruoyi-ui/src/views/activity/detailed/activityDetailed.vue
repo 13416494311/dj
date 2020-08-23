@@ -1101,6 +1101,9 @@
           this.$refs.activityResolution.disabled = this.disabled;
           this.$refs.activityResolution.init(this.form.detailedUuid);
 
+          this.$refs.activitySuggestions.queryParams.detailedUuid= this.form.detailedUuid;
+          this.$refs.activityExperience.queryParams.detailedUuid= this.form.detailedUuid;
+
         });
       },
       changeByDetailedStatus() {

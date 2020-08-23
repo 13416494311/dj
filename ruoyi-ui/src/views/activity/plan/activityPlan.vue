@@ -281,7 +281,7 @@
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">计划参与党组织</span>
             <el-button
-              v-if="!disabled&&this.form.activitySources =='3'"
+              v-if="!disabled && this.activitySources =='3'"
               type="primary"
               icon="el-icon-plus"
               size="mini"
@@ -370,9 +370,9 @@
       </el-form>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
         <el-button v-show="!disabled  " type="primary" @click="submitForm(1)">保 存</el-button>
-        <el-button v-show="!disabled && this.form.activitySources =='1'" type="primary"
+        <el-button v-show="!disabled && this.activitySources =='1'" type="primary"
                    @click="submitForm(2)">备 案</el-button>
-        <el-button v-show="!disabled&& (this.form.activitySources =='2'||this.form.activitySources =='3')" type="primary"
+        <el-button v-show="!disabled&& (this.activitySources =='2'||this.activitySources =='3')" type="primary"
                    @click="submitForm(2)">发 布</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -496,6 +496,7 @@
           }
         },
         user: {},
+        activitySources:undefined,
 
       };
     },
@@ -528,6 +529,7 @@
       this.getDicts("month_type").then(response => {
         this.cycleYearMonthUnitOptions = response.data;
       });
+      //this.getActivitySourcesByPath();
     },
     methods: {
       orgTypeFormat(row, column) {
@@ -712,6 +714,8 @@
       /** 查询活动计划列表 */
       getList() {
         this.loading = true;
+        this.getActivitySourcesByPath();
+        this.queryParams.activitySources = this.activitySources;
         listPlan(this.queryParams).then(response => {
           this.planList = response.rows;
           this.total = response.total;
@@ -803,6 +807,22 @@
         this.single = selection.length != 1
         this.multiple = !selection.length
       },
+      getActivitySourcesByPath(){
+        let path = this.$route.path;
+        switch (path) {
+          case "/activity/plan/1" :
+            this.activitySources = "1";
+            break;
+          case "/activity/plan/2" :
+            this.activitySources = "2";
+            break;
+          case "/activity/plan/3" :
+            this.activitySources = "3";
+            break;
+          default:
+            break;
+        }
+      },
       /** 新增按钮操作 */
       handleAdd(activitySources) {
         this.reset();
@@ -817,20 +837,14 @@
         this.title = "添加活动计划";
       },
       changeByActivitySources(){
-        let path = this.$route.path;
-        switch (path) {
-          case "/activity/plan/1" :
-            this.form.activitySources = "1";
+        switch (this.activitySources) {
+          case "1" :
             this.addOrgArrange();
-            this.show = false;
             break;
-          case "/activity/plan/2" :
-            this.form.activitySources = "2";
+          case "2" :
             this.addOrgArrange();
-            this.show = false;
             break;
-          case "/activity/plan/3" :
-            this.form.activitySources = "3";
+          case "3" :
             break;
           default:
             break;
@@ -887,6 +901,7 @@
         this.form.status = status;
         this.$refs["form"].validate(valid => {
           if (valid) {
+            this.form.activitySources = this.activitySources;
             if (this.form.planId != undefined) {
               updatePlan(this.form).then(response => {
                 if (response.code === 200) {

@@ -152,6 +152,7 @@
       /** 查询活动决议列表 */
       getList() {
         this.loading = true;
+        this.resolutionList = [];
         listResolution(this.queryParams).then(response => {
           this.resolutionList = response.rows;
           this.total = response.total;

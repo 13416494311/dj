@@ -22,7 +22,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 活动纪要Controller
- * 
+ *
  * @author ruoyi
  * @date 2020-08-22
  */
@@ -36,7 +36,6 @@ public class DjActivitySummaryController extends BaseController
     /**
      * 查询活动纪要列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:summary:list')")
     @GetMapping("/list")
     public TableDataInfo list(DjActivitySummary djActivitySummary)
     {
@@ -48,7 +47,6 @@ public class DjActivitySummaryController extends BaseController
     /**
      * 导出活动纪要列表
      */
-    @PreAuthorize("@ss.hasPermi('activity:summary:export')")
     @Log(title = "活动纪要", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     public AjaxResult export(DjActivitySummary djActivitySummary)
@@ -61,7 +59,6 @@ public class DjActivitySummaryController extends BaseController
     /**
      * 获取活动纪要详细信息
      */
-    @PreAuthorize("@ss.hasPermi('activity:summary:query')")
     @GetMapping(value = "/{summaryId}")
     public AjaxResult getInfo(@PathVariable("summaryId") Long summaryId)
     {
@@ -71,7 +68,6 @@ public class DjActivitySummaryController extends BaseController
     /**
      * 新增活动纪要
      */
-    @PreAuthorize("@ss.hasPermi('activity:summary:add')")
     @Log(title = "活动纪要", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody DjActivitySummary djActivitySummary)
@@ -82,7 +78,6 @@ public class DjActivitySummaryController extends BaseController
     /**
      * 修改活动纪要
      */
-    @PreAuthorize("@ss.hasPermi('activity:summary:edit')")
     @Log(title = "活动纪要", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody DjActivitySummary djActivitySummary)
@@ -93,7 +88,6 @@ public class DjActivitySummaryController extends BaseController
     /**
      * 删除活动纪要
      */
-    @PreAuthorize("@ss.hasPermi('activity:summary:remove')")
     @Log(title = "活动纪要", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{summaryIds}")
     public AjaxResult remove(@PathVariable Long[] summaryIds)
