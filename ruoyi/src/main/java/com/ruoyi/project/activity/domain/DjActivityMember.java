@@ -25,6 +25,8 @@ public class DjActivityMember extends BaseEntity
     @Excel(name = "活动计划ID")
     private String planUuid;
 
+    private String detailedUuid;
+
     /** 党组织ID */
     @Excel(name = "党组织ID")
     private Long partyOrgId;

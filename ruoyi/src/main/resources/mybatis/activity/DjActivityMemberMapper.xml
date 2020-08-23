@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="DjActivityMember" id="DjActivityMemberResult">
         <result property="memberId"    column="member_id"    />
         <result property="planUuid"    column="plan_uuid"    />
+        <result property="detailedUuid"    column="detailed_uuid"    />
         <result property="partyOrgId"    column="party_org_id"    />
         <result property="partyMemberId"    column="party_member_id"    />
         <result property="type"    column="type"    />
@@ -29,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDjActivityMemberVo"/>
         <where>
             <if test="planUuid != null "> and plan_uuid = #{planUuid}</if>
+            <if test="detailedUuid != null "> and detailed_uuid = #{detailedUuid}</if>
             <if test="partyOrgId != null "> and party_org_id = #{partyOrgId}</if>
             <if test="partyMemberId != null  and partyMemberId != ''"> and party_member_id = #{partyMemberId}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
@@ -46,6 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="memberId != null ">member_id,</if>
             <if test="planUuid != null ">plan_uuid,</if>
+            <if test="detailedUuid != null ">detailed_uuid,</if>
             <if test="partyOrgId != null ">party_org_id,</if>
             <if test="partyMemberId != null  and partyMemberId != ''">party_member_id,</if>
             <if test="type != null  and type != ''">type,</if>
@@ -59,6 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="memberId != null ">#{memberId},</if>
             <if test="planUuid != null ">#{planUuid},</if>
+            <if test="detailedUuid != null ">#{detailedUuid},</if>
             <if test="partyOrgId != null ">#{partyOrgId},</if>
             <if test="partyMemberId != null  and partyMemberId != ''">#{partyMemberId},</if>
             <if test="type != null  and type != ''">#{type},</if>
@@ -75,6 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update dj_activity_member
         <trim prefix="SET" suffixOverrides=",">
             <if test="planUuid != null ">plan_uuid = #{planUuid},</if>
+            <if test="detailedUuid != null ">detailed_uuid = #{detailedUuid},</if>
             <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
             <if test="partyMemberId != null  and partyMemberId != ''">party_member_id = #{partyMemberId},</if>
             <if test="type != null  and type != ''">type = #{type},</if>

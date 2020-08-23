@@ -207,6 +207,7 @@
                                   style="width: 100%"
                                   v-model="form.activityPlanStartTime"
                                   type="datetime"
+                                  format="yyyy-MM-dd HH:mm:ss"
                                   value-format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择活动计划召开时间">
                   </el-date-picker>
@@ -215,10 +216,12 @@
               <el-col :span="12">
                 <el-form-item label="活动计划结束时间" prop="activityPlanEndTime">
                   <el-date-picker :disabled="disabled  || !disabled1 "
-                                  clearable size="small"
+                                  clearable
+                                  size="small"
                                   style="width: 100%"
                                   v-model="form.activityPlanEndTime"
                                   type="datetime"
+                                  format="yyyy-MM-dd HH:mm:ss"
                                   value-format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择活动计划结束时间">
                   </el-date-picker>
@@ -235,6 +238,7 @@
                                   style="width: 100%"
                                   v-model="form.actualStartTime"
                                   type="datetime"
+                                  format="yyyy-MM-dd HH:mm:ss"
                                   value-format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择活动实际开始时间">
                   </el-date-picker>
@@ -248,6 +252,7 @@
                                   style="width: 100%"
                                   v-model="form.actualEndTime"
                                   type="datetime"
+                                  format="yyyy-MM-dd HH:mm:ss"
                                   value-format="yyyy-MM-dd HH:mm:ss"
                                   placeholder="选择活动实际结束时间">
                   </el-date-picker>
@@ -527,7 +532,7 @@
 
 
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button  v-if=""type="primary" @click="submitForm(this.form.status)">保 存</el-button>
+        <el-button  v-if=""type="primary" @click="submitForm()">保 存</el-button>
         <el-button type="primary"
                    v-if="this.form.status =='1'" @click="submitForm('2')">启动活动
         </el-button>
@@ -767,6 +772,7 @@
             break;
             break;
           case "5":
+            this.getLeaveMemberList();
             break;
           default:
             break;
@@ -829,7 +835,7 @@
       getJoinMemberList() {
         this.memberList = [];
         this.memberLoading = true;
-        listMember({"planUuid": this.form.planUuid, "partyOrgId": this.form.partyOrgId}).then(response => {
+        listMember({"detailedUuid": this.form.detailedUuid}).then(response => {
           this.memberList = response.rows;
           this.memberLoading = false;
         });
@@ -838,8 +844,7 @@
         this.leaveMemberList = [];
         this.memberLoading = true;
         listMember({
-          "planUuid": this.form.planUuid,
-          "partyOrgId": this.form.partyOrgId,
+          "detailedUuid": this.form.detailedUuid,
           "status": "5"
         }).then(response => {
           this.leaveMemberList = response.rows;
@@ -849,8 +854,7 @@
       openOrgMemberTransfer(type) {
         this.$refs.memberTransfer.open = true;
         this.$refs.memberTransfer.title = "选择活动参与人";
-        this.$refs.memberTransfer.planUuid = this.form.planUuid;
-        this.$refs.memberTransfer.partyOrgId = this.form.partyOrgId;
+        this.$refs.memberTransfer.detailedUuid = this.form.detailedUuid;
         this.$refs.memberTransfer.type = type;
         this.$refs.memberTransfer.getPartyMemberSelect();
       },

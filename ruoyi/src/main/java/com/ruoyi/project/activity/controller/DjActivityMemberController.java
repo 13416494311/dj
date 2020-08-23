@@ -1,6 +1,8 @@
 package com.ruoyi.project.activity.controller;
 
 import java.util.List;
+
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,12 +87,15 @@ public class DjActivityMemberController extends BaseController
 
     @Log(title = "活动参与人", businessType = BusinessType.INSERT)
     @PostMapping("/addByArrange")
-    public AjaxResult addByArrange(String planUuid,String partyOrgId,String partyMemberIds,String type)
+    public AjaxResult addByArrange(String planUuid,String detailedUuid,String partyOrgId,String partyMemberIds,String type)
     {
         for(String partyMemberId:partyMemberIds.split(",")){
             DjActivityMember activityMember = new DjActivityMember();
             activityMember.setPlanUuid(planUuid);
-            activityMember.setPartyOrgId(Long.parseLong(partyOrgId));
+            activityMember.setDetailedUuid(detailedUuid);
+            if(StringUtils.isNotNull(partyOrgId)){
+                activityMember.setPartyOrgId(Long.parseLong(partyOrgId));
+            }
             activityMember.setPartyMemberId(Long.parseLong(partyMemberId));
             activityMember.setType(type);
             activityMember.setStatus("1");

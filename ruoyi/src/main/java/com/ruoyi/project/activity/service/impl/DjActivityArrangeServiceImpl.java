@@ -2,14 +2,17 @@ package com.ruoyi.project.activity.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.activity.domain.DjActivityDetailed;
+import com.ruoyi.project.activity.domain.DjActivityMember;
 import com.ruoyi.project.activity.domain.DjActivityParams;
 import com.ruoyi.project.activity.mapper.DjActivityPlanMapper;
 import com.ruoyi.project.activity.service.IDjActivityDetailedService;
+import com.ruoyi.project.activity.service.IDjActivityMemberService;
 import com.ruoyi.project.activity.service.IDjActivityPlanService;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
@@ -40,6 +43,8 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
     private IDjPartyMemberService djPartyMemberService;
     @Autowired
     private IDjActivityDetailedService djActivityDetailedService;
+    @Autowired
+    private IDjActivityMemberService djActivityMemberService;
     /**
      * 查询活动安排
      *
@@ -136,13 +141,35 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
 
 
         if("2".equals(djActivityArrange.getStatus())){
-            DjActivityDetailed activityDetailed =new DjActivityDetailed();
-            activityDetailed.setPartyOrgId(djActivityArrange.getPartyOrgId());
-            activityDetailed.setPlanUuid(djActivityArrange.getPlanUuid());
-            activityDetailed.setPartyMemberId(djActivityArrange.getPartyMemberId());
-            activityDetailed.setVenue(djActivityArrange.getVenue());
-            activityDetailed.setStatus("1");
-            djActivityDetailedService.updateByPlanUuidAndPartyOrgId(activityDetailed);
+
+            DjActivityDetailed detailed =new DjActivityDetailed();
+            detailed.setPlanUuid(djActivityArrange.getPlanUuid());
+            detailed.setPartyOrgId(djActivityArrange.getPartyOrgId());
+            List<DjActivityDetailed> detailedList = djActivityDetailedService.selectDjActivityDetailedList(detailed);
+
+            DjActivityMember activityMember = new DjActivityMember();
+            activityMember.setPlanUuid(djActivityArrange.getPlanUuid());
+            activityMember.setPartyOrgId(djActivityArrange.getPartyOrgId());
+            List<DjActivityMember> memberList = djActivityMemberService.selectDjActivityMemberList(activityMember);
+
+
+            detailedList.stream().forEach(activityDetailed->{
+                activityDetailed.setPartyMemberId(djActivityArrange.getPartyMemberId());
+                activityDetailed.setVenue(djActivityArrange.getVenue());
+                activityDetailed.setStatus("1");
+                djActivityDetailedService.updateDjActivityDetailed(activityDetailed);
+
+                for(int i=0;i<memberList.size();i++){
+                    DjActivityMember detailedMember = new DjActivityMember();
+                    detailedMember.setDetailedUuid(activityDetailed.getDetailedUuid());
+                    detailedMember.setPartyMemberId(memberList.get(i).getPartyMemberId());
+                    detailedMember.setType("1");
+                    detailedMember.setStatus("1");
+                    djActivityMemberService.insertDjActivityMember(detailedMember);
+                }
+            });
+
+
         }
         djActivityArrange.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djActivityArrange.setUpdateTime(DateUtils.getNowDate());

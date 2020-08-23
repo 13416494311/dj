@@ -67,22 +67,22 @@ public class DjActivityDetailed extends BaseEntity
     private Date planEndTime;
 
     /** 活动计划召开时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Excel(name = "活动计划召开时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date activityPlanStartTime;
 
     /** 活动计划结束时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Excel(name = "活动计划结束时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date activityPlanEndTime;
 
     /** 活动实际开始时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Excel(name = "活动实际开始时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date actualStartTime;
 
     /** 活动实际结束时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     @Excel(name = "活动实际结束时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date actualEndTime;
 

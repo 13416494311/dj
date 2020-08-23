@@ -57,6 +57,7 @@
   export default {
     data() {
       return {
+        detailedUuid:undefined,
         planUuid:undefined,
         partyOrgId:undefined,
         type:undefined,
@@ -158,8 +159,12 @@
           return;
         }
         let formData = new FormData();
-        formData.append("planUuid", this.planUuid);
-        formData.append("partyOrgId", this.partyOrgId);
+        if(this.detailedUuid!=undefined){
+          formData.append("detailedUuid", this.detailedUuid);
+        }else{
+          formData.append("planUuid", this.planUuid);
+          formData.append("partyOrgId", this.partyOrgId);
+        }
         formData.append("partyMemberIds", this.value.join(","));
         formData.append("type", this.type);
         addMemberList(formData).then(response => {

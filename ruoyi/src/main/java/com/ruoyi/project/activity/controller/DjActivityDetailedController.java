@@ -160,17 +160,16 @@ public class DjActivityDetailedController extends BaseController
         dataMap.put("planActivityTheme",activityPlan.getActivityTheme());
 
         dataMap.put("detailedActualStartTime",
-                DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,activityDetailed.getActivityPlanStartTime()));
+                DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,activityDetailed.getActualStartTime()));
         dataMap.put("detailedActualEndTime",
-                DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,activityDetailed.getActivityPlanEndTime()));
+                DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,activityDetailed.getActualEndTime()));
         dataMap.put("detailedVenue",activityDetailed.getVenue()==null?"":activityDetailed.getVenue());
         dataMap.put("detailedPresenter",activityDetailed.getPresenter()==null?"":activityDetailed.getPresenter());
         dataMap.put("detailedRecorder",activityDetailed.getRecorder()==null?"":activityDetailed.getRecorder());
         dataMap.put("detailedMentors",activityDetailed.getMentors()==null?"":activityDetailed.getMentors());
 
         DjActivityMember activityMember = new DjActivityMember();
-        activityMember.setPlanUuid(activityDetailed.getPlanUuid());
-        activityMember.setPartyOrgId(activityDetailed.getPartyOrgId());
+        activityMember.setDetailedUuid(activityDetailed.getDetailedUuid());
         List<DjActivityMember> memberList = djActivityMemberService.selectDjActivityMemberList(activityMember);
         dataMap.put("memberTotal",memberList.size());
         StringBuilder memberNames= new StringBuilder();
