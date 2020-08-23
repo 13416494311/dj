@@ -192,7 +192,9 @@ public class DjActivityDetailedController extends BaseController
                     memberLateNum[0] += 1;
                     memberLateNames.append(member.getDjPartyMember().getMemberName()+"、");
                     break;
-                case "4" : break;
+                case "4" :
+                    memberActualNum[0] += 1;
+                    break;
                 case "5" :
                     memberLeaveNames.append(member.getDjPartyMember().getMemberName()+"、");
                     break;

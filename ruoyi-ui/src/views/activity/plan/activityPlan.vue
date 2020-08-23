@@ -757,7 +757,11 @@
         return this.selectDictLabel(this.conveneCycleOptions, row.conveneCycle);
       },
       planStatusFormat(row, column) {
-        return this.selectDictLabel(this.planStatusOptions, row.status);
+        if(row.activitySources =='3'){
+          return "已发布";
+        }else{
+          return this.selectDictLabel(this.planStatusOptions, row.status);
+        }
       },
       // 取消按钮
       cancel() {
@@ -852,7 +856,8 @@
       },
       addOrgArrange(){
         if(this.user.djPartyMember){
-          addArrange({"planUuid":this.form.planUuid,"partyOrgId":this.user.djPartyMember.partyOrgId})
+          addArrange({"planUuid":this.form.planUuid,
+            "partyOrgId":this.user.djPartyMember.partyOrgId,"status":"1"})
             .then(response => {
               if (response.code === 200) {
                 this.getJoinOrgList();

@@ -29,7 +29,6 @@
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              v-hasPermi="['activity:resolution:edit']"
             >修改
             </el-button>
             <el-button
@@ -37,7 +36,6 @@
               type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
-              v-hasPermi="['activity:resolution:remove']"
             >删除
             </el-button>
           </template>
@@ -48,7 +46,7 @@
 
       <!-- 添加或修改活动决议对话框 -->
       <el-dialog :title="title" :visible.sync="open"  append-to-body
-                 @open="init" :close-on-click-modal="false">
+                 :close-on-click-modal="false">
         <el-form ref="form" :model="form" :rules="rules"  label-width="100px">
           <el-form-item label="决议内容" prop="recordContent">
             <el-input v-model="form.recordContent" type="textarea" :autosize="{ minRows: 6, maxRows: 6}"

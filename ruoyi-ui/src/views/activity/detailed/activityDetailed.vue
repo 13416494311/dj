@@ -527,7 +527,7 @@
 
 
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button type="primary" @click="submitForm(this.form.status)">保 存</el-button>
+        <el-button  v-if=""type="primary" @click="submitForm(this.form.status)">保 存</el-button>
         <el-button type="primary"
                    v-if="this.form.status =='1'" @click="submitForm('2')">启动活动
         </el-button>
@@ -1147,38 +1147,51 @@
       },
       /** 提交按钮 */
       submitForm: function (status) {
-        this.$refs["form"].validate(valid => {
-          if (valid) {
-            this.form.status = status;
-            if (this.form.detailedId != undefined) {
-              updateDetailed(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess("修改成功");
-                  this.open = false;
-                  this.getList();
-                } else {
-                  this.msgError(response.msg);
-                }
-              });
+        if(status!='6'){
+          this.$refs["form"].validate(valid => {
+            if (valid) {
+              this.form.status = status;
+              if (this.form.detailedId != undefined) {
+                updateDetailed(this.form).then(response => {
+                  if (response.code === 200) {
+                    this.msgSuccess("修改成功");
+                    this.open = false;
+                    this.getList();
+                  } else {
+                    this.msgError(response.msg);
+                  }
+                });
+              } else {
+                addDetailed(this.form).then(response => {
+                  if (response.code === 200) {
+                    this.msgSuccess("新增成功");
+                    this.open = false;
+                    this.getList();
+                  } else {
+                    this.msgError(response.msg);
+                  }
+                });
+              }
             } else {
-              addDetailed(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess("新增成功");
-                  this.open = false;
-                  this.getList();
-                } else {
-                  this.msgError(response.msg);
-                }
-              });
+              setTimeout(() => {
+                var isError = document.getElementsByClassName("is-error");
+                isError[0].querySelector('input').focus();
+              }, 100);
+              return false;
             }
-          } else {
-            setTimeout(() => {
-              var isError = document.getElementsByClassName("is-error");
-              isError[0].querySelector('input').focus();
-            }, 100);
-            return false;
-          }
-        });
+          });
+        }else {
+          updateDetailed(this.form).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            } else {
+              this.msgError(response.msg);
+            }
+          });
+        }
+
       },
       /** 删除按钮操作 */
       handleDelete(row) {

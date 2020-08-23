@@ -43,7 +43,7 @@
 
     <!-- 添加或修改活动纪要对话框 -->
     <el-dialog :title="title" :visible.sync="open"  append-to-body
-               @open="init" :close-on-click-modal="false">
+               :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
 
         <el-form-item label="纪要内容" prop="recordContent">
@@ -118,6 +118,7 @@
         this.queryParams.detailedUuid = detailedUuid;
         this.getList();
         this.detailedUuid = detailedUuid;
+
       },
       /** 对话框自适应高度 */
       getHeight() {
