@@ -2,6 +2,7 @@ package com.ruoyi.project.activity.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.system.domain.SysFile;
@@ -74,6 +75,7 @@ public class DjActivityExperienceServiceImpl implements IDjActivityExperienceSer
     @Override
     public int insertDjActivityExperience(DjActivityExperience djActivityExperience)
     {
+        djActivityExperience.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djActivityExperience.setCreateTime(DateUtils.getNowDate());
         return djActivityExperienceMapper.insertDjActivityExperience(djActivityExperience);
     }
@@ -87,6 +89,7 @@ public class DjActivityExperienceServiceImpl implements IDjActivityExperienceSer
     @Override
     public int updateDjActivityExperience(DjActivityExperience djActivityExperience)
     {
+        djActivityExperience.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djActivityExperience.setUpdateTime(DateUtils.getNowDate());
         return djActivityExperienceMapper.updateDjActivityExperience(djActivityExperience);
     }

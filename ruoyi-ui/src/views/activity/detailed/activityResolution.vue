@@ -47,7 +47,7 @@
       <!-- 添加或修改活动决议对话框 -->
       <el-dialog :title="title" :visible.sync="open"  append-to-body
                  :close-on-click-modal="false">
-        <el-form ref="form" :model="form" :rules="rules"  label-width="100px">
+        <el-form ref="form" :model="form" :rules="rules"  label-width="150px">
           <el-form-item label="决议内容" prop="recordContent">
             <el-input v-model="form.recordContent" type="textarea" :autosize="{ minRows: 6, maxRows: 6}"
                       placeholder="请输入内容"/>

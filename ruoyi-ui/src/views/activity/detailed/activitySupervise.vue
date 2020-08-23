@@ -1,56 +1,41 @@
 <template>
-  <div>
+  <div class="app-container">
 
-    <el-card shadow="always" style="margin-bottom: 30px;">
-      <div slot="header" style="height: 25px">
-        <span style="font-weight: bold;font-size: 16px">活动纪要</span>
-        <el-button
-          v-if="!disabled"
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          style="float: right;margin-top: -5px"
-        >新增</el-button>
+    <el-dialog  :visible.sync="tableOpen" width="90%" append-to-body
+               @open="getHeight" :close-on-click-modal="false">
+      <div :style="bodyStyle">
+        <el-card shadow="always" style="margin-bottom: 30px;">
+          <div slot="header" style="height: 25px">
+            <span style="font-weight: bold;font-size: 16px">活动督办</span>
+            <el-button
+              type="primary"
+              icon="el-icon-plus"
+              size="mini"
+              @click="handleAdd"
+              style="float: right;margin-top: -5px"
+            >新增
+            </el-button>
+          </div>
+          <el-table v-loading="loading" :data="superviseList">
+            <el-table-column label="督办内容" align="left" prop="content" min-width="60%"/>
+            <el-table-column label="创建时间" align="center" prop="createTime" min-width="20%"/>
+            <el-table-column label="督办人" align="center" prop="djPartyMember.memberName" min-width="20%"/>
+          </el-table>
+        </el-card>
       </div>
-      <el-table v-loading="loading" :data="summaryList">
-        <el-table-column label="纪要内容" align="left" prop="recordContent" min-width="60%"/>
-        <el-table-column label="创建时间" align="center" prop="createTime" min-width="20%">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="!disabled" label="操作" align="center" class-name="small-padding fixed-width" min-width="20%">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-edit"
-              @click="handleUpdate(scope.row)"
-            >修改
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
-            >删除
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-card>
+      <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
+        <el-button @click="tableCancel">取 消</el-button>
+      </div>
+    </el-dialog>
 
-    <!-- 添加或修改活动纪要对话框 -->
-    <el-dialog :title="title" :visible.sync="open"  append-to-body
+
+    <!-- 添加或修改活动督办对话框 -->
+    <el-dialog :title="title" :visible.sync="open" append-to-body
                :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" label-width="150px">
-
-        <el-form-item label="纪要内容" prop="recordContent">
-          <el-input v-model="form.recordContent" type="textarea" :autosize="{ minRows: 6, maxRows: 6}"
-                    placeholder="请输入纪要内容"/>
+        <el-form-item label="督办内容" prop="content">
+          <el-input v-model="form.content" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" placeholder="请输入内容"/>
         </el-form-item>
-
       </el-form>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -61,10 +46,18 @@
 </template>
 
 <script>
-  import {listSummary, getSummary, delSummary, addSummary, updateSummary, exportSummary} from "@/api/activity/summary";
+  import {
+    listSupervise,
+    getSupervise,
+    delSupervise,
+    addSupervise,
+    updateSupervise,
+    exportSupervise
+  } from "@/api/activity/supervise";
+  import { getUserProfile } from "@/api/system/user";
 
   export default {
-    name: "Summary",
+    name: "Supervise",
     data() {
       return {
         // 遮罩层
@@ -77,8 +70,10 @@
         multiple: true,
         // 总条数
         total: 0,
-        // 活动纪要表格数据
-        summaryList: [],
+        // 活动督办表格数据
+        superviseList: [],
+        tableTitle: "",
+        tableOpen: false,
         // 弹出层标题
         title: "",
         // 是否显示弹出层
@@ -88,48 +83,49 @@
           pageNum: 1,
           pageSize: 10,
           detailedUuid: undefined,
-          recordContent: undefined,
-          delFlag: undefined,
-          createBy: undefined,
-          createTime: undefined,
-          updateBy: undefined,
-          updateTime: undefined
+          content: undefined,
+          partyMemberId: undefined,
         },
         // 表单参数
         form: {},
         // 表单校验
         rules: {
-          recordContent: [
-            { required: true, message: "纪要内容不能为空", trigger: "blur" }
+          content: [
+            {required: true, message: "督办内容不能为空", trigger: "blur"}
           ],
         },
-        disabled:false,
+        bodyStyle: {
+          overflowY: 'auto',
+          height: '',
+          marginLeft: '2%',
+          paddingRight: '2%',
+        },
         detailedUuid:undefined,
+        user: {},
       };
     },
     mounted() {
-      //window.addEventListener('resize', this.getHeight);
+      window.addEventListener('resize', this.getHeight);
     },
     created() {
       this.getList();
+      this.getUser();
     },
     methods: {
-      init(detailedUuid){
-        this.queryParams.detailedUuid = detailedUuid;
-        this.getList();
-        this.detailedUuid = detailedUuid;
-
+      getUser() {
+        getUserProfile().then(response => {
+          this.user = response.data;
+        });
       },
       /** 对话框自适应高度 */
       getHeight() {
         this.bodyStyle.height = window.innerHeight - 281 + 'px';
       },
-      /** 查询活动纪要列表 */
+      /** 查询活动督办列表 */
       getList() {
         this.loading = true;
-        this.summaryList = [];
-        listSummary(this.queryParams).then(response => {
-          this.summaryList = response.rows;
+        listSupervise(this.queryParams).then(response => {
+          this.superviseList = response.rows;
           this.total = response.total;
           this.loading = false;
         });
@@ -139,12 +135,17 @@
         this.open = false;
         this.reset();
       },
+      tableCancel(){
+        this.tableOpen = false;
+        this.reset();
+      },
       // 表单重置
       reset() {
         this.form = {
-          summaryId: undefined,
+          superviseId: undefined,
           detailedUuid: undefined,
-          recordContent: undefined,
+          content: undefined,
+          partyMemberId: undefined,
           delFlag: undefined,
           createBy: undefined,
           createTime: undefined,
@@ -165,34 +166,34 @@
       },
       // 多选框选中数据
       handleSelectionChange(selection) {
-        this.ids = selection.map(item => item.summaryId)
+        this.ids = selection.map(item => item.superviseId)
         this.single = selection.length != 1
         this.multiple = !selection.length
       },
       /** 新增按钮操作 */
       handleAdd() {
         this.reset();
-        this.form.detailedUuid= this.detailedUuid
         this.open = true;
-        this.title = "添加活动纪要";
+        this.title = "添加活动督办";
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
-        this.form.detailedUuid= this.detailedUuid
-        const summaryId = row.summaryId || this.ids
-        getSummary(summaryId).then(response => {
+        const superviseId = row.superviseId || this.ids
+        getSupervise(superviseId).then(response => {
           this.form = response.data;
           this.open = true;
-          this.title = "修改活动纪要";
+          this.title = "修改活动督办";
         });
       },
       /** 提交按钮 */
       submitForm: function () {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            if (this.form.summaryId != undefined) {
-              updateSummary(this.form).then(response => {
+            this.form.detailedUuid = this.detailedUuid;
+            this.form.partyMemberId = this.user.partyMemberId
+            if (this.form.superviseId != undefined) {
+              updateSupervise(this.form).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("修改成功");
                   this.open = false;
@@ -202,7 +203,7 @@
                 }
               });
             } else {
-              addSummary(this.form).then(response => {
+              addSupervise(this.form).then(response => {
                 if (response.code === 200) {
                   this.msgSuccess("新增成功");
                   this.open = false;
@@ -212,24 +213,18 @@
                 }
               });
             }
-          }else {
-            setTimeout(() => {
-              var isError = document.getElementsByClassName("is-error");
-              isError[0].querySelector('input').focus();
-            }, 100);
-            return false;
           }
         });
       },
       /** 删除按钮操作 */
       handleDelete(row) {
-        const summaryIds = row.summaryId || this.ids;
-        this.$confirm('是否确认删除活动纪要编号为"' + summaryIds + '"的数据项?', "警告", {
+        const superviseIds = row.superviseId || this.ids;
+        this.$confirm('是否确认删除活动督办编号为"' + superviseIds + '"的数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function () {
-          return delSummary(summaryIds);
+          return delSupervise(superviseIds);
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
@@ -239,12 +234,12 @@
       /** 导出按钮操作 */
       handleExport() {
         const queryParams = this.queryParams;
-        this.$confirm('是否确认导出所有活动纪要数据项?', "警告", {
+        this.$confirm('是否确认导出所有活动督办数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function () {
-          return exportSummary(queryParams);
+          return exportSupervise(queryParams);
         }).then(response => {
           this.download(response.msg);
         }).catch(function () {

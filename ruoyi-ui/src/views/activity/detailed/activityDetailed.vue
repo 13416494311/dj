@@ -45,7 +45,7 @@
           >查看
           </el-button>
           <el-button
-            v-if="scope.row.status !='5' "
+            v-if="scope.row.status !='5' && pathType=='1'"
             size="small"
             type="text"
             icon="el-icon-edit"
@@ -54,12 +54,20 @@
           >活动管理
           </el-button>
           <el-button
-            v-if="scope.row.status =='5' "
+            v-if="scope.row.status =='5'"
             size="small"
             type="text"
             icon="el-icon-download"
             @click="handleExportArchives(scope.row)"
           >下载
+          </el-button>
+          <el-button
+            v-if="scope.row.status !='5' && pathType=='2'"
+            size="small"
+            type="text"
+            icon="el-icon-download"
+            @click="handleOpenSupervise(scope.row)"
+          >督办
           </el-button>
         </template>
       </el-table-column>
@@ -562,6 +570,7 @@
                :close-on-click-modal="false">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
+    <activity-supervise ref="activitySupervise"/>
   </div>
 </template>
 
@@ -586,12 +595,14 @@
   import activityResolution from "./activityResolution";
   import activitySuggestions from "./activitySuggestions";
   import activityExperience from "./activityExperience";
+  import activitySupervise from "./activitySupervise";
 
   export default {
     name: "Detailed",
     components: {
       partyMember, addressMap, memberTransfer, activitySummary,
-      activityResolution, activitySuggestions, activityExperience
+      activityResolution, activitySuggestions, activityExperience,
+      activitySupervise
     },
     data() {
       return {
@@ -687,6 +698,7 @@
         disabled6: false,
         mapOpen: false,
         actualRequired: false,
+        pathType: undefined,
 
       };
     },
@@ -705,9 +717,22 @@
       this.getDicts("activity_member_status").then(response => {
         this.memberStatusOptions = response.data;
       });
+      this.getPathType();
     },
     methods: {
-
+      getPathType(){
+        let path = this.$route.path;
+        switch (path) {
+          case "/activity/detailed/1" :
+            this.pathType = "1";
+            break;
+          case "/activity/detailed/2" :
+            this.pathType = "2";
+            break;
+          default:
+            break;
+        }
+      },
       /**附件上传*/
       uploadPicFile(file) {
         const loading = this.$loading({
@@ -1104,7 +1129,6 @@
           this.$refs.activitySummary.init(this.form.detailedUuid);
           this.$refs.activityResolution.disabled = this.disabled;
           this.$refs.activityResolution.init(this.form.detailedUuid);
-
           this.$refs.activitySuggestions.queryParams.detailedUuid= this.form.detailedUuid;
           this.$refs.activityExperience.queryParams.detailedUuid= this.form.detailedUuid;
 
@@ -1229,6 +1253,11 @@
       handleExportArchives(row) {
         downLoadZip("/activity/detailed/exportArchives?detailedId=" + row.detailedId);
       },
+      handleOpenSupervise(row){
+        this.$refs.activitySupervise.tableOpen= true;
+        this.$refs.activitySupervise.detailedUuid= row.detailedUuid
+        this.$refs.activitySupervise.queryParams.detailedUuid= row.detailedUuid
+      }
     }
   };
 </script>
