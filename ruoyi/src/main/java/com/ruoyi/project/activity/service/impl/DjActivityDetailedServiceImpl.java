@@ -49,6 +49,7 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     @Autowired
     private IDjSysTodoService djSysTodoService;
 
+
     /**
      * 查询活动详情
      *
@@ -67,6 +68,10 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
         if (StringUtils.isNotNull(detailed.getPlanUuid())) {
             detailed.setDjActivityPlan(djActivityPlanService.selectDjActivityPlanByPlanUuid(detailed.getPlanUuid()));
         }
+        DjActivityMember djActivityMember = new DjActivityMember();
+        djActivityMember.setDetailedUuid(detailed.getDetailedUuid());
+        detailed.setDjActivityMemberList(djActivityMemberService.selectDjActivityMemberList(djActivityMember));
+
         return detailed;
     }
 

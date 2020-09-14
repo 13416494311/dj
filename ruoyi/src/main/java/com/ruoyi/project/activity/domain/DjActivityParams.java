@@ -8,4 +8,6 @@ public class DjActivityParams extends BaseEntity {
 
     private String activityTheme;
 
+    private String state ;
+
 }

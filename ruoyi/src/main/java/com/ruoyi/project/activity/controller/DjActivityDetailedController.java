@@ -7,10 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.pagehelper.PageHelper;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.FileUtil;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.WordUtils;
 import com.ruoyi.common.utils.file.FileUtils;
+import com.ruoyi.common.utils.sql.SqlUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.project.activity.domain.*;
 import com.ruoyi.project.activity.service.*;
@@ -18,14 +21,7 @@ import com.ruoyi.project.system.service.ISysDictDataService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import com.ruoyi.framework.web.controller.BaseController;
@@ -80,6 +76,19 @@ public class DjActivityDetailedController extends BaseController
         startPage();
         List<DjActivityDetailed> list = djActivityDetailedService.selectDetailedListByParam(params);
         return getDataTable(list);
+    }
+
+
+    @PostMapping("/listByParamForApp")
+    @DataScope(partyOrgAlias = "detailed")
+    public AjaxResult listByParamForApp(@RequestBody DjActivityParams params)
+    {
+        if (StringUtils.isNotNull(params.getPageNum()) && StringUtils.isNotNull(params.getPageSize()))
+        {
+            PageHelper.startPage(params.getPageNum(), params.getPageSize());
+        }
+        List<DjActivityDetailed> list = djActivityDetailedService.selectDetailedListByParam(params);
+        return AjaxResult.success(list);
     }
 
     /**

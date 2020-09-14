@@ -38,6 +38,8 @@ public class DjActivityPlan extends BaseEntity
     @Excel(name = "党员活动类型")
     private String activityType;
 
+    private String activityTypeText;
+
     /** 召开周期 */
     @Excel(name = "召开周期")
     private String conveneCycle;

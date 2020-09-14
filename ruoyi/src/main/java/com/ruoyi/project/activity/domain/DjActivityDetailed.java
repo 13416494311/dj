@@ -1,6 +1,8 @@
 package com.ruoyi.project.activity.domain;
 
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.domain.DjPartyOrg;
@@ -120,6 +122,8 @@ public class DjActivityDetailed extends BaseEntity
 
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
+
+    private List<DjActivityMember> djActivityMemberList;
 
 
 }

@@ -93,6 +93,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="activityTheme != null  and activityTheme != ''">
                 and plan.activity_theme like concat('%', #{activityTheme}, '%')
             </if>
+            <if test="state != null  and state != '' and '1'.toString == state">
+                and detailed.status in ('5')
+            </if>
+            <if test="state != null  and state != '' and '0'.toString == state">
+                and detailed.status in ('2','3','4','6')
+            </if>
             ${dataScope}
         </where>
     </select>

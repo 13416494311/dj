@@ -9,13 +9,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Entity基类
- * 
+ *
  * @author ruoyi
  */
 public class BaseEntity implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
+    private Integer pageNum ;
+
+    private Integer pageSize ;
     /** 搜索值 */
     private String searchValue;
 
@@ -49,6 +52,22 @@ public class BaseEntity implements Serializable
 
     /** 请求参数 */
     private Map<String, Object> params;
+
+    public Integer getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
 
     public String getSearchValue()
     {

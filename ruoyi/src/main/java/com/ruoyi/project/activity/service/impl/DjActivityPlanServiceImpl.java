@@ -14,6 +14,7 @@ import com.ruoyi.project.activity.domain.DjActivityDetailed;
 import com.ruoyi.project.activity.mapper.DjActivityDetailedMapper;
 import com.ruoyi.project.activity.service.IDjActivityArrangeService;
 import com.ruoyi.project.activity.service.IDjActivityDetailedService;
+import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivityPlanMapper;
@@ -34,6 +35,8 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
     private IDjActivityDetailedService djActivityDetailedService;
     @Autowired
     private IDjActivityArrangeService djActivityArrangeService;
+    @Autowired
+    private ISysDictDataService dictDataService;
     /**
      * 查询活动计划
      *
@@ -47,7 +50,11 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
 
     @Override
     public DjActivityPlan selectDjActivityPlanByPlanUuid(String planUuid) {
-        return djActivityPlanMapper.selectDjActivityPlanByPlanUuid(planUuid);
+        DjActivityPlan activityPlan = djActivityPlanMapper.selectDjActivityPlanByPlanUuid(planUuid);
+        if(StringUtils.isNotNull(activityPlan.getActivityType())){
+            activityPlan.setActivityTypeText(dictDataService.selectDictLabel("activity_type",activityPlan.getActivityType()));
+        }
+        return activityPlan;
     }
 
     /**
