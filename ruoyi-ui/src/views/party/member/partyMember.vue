@@ -73,7 +73,6 @@
           </el-col>-->
         </el-row>
         <el-table v-loading="loading" :data="partyMemberList" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55" align="center"/>
           <el-table-column label="党员姓名" align="center" prop="memberName"/>
           <el-table-column label="手机号" align="center" prop="mobile"/>
           <el-table-column label="行政组织" align="center" prop="deptId" :formatter="deptIdFormat" />
@@ -94,17 +93,18 @@
                 type="text"
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
+                v-if="showHandleUpdate(scope.row)"
                 v-hasPermi="['party:member:edit']"
               >修改
               </el-button>
-              <el-button
+              <!--<el-button
                 size="small"
                 type="text"
                 icon="el-icon-delete"
                 @click="handleDelete(scope.row)"
                 v-hasPermi="['party:member:remove']"
               >删除
-              </el-button>
+              </el-button>-->
             </template>
           </el-table-column>
         </el-table>
@@ -651,6 +651,7 @@
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import selectTree from '../../components/selectTree';
+  import { getUserProfile } from "@/api/system/user";
 
   export default {
     name: "PartyMember",
@@ -876,6 +877,7 @@
             return date.getTime() > Date.now();
           }
         },
+        user: {},
       };
     },
     mounted() {
@@ -892,6 +894,7 @@
 
     },
     created() {
+      this.getUser();
       this.getList();
       this.getPartyOrgTreeSelect();
       this.getDeptTreeselect();
@@ -1272,6 +1275,29 @@
           this.download(response.msg);
         }).catch(function () {
         });
+      },
+      getUser() {
+        getUserProfile().then(response => {
+          this.user = response.data;
+          console.log(JSON.stringify(this.user));
+        });
+      },
+      showHandleUpdate(row){
+        let showFlag = false;
+        let roles = this.user.roles;
+        if(roles && roles.length!=0){
+          for(let i=0;i<roles.length;i++){
+            //管理员角色
+            if(roles[i].roleId == 1){
+              showFlag = true;
+              break;
+            }
+          }
+        }
+        if(this.user.djPartyMember && this.user.djPartyMember.partyOrgId == row.partyOrgId){
+          showFlag = true;
+        }
+        return showFlag ;
       }
     }
   };
