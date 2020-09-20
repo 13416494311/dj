@@ -13,18 +13,18 @@
               <el-row>
                 <el-col :span="12">
                   <el-form-item label="党员姓名" prop="memberName">
-                    <el-input :disabled="disabled"v-model="form.memberName" placeholder="请输入党员姓名"/>
+                    <el-input :disabled="disabled" v-model="form.memberName" placeholder="请输入党员姓名"/>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="手机号" prop="mobile">
-                    <el-input :disabled="disabled"v-model="form.mobile" placeholder="请输入手机号"/>
+                    <el-input :disabled="disabled" v-model="form.mobile" placeholder="请输入手机号"/>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
                 <el-col :span="12">
-                  <el-form-item label="用户性别">
+                  <el-form-item label="用户性别" prop="sex">
                     <el-select :disabled="disabled"
                                v-model="form.sex"
                                style="width: 100%" placeholder="请选择用户性别">
@@ -39,7 +39,7 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="工号" prop="workNo">
-                    <el-input :disabled="disabled"v-model="form.workNo" placeholder="请输入工号"/>
+                    <el-input :disabled="disabled" v-model="form.workNo" placeholder="请输入工号"/>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -72,8 +72,8 @@
                 :http-request="uploadAtt"
                 accept="image/jpeg,image/jpg,image/gif,image/png,">
                 <div class="avatar">
-                  <img v-if="form.avatar" :src="avatarUrl"  >
-                  <div v-else class="avatar-background" ></div>
+                  <img v-if="form.avatar" :src="avatarUrl">
+                  <div v-else class="avatar-background"></div>
                 </div>
               </el-upload>
 
@@ -97,7 +97,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="行政职务">
+              <el-form-item label="行政职务" prop="administrativePosition">
                 <el-select :disabled="disabled"
                            v-model="form.administrativePosition"
                            style="width: 100%" placeholder="请选择行政职务">
@@ -118,7 +118,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="岗位">
+              <el-form-item label="岗位" prop="postId">
                 <el-select :disabled="disabled"
                            v-model="form.postId"
                            style="width: 100%" placeholder="请选择岗位">
@@ -148,7 +148,7 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="民族">
+              <el-form-item label="民族" prop="nation">
                 <el-select :disabled="disabled"
                            v-model="form.nation"
                            style="width: 100%" placeholder="请选择民族">
@@ -162,7 +162,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="政治面貌">
+              <el-form-item label="政治面貌" prop="polity">
                 <el-select :disabled="disabled"
                            v-model="form.polity"
                            style="width: 100%" placeholder="请选择政治面貌">
@@ -176,7 +176,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="身份">
+              <el-form-item label="身份" prop="workIdentity">
                 <el-select :disabled="disabled"
                            v-model="form.workIdentity"
                            style="width: 100%" placeholder="请选择身份">
@@ -192,7 +192,7 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="学历">
+              <el-form-item label="学历" prop="education">
                 <el-select :disabled="disabled"
                            v-model="form.education"
                            style="width: 100%" placeholder="请选择学历">
@@ -206,7 +206,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="学位">
+              <el-form-item label="学位" prop="academicDegree">
                 <el-select :disabled="disabled"
                            v-model="form.academicDegree"
                            style="width: 100%" placeholder="请选择学位">
@@ -221,19 +221,19 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="籍贯" prop="nativePlace">
-                <el-input :disabled="disabled"v-model="form.nativePlace" placeholder="请输入籍贯"/>
+                <el-input :disabled="disabled" v-model="form.nativePlace" placeholder="请输入籍贯"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
               <el-form-item label="家庭住址" prop="homeAddress">
-                <el-input :disabled="disabled"v-model="form.homeAddress" placeholder="请输入家庭住址"/>
+                <el-input :disabled="disabled" v-model="form.homeAddress" placeholder="请输入家庭住址"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="固定电话" prop="housePhone">
-                <el-input :disabled="disabled"v-model="form.housePhone" placeholder="请输入固定电话"/>
+                <el-input :disabled="disabled" v-model="form.housePhone" placeholder="请输入固定电话"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -245,7 +245,7 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="QQ" prop="qq">
-                <el-input :disabled="disabled"v-model="form.qq" placeholder="请输入QQ"/>
+                <el-input :disabled="disabled" v-model="form.qq" placeholder="请输入QQ"/>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -255,7 +255,6 @@
             </el-col>
           </el-row>
         </el-card>
-
         <el-card shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">党员信息</span>
@@ -345,7 +344,7 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="流动党员">
+              <el-form-item label="流动党员" prop="floatingType">
                 <el-select :disabled="disabled"
                            v-model="form.floatingType"
                            style="width: 100%" placeholder="请选择流动党员">
@@ -359,7 +358,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="党员分组">
+              <el-form-item label="党员分组" prop="memberGroup">
                 <el-select :disabled="disabled"
                            v-model="form.memberGroup"
                            style="width: 100%" placeholder="请选择党员分组">
@@ -374,14 +373,13 @@
             </el-col>
           </el-row>
         </el-card>
-
         <el-card shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">生活困难情况</span>
           </div>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="生活困难">
+              <el-form-item label="生活困难" prop="lifeDifficulty">
                 <el-select :disabled="disabled"
                            v-model="form.lifeDifficulty"
                            style="width: 100%"
@@ -396,7 +394,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="组织认定">
+              <el-form-item label="组织认定"
+                            prop="cognizance">
                 <el-select :disabled="disabled"
                            v-model="form.cognizance"
                            style="width: 100%" placeholder="请选择是否组织认定">
@@ -410,7 +409,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="经济状况">
+              <el-form-item label="经济状况" prop="economicSituation">
                 <el-select :disabled="disabled"
                            v-model="form.economicSituation"
                            style="width: 100%" placeholder="请选择经济状况">
@@ -426,7 +425,7 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="身体健康情况">
+              <el-form-item label="身体健康情况" prop="physicalHealth">
                 <el-select :disabled="disabled" v-model="form.physicalHealth" style="width: 100%" placeholder="请选择身体健康情况">
                   <el-option
                     v-for="dict in physicalHealthOptions"
@@ -438,8 +437,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="生活困难类型">
-                <el-select :disabled="disabled" v-model="form.lifeDifficultyType" style="width: 100%" placeholder="请选择生活困难类型">
+              <el-form-item label="生活困难类型" prop="lifeDifficultyType">
+                <el-select :disabled="disabled" v-model="form.lifeDifficultyType" style="width: 100%"
+                           placeholder="请选择生活困难类型">
                   <el-option
                     v-for="dict in lifeDifficultyTypeOptions"
                     :key="dict.dictValue"
@@ -450,7 +450,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="享受帮扶">
+              <el-form-item label="享受帮扶" prop="enjoyHelp">
                 <el-select :disabled="disabled" v-model="form.enjoyHelp" style="width: 100%" placeholder="请选择是否享受帮扶">
                   <el-option
                     v-for="dict in enjoyHelpOptions"
@@ -478,25 +478,23 @@
             </el-col>
           </el-row>
         </el-card>
-
         <el-card shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">审批记录</span>
           </div>
-          <el-table v-loading="loading" :data="logList" >
-            <el-table-column label="操作名称" align="center" prop="stepName" />
-            <el-table-column label="操作人" align="center" prop="sysUser.nickName" />
-            <el-table-column label="操作" align="center" prop="operResult" />
+          <el-table v-loading="loading" :data="logList">
+            <el-table-column label="操作名称" align="center" prop="stepName"/>
+            <el-table-column label="操作人" align="center" prop="sysUser.nickName"/>
+            <el-table-column label="操作" align="center" prop="operResult"/>
             <el-table-column label="操作时间" align="center" prop="operTime" width="180">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.operTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="备注" align="center" prop="operReason" />
+            <el-table-column label="备注" align="center" prop="operReason"/>
           </el-table>
 
         </el-card>
-
       </el-form>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
         <el-button v-show="!disabled" type="primary" @click="submitForm">确 定</el-button>
@@ -543,6 +541,7 @@
     updatePartyMemberChange,
     exportPartyMemberChange
   } from "@/api/memberChange/partyMemberChange";
+  import {getPartyMember} from "@/api/party/member";
   import { postOptionSelect } from "@/api/system/post";
   import { partyOrgTreeselect, getPartyOrg } from "@/api/party/org";
   import { getDept } from "@/api/system/dept";
@@ -556,6 +555,204 @@
     name: "PartyMemberChange",
     components: {Treeselect,selectTree},
     data() {
+      let checkPartyMember = (rule, value, callback) => {
+        let field = rule.field;
+        if (value != this.partyMember[field]) {
+          switch (field) {
+            case "sex" :
+              let sex=''
+              if(this.partyMember[field]){
+                sex = this.selectDictLabel(this.sexOptions, this.partyMember[field]);
+              }
+              callback(new Error(sex));
+              break;
+            case "birthday" :
+              let birthday ='';
+              if(this.partyMember[field]){
+                birthday=this.partyMember[field].substring(0,10);
+              }
+              callback(new Error(birthday));
+              break;
+            case "deptId" :
+              let deptName='';
+              if(this.partyMember[field]){
+                getDept(this.partyMember[field]).then(response => {
+                  deptName = response.data.deptName;
+                }).then(()=>{
+                  callback(new Error(deptName));
+                });
+              }
+              break;
+            case "administrativePosition" :
+              let administrativePosition = '';
+              if(this.partyMember[field]){
+                administrativePosition = this.selectDictLabel(this.administrativePositionOptions, this.partyMember[field]);
+              }
+              callback(new Error(administrativePosition));
+              break;
+            case "postId" :
+              let post='';
+              if(this.partyMember[field]){
+                for(let i=0;i<this.postOptions.length;i++){
+                  if(this.postOptions[i].postId == this.partyMember[field]){
+                    post = this.postOptions[i].postName;
+                  }
+                }
+              }
+              callback(new Error(post));
+              break;
+            case "workingDate" :
+              let workingDate ='';
+              if(this.partyMember[field]){
+                workingDate=this.partyMember[field].substring(0,10);
+              }
+              callback(new Error(workingDate));
+              break;
+            case "nation" :
+              let nation ='';
+              if(this.partyMember[field]){
+                nation = this.selectDictLabel(this.nationOptions, this.partyMember[field]);
+              }
+              callback(new Error(nation));
+              break;
+            case "polity" :
+              let polity ='';
+              if(this.partyMember[field]){
+                polity = this.selectDictLabel(this.polityOptions, this.partyMember[field]);
+              }
+              callback(new Error(polity));
+              break;
+            case "workIdentity" :
+              let workIdentity ='';
+              if(this.partyMember[field]){
+                workIdentity = this.selectDictLabel(this.workIdentityOptions, this.partyMember[field]);
+              }
+              callback(new Error(workIdentity));
+              break;
+            case "education" :
+              let education ='';
+              if(this.partyMember[field]){
+                education = this.selectDictLabel(this.educationOptions, this.partyMember[field]);
+              }
+              callback(new Error(education));
+              break;
+            case "academicDegree" :
+              let academicDegree ='';
+              if(this.partyMember[field]){
+                academicDegree = this.selectDictLabel(this.academicDegreeOptions, this.partyMember[field]);
+              }
+              callback(new Error(academicDegree));
+              break;
+            case "partyOrgId" :
+              let partyOrgName ='';
+              if(this.partyMember[field]){
+                getPartyOrg(this.partyMember[field]).then(response => {
+                  partyOrgName = response.data.partyOrgName;
+                }).then(()=>{
+                  callback(new Error(partyOrgName));
+                });
+              }
+              break;
+            case "memberType" :
+              let memberType ='';
+              if(this.partyMember[field]){
+                memberType = this.selectDictLabel(this.memberTypeOptions, this.partyMember[field]);
+              }
+              callback(new Error(memberType));
+              break;
+            case "memberStatus" :
+              let memberStatus ='';
+              if(this.partyMember[field]){
+                memberStatus = this.selectDictLabel(this.memberStatusOptions, this.partyMember[field]);
+              }
+              callback(new Error(memberStatus));
+              break;
+            case "joinBranchData" :
+              let joinBranchData ='';
+              if(this.partyMember[field]){
+                joinBranchData=this.partyMember[field].substring(0,10);
+              }
+              callback(new Error(joinBranchData));
+              break;
+            case "joinData" :
+              let joinData ='';
+              if(this.partyMember[field]){
+                joinData=this.partyMember[field].substring(0,10);
+              }
+              callback(new Error(joinData));
+              break;
+            case "formalData" :
+              let formalData ='';
+              if(this.partyMember[field]){
+                formalData=this.partyMember[field].substring(0,10);
+              }
+              callback(new Error(formalData));
+              break;
+            case "floatingType" :
+              let floatingType ='';
+              if(this.partyMember[field]){
+                floatingType = this.selectDictLabel(this.floatingTypeOptions, this.partyMember[field]);
+              }
+              callback(new Error(floatingType));
+              break;
+            case "memberGroup" :
+              let memberGroup ='';
+              if(this.partyMember[field]){
+                memberGroup = this.selectDictLabel(this.memberGroupOptions, this.partyMember[field]);
+              }
+              callback(new Error(memberGroup));
+              break;
+            case "lifeDifficulty" :
+              let lifeDifficulty ='';
+              if(this.partyMember[field]){
+                lifeDifficulty = this.selectDictLabel(this.lifeDifficultyOptions, this.partyMember[field]);
+              }
+              callback(new Error(lifeDifficulty));
+              break;
+            case "cognizance" :
+              let cognizance ='';
+              if(this.partyMember[field]){
+                cognizance = this.selectDictLabel(this.cognizanceOptions, this.partyMember[field]);
+              }
+              callback(new Error(cognizance));
+              break;
+            case "economicSituation" :
+              let economicSituation ='';
+              if(this.partyMember[field]){
+                economicSituation = this.selectDictLabel(this.economicSituationOptions, this.partyMember[field]);
+              }
+              callback(new Error(economicSituation));
+              break;
+            case "physicalHealth" :
+              let physicalHealth ='';
+              if(this.partyMember[field]){
+                physicalHealth = this.selectDictLabel(this.physicalHealthOptions, this.partyMember[field]);
+              }
+              callback(new Error(physicalHealth));
+              break;
+            case "lifeDifficultyType" :
+              let lifeDifficultyType ='';
+              if(this.partyMember[field]){
+                lifeDifficultyType = this.selectDictLabel(this.lifeDifficultyTypeOptions, this.partyMember[field]);
+              }
+              callback(new Error(lifeDifficultyType));
+              break;
+            case "enjoyHelp" :
+              let enjoyHelp ='';
+              if(this.partyMember[field]){
+                enjoyHelp = this.selectDictLabel(this.enjoyHelpOptions, this.partyMember[field]);
+              }
+              callback(new Error(enjoyHelp));
+              break;
+            default:
+              callback(new Error(this.partyMember[field]));
+              break;
+          }
+
+        } else {
+          callback();
+        }
+      };
       return {
         // 遮罩层
         loading: true,
@@ -664,140 +861,136 @@
         form: {},
         // 表单校验
         rules: {
-          memberUuid: [
-            {required: true, message: "用户唯一uuid不能为空", trigger: "blur"}
-          ],
-          changeType: [
-            {required: true, message: "党员变更类型（add：新增 ；edit：修改；del：删除）不能为空", trigger: "blur"}
-          ],
-          partyMemberId: [
-            {required: true, message: "关联党组织成员id不能为空", trigger: "blur"}
-          ],
-          auditState: [
-            {required: true, message: "审批状态不能为空", trigger: "blur"}
-          ],
-          partyOrgId: [
-            {required: true, message: "党组织ID不能为空", trigger: "blur"}
-          ],
-          workNo: [
-            {required: true, message: "工号不能为空", trigger: "blur"}
-          ],
-          avatar: [
-            {required: true, message: "党员照片不能为空", trigger: "blur"}
-          ],
           memberName: [
-            {required: true, message: "党员姓名不能为空", trigger: "blur"}
-          ],
-          sex: [
-            {required: true, message: "用户性别（0男 1女 2未知）不能为空", trigger: "blur"}
+            {required: true, message: "党员姓名不能为空", trigger: "blur"},
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           mobile: [
-            {required: true, message: "手机号不能为空", trigger: "blur"}
+            {required: true, message: "手机号不能为空", trigger: "blur"},
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           identityCard: [
-            {required: true, message: "身份证号不能为空", trigger: "blur"}
+            {required: true, message: "身份证号不能为空", trigger: "blur"},
+            {validator: checkPartyMember, trigger: "blur"}
           ],
-          birthday: [
-            {required: true, message: "出生日期不能为空", trigger: "blur"}
-          ],
-          companyName: [
-            {required: true, message: "所在单位不能为空", trigger: "blur"}
-          ],
-          deptId: [
-            {required: true, message: "行政组织不能为空", trigger: "blur"}
-          ],
-          administrativePosition: [
-            {required: true, message: "行政职务不能为空", trigger: "blur"}
-          ],
-          title: [
-            {required: true, message: "职称不能为空", trigger: "blur"}
-          ],
-          postId: [
-            {required: true, message: "岗位不能为空", trigger: "blur"}
-          ],
-          workingDate: [
-            {required: true, message: "参加工作日期不能为空", trigger: "blur"}
-          ],
-          nation: [
-            {required: true, message: "民族不能为空", trigger: "blur"}
-          ],
-          polity: [
-            {required: true, message: "政治面貌不能为空", trigger: "blur"}
-          ],
-          workIdentity: [
-            {required: true, message: "身份不能为空", trigger: "blur"}
-          ],
-          education: [
-            {required: true, message: "学历不能为空", trigger: "blur"}
-          ],
-          academicDegree: [
-            {required: true, message: "学位不能为空", trigger: "blur"}
-          ],
-          nativePlace: [
-            {required: true, message: "籍贯不能为空", trigger: "blur"}
-          ],
-          homeAddress: [
-            {required: true, message: "家庭住址不能为空", trigger: "blur"}
-          ],
-          housePhone: [
-            {required: true, message: "固定电话不能为空", trigger: "blur"}
-          ],
-          email: [
-            {required: true, message: "电子邮箱不能为空", trigger: "blur"}
-          ],
-          qq: [
-            {required: true, message: "qq不能为空", trigger: "blur"}
-          ],
-          wechat: [
-            {required: true, message: "微信号码不能为空", trigger: "blur"}
-          ],
-          remark: [
-            {required: true, message: "备注不能为空", trigger: "blur"}
+          partyOrgId: [
+            {required: true, message: "党组织不能为空", trigger: "blur"},
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           memberType: [
-            {required: true, message: "党员类型不能为空", trigger: "blur"}
+            {required: true, message: "党员类型不能为空", trigger: "blur"},
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           memberStatus: [
-            {required: true, message: "党员状态不能为空", trigger: "blur"}
+            {required: true, message: "党员状态不能为空", trigger: "blur"},
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+
+
+          housePhone: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          email: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          workNo: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          avatar: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          sex: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          birthday: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          companyName: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          deptId: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          administrativePosition: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          title: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          postId: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          workingDate: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          nation: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          polity: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          workIdentity: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          education: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          academicDegree: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          nativePlace: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          homeAddress: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          qq: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          wechat: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          remark: [
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           joinBranchData: [
-            {required: true, message: "加入党支部日期不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           joinData: [
-            {required: true, message: "加入党日期不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           formalData: [
-            {required: true, message: "转为正式党员日期不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           floatingType: [
-            {required: true, message: "流动党员（1：是  0：否）不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           memberGroup: [
-            {required: true, message: "党员分组不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           lifeDifficulty: [
-            {required: true, message: "生活困难（1：是  0：否）不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           cognizance: [
-            {required: true, message: "组织认定（1：是  0：否）不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           economicSituation: [
-            {required: true, message: "经济状况不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           physicalHealth: [
-            {required: true, message: "身体健康情况不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           lifeDifficultyType: [
-            {required: true, message: "生活困难类型不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           enjoyHelp: [
-            {required: true, message: "享受帮扶不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           helpInfo: [
-            {required: true, message: "补助情况不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           detail: [
-            {required: true, message: "具体情况描述不能为空", trigger: "blur"}
+            {validator: checkPartyMember, trigger: "blur"}
           ],
         },
         bodyStyle: {
@@ -1118,6 +1311,14 @@
           this.open = true;
           this.title = "党员"+this.selectDictLabel(this.changeTypeOptions, row.changeType)+"变更";
           this.getLogList();
+        }).then(() => {
+          if (this.form.changeType == "edit") {
+            getPartyMember(this.form.partyMemberId).then(response => {
+              this.partyMember = response.data;
+              this.$refs["form"].validate(valid => {
+              });
+            });
+          }
         });
       },
       /** 修改按钮操作 */

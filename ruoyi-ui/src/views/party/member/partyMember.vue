@@ -24,29 +24,6 @@
           />
         </div>
       </el-col>
-      <el-col :span="6" :xs="24">
-        <div class="head-container">
-          <el-input
-            v-model="partyOrgName"
-            placeholder="请输入党组织架构名称"
-            clearable
-            size="small"
-            prefix-icon="el-icon-search"
-            style="margin-bottom: 20px"
-          />
-        </div>
-        <div class="head-container">
-          <el-tree
-            :data="partyOrgOptions"
-            :props="defaultProps"
-            :expand-on-click-node="false"
-            :filter-node-method="filterNode"
-            ref="tree"
-            default-expand-all
-            @node-click="handleNodeClick"
-          />
-        </div>
-      </el-col>
       <el-col :span="18" :xs="24">
         <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
           <el-form-item label="党员姓名" prop="memberName">
