@@ -11,6 +11,14 @@ export function listUser(query) {
 }
 
 // 查询用户详细
+export function optionselect(roleId) {
+  return request({
+    url: '/system/user/optionselect/' + praseStrEmpty(roleId),
+    method: 'get'
+  })
+}
+
+// 查询用户详细
 export function getUser(userId) {
   return request({
     url: '/system/user/' + praseStrEmpty(userId),

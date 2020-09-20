@@ -1,146 +1,5 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="20">
-      <el-col :span="6" :xs="24">
-        <div class="head-container">
-          <el-input
-            v-model="partyOrgName"
-            placeholder="请输入党组织架构名称"
-            clearable
-            size="small"
-            prefix-icon="el-icon-search"
-            style="margin-bottom: 20px"
-          />
-        </div>
-        <div class="head-container">
-          <el-tree
-            :data="partyOrgOptions"
-            :props="defaultProps"
-            :expand-on-click-node="false"
-            :filter-node-method="filterNode"
-            ref="tree"
-            default-expand-all
-            @node-click="handleNodeClick"
-          />
-        </div>
-      </el-col>
-      <el-col :span="6" :xs="24">
-        <div class="head-container">
-          <el-input
-            v-model="partyOrgName"
-            placeholder="请输入党组织架构名称"
-            clearable
-            size="small"
-            prefix-icon="el-icon-search"
-            style="margin-bottom: 20px"
-          />
-        </div>
-        <div class="head-container">
-          <el-tree
-            :data="partyOrgOptions"
-            :props="defaultProps"
-            :expand-on-click-node="false"
-            :filter-node-method="filterNode"
-            ref="tree"
-            default-expand-all
-            @node-click="handleNodeClick"
-          />
-        </div>
-      </el-col>
-      <el-col :span="18" :xs="24">
-        <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-          <el-form-item label="党员姓名" prop="memberName">
-            <el-input
-              v-model="queryParams.memberName"
-              placeholder="请输入党员姓名"
-              clearable
-              size="small"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="党员类型" prop="memberType">
-            <el-select v-model="queryParams.memberType" placeholder="请选择党员类型" clearable size="small">
-              <el-option
-                v-for="dict in memberTypeOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-          </el-form-item>
-        </el-form>
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button
-              type="primary"
-              icon="el-icon-plus"
-              size="mini"
-              @click="handleAdd"
-              v-hasPermi="['party:member:add']"
-            >新增
-            </el-button>
-          </el-col>
-          <!--<el-col :span="1.5">
-            <el-button
-              type="warning"
-              icon="el-icon-download"
-              size="mini"
-              @click="handleExport"
-              v-hasPermi="['party:member:export']"
-            >导出
-            </el-button>
-          </el-col>-->
-        </el-row>
-        <el-table v-loading="loading" :data="partyMemberList" @selection-change="handleSelectionChange">
-          <el-table-column label="党员姓名" align="center" prop="memberName"/>
-          <el-table-column label="手机号" align="center" prop="mobile"/>
-          <el-table-column label="行政组织" align="center" prop="deptId" :formatter="deptIdFormat" />
-          <el-table-column label="党组织" align="center" prop="partyOrgId" :formatter="partyOrgIdFormat" />
-          <el-table-column label="党员类型" align="center" prop="memberType" :formatter="memberTypeFormat"/>
-          <el-table-column label="党员状态" align="center" prop="memberStatus" :formatter="memberStatusFormat"/>
-          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-            <template slot-scope="scope">
-              <el-button
-                size="small"
-                type="text"
-                icon="el-icon-search"
-                @click="handleSee(scope.row)"
-              >查看
-              </el-button>
-              <el-button
-                size="small"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleUpdate(scope.row)"
-                v-if="showHandleUpdate(scope.row)"
-                v-hasPermi="['party:member:edit']"
-              >修改
-              </el-button>
-              <el-button
-                size="small"
-                type="text"
-                icon="el-icon-delete"
-                @click="chooseAuditUser1(scope.row)"
-                v-if="showHandleUpdate(scope.row)"
-                v-hasPermi="['party:member:remove']"
-              >删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <pagination
-          v-show="total>0"
-          :total="total"
-          :page.sync="queryParams.pageNum"
-          :limit.sync="queryParams.pageSize"
-          @pagination="getList"
-        />
-      </el-col>
-    </el-row>
     <!-- 添加或修改党员信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="90%" append-to-body
                @open="getHeight" :close-on-click-modal="false">
@@ -410,7 +269,7 @@
                              vModel="partyOrgId"
                              @selected="setVModelValue"
                              placeholder="请选择党组织"
-                             />
+                />
                 <!--<treeselect :disabled="disabled"
                             v-model="form.partyOrgId"
                             :options="partyOrgOptions"
@@ -620,14 +479,30 @@
           </el-row>
         </el-card>
 
+        <el-card shadow="always" style="margin-bottom: 30px;">
+          <div slot="header" style="height: 25px">
+            <span style="font-weight: bold;font-size: 16px">审批记录</span>
+          </div>
+          <el-table v-loading="loading" :data="logList" >
+            <el-table-column label="操作名称" align="center" prop="stepName" />
+            <el-table-column label="操作人" align="center" prop="sysUser.nickName" />
+            <el-table-column label="操作" align="center" prop="operResult" />
+            <el-table-column label="操作时间" align="center" prop="operTime" width="180">
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.operTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="备注" align="center" prop="operReason" />
+          </el-table>
+
+        </el-card>
+
       </el-form>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button v-show="!disabled" type="primary" @click="chooseAuditUser">提交审批</el-button>
+        <el-button v-show="!disabled" type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-
-    <choose-audit-user ref="chooseAuditUser"  @ok="submitForm" @del="handleDelete"/>
   </div>
 </template>
 
@@ -661,16 +536,13 @@
 
 <script>
   import {
-    listPartyMember,
-    getPartyMember,
-    delPartyMember,
-    addPartyMember,
-    updatePartyMember,
-    exportPartyMember,
-    uploadAvatar,
-    checkPartyMemberUnique,
-  } from "@/api/party/member";
-  import { listPartyMemberChange } from "@/api/memberChange/partyMemberChange";
+    listPartyMemberChange,
+    getPartyMemberChange,
+    delPartyMemberChange,
+    addPartyMemberChange,
+    updatePartyMemberChange,
+    exportPartyMemberChange
+  } from "@/api/memberChange/partyMemberChange";
   import { postOptionSelect } from "@/api/system/post";
   import { partyOrgTreeselect, getPartyOrg } from "@/api/party/org";
   import { getDept } from "@/api/system/dept";
@@ -678,106 +550,12 @@
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
   import selectTree from '../../components/selectTree';
-  import { getUserProfile } from "@/api/system/user";
-  import ChooseAuditUser from "../../audit/chooseAuditUser";
-  import { listLog, getLog, delLog, addLog, updateLog, exportLog } from "@/api/sys/log";
+  import { listLog } from "@/api/sys/log";
 
   export default {
-    name: "PartyMember",
-    components: {ChooseAuditUser, Treeselect,selectTree},
+    name: "PartyMemberChange",
+    components: {Treeselect,selectTree},
     data() {
-      let checkIdentityCard = (rule, value, callback) => {
-        if (!value) {
-          callback();
-        } else {
-          const reg = /^\d{6}(18|19|20)?\d{2}(0[1-9]|1[0-2])(([0-2][1-9])|10|20|30|31)\d{3}(\d|X|x)$/;
-          const card = reg.test(value);
-          if (!card) {
-            //判断座机为12位
-            callback(new Error("身份证格式如:423024xxxx0216xxxx"));
-          } else {
-            let param={};
-            param.memberId = this.form.memberId;
-            param.identityCard  = value;
-            checkPartyMemberUnique(param).then(response => {
-              if (response.code === 200 && response.msg.indexOf("已存在")!=-1) {
-                callback(new Error(response.msg));
-              } else {
-                callback();
-              }
-            });
-          }
-        }
-      };
-      let checkPhone = (rule, value, callback) => {
-        if (!value) {
-          callback();
-        } else {
-          const telReg = /^1(3[0-9]|4[5,7]|5[0,1,2,3,5,6,7,8,9]|6[2,5,6,7]|7[0,1,7,8]|8[0-9]|9[1,8,9])\d{8}$/;
-          const isTelPhone = telReg.test(value);
-          const reg = /^((0\d{2,3}-\d{7,8})|(1[3584]\d{9}))$/;
-          const isPhone = reg.test(value);
-          if (!isTelPhone && !isPhone) {
-            callback(new Error("请输入正确手机号或座机"));
-          } else {
-            callback();
-          }
-        }
-      };
-      let checkMobile = (rule, value, callback) => {
-        if (!value) {
-          return new Error("请输入电话号码");
-        } else {
-          const telReg = /^1(3[0-9]|4[5,7]|5[0,1,2,3,5,6,7,8,9]|6[2,5,6,7]|7[0,1,7,8]|8[0-9]|9[1,8,9])\d{8}$/;
-          const isTelPhone = telReg.test(value);
-          if (!isTelPhone ) {
-            callback(new Error("请输入正确手机号"));
-          } else {
-            let param={};
-            param.memberId = this.form.memberId;
-            param.mobile = value;
-            checkPartyMemberUnique(param).then(response => {
-              if (response.code === 200 && response.msg.indexOf("已存在")!=-1) {
-                callback(new Error(response.msg));
-              } else {
-                callback();
-              }
-            });
-          }
-        }
-      };
-      let checkEmail = (rule, value, callback) => {
-        if (!value) {
-          callback();
-        } else {
-          let param={};
-          param.memberId = this.form.memberId;
-          param.email = value;
-          checkPartyMemberUnique(param).then(response => {
-            if (response.code === 200 && response.msg.indexOf("已存在")!=-1) {
-              callback(new Error(response.msg));
-            } else {
-              callback();
-            }
-          });
-        }
-      };
-      let checkMemberName = (rule, value, callback) => {
-        if (!value) {
-          return new Error("请输入党员姓名");
-        } else {
-          let param={};
-          param.memberId = this.form.memberId;
-          param.memberName = value;
-          checkPartyMemberUnique(param).then(response => {
-            if (response.code === 200 && response.msg.indexOf("已存在")!=-1) {
-              callback(new Error(response.msg));
-            } else {
-              callback();
-            }
-          });
-        }
-      };
       return {
         // 遮罩层
         loading: true,
@@ -789,18 +567,20 @@
         multiple: true,
         // 总条数
         total: 0,
-        // 党员信息表格数据
-        partyMemberList: [],
+        // 党员变更表表格数据
+        partyMemberChangeList: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层
         open: false,
+        // 变更类型字典
+        changeTypeOptions: [],
+        // 审批状态字典
+        auditStateOptions: [],
         // 用户性别字典
         sexOptions: [],
         // 行政职务字典
         administrativePositionOptions: [],
-        // 岗位选项
-        postOptions: [],
         // 民族字典
         nationOptions: [],
         // 政治面貌字典
@@ -829,74 +609,202 @@
         physicalHealthOptions: [],
         // 生活困难类型字典
         lifeDifficultyTypeOptions: [],
-        // 党组织架构树选项
-        partyOrgOptions: [],
-        // 部门树选项
-        deptOptions: [],
         // 享受帮扶字典
         enjoyHelpOptions: [],
         // 查询参数
         queryParams: {
           pageNum: 1,
           pageSize: 10,
+          memberUuid: undefined,
+          changeType: undefined,
+          partyMemberId: undefined,
+          auditState: undefined,
+          partyOrgId: undefined,
+          workNo: undefined,
+          avatar: undefined,
           memberName: undefined,
+          sex: undefined,
+          mobile: undefined,
+          identityCard: undefined,
+          birthday: undefined,
+          companyName: undefined,
+          deptId: undefined,
+          administrativePosition: undefined,
+          title: undefined,
+          postId: undefined,
+          workingDate: undefined,
+          nation: undefined,
+          polity: undefined,
+          workIdentity: undefined,
+          education: undefined,
+          academicDegree: undefined,
+          nativePlace: undefined,
+          homeAddress: undefined,
+          housePhone: undefined,
+          email: undefined,
+          qq: undefined,
+          wechat: undefined,
           memberType: undefined,
-        },
-        defaultProps: {
-          value: 'id',          // 唯一标识
-          label: 'label',       // 标签显示
-          children: 'children', // 子级
+          memberStatus: undefined,
+          joinBranchData: undefined,
+          joinData: undefined,
+          formalData: undefined,
+          floatingType: undefined,
+          memberGroup: undefined,
+          lifeDifficulty: undefined,
+          cognizance: undefined,
+          economicSituation: undefined,
+          physicalHealth: undefined,
+          lifeDifficultyType: undefined,
+          enjoyHelp: undefined,
+          helpInfo: undefined,
+          detail: undefined,
         },
         // 表单参数
         form: {},
         // 表单校验
         rules: {
-          memberName: [
-            {required: true, message: "党员姓名不能为空", trigger: "blur"},
-            {validator: checkMemberName, trigger: 'blur'}
-
+          memberUuid: [
+            {required: true, message: "用户唯一uuid不能为空", trigger: "blur"}
           ],
-          mobile: [
-            {required: true, message: "手机号不能为空", trigger: "blur"},
-            { validator: checkMobile, trigger: "blur" }
+          changeType: [
+            {required: true, message: "党员变更类型（add：新增 ；edit：修改；del：删除）不能为空", trigger: "blur"}
           ],
-          identityCard: [
-            { required: true, message: "身份证号不能为空", trigger: "blur" },
-            {validator: checkIdentityCard, trigger: 'blur'}
+          partyMemberId: [
+            {required: true, message: "关联党组织成员id不能为空", trigger: "blur"}
           ],
-          housePhone: [
-            { validator: checkPhone, trigger: "blur" }
-          ],
-          email: [
-            {
-              type: "email",
-              message: "请输入正确的邮箱地址",
-              trigger: ["blur", "change"]
-            },
-            {validator: checkEmail, trigger: 'blur'}
+          auditState: [
+            {required: true, message: "审批状态不能为空", trigger: "blur"}
           ],
           partyOrgId: [
-            { required: true, message: "党组织不能为空", trigger: "blur" }
+            {required: true, message: "党组织ID不能为空", trigger: "blur"}
+          ],
+          workNo: [
+            {required: true, message: "工号不能为空", trigger: "blur"}
+          ],
+          avatar: [
+            {required: true, message: "党员照片不能为空", trigger: "blur"}
+          ],
+          memberName: [
+            {required: true, message: "党员姓名不能为空", trigger: "blur"}
+          ],
+          sex: [
+            {required: true, message: "用户性别（0男 1女 2未知）不能为空", trigger: "blur"}
+          ],
+          mobile: [
+            {required: true, message: "手机号不能为空", trigger: "blur"}
+          ],
+          identityCard: [
+            {required: true, message: "身份证号不能为空", trigger: "blur"}
+          ],
+          birthday: [
+            {required: true, message: "出生日期不能为空", trigger: "blur"}
+          ],
+          companyName: [
+            {required: true, message: "所在单位不能为空", trigger: "blur"}
+          ],
+          deptId: [
+            {required: true, message: "行政组织不能为空", trigger: "blur"}
+          ],
+          administrativePosition: [
+            {required: true, message: "行政职务不能为空", trigger: "blur"}
+          ],
+          title: [
+            {required: true, message: "职称不能为空", trigger: "blur"}
+          ],
+          postId: [
+            {required: true, message: "岗位不能为空", trigger: "blur"}
+          ],
+          workingDate: [
+            {required: true, message: "参加工作日期不能为空", trigger: "blur"}
+          ],
+          nation: [
+            {required: true, message: "民族不能为空", trigger: "blur"}
+          ],
+          polity: [
+            {required: true, message: "政治面貌不能为空", trigger: "blur"}
+          ],
+          workIdentity: [
+            {required: true, message: "身份不能为空", trigger: "blur"}
+          ],
+          education: [
+            {required: true, message: "学历不能为空", trigger: "blur"}
+          ],
+          academicDegree: [
+            {required: true, message: "学位不能为空", trigger: "blur"}
+          ],
+          nativePlace: [
+            {required: true, message: "籍贯不能为空", trigger: "blur"}
+          ],
+          homeAddress: [
+            {required: true, message: "家庭住址不能为空", trigger: "blur"}
+          ],
+          housePhone: [
+            {required: true, message: "固定电话不能为空", trigger: "blur"}
+          ],
+          email: [
+            {required: true, message: "电子邮箱不能为空", trigger: "blur"}
+          ],
+          qq: [
+            {required: true, message: "qq不能为空", trigger: "blur"}
+          ],
+          wechat: [
+            {required: true, message: "微信号码不能为空", trigger: "blur"}
+          ],
+          remark: [
+            {required: true, message: "备注不能为空", trigger: "blur"}
           ],
           memberType: [
-            { required: true, message: "党员类型不能为空", trigger: "blur" }
+            {required: true, message: "党员类型不能为空", trigger: "blur"}
           ],
           memberStatus: [
-            { required: true, message: "党员状态不能为空", trigger: "blur" }
+            {required: true, message: "党员状态不能为空", trigger: "blur"}
           ],
-
+          joinBranchData: [
+            {required: true, message: "加入党支部日期不能为空", trigger: "blur"}
+          ],
+          joinData: [
+            {required: true, message: "加入党日期不能为空", trigger: "blur"}
+          ],
+          formalData: [
+            {required: true, message: "转为正式党员日期不能为空", trigger: "blur"}
+          ],
+          floatingType: [
+            {required: true, message: "流动党员（1：是  0：否）不能为空", trigger: "blur"}
+          ],
+          memberGroup: [
+            {required: true, message: "党员分组不能为空", trigger: "blur"}
+          ],
+          lifeDifficulty: [
+            {required: true, message: "生活困难（1：是  0：否）不能为空", trigger: "blur"}
+          ],
+          cognizance: [
+            {required: true, message: "组织认定（1：是  0：否）不能为空", trigger: "blur"}
+          ],
+          economicSituation: [
+            {required: true, message: "经济状况不能为空", trigger: "blur"}
+          ],
+          physicalHealth: [
+            {required: true, message: "身体健康情况不能为空", trigger: "blur"}
+          ],
+          lifeDifficultyType: [
+            {required: true, message: "生活困难类型不能为空", trigger: "blur"}
+          ],
+          enjoyHelp: [
+            {required: true, message: "享受帮扶不能为空", trigger: "blur"}
+          ],
+          helpInfo: [
+            {required: true, message: "补助情况不能为空", trigger: "blur"}
+          ],
+          detail: [
+            {required: true, message: "具体情况描述不能为空", trigger: "blur"}
+          ],
         },
         bodyStyle: {
           overflowY: 'auto',
           height: '',
           marginLeft: '2%',
           paddingRight: '2%',
-        },
-        // 党组织架构名称
-        partyOrgName: undefined,
-        partyOrg:{
-          partyOrgId:undefined,
-          partyOrgName:undefined,
         },
         avatarUrl:'',
         disabled:false,
@@ -906,28 +814,29 @@
             return date.getTime() > Date.now();
           }
         },
-        user: {},
+        // 党组织架构树选项
+        partyOrgOptions: [],
+        // 岗位选项
+        postOptions: [],
+        // 部门树选项
+        deptOptions: [],
+        logList: [],
       };
     },
     mounted() {
       window.addEventListener('resize', this.getHeight);
     },
-    watch: {
-      // 根据名称筛选部门树
-      partyOrgName(val) {
-        this.$refs.tree.filter(val);
-      },
-      formalData(val){
-        this.getDateYearSub(val,this.getNowFormatDate)
-      }
-
-    },
     created() {
-      this.getUser();
       this.getList();
       this.getPartyOrgTreeSelect();
-      this.getDeptTreeselect();
       this.postOptionSelect();
+      this.getDeptTreeselect();
+      this.getDicts("change_type").then(response => {
+        this.changeTypeOptions = response.data;
+      });
+      this.getDicts("audit_state").then(response => {
+        this.auditStateOptions = response.data;
+      });
       this.getDicts("sys_user_sex").then(response => {
         this.sexOptions = response.data;
       });
@@ -981,58 +890,11 @@
       });
     },
     methods: {
-      //下拉树选择后设置值
-      setVModelValue(vModel,val){
-        if(val!=null){
-          this.form[vModel] =  val;
-        }else{
-          this.form[vModel] =  undefined;
-        }
-      },
-      /**附件上传*/
-      uploadAtt(file) {
-        const loading = this.$loading({
-          lock: true,
-          text: '上传中……',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
-        let formData = new FormData();
-        formData.append("avatarfile", file.file);
-        uploadAvatar(formData).then(response => {
-          if (response.code === 200) {
-            this.form.avatar = response.msg
-            this.avatarUrl=process.env.VUE_APP_BASE_API + response.msg;
-            loading.close();
-            this.msgSuccess("上传成功！")
-          } else {
-            loading.close();
-            this.msgError(response.msg);
-          }
-        }).catch(function (err) {
-          loading.close();
-        });
-      },
-      // 筛选节点
-      filterNode(value, data) {
-        if (!value) return true;
-        return data.label.indexOf(value) !== -1;
-      },
-      // 节点单击事件
-      handleNodeClick(data) {
-        this.queryParams.partyOrgId = data.id;
-        this.partyOrg.partyOrgId = data.id;
-        this.partyOrg.partyOrgName = data.label;
-        this.getList();
-      },
-      /** 对话框自适应高度 */
-      getHeight() {
-        this.bodyStyle.height = window.innerHeight - 281 + 'px';
-      },
-      /** 查询岗位下拉结构 */
-      postOptionSelect(){
-        postOptionSelect().then(response => {
-          this.postOptions = response.data;
+      getLogList() {
+        this.loading = true;
+        listLog({"uuid": this.form.memberUuid}).then(response => {
+          this.logList = response.rows;
+          this.loading = false;
         });
       },
       /** 查询行政组织下拉树结构 */
@@ -1041,20 +903,57 @@
           this.deptOptions = response.data;
         });
       },
+      /** 查询岗位下拉结构 */
+      postOptionSelect(){
+        postOptionSelect().then(response => {
+          this.postOptions = response.data;
+        });
+      },
       /** 查询党组织下拉树结构 */
       getPartyOrgTreeSelect() {
         partyOrgTreeselect().then(response => {
           this.partyOrgOptions = this.treeInitData(response.data);
         });
       },
-      /** 查询党员信息列表 */
+      //下拉树选择后设置值
+      setVModelValue(vModel,val){
+        if(val!=null){
+          this.form[vModel] =  val;
+        }else{
+          this.form[vModel] =  undefined;
+        }
+      },
+      /** 对话框自适应高度 */
+      getHeight() {
+        this.bodyStyle.height = window.innerHeight - 281 + 'px';
+      },
+      /** 查询党员变更表列表 */
       getList() {
         this.loading = true;
-        listPartyMember(this.queryParams).then(response => {
-          this.partyMemberList = response.rows;
+        listPartyMemberChange(this.queryParams).then(response => {
+          this.partyMemberChangeList = response.rows;
           this.total = response.total;
           this.loading = false;
         });
+      },
+      auditStateFormat(){
+        return this.selectDictLabel(this.auditStateOptions, row.changeType);
+      },
+      // 变更类型字典翻译
+      changeTypeFormat(row, column) {
+        return this.selectDictLabel(this.changeTypeOptions, row.changeType);
+      },
+      // 部门id翻译
+      deptIdFormat(row, column,value){
+        if(row.sysDept!=null){
+          return row.sysDept.deptName;
+        }else{
+          return "";
+        }
+      },
+      // 党组织id翻译
+      partyOrgIdFormat(row, column){
+        return row.djPartyOrg.partyOrgName;
       },
       // 用户性别字典翻译
       sexFormat(row, column) {
@@ -1083,18 +982,6 @@
       // 学位字典翻译
       academicDegreeFormat(row, column) {
         return this.selectDictLabel(this.academicDegreeOptions, row.academicDegree);
-      },
-      // 部门id翻译
-      deptIdFormat(row, column,value){
-        if(row.sysDept!=null){
-          return row.sysDept.deptName;
-        }else{
-          return "";
-        }
-      },
-      // 党组织id翻译
-      partyOrgIdFormat(row, column){
-        return row.djPartyOrg.partyOrgName;
       },
       // 党员类型字典翻译
       memberTypeFormat(row, column) {
@@ -1145,6 +1032,10 @@
       reset() {
         this.form = {
           memberId: undefined,
+          memberUuid: undefined,
+          changeType: undefined,
+          partyMemberId: undefined,
+          auditState: undefined,
           partyOrgId: undefined,
           workNo: undefined,
           avatar: undefined,
@@ -1172,7 +1063,7 @@
           wechat: undefined,
           remark: undefined,
           memberType: undefined,
-          memberStatus: undefined,
+          memberStatus: "0",
           joinBranchData: undefined,
           joinData: undefined,
           formalData: undefined,
@@ -1213,141 +1104,93 @@
       /** 新增按钮操作 */
       handleAdd() {
         this.reset();
-        this.disabled = false;
-        this.form.partyOrgId = Number(this.partyOrg.partyOrgId);
         this.open = true;
-        this.title = "添加党员信息";
+        this.title = "添加党员变更表";
       },
       /** 查看按钮操作 */
       handleSee(row){
         this.reset();
         this.disabled = true;
         const memberId = row.memberId || this.ids
-        getPartyMember(memberId).then(response => {
+        getPartyMemberChange(memberId).then(response => {
           this.form = response.data;
           this.avatarUrl=process.env.VUE_APP_BASE_API + this.form.avatar;
           this.open = true;
-          this.title = "查看党员信息";
+          this.title = "党员"+this.selectDictLabel(this.changeTypeOptions, row.changeType)+"变更";
+          this.getLogList();
         });
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
-        this.disabled = false;
         const memberId = row.memberId || this.ids
-        getPartyMember(memberId).then(response => {
+        getPartyMemberChange(memberId).then(response => {
           this.form = response.data;
-          this.avatarUrl=process.env.VUE_APP_BASE_API + this.form.avatar;
           this.open = true;
-          this.title = "修改党员信息";
+          this.title = "修改党员变更表";
         });
       },
-      chooseAuditUser(){
-        if(this.form.memberId){
-          listPartyMemberChange({"partyMemberId":this.form.memberId, "auditState":"2"}).then(response => {
-            if(response.rows&&response.rows.length >0){
-              this.msgSuccess("该党员变更正在审批中！")
-            }else{
-              this.$refs.chooseAuditUser.init(6,"edit",this.form.memberId)
-            }
-          });
-        }else{
-          this.$refs.chooseAuditUser.init(6,"add",this.form.memberId)
-        }
-
-
-      },
       /** 提交按钮 */
-      submitForm: function (form) {
+      submitForm: function () {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            this.form.auditUserId = form.auditUserId;
-            this.form.operReason = form.reason;
             if (this.form.memberId != undefined) {
-              updatePartyMember(this.form).then(response => {
+              updatePartyMemberChange(this.form).then(response => {
                 if (response.code === 200) {
-                  this.msgSuccess("提交审批成功");
+                  this.msgSuccess("修改成功");
                   this.open = false;
+                  this.getList();
                 } else {
                   this.msgError(response.msg);
                 }
               });
             } else {
-              addPartyMember(this.form).then(response => {
+              addPartyMemberChange(this.form).then(response => {
                 if (response.code === 200) {
-                  this.msgSuccess("提交审批成功");
+                  this.msgSuccess("新增成功");
                   this.open = false;
+                  this.getList();
                 } else {
                   this.msgError(response.msg);
                 }
               });
             }
-          }else{
-            setTimeout(() => {
-              var isError = document.getElementsByClassName("is-error");
-              isError[0].querySelector('input').focus();
-            }, 100);
-            return false;
-          }
-        });
-      },
-      chooseAuditUser1(row){
-        listPartyMemberChange({"partyMemberId":row.memberId, "auditState":"2"}).then(response => {
-          if(response.rows&&response.rows.length >0){
-            this.msgSuccess("该党员变更正在审批中！")
-          }else{
-            this.$refs.chooseAuditUser.init(6,'del',row.memberId)
           }
         });
       },
       /** 删除按钮操作 */
-      handleDelete(form) {
-        delPartyMember(form).then(response => {
-          if (response.code === 200) {
-            this.msgSuccess("提交审批成功");
-            this.getList();
-          } else {
-            this.msgError(response.msg);
-          }
+      handleDelete(row) {
+        const memberIds = row.memberId || this.ids;
+        this.$confirm('是否确认删除党员变更表编号为"' + memberIds + '"的数据项?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function () {
+          return delPartyMemberChange(memberIds);
+        }).then(() => {
+          this.getList();
+          this.msgSuccess("删除成功");
+        }).catch(function () {
         });
       },
       /** 导出按钮操作 */
       handleExport() {
         const queryParams = this.queryParams;
-        this.$confirm('是否确认导出所有党员信息数据项?', "警告", {
+        this.$confirm('是否确认导出所有党员变更表数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function () {
-          return exportPartyMember(queryParams);
+          return exportPartyMemberChange(queryParams);
         }).then(response => {
           this.download(response.msg);
         }).catch(function () {
         });
       },
-      getUser() {
-        getUserProfile().then(response => {
-          this.user = response.data;
-          console.log(JSON.stringify(this.user));
-        });
+      /**附件上传*/
+      uploadAtt(file) {
+
       },
-      showHandleUpdate(row){
-        let showFlag = false;
-        let roles = this.user.roles;
-        if(roles && roles.length!=0){
-          for(let i=0;i<roles.length;i++){
-            //管理员角色
-            if(roles[i].roleId == 1){
-              showFlag = true;
-              break;
-            }
-          }
-        }
-        if(this.user.djPartyMember && this.user.djPartyMember.partyOrgId == row.partyOrgId){
-          showFlag = true;
-        }
-        return showFlag ;
-      }
     }
   };
 </script>

@@ -172,4 +172,12 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
+
+
+    /**
+     * 获取角色下用户
+     * @param roleId
+     * @return
+     */
+    public List<SysUser> selectUserByRoleId(Long roleId);
 }

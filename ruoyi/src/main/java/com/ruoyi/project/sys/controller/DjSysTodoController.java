@@ -46,7 +46,6 @@ public class DjSysTodoController extends BaseController
         if(!SecurityUtils.isAdmin(SecurityUtils.getLoginUser().getUser().getUserId())){
             djSysTodo.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
         }
-        djSysTodo.setStatus("0");
         List<DjSysTodo> list = djSysTodoService.selectDjSysTodoList(djSysTodo);
         return getDataTable(list);
     }
@@ -71,7 +70,6 @@ public class DjSysTodoController extends BaseController
     {
         DjSysTodo djSysTodo = new DjSysTodo();
         djSysTodo.setTodoId(todoId);
-        djSysTodo.setStatus("0");
         if(!SecurityUtils.isAdmin(SecurityUtils.getLoginUser().getUser().getUserId())){
             djSysTodo.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
         }

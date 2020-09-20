@@ -159,8 +159,14 @@ export function getNowFormatDate() {
   if (strDate >= 0 && strDate <= 9) {
     strDate = "0" + strDate;
   }
-  let currentdate = year + seperator1 + month + seperator1 + strDate;
-  return currentdate;
+  let currentdate = year + seperator1 + month + seperator1 + strDate ;
+
+  let seperator2 = ":";
+  let hour = date.getHours();
+  let minute = date.getMinutes() ;
+  let second = date.getSeconds();
+  let currenttime = hour + seperator2 + minute + seperator2 + second ;
+  return currentdate + " "+currenttime;
 }
 
 //计算年份

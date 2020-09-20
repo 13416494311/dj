@@ -195,4 +195,11 @@ public class SysUserController extends BaseController
         user.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         return toAjax(userService.updateUserStatus(user));
     }
+
+    @GetMapping("/optionselect/{roleId}")
+    public AjaxResult optionselect(@PathVariable Long roleId)
+    {
+        List<SysUser> userList = userService.selectUserByRoleId(roleId);
+        return AjaxResult.success(userList);
+    }
 }

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.sys.mapper.DjSysLogMapper">
+
+    <resultMap type="DjSysLog" id="DjSysLogResult">
+        <result property="id"    column="id"    />
+        <result property="uuid"    column="uuid"    />
+        <result property="stepType"    column="step_type"    />
+        <result property="stepName"    column="step_name"    />
+        <result property="operUserId"    column="oper_user_id"    />
+        <result property="operResult"    column="oper_result"    />
+        <result property="operTime"    column="oper_time"    />
+        <result property="operReason"    column="oper_reason"    />
+    </resultMap>
+
+    <sql id="selectDjSysLogVo">
+        select id, uuid, step_type, step_name, oper_user_id, oper_result, oper_time, oper_reason from dj_sys_log
+    </sql>
+
+    <select id="selectDjSysLogList" parameterType="DjSysLog" resultMap="DjSysLogResult">
+        <include refid="selectDjSysLogVo"/>
+        <where>
+            <if test="uuid != null  and uuid != ''"> and uuid = #{uuid}</if>
+            <if test="stepType != null  and stepType != ''"> and step_type = #{stepType}</if>
+            <if test="stepName != null  and stepName != ''"> and step_name like concat('%', #{stepName}, '%')</if>
+            <if test="operUserId != null  and operUserId != ''"> and oper_user_id = #{operUserId}</if>
+            <if test="operResult != null  and operResult != ''"> and oper_result = #{operResult}</if>
+            <if test="operTime != null "> and oper_time = #{operTime}</if>
+            <if test="operReason != null  and operReason != ''"> and oper_reason = #{operReason}</if>
+        </where>
+        order by oper_time asc
+    </select>
+
+    <select id="selectDjSysLogById" parameterType="Long" resultMap="DjSysLogResult">
+        <include refid="selectDjSysLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDjSysLog" parameterType="DjSysLog" useGeneratedKeys="true" keyProperty="id">
+        insert into dj_sys_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null  and uuid != ''">uuid,</if>
+            <if test="stepType != null  and stepType != ''">step_type,</if>
+            <if test="stepName != null  and stepName != ''">step_name,</if>
+            <if test="operUserId != null  and operUserId != ''">oper_user_id,</if>
+            <if test="operResult != null  and operResult != ''">oper_result,</if>
+            <if test="operTime != null ">oper_time,</if>
+            <if test="operReason != null  and operReason != ''">oper_reason,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid != null  and uuid != ''">#{uuid},</if>
+            <if test="stepType != null  and stepType != ''">#{stepType},</if>
+            <if test="stepName != null  and stepName != ''">#{stepName},</if>
+            <if test="operUserId != null  and operUserId != ''">#{operUserId},</if>
+            <if test="operResult != null  and operResult != ''">#{operResult},</if>
+            <if test="operTime != null ">#{operTime},</if>
+            <if test="operReason != null  and operReason != ''">#{operReason},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjSysLog" parameterType="DjSysLog">
+        update dj_sys_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uuid != null  and uuid != ''">uuid = #{uuid},</if>
+            <if test="stepType != null  and stepType != ''">step_type = #{stepType},</if>
+            <if test="stepName != null  and stepName != ''">step_name = #{stepName},</if>
+            <if test="operUserId != null  and operUserId != ''">oper_user_id = #{operUserId},</if>
+            <if test="operResult != null  and operResult != ''">oper_result = #{operResult},</if>
+            <if test="operTime != null ">oper_time = #{operTime},</if>
+            <if test="operReason != null  and operReason != ''">oper_reason = #{operReason},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDjSysLogById" parameterType="Long">
+        delete from dj_sys_log where id = #{id}
+    </delete>
+
+    <delete id="deleteDjSysLogByIds" parameterType="String">
+        delete from dj_sys_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

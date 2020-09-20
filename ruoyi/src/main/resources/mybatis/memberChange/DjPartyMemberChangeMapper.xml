@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.party.mapper.DjPartyMemberChangeMapper">
+
+    <resultMap type="DjPartyMemberChange" id="DjPartyMemberChangeResult">
+        <result property="memberId"    column="member_id"    />
+        <result property="memberUuid"    column="member_uuid"    />
+        <result property="changeType"    column="change_type"    />
+        <result property="partyMemberId"    column="party_member_id"    />
+        <result property="auditState"    column="audit_state"    />
+        <result property="partyOrgId"    column="party_org_id"    />
+        <result property="workNo"    column="work_no"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="memberName"    column="member_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="identityCard"    column="identity_card"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="companyName"    column="company_name"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="administrativePosition"    column="administrative_position"    />
+        <result property="title"    column="title"    />
+        <result property="postId"    column="post_id"    />
+        <result property="workingDate"    column="working_date"    />
+        <result property="nation"    column="nation"    />
+        <result property="polity"    column="polity"    />
+        <result property="workIdentity"    column="work_identity"    />
+        <result property="education"    column="education"    />
+        <result property="academicDegree"    column="academic_degree"    />
+        <result property="nativePlace"    column="native_place"    />
+        <result property="homeAddress"    column="home_address"    />
+        <result property="housePhone"    column="house_phone"    />
+        <result property="email"    column="email"    />
+        <result property="qq"    column="qq"    />
+        <result property="wechat"    column="wechat"    />
+        <result property="remark"    column="remark"    />
+        <result property="memberType"    column="member_type"    />
+        <result property="memberStatus"    column="member_status"    />
+        <result property="joinBranchData"    column="join_branch_data"    />
+        <result property="joinData"    column="join_data"    />
+        <result property="formalData"    column="formal_data"    />
+        <result property="floatingType"    column="floating_type"    />
+        <result property="memberGroup"    column="member_group"    />
+        <result property="lifeDifficulty"    column="life_difficulty"    />
+        <result property="cognizance"    column="cognizance"    />
+        <result property="economicSituation"    column="economic_situation"    />
+        <result property="physicalHealth"    column="physical_health"    />
+        <result property="lifeDifficultyType"    column="life_difficulty_type"    />
+        <result property="enjoyHelp"    column="enjoy_help"    />
+        <result property="helpInfo"    column="help_info"    />
+        <result property="detail"    column="detail"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjPartyMemberChangeVo">
+        select member_id, member_uuid, change_type, party_member_id, audit_state, party_org_id, work_no, avatar, member_name, sex, mobile, identity_card, birthday, company_name, dept_id, administrative_position, title, post_id, working_date, nation, polity, work_identity, education, academic_degree, native_place, home_address, house_phone, email, qq, wechat, remark, member_type, member_status, join_branch_data, join_data, formal_data, floating_type, member_group, life_difficulty, cognizance, economic_situation, physical_health, life_difficulty_type, enjoy_help, help_info, detail, del_flag, create_by, create_time, update_by, update_time from dj_party_member_change
+    </sql>
+
+    <select id="selectDjPartyMemberChangeList" parameterType="DjPartyMemberChange" resultMap="DjPartyMemberChangeResult">
+        <include refid="selectDjPartyMemberChangeVo"/>
+        <where>
+            <if test="memberUuid != null  and memberUuid != ''"> and member_uuid = #{memberUuid}</if>
+            <if test="changeType != null  and changeType != ''"> and change_type = #{changeType}</if>
+            <if test="partyMemberId != null "> and party_member_id = #{partyMemberId}</if>
+            <if test="auditState != null  and auditState != ''"> and audit_state = #{auditState}</if>
+            <if test="partyOrgId != null "> and party_org_id = #{partyOrgId}</if>
+            <if test="workNo != null  and workNo != ''"> and work_no = #{workNo}</if>
+            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
+            <if test="memberName != null  and memberName != ''"> and member_name like concat('%', #{memberName}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            <if test="identityCard != null  and identityCard != ''"> and identity_card = #{identityCard}</if>
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="administrativePosition != null  and administrativePosition != ''"> and administrative_position = #{administrativePosition}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="postId != null "> and post_id = #{postId}</if>
+            <if test="workingDate != null "> and working_date = #{workingDate}</if>
+            <if test="nation != null  and nation != ''"> and nation = #{nation}</if>
+            <if test="polity != null  and polity != ''"> and polity = #{polity}</if>
+            <if test="workIdentity != null  and workIdentity != ''"> and work_identity = #{workIdentity}</if>
+            <if test="education != null  and education != ''"> and education = #{education}</if>
+            <if test="academicDegree != null  and academicDegree != ''"> and academic_degree = #{academicDegree}</if>
+            <if test="nativePlace != null  and nativePlace != ''"> and native_place = #{nativePlace}</if>
+            <if test="homeAddress != null  and homeAddress != ''"> and home_address = #{homeAddress}</if>
+            <if test="housePhone != null  and housePhone != ''"> and house_phone = #{housePhone}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="qq != null  and qq != ''"> and qq = #{qq}</if>
+            <if test="wechat != null  and wechat != ''"> and wechat = #{wechat}</if>
+            <if test="memberType != null  and memberType != ''"> and member_type = #{memberType}</if>
+            <if test="memberStatus != null  and memberStatus != ''"> and member_status = #{memberStatus}</if>
+            <if test="joinBranchData != null "> and join_branch_data = #{joinBranchData}</if>
+            <if test="joinData != null "> and join_data = #{joinData}</if>
+            <if test="formalData != null "> and formal_data = #{formalData}</if>
+            <if test="floatingType != null  and floatingType != ''"> and floating_type = #{floatingType}</if>
+            <if test="memberGroup != null  and memberGroup != ''"> and member_group = #{memberGroup}</if>
+            <if test="lifeDifficulty != null  and lifeDifficulty != ''"> and life_difficulty = #{lifeDifficulty}</if>
+            <if test="cognizance != null  and cognizance != ''"> and cognizance = #{cognizance}</if>
+            <if test="economicSituation != null  and economicSituation != ''"> and economic_situation = #{economicSituation}</if>
+            <if test="physicalHealth != null  and physicalHealth != ''"> and physical_health = #{physicalHealth}</if>
+            <if test="lifeDifficultyType != null  and lifeDifficultyType != ''"> and life_difficulty_type = #{lifeDifficultyType}</if>
+            <if test="enjoyHelp != null  and enjoyHelp != ''"> and enjoy_help = #{enjoyHelp}</if>
+            <if test="helpInfo != null  and helpInfo != ''"> and help_info = #{helpInfo}</if>
+            <if test="detail != null  and detail != ''"> and detail = #{detail}</if>
+        </where>
+    </select>
+
+    <select id="selectDjPartyMemberChangeById" parameterType="Long" resultMap="DjPartyMemberChangeResult">
+        <include refid="selectDjPartyMemberChangeVo"/>
+        where member_id = #{memberId}
+    </select>
+
+    <select id="selectDjPartyMemberChangeByMemberUuid" parameterType="String" resultMap="DjPartyMemberChangeResult">
+        <include refid="selectDjPartyMemberChangeVo"/>
+        where member_uuid = #{memberUuid}
+    </select>
+
+    <insert id="insertDjPartyMemberChange" parameterType="DjPartyMemberChange" useGeneratedKeys="true" keyProperty="memberId">
+        insert into dj_party_member_change
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberUuid != null  and memberUuid != ''">member_uuid,</if>
+            <if test="changeType != null  and changeType != ''">change_type,</if>
+            <if test="partyMemberId != null ">party_member_id,</if>
+            <if test="auditState != null  and auditState != ''">audit_state,</if>
+            <if test="partyOrgId != null ">party_org_id,</if>
+            <if test="workNo != null  and workNo != ''">work_no,</if>
+            <if test="avatar != null  and avatar != ''">avatar,</if>
+            <if test="memberName != null  and memberName != ''">member_name,</if>
+            <if test="sex != null  and sex != ''">sex,</if>
+            <if test="mobile != null  and mobile != ''">mobile,</if>
+            <if test="identityCard != null  and identityCard != ''">identity_card,</if>
+            <if test="birthday != null ">birthday,</if>
+            <if test="companyName != null  and companyName != ''">company_name,</if>
+            <if test="deptId != null ">dept_id,</if>
+            <if test="administrativePosition != null  and administrativePosition != ''">administrative_position,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="postId != null ">post_id,</if>
+            <if test="workingDate != null ">working_date,</if>
+            <if test="nation != null  and nation != ''">nation,</if>
+            <if test="polity != null  and polity != ''">polity,</if>
+            <if test="workIdentity != null  and workIdentity != ''">work_identity,</if>
+            <if test="education != null  and education != ''">education,</if>
+            <if test="academicDegree != null  and academicDegree != ''">academic_degree,</if>
+            <if test="nativePlace != null  and nativePlace != ''">native_place,</if>
+            <if test="homeAddress != null  and homeAddress != ''">home_address,</if>
+            <if test="housePhone != null  and housePhone != ''">house_phone,</if>
+            <if test="email != null  and email != ''">email,</if>
+            <if test="qq != null  and qq != ''">qq,</if>
+            <if test="wechat != null  and wechat != ''">wechat,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="memberType != null  and memberType != ''">member_type,</if>
+            <if test="memberStatus != null  and memberStatus != ''">member_status,</if>
+            <if test="joinBranchData != null ">join_branch_data,</if>
+            <if test="joinData != null ">join_data,</if>
+            <if test="formalData != null ">formal_data,</if>
+            <if test="floatingType != null  and floatingType != ''">floating_type,</if>
+            <if test="memberGroup != null  and memberGroup != ''">member_group,</if>
+            <if test="lifeDifficulty != null  and lifeDifficulty != ''">life_difficulty,</if>
+            <if test="cognizance != null  and cognizance != ''">cognizance,</if>
+            <if test="economicSituation != null  and economicSituation != ''">economic_situation,</if>
+            <if test="physicalHealth != null  and physicalHealth != ''">physical_health,</if>
+            <if test="lifeDifficultyType != null  and lifeDifficultyType != ''">life_difficulty_type,</if>
+            <if test="enjoyHelp != null  and enjoyHelp != ''">enjoy_help,</if>
+            <if test="helpInfo != null  and helpInfo != ''">help_info,</if>
+            <if test="detail != null  and detail != ''">detail,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberUuid != null  and memberUuid != ''">#{memberUuid},</if>
+            <if test="changeType != null  and changeType != ''">#{changeType},</if>
+            <if test="partyMemberId != null ">#{partyMemberId},</if>
+            <if test="auditState != null  and auditState != ''">#{auditState},</if>
+            <if test="partyOrgId != null ">#{partyOrgId},</if>
+            <if test="workNo != null  and workNo != ''">#{workNo},</if>
+            <if test="avatar != null  and avatar != ''">#{avatar},</if>
+            <if test="memberName != null  and memberName != ''">#{memberName},</if>
+            <if test="sex != null  and sex != ''">#{sex},</if>
+            <if test="mobile != null  and mobile != ''">#{mobile},</if>
+            <if test="identityCard != null  and identityCard != ''">#{identityCard},</if>
+            <if test="birthday != null ">#{birthday},</if>
+            <if test="companyName != null  and companyName != ''">#{companyName},</if>
+            <if test="deptId != null ">#{deptId},</if>
+            <if test="administrativePosition != null  and administrativePosition != ''">#{administrativePosition},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="postId != null ">#{postId},</if>
+            <if test="workingDate != null ">#{workingDate},</if>
+            <if test="nation != null  and nation != ''">#{nation},</if>
+            <if test="polity != null  and polity != ''">#{polity},</if>
+            <if test="workIdentity != null  and workIdentity != ''">#{workIdentity},</if>
+            <if test="education != null  and education != ''">#{education},</if>
+            <if test="academicDegree != null  and academicDegree != ''">#{academicDegree},</if>
+            <if test="nativePlace != null  and nativePlace != ''">#{nativePlace},</if>
+            <if test="homeAddress != null  and homeAddress != ''">#{homeAddress},</if>
+            <if test="housePhone != null  and housePhone != ''">#{housePhone},</if>
+            <if test="email != null  and email != ''">#{email},</if>
+            <if test="qq != null  and qq != ''">#{qq},</if>
+            <if test="wechat != null  and wechat != ''">#{wechat},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="memberType != null  and memberType != ''">#{memberType},</if>
+            <if test="memberStatus != null  and memberStatus != ''">#{memberStatus},</if>
+            <if test="joinBranchData != null ">#{joinBranchData},</if>
+            <if test="joinData != null ">#{joinData},</if>
+            <if test="formalData != null ">#{formalData},</if>
+            <if test="floatingType != null  and floatingType != ''">#{floatingType},</if>
+            <if test="memberGroup != null  and memberGroup != ''">#{memberGroup},</if>
+            <if test="lifeDifficulty != null  and lifeDifficulty != ''">#{lifeDifficulty},</if>
+            <if test="cognizance != null  and cognizance != ''">#{cognizance},</if>
+            <if test="economicSituation != null  and economicSituation != ''">#{economicSituation},</if>
+            <if test="physicalHealth != null  and physicalHealth != ''">#{physicalHealth},</if>
+            <if test="lifeDifficultyType != null  and lifeDifficultyType != ''">#{lifeDifficultyType},</if>
+            <if test="enjoyHelp != null  and enjoyHelp != ''">#{enjoyHelp},</if>
+            <if test="helpInfo != null  and helpInfo != ''">#{helpInfo},</if>
+            <if test="detail != null  and detail != ''">#{detail},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjPartyMemberChange" parameterType="DjPartyMemberChange">
+        update dj_party_member_change
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberUuid != null  and memberUuid != ''">member_uuid = #{memberUuid},</if>
+            <if test="changeType != null  and changeType != ''">change_type = #{changeType},</if>
+            <if test="partyMemberId != null ">party_member_id = #{partyMemberId},</if>
+            <if test="auditState != null  and auditState != ''">audit_state = #{auditState},</if>
+            <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
+            <if test="workNo != null  and workNo != ''">work_no = #{workNo},</if>
+            <if test="avatar != null  and avatar != ''">avatar = #{avatar},</if>
+            <if test="memberName != null  and memberName != ''">member_name = #{memberName},</if>
+            <if test="sex != null  and sex != ''">sex = #{sex},</if>
+            <if test="mobile != null  and mobile != ''">mobile = #{mobile},</if>
+            <if test="identityCard != null  and identityCard != ''">identity_card = #{identityCard},</if>
+            <if test="birthday != null ">birthday = #{birthday},</if>
+            <if test="companyName != null  and companyName != ''">company_name = #{companyName},</if>
+            <if test="deptId != null ">dept_id = #{deptId},</if>
+            <if test="administrativePosition != null  and administrativePosition != ''">administrative_position = #{administrativePosition},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="postId != null ">post_id = #{postId},</if>
+            <if test="workingDate != null ">working_date = #{workingDate},</if>
+            <if test="nation != null  and nation != ''">nation = #{nation},</if>
+            <if test="polity != null  and polity != ''">polity = #{polity},</if>
+            <if test="workIdentity != null  and workIdentity != ''">work_identity = #{workIdentity},</if>
+            <if test="education != null  and education != ''">education = #{education},</if>
+            <if test="academicDegree != null  and academicDegree != ''">academic_degree = #{academicDegree},</if>
+            <if test="nativePlace != null  and nativePlace != ''">native_place = #{nativePlace},</if>
+            <if test="homeAddress != null  and homeAddress != ''">home_address = #{homeAddress},</if>
+            <if test="housePhone != null  and housePhone != ''">house_phone = #{housePhone},</if>
+            <if test="email != null  and email != ''">email = #{email},</if>
+            <if test="qq != null  and qq != ''">qq = #{qq},</if>
+            <if test="wechat != null  and wechat != ''">wechat = #{wechat},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="memberType != null  and memberType != ''">member_type = #{memberType},</if>
+            <if test="memberStatus != null  and memberStatus != ''">member_status = #{memberStatus},</if>
+            <if test="joinBranchData != null ">join_branch_data = #{joinBranchData},</if>
+            <if test="joinData != null ">join_data = #{joinData},</if>
+            <if test="formalData != null ">formal_data = #{formalData},</if>
+            <if test="floatingType != null  and floatingType != ''">floating_type = #{floatingType},</if>
+            <if test="memberGroup != null  and memberGroup != ''">member_group = #{memberGroup},</if>
+            <if test="lifeDifficulty != null  and lifeDifficulty != ''">life_difficulty = #{lifeDifficulty},</if>
+            <if test="cognizance != null  and cognizance != ''">cognizance = #{cognizance},</if>
+            <if test="economicSituation != null  and economicSituation != ''">economic_situation = #{economicSituation},</if>
+            <if test="physicalHealth != null  and physicalHealth != ''">physical_health = #{physicalHealth},</if>
+            <if test="lifeDifficultyType != null  and lifeDifficultyType != ''">life_difficulty_type = #{lifeDifficultyType},</if>
+            <if test="enjoyHelp != null  and enjoyHelp != ''">enjoy_help = #{enjoyHelp},</if>
+            <if test="helpInfo != null  and helpInfo != ''">help_info = #{helpInfo},</if>
+            <if test="detail != null  and detail != ''">detail = #{detail},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where member_id = #{memberId}
+    </update>
+
+    <delete id="deleteDjPartyMemberChangeById" parameterType="Long">
+        delete from dj_party_member_change where member_id = #{memberId}
+    </delete>
+
+    <delete id="deleteDjPartyMemberChangeByIds" parameterType="String">
+        delete from dj_party_member_change where member_id in
+        <foreach item="memberId" collection="array" open="(" separator="," close=")">
+            #{memberId}
+        </foreach>
+    </delete>
+
+</mapper>

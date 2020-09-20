@@ -1,15 +1,23 @@
 package com.ruoyi.project.party.controller;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.config.RuoYiConfig;
 import com.ruoyi.project.party.domain.DjPartyMember;
+import com.ruoyi.project.party.domain.DjPartyMemberChange;
+import com.ruoyi.project.party.service.IDjPartyMemberChangeService;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
+import com.ruoyi.project.sys.domain.DjSysLog;
+import com.ruoyi.project.sys.domain.DjSysTodo;
+import com.ruoyi.project.sys.service.IDjSysLogService;
+import com.ruoyi.project.sys.service.IDjSysTodoService;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.ISysConfigService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,6 +44,12 @@ public class DjPartyMemberController extends BaseController
 {
     @Autowired
     private IDjPartyMemberService djPartyMemberService;
+    @Autowired
+    private IDjPartyMemberChangeService djPartyMemberChangeService;
+    @Autowired
+    private IDjSysLogService djSysLogService;
+    @Autowired
+    private IDjSysTodoService djSysTodoService;
 
     /**
      * 查询党员信息列表
@@ -74,9 +88,20 @@ public class DjPartyMemberController extends BaseController
      */
     @Log(title = "党员信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody DjPartyMember djPartyMember)
+    public AjaxResult add(@RequestBody Map<String,Object> params)
     {
-        return toAjax(djPartyMemberService.insertDjPartyMember(djPartyMember));
+        //党员变更表
+        DjPartyMemberChange memberChange = JSON.parseObject(JSON.toJSONString(params), DjPartyMemberChange.class);
+        memberChange.setMemberUuid(UUID.randomUUID().toString());
+        memberChange.setChangeType("add");
+        memberChange.setAuditState("2");
+        djPartyMemberChangeService.insertDjPartyMemberChange(memberChange);
+
+        createSysLogAndTodo( memberChange,
+                Long.parseLong(params.get("auditUserId").toString()),
+                params.get("operReason")==null?null:params.get("operReason").toString());
+
+        return AjaxResult.success(memberChange);
     }
 
     /**
@@ -84,23 +109,96 @@ public class DjPartyMemberController extends BaseController
      */
     @Log(title = "党员信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody DjPartyMember djPartyMember)
+    public AjaxResult edit(@RequestBody Map<String,Object> params)
     {
 
-        return toAjax(djPartyMemberService.updateDjPartyMember(djPartyMember));
+        //党员变更表
+        DjPartyMemberChange memberChange = JSON.parseObject(JSON.toJSONString(params), DjPartyMemberChange.class);
+        memberChange.setMemberUuid(UUID.randomUUID().toString());
+        memberChange.setChangeType("edit");
+        memberChange.setPartyMemberId(Long.parseLong(params.get("memberId").toString()));
+        memberChange.setAuditState("2");
+        djPartyMemberChangeService.insertDjPartyMemberChange(memberChange);
+
+        createSysLogAndTodo( memberChange,
+                Long.parseLong(params.get("auditUserId").toString()),
+                params.get("operReason")==null?null:params.get("operReason").toString());
+
+
+        return AjaxResult.success(memberChange);
+    }
+
+
+    private void createSysLogAndTodo(DjPartyMemberChange memberChange,Long auditUserId, String operReason){
+        //生成操作记录
+        DjSysLog sysLog = new DjSysLog();
+        sysLog.setUuid(memberChange.getMemberUuid());
+        sysLog.setStepType("his");
+        sysLog.setStepName("提交审批");
+        sysLog.setOperUserId(SecurityUtils.getLoginUser().getUser().getUserId());
+        switch (memberChange.getChangeType()){
+            case "add" : sysLog.setOperResult("提交新增变更");  break;
+            case "edit" : sysLog.setOperResult("提交修改变更");  break;
+            case "del" : sysLog.setOperResult("提交删除变更");  break;
+            default:break;
+        }
+        sysLog.setOperTime(new Date());
+        sysLog.setOperReason(operReason);
+        djSysLogService.insertDjSysLog(sysLog);
+
+        DjSysLog nextSysLog = new DjSysLog();
+        nextSysLog.setUuid(memberChange.getMemberUuid());
+        nextSysLog.setStepType("cur");
+        switch (memberChange.getChangeType()){
+            case "add" : nextSysLog.setStepName("新增变更审批");  break;
+            case "edit" : nextSysLog.setStepName("修改变更审批");  break;
+            case "del" : nextSysLog.setStepName("删除变更审批");  break;
+            default:break;
+        }
+        nextSysLog.setOperUserId(auditUserId);
+        djSysLogService.insertDjSysLog(nextSysLog);
+
+        DjSysTodo sysTodo = new DjSysTodo();
+        sysTodo.setUuid(memberChange.getMemberUuid());
+        sysTodo.setType("3"); //党员变更审批
+        switch (memberChange.getChangeType()){
+            case "add" : sysTodo.setTitle(memberChange.getMemberName()+" 新增审批");;  break;
+            case "edit" : sysTodo.setTitle(memberChange.getMemberName()+" 修改审批");;  break;
+            case "del" : sysTodo.setTitle(memberChange.getMemberName()+" 删除审批");;  break;
+            default:break;
+        }
+        sysTodo.setUrlName("MemberChangeDetail");
+        sysTodo.setUrlPath("todo/memberChangeDetail");
+        sysTodo.setUserId(auditUserId);
+        sysTodo.setStatus("0");
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("sysLogId", nextSysLog.getId().toString());
+        map.put("memberUuid", memberChange.getMemberUuid());
+        sysTodo.setUrlParams(JSON.toJSONString(map));
+        djSysTodoService.insertDjSysTodo(sysTodo);
     }
 
     /**
      * 删除党员信息
      */
     @Log(title = "党员信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{memberId}")
-    public AjaxResult remove(@PathVariable Long memberId)
+	@PostMapping("/del")
+    public AjaxResult remove(@RequestBody Map<String,Object> params)
     {
-        DjPartyMember djPartyMember = new DjPartyMember();
-        djPartyMember.setMemberId(memberId);
-        djPartyMember.setDelFlag("1");
-        return toAjax(djPartyMemberService.updateDjPartyMember(djPartyMember));
+        DjPartyMember djPartyMember = djPartyMemberService.selectDjPartyMemberById(Long.parseLong(params.get("memberId").toString()));
+
+        DjPartyMemberChange memberChange = new DjPartyMemberChange();
+        BeanUtils.copyBeanProp(memberChange,djPartyMember);
+        memberChange.setMemberUuid(UUID.randomUUID().toString());
+        memberChange.setChangeType("del");
+        memberChange.setPartyMemberId(djPartyMember.getMemberId());
+        memberChange.setAuditState("2");
+
+        createSysLogAndTodo( memberChange,
+                Long.parseLong(params.get("auditUserId").toString()),
+                params.get("operReason")==null?null:params.get("operReason").toString());
+
+        return toAjax(djPartyMemberChangeService.insertDjPartyMemberChange(memberChange));
     }
 
     /**

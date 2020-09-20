@@ -265,9 +265,13 @@
       </el-form>
     </el-card>
 
-    <div :style="{textAlign:'center'}">
+    <div v-if="todoStatus=='0'" :style="{textAlign:'center'}">
       <el-button type="primary" @click="submitForm('1')">提 交</el-button>
-      <el-button @click="submitTodo('1')">无意见</el-button>
+      <el-button @click="submitTodo('1')">完 成</el-button>
+    </div>
+
+    <div v-if="todoStatus=='1'" :style="{textAlign:'center'}">
+      <el-button @click="cancel">关 闭</el-button>
     </div>
 
 
@@ -303,6 +307,7 @@
   export default {
     data() {
       return {
+        todoStatus: undefined,
         todoId: undefined,
         detailedUuid: undefined,
         partyMemberId: undefined,
@@ -344,6 +349,7 @@
             this.$store.dispatch('tagsView/delView', this.$route)
             this.$router.go(-1)
           }
+          this.todoStatus = response.data.status
           let params = eval('(' + response.data.urlParams + ')');
           this.detailedUuid = params.detailedUuid;
           this.partyMemberId = params.partyMemberId;
@@ -572,6 +578,10 @@
           }
         });
       },
+      cancel(){
+        this.$store.dispatch('tagsView/delView', this.$route)
+        this.$router.go(-1)
+      }
     },
   }
 </script>

@@ -2,6 +2,7 @@ package com.ruoyi.project.system.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.project.party.domain.DjPartyMember;
@@ -59,6 +60,7 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     private IDjPartyMemberService djPartyMemberService;
+
 
     /**
      * 根据条件分页查询用户列表
@@ -486,5 +488,16 @@ public class SysUserServiceImpl implements ISysUserService
         }
         return successMsg.toString();
     }
+
+    @Override
+    public List<SysUser> selectUserByRoleId(Long roleId) {
+        List<SysUserRole> userRoleList = userRoleMapper.selectUserByRoleId(roleId);
+        List<SysUser> userList = userRoleList.stream().map(userRole->{
+            SysUser sysUser = userMapper.selectUserById(userRole.getUserId());
+            return  sysUser;
+        }).distinct().collect(Collectors.toList());
+        return userList;
+    }
+
 
 }

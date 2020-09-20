@@ -36,10 +36,11 @@ export function updatePartyMember(data) {
 }
 
 // 删除党员信息
-export function delPartyMember(memberId) {
+export function delPartyMember(data) {
   return request({
-    url: '/party/member/' + memberId,
-    method: 'delete'
+    url: '/party/member/del',
+    method: 'post',
+    data: data
   })
 }
 
