@@ -647,7 +647,7 @@
     uploadAvatar,
     checkPartyMemberUnique,
   } from "@/api/party/member";
-  import { listPartyMemberChange } from "@/api/memberChange/partyMemberChange";
+  import { listPartyMemberChange } from "@/api/party/memberChange";
   import { postOptionSelect } from "@/api/system/post";
   import { partyOrgTreeselect, getPartyOrg } from "@/api/party/org";
   import { getDept } from "@/api/system/dept";

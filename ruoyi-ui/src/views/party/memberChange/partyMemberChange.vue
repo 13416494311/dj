@@ -59,7 +59,7 @@
     addPartyMemberChange,
     updatePartyMemberChange,
     exportPartyMemberChange
-  } from "@/api/memberChange/partyMemberChange";
+  } from "@/api/party/memberChange";
   import memberChangeDetail from "./memberChangeDetail";
 
   export default {

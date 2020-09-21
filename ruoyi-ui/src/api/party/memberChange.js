@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询党员变更表列表
 export function listPartyMemberChange(query) {
   return request({
-    url: '/memberChange/partyMemberChange/list',
+    url: '/party/partyMemberChange/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listPartyMemberChange(query) {
 // 查询党员变更表详细
 export function getPartyMemberChange(memberId) {
   return request({
-    url: '/memberChange/partyMemberChange/' + memberId,
+    url: '/party/partyMemberChange/' + memberId,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getPartyMemberChange(memberId) {
 // 查询党员变更表详细
 export function getPartyMemberChangeByMemberUuid(memberUuid) {
   return request({
-    url: '/memberChange/partyMemberChange/getByMemberUuid/' + memberUuid,
+    url: '/party/partyMemberChange/getByMemberUuid/' + memberUuid,
     method: 'get'
   })
 }
@@ -28,7 +28,7 @@ export function getPartyMemberChangeByMemberUuid(memberUuid) {
 // 新增党员变更表
 export function addPartyMemberChange(data) {
   return request({
-    url: '/memberChange/partyMemberChange',
+    url: '/party/partyMemberChange',
     method: 'post',
     data: data
   })
@@ -37,7 +37,7 @@ export function addPartyMemberChange(data) {
 // 修改党员变更表
 export function updatePartyMemberChange(data) {
   return request({
-    url: '/memberChange/partyMemberChange',
+    url: '/party/partyMemberChange',
     method: 'put',
     data: data
   })
@@ -46,7 +46,7 @@ export function updatePartyMemberChange(data) {
 // 删除党员变更表
 export function delPartyMemberChange(memberId) {
   return request({
-    url: '/memberChange/partyMemberChange/' + memberId,
+    url: '/party/partyMemberChange/' + memberId,
     method: 'delete'
   })
 }
@@ -54,7 +54,7 @@ export function delPartyMemberChange(memberId) {
 // 导出党员变更表
 export function exportPartyMemberChange(query) {
   return request({
-    url: '/memberChange/partyMemberChange/export',
+    url: '/party/partyMemberChange/export',
     method: 'get',
     params: query
   })

@@ -7,6 +7,8 @@ import java.util.Map;
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.project.party.domain.DjPartyMember;
+import com.ruoyi.project.party.domain.DjPartyMemberFlow;
+import com.ruoyi.project.party.service.IDjPartyMemberFlowService;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.sys.domain.DjSysLog;
 import com.ruoyi.project.sys.service.IDjSysLogService;
@@ -36,7 +38,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
  * @date 2020-09-16
  */
 @RestController
-@RequestMapping("/memberChange/partyMemberChange")
+@RequestMapping("/party/partyMemberChange")
 public class DjPartyMemberChangeController extends BaseController
 {
     @Autowired
@@ -45,6 +47,8 @@ public class DjPartyMemberChangeController extends BaseController
     private IDjSysLogService djSysLogService;
     @Autowired
     private IDjPartyMemberService djPartyMemberService;
+    @Autowired
+    private IDjPartyMemberFlowService djPartyMemberFlowService;
 
     /**
      * 查询党员变更表列表
@@ -109,12 +113,14 @@ public class DjPartyMemberChangeController extends BaseController
         memberChange.setAuditState(state);
         djPartyMemberChangeService.updateDjPartyMemberChange(memberChange);
 
+
         DjSysLog sysLog = new DjSysLog();
         sysLog.setId(Long.parseLong(sysLogId));
         switch (state){
             case "3":
                 sysLog.setOperResult("通过");
                 changePartyMember(memberChange);
+                addMemberFlow(memberChange);
                 break;
             case "4":
                 sysLog.setOperResult("不通过");
@@ -125,7 +131,27 @@ public class DjPartyMemberChangeController extends BaseController
         sysLog.setOperReason(reason);
         djSysLogService.updateDjSysLog(sysLog);
 
+
+
         return AjaxResult.success();
+    }
+
+    private void addMemberFlow(DjPartyMemberChange memberChange){
+        DjPartyMemberFlow memberFlow = new DjPartyMemberFlow();
+        memberFlow.setFlowMemberId(memberChange.getPartyMemberId());
+        switch (memberChange.getChangeType()){
+            case "add":
+                memberFlow.setFlowType("0");
+                djPartyMemberFlowService.insertDjPartyMemberFlow(memberFlow);
+                break;
+            case "edit":
+                break;
+            case "del":
+                memberFlow.setFlowType("1");
+                djPartyMemberFlowService.insertDjPartyMemberFlow(memberFlow);
+                break;
+            default:break;
+        }
     }
 
     private void changePartyMember(DjPartyMemberChange memberChange){

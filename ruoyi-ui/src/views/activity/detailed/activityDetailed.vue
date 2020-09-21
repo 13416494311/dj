@@ -161,7 +161,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="负责人" prop="partyMemberName">
-                  <el-input :disabled="disabled || !disabled1" v-model="form.partyMemberName"
+                  <el-input :disabled="true" v-model="form.partyMemberName"
                             placeholder="请输入负责人">
                     <el-button :disabled="disabled || !disabled1" slot="append" icon="el-icon-search"
                                @click="openMemberChoose"></el-button>

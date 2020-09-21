@@ -540,7 +540,7 @@
     addPartyMemberChange,
     updatePartyMemberChange,
     exportPartyMemberChange
-  } from "@/api/memberChange/partyMemberChange";
+  } from "@/api/party/memberChange.js";
   import {getPartyMember} from "@/api/party/member";
   import {postOptionSelect} from "@/api/system/post";
   import {partyOrgTreeselect, getPartyOrg} from "@/api/party/org";
