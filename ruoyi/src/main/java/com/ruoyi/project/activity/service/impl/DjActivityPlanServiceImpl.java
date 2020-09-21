@@ -51,7 +51,7 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
     @Override
     public DjActivityPlan selectDjActivityPlanByPlanUuid(String planUuid) {
         DjActivityPlan activityPlan = djActivityPlanMapper.selectDjActivityPlanByPlanUuid(planUuid);
-        if(StringUtils.isNotNull(activityPlan.getActivityType())){
+        if(StringUtils.isNotNull(activityPlan) && StringUtils.isNotNull(activityPlan.getActivityType())){
             activityPlan.setActivityTypeText(dictDataService.selectDictLabel("activity_type",activityPlan.getActivityType()));
         }
         return activityPlan;

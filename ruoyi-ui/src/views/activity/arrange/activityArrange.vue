@@ -517,11 +517,15 @@
           this.form = response.data;
           if(response.data.djPartyMember != undefined){
             this.form.partyMemberName = response.data.djPartyMember.memberName
+          }else{
+            this.form.partyMemberName = this.form.djPartyOrg.leaderMember.memberName;
+            this.form.partyMemberId = this.form.djPartyOrg.leader;
           }
           this.setActivityPlan(response.data.djActivityPlan);
           this.open = true;
           this.title = "活动安排";
         }).then(() => {
+
           this.getFileList();
           this.getJoinMemberList();
           this.getDetailedList();

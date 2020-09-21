@@ -24,6 +24,8 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
 {
     @Autowired
     private DjPartyOrgMapper djPartyOrgMapper;
+    @Autowired
+    private DjPartyMemberServiceImpl partyMemberService;
 
     /**
      * 查询党组织架构
@@ -44,6 +46,9 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
             }
         }
         djPartyOrg.setPartyOrgFullName(partyOrgFullName+djPartyOrg.getPartyOrgName());
+        if(StringUtils.isNotNull(djPartyOrg.getLeader())){
+            djPartyOrg.setLeaderMember(partyMemberService.selectDjPartyMemberById(djPartyOrg.getLeader()));
+        }
         return djPartyOrg;
     }
 

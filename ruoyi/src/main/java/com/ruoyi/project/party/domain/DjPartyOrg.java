@@ -43,7 +43,9 @@ public class DjPartyOrg extends TreeEntity
 
     /** 负责人 */
     @Excel(name = "负责人")
-    private String leader;
+    private Long leader;
+
+    private DjPartyMember leaderMember;
 
     /** 联系电话 */
     @Excel(name = "联系电话")

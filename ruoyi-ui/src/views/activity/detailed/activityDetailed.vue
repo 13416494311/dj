@@ -14,23 +14,41 @@
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
+      <el-form-item>
+        <span class="info-span info-span-left">预警颜色说明:</span>
+        <i class="dot danger"/><span class="info-span info-span-left">已超期</span>
+        <i class="dot warn"/> <span class="info-span info-span-left">即将超期</span>
+        <span class="info-span">（已归档状态不参与预警）</span>
+      </el-form-item>
     </el-form>
 
 
-    <el-table v-loading="loading" :data="detailedList">
+    <el-table v-loading="loading"
+              :data="detailedList"
+              :row-class-name="tableRowClassName">
       <el-table-column label="活动名称" align="center" prop="djActivityPlan.activityTheme"/>
       <el-table-column label="活动类型" align="center" prop="djActivityPlan.activityType"
                        :formatter="activityTypeFormat"/>
       <el-table-column label="活动党组织" align="center" prop="djPartyOrg.partyOrgFullName"/>
       <el-table-column label="负责人" align="center" prop="djPartyMember.memberName"/>
-      <el-table-column label="计划开始时间" align="center" prop="planStartTime">
+      <el-table-column v-if="pathType=='1'" label="计划开始时间" align="center" prop="planStartTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.planStartTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="计划截止时间" align="center" prop="planEndTime">
+      <el-table-column v-if="pathType=='1'" label="计划截止时间" align="center" prop="planEndTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.planEndTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="pathType=='2'" label="活动计划召开时间" align="center" prop="planStartTime">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.activityPlanStartTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="pathType=='2'" label="活动计划结束时间" align="center" prop="planStartTime">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.activityPlanEndTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="活动状态" align="center" prop="status"
@@ -51,6 +69,14 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['activity:detailed:edit']"
+          >活动管理
+          </el-button>
+          <el-button
+            v-if="scope.row.status =='5'&&(scope.row.partyMemberId == user.partyMemberId || admin)"
+            size="small"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
           >活动管理
           </el-button>
           <el-button
@@ -90,10 +116,10 @@
             <span style="font-weight: bold;font-size: 16px">活动进度</span>
           </div>
           <el-steps v-if="!disabled6" :active="activeStep" finish-status="success">
-            <el-step title="完善活动信息"></el-step>
+            <el-step title="活动计划"></el-step>
+            <!--<el-step title="启动活动"></el-step>-->
             <el-step title="启动活动"></el-step>
-            <el-step title="开始活动"></el-step>
-            <el-step title="结束活动"></el-step>
+           <!-- <el-step title="结束活动"></el-step>-->
             <el-step title="活动归档"></el-step>
           </el-steps>
           <el-steps v-if="disabled6" :active="activeStep" finish-status="success">
@@ -240,8 +266,8 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="活动实际开始时间" prop="actualStartTime"
-                              :rules="[{required: actualRequired ,message: `请选择周期结束季度`,trigger: 'blur'}]">
-                  <el-date-picker :disabled="disabled  || !disabled2 "
+                              :rules="[{required: actualRequired ,message: `请选择活动实际开始时间`,trigger: 'blur'}]">
+                  <el-date-picker :disabled="disabled  || !disabled3 "
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.actualStartTime"
@@ -254,8 +280,8 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="活动实际结束时间" prop="actualEndTime"
-                              :rules="[{required: actualRequired,message: `请选择周期结束季度`,trigger: 'blur'}]">
-                  <el-date-picker :disabled="disabled || !disabled2"
+                              :rules="[{required: actualRequired,message: `请选择活动实际结束时间`,trigger: 'blur'}]">
+                  <el-date-picker :disabled="disabled || !disabled3"
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.actualEndTime"
@@ -540,8 +566,8 @@
 
 
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button  v-if=""type="primary" @click="submitForm()">保 存</el-button>
-        <el-button type="primary"
+        <el-button  v-if="!disabled "type="primary" @click="submitForm()">保 存</el-button>
+        <!--<el-button type="primary"
                    v-if="this.form.status =='1'" @click="submitForm('2')">启动活动
         </el-button>
         <el-button type="primary"
@@ -558,6 +584,18 @@
         </el-button>
         <el-button type="primary"
                    v-if="this.form.status =='4'" @click="submitForm('5')">活动归档
+        </el-button>-->
+        <el-button type="primary"
+                   v-if="!disabled && this.form.status =='1'" @click="submitForm('3')">开始活动
+        </el-button>
+        <el-button type="primary"
+                   v-if="!disabled && this.form.status =='3'" @click="submitForm('6')">取消活动
+        </el-button>
+        <el-button type="primary"
+                   v-if="!disabled && this.form.status =='6'" @click="submitForm('3')">重新开始
+        </el-button>
+        <el-button type="primary"
+                   v-if="!disabled && this.form.status =='3'" @click="submitForm('5')">活动归档
         </el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -574,7 +612,27 @@
   </div>
 </template>
 
-
+<style>
+  .info-span{
+    color:#909399;
+  }
+  .info-span-left{
+    margin-left: 20px;
+  }
+  .dot{
+    position:absolute;
+    top:6px;
+    width:15px;
+    height:15px;
+    border-radius:15px;
+  }
+  .danger{
+    background: #F56C6C;
+  }
+  .warn{
+    background: #E6A23C;
+  }
+</style>
 <script>
   import {
     listDetailed,
@@ -596,6 +654,7 @@
   import activitySuggestions from "./activitySuggestions";
   import activityExperience from "./activityExperience";
   import activitySupervise from "./activitySupervise";
+  import { getUserProfile } from "@/api/system/user";
 
   export default {
     name: "Detailed",
@@ -699,7 +758,8 @@
         mapOpen: false,
         actualRequired: false,
         pathType: undefined,
-
+        user: {},
+        admin: false,
       };
     },
     mounted() {
@@ -707,7 +767,6 @@
     },
     created() {
       this.defaultFilePicUrl = require("@/assets/image/file.png");
-      this.getList();
       this.getDicts("activity_type").then(response => {
         this.activityTypeOptions = response.data;
       });
@@ -718,6 +777,10 @@
         this.memberStatusOptions = response.data;
       });
       this.getPathType();
+      this.getUser();
+      setTimeout(()=>{
+        this.getList()
+      },10);
     },
     methods: {
       getPathType(){
@@ -1154,7 +1217,8 @@
             this.disabled2 = true;
             break;
           case "3":
-            this.activeStep = 3;
+            this.activeStep = 2;
+            this.actualRequired = true;
             this.disabled3 = true;
             break;
           case "4":
@@ -1162,7 +1226,7 @@
             this.disabled4 = true;
             break;
           case "5":
-            this.activeStep = 5;
+            this.activeStep = 3;
             this.disabled5 = true;
             break;
           case "6":
@@ -1209,6 +1273,7 @@
             }
           });
         }else {
+          this.form.status = status;
           updateDetailed(this.form).then(response => {
             if (response.code === 200) {
               this.msgSuccess("修改成功");
@@ -1257,7 +1322,50 @@
         this.$refs.activitySupervise.tableOpen= true;
         this.$refs.activitySupervise.detailedUuid= row.detailedUuid
         this.$refs.activitySupervise.queryParams.detailedUuid= row.detailedUuid
-      }
+      },
+      getUser() {
+        getUserProfile().then(response => {
+          this.admin = false;
+          this.user = response.data;
+          let roles = this.user.roles;
+          if(roles){
+            for(let i=0;i<roles.length;i++){
+              if(roles[i].roleId == 7){
+                this.admin = true;
+              }
+            }
+          }
+        });
+      },
+      /**行颜色*/
+      tableRowClassName({row, rowIndex}) {
+        if(row.status != '5' && row.status != '6'){  //未归档  && 已取消
+          if(this.pathType=="1"){  //活动详情
+            let planEndTime = new Date(row.planEndTime.replace(/-/g, "/"));
+            if(planEndTime.getTime() <= Date.now() ){
+              return 'danger-row';
+            }
+            if(planEndTime.getTime()  <= Date.now() + 7 * 24 * 60 * 60 * 1000){
+              return 'warn-row';
+            }
+          }
+          if(this.pathType=="2"){  //活动督办
+            let endTime;
+            if(row.activityPlanEndTime){
+              endTime= new Date(row.activityPlanEndTime.replace(/-/g, "/"));
+            }else{
+              endTime= new Date(row.planEndTime.replace(/-/g, "/"));
+            }
+            if(endTime.getTime() <= Date.now() ){
+              return 'danger-row';
+            }
+            if(endTime.getTime()  <= Date.now() + 7 * 24 * 60 * 60 * 1000){
+              return 'warn-row';
+            }
+          }
+        }
+        return '';
+      },
     }
   };
 </script>

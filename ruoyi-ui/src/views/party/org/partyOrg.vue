@@ -181,7 +181,10 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="负责人" prop="leader">
-                <el-input :disabled="disabled" v-model="form.leader" placeholder="请输入负责人"/>
+                <el-input :disabled="true" v-model="form.leaderName" placeholder="请选择负责人">
+                  <el-button :disabled="disabled" slot="append" icon="el-icon-search"
+                             @click="openMemberChoose"></el-button>
+                </el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -255,6 +258,7 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <party-member ref="partyMember" @callbackMember="setMember"/>
   </div>
 </template>
 
@@ -267,10 +271,11 @@
   import partyOrgPost from "./partyOrgPost";
   import addressMap from "./addressMap";
   import selectTree from '../../components/selectTree';
+  import partyMember from "../../party/org/partyMemberChoose";
 
   export default {
     name: "PartyOrg",
-    components: {Treeselect, partyOrgPic,partyOrgPost, addressMap, selectTree},
+    components: {Treeselect, partyOrgPic,partyOrgPost, addressMap, selectTree,partyMember},
     data() {
       return {
         disabled: false,
@@ -469,6 +474,7 @@
           partyOrgType: undefined,
           buildTime: undefined,
           leader: undefined,
+          leaderName: undefined,
           phone: undefined,
           email: undefined,
           address: undefined,
@@ -515,6 +521,9 @@
         }
         getPartyOrg(row.partyOrgId).then(response => {
           this.form = response.data;
+          if(response.data.leaderMember != undefined){
+            this.form.leaderName = response.data.leaderMember.memberName
+          }
           this.open = true;
           this.title = "查看党组织架构";
         });
@@ -530,6 +539,9 @@
         }
         getPartyOrg(row.partyOrgId).then(response => {
           this.form = response.data;
+          if(response.data.leaderMember != undefined){
+            this.form.leaderName = response.data.leaderMember.memberName
+          }
           this.open = true;
           this.title = "修改党组织架构";
         });
@@ -581,7 +593,16 @@
           this.msgSuccess("删除成功");
         }).catch(function () {
         });
-      }
+      },
+      openMemberChoose() {
+        this.$refs.partyMember.open = true;
+        this.$refs.partyMember.title = "选择负责人";
+      },
+      setMember(member) {
+        this.form.leader = member.memberId;
+        this.form.leaderName = member.memberName;
+        this.$forceUpdate();
+      },
     }
   };
 </script>

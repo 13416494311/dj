@@ -1,9 +1,11 @@
 package com.ruoyi.project.activity.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -18,6 +20,10 @@ import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
+import com.ruoyi.project.sys.domain.DjSysTodo;
+import com.ruoyi.project.sys.service.IDjSysTodoService;
+import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivityArrangeMapper;
@@ -45,6 +51,11 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
     private IDjActivityDetailedService djActivityDetailedService;
     @Autowired
     private IDjActivityMemberService djActivityMemberService;
+    @Autowired
+    private ISysUserService userService;
+    @Autowired
+    private IDjSysTodoService djSysTodoService;
+
     /**
      * 查询活动安排
      *
@@ -154,10 +165,13 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
 
 
             detailedList.stream().forEach(activityDetailed->{
+
                 activityDetailed.setPartyMemberId(djActivityArrange.getPartyMemberId());
                 activityDetailed.setVenue(djActivityArrange.getVenue());
                 activityDetailed.setStatus("1");
                 djActivityDetailedService.updateDjActivityDetailed(activityDetailed);
+
+                createTodo(activityDetailed);
 
                 for(int i=0;i<memberList.size();i++){
                     DjActivityMember detailedMember = new DjActivityMember();
@@ -176,6 +190,21 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
         return djActivityArrangeMapper.updateDjActivityArrange(djActivityArrange);
     }
 
+    private void createTodo(DjActivityDetailed detailed){
+        SysUser user = userService.selectUserByPartyMemberId(detailed.getPartyMemberId());
+        DjSysTodo sysTodo = new DjSysTodo();
+        sysTodo.setUuid(detailed.getDetailedUuid());
+        sysTodo.setType("4"); //活动管理
+        sysTodo.setTitle(detailed.getDjActivityPlan().getActivityTheme());
+        sysTodo.setUrlName("ActivityDetailed");
+        sysTodo.setUrlPath("todo/activityDetailed");
+        sysTodo.setUserId(user.getUserId());
+        sysTodo.setStatus("0");
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("detailedUuid", detailed.getDetailedUuid());
+        sysTodo.setUrlParams(JSON.toJSONString(map));
+        djSysTodoService.insertDjSysTodo(sysTodo);
+    }
     /**
      * 批量删除活动安排
      *

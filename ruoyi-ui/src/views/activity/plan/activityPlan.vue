@@ -492,7 +492,8 @@
         yearRequired: false,
         beforeTimeOption: {
           disabledDate(date) {
-            return date.getTime() <= Date.now() - 24 * 60 * 60 * 1000;
+            //return date.getTime() <= Date.now() - 24 * 60 * 60 * 1000;
+            return true;
           }
         },
         user: {},

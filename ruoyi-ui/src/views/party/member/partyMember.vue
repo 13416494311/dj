@@ -1305,7 +1305,6 @@
       getUser() {
         getUserProfile().then(response => {
           this.user = response.data;
-          console.log(JSON.stringify(this.user));
         });
       },
       showHandleUpdate(row){

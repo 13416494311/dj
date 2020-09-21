@@ -159,6 +159,30 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
      */
     @Override
     public int updateDjActivityDetailed(DjActivityDetailed djActivityDetailed) {
+        //如果更换负责人 待办跟着一起切换
+        if(StringUtils.isNotNull(djActivityDetailed.getPartyMemberId())){
+            DjSysTodo sysTodo = new DjSysTodo();
+            sysTodo.setUuid(djActivityDetailed.getDetailedUuid());
+            List<DjSysTodo> sysTodoList = djSysTodoService.selectDjSysTodoList(sysTodo);
+
+            SysUser user = userService.selectUserByPartyMemberId(djActivityDetailed.getPartyMemberId());
+            sysTodoList.stream().forEach(djSysTodo->{
+                djSysTodo.setUserId(user.getUserId());
+                djSysTodoService.updateDjSysTodo(djSysTodo);
+            });
+        }
+
+        //归档时 修改待办为已办
+        if("5".equals(djActivityDetailed.getStatus())){
+            DjSysTodo sysTodo = new DjSysTodo();
+            sysTodo.setUuid(djActivityDetailed.getDetailedUuid());
+            List<DjSysTodo> sysTodoList = djSysTodoService.selectDjSysTodoList(sysTodo);
+            sysTodoList.stream().forEach(djSysTodo->{
+                djSysTodo.setStatus("1");
+                djSysTodoService.updateDjSysTodo(djSysTodo);
+            });
+        }
+
         if(StringUtils.isNotNull(djActivityDetailed.getStatus())){
             createTodo(djActivityDetailed);
         }
