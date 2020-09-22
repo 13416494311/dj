@@ -1,9 +1,8 @@
 package com.ruoyi.project.activity.service.impl;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.utils.DateIntervalUtil;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -14,7 +13,11 @@ import com.ruoyi.project.activity.domain.DjActivityDetailed;
 import com.ruoyi.project.activity.mapper.DjActivityDetailedMapper;
 import com.ruoyi.project.activity.service.IDjActivityArrangeService;
 import com.ruoyi.project.activity.service.IDjActivityDetailedService;
+import com.ruoyi.project.sys.domain.DjSysTodo;
+import com.ruoyi.project.sys.service.IDjSysTodoService;
+import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.ISysDictDataService;
+import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivityPlanMapper;
@@ -37,6 +40,10 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
     private IDjActivityArrangeService djActivityArrangeService;
     @Autowired
     private ISysDictDataService dictDataService;
+    @Autowired
+    private ISysUserService userService;
+    @Autowired
+    private IDjSysTodoService djSysTodoService;
     /**
      * 查询活动计划
      *
@@ -78,8 +85,9 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
     public int insertDjActivityPlan(DjActivityPlan djActivityPlan) {
         djActivityPlan.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         djActivityPlan.setCreateTime(DateUtils.getNowDate());
+        int result = djActivityPlanMapper.insertDjActivityPlan(djActivityPlan);
         createActivityDetailed(djActivityPlan);
-        return djActivityPlanMapper.insertDjActivityPlan(djActivityPlan);
+        return result;
     }
 
     /**
@@ -92,8 +100,9 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
     public int updateDjActivityPlan(DjActivityPlan djActivityPlan) {
         djActivityPlan.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djActivityPlan.setUpdateTime(DateUtils.getNowDate());
+        int result = djActivityPlanMapper.updateDjActivityPlan(djActivityPlan);
         createActivityDetailed(djActivityPlan);
-        return djActivityPlanMapper.updateDjActivityPlan(djActivityPlan);
+        return result;
     }
 
 
@@ -148,6 +157,7 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
             List<DjActivityArrange> arrangeList = djActivityArrangeService.selectDjActivityArrangeList(activityArrange);
             if(list!=null&&list.size()>0&&arrangeList!=null&&arrangeList.size()>0){
                 for(int j=0;j<arrangeList.size();j++){
+                    createTodo(arrangeList.get(j));
                     for(int i=0;i<list.size();i++){
                         DjActivityDetailed activityDetailed = new DjActivityDetailed();
                         activityDetailed.setPlanUuid(djActivityPlan.getPlanUuid());
@@ -191,6 +201,21 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
 
     }
 
+    private void createTodo(DjActivityArrange activityArrange){
+        SysUser user = userService.selectUserByPartyMemberId(activityArrange.getDjPartyOrg().getLeader());
+        DjSysTodo sysTodo = new DjSysTodo();
+        sysTodo.setUuid(activityArrange.getId().toString());
+        sysTodo.setType("6"); //活动安排
+        sysTodo.setTitle(activityArrange.getDjActivityPlan().getActivityTheme());
+        sysTodo.setUrlName("ActivityArrange");
+        sysTodo.setUrlPath("todo/activityArrange");
+        sysTodo.setUserId(user.getUserId());
+        sysTodo.setStatus("0");
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("arrangeId", activityArrange.getId().toString());
+        sysTodo.setUrlParams(JSON.toJSONString(map));
+        djSysTodoService.insertDjSysTodo(sysTodo);
+    }
     /**
      * 批量删除活动计划
      *

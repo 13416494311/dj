@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.activity.mapper.DjActivitySuperviseMapper">
-    
+
     <resultMap type="DjActivitySupervise" id="DjActivitySuperviseResult">
         <result property="superviseId"    column="supervise_id"    />
         <result property="detailedUuid"    column="detailed_uuid"    />
@@ -22,18 +22,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectDjActivitySuperviseList" parameterType="DjActivitySupervise" resultMap="DjActivitySuperviseResult">
         <include refid="selectDjActivitySuperviseVo"/>
-        <where>  
+        <where>
+            <if test="superviseId != null "> and supervise_id = #{superviseId}</if>
             <if test="detailedUuid != null  and detailedUuid != ''"> and detailed_uuid = #{detailedUuid}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="partyMemberId != null "> and party_member_id = #{partyMemberId}</if>
         </where>
     </select>
-    
+
     <select id="selectDjActivitySuperviseById" parameterType="Long" resultMap="DjActivitySuperviseResult">
         <include refid="selectDjActivitySuperviseVo"/>
         where supervise_id = #{superviseId}
     </select>
-        
+
     <insert id="insertDjActivitySupervise" parameterType="DjActivitySupervise" useGeneratedKeys="true" keyProperty="superviseId">
         insert into dj_activity_supervise
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -78,10 +79,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDjActivitySuperviseByIds" parameterType="String">
-        delete from dj_activity_supervise where supervise_id in 
+        delete from dj_activity_supervise where supervise_id in
         <foreach item="superviseId" collection="array" open="(" separator="," close=")">
             #{superviseId}
         </foreach>
     </delete>
-    
+
 </mapper>

@@ -1,5 +1,16 @@
 <template>
   <div style="padding: 30px">
+
+    <el-card v-if="this.todoStatus =='2'||this.todoStatus =='3'" shadow="always" style="margin-bottom: 30px;">
+      <div slot="header" style="height: 25px">
+        <span style="font-weight: bold;font-size: 16px">活动督办</span>
+      </div>
+      <el-table v-loading="loading" :data="superviseList">
+        <el-table-column label="督办内容" align="left" prop="content" min-width="60%"/>
+        <el-table-column label="创建时间" align="center" prop="createTime" min-width="20%"/>
+        <el-table-column label="督办人" align="center" prop="djPartyMember.memberName" min-width="20%"/>
+      </el-table>
+    </el-card>
     <el-card shadow="always" style="margin-bottom: 30px;">
       <div slot="header" style="height: 25px">
         <span style="font-weight: bold;font-size: 16px">活动进度</span>
@@ -460,7 +471,7 @@
       <el-button type="primary"
                  v-if="!disabled && this.form.status =='3'" @click="submitForm('5')">活动归档
       </el-button>
-      <el-button @click="cancel">取 消</el-button>
+      <el-button @click="cancel">关 闭</el-button>
     </div>
 
     <party-member ref="partyMember" @callbackMember="setMember"/>
@@ -498,6 +509,7 @@
   import activitySupervise from "../../activity/detailed/activitySupervise";
   import {getUserProfile} from "@/api/system/user";
   import {listTodo, getTodo, delTodo, addTodo, updateTodo, exportTodo} from "@/api/sys/todo";
+  import {listSupervise} from "@/api/activity/supervise";
 
   export default {
     name: "Detailed",
@@ -605,6 +617,10 @@
         admin: false,
         todoId: undefined,
         todoStatus: undefined,
+        // 活动督办表格数据
+        superviseList: [],
+        detailedUuid: undefined,
+        superviseId: undefined,
       };
     },
     mounted() {
@@ -639,11 +655,17 @@
           this.todoStatus = response.data.status
           let params = eval('(' + response.data.urlParams + ')');
           this.detailedUuid = params.detailedUuid;
+          this.superviseId = params.superviseId;
         }).then(() => {
           if(this.todoStatus =='0'){
             this.handleUpdate();
           }else{
             this.handleSee();
+          }
+
+          //待阅打开时设置为已阅
+          if(this.todoStatus =='2'){
+            updateTodo({"todoId": this.todoId, "status": "3"})
           }
 
         });
@@ -743,6 +765,14 @@
         //console.log(file);
         downLoadZip("/system/file/download/" + file.uid);
 
+      },
+      /** 查询活动督办列表 */
+      getSuperviseList() {
+        this.loading = true;
+        listSupervise({'superviseId':this.superviseId,'detailedUuid': this.form.detailedUuid}).then(response => {
+          this.superviseList = response.rows;
+          this.loading = false;
+        });
       },
       getPlanFileList() {
         this.planFileList = [];
@@ -1029,6 +1059,7 @@
           this.getJoinMemberList();
           this.getPicFileList();
           this.getFileList();
+          this.getSuperviseList();
           this.$refs.activitySummary.disabled = this.disabled;
           this.$refs.activitySummary.init(this.form.detailedUuid);
           this.$refs.activityResolution.disabled = this.disabled;
@@ -1053,6 +1084,7 @@
           this.getJoinMemberList();
           this.getPicFileList();
           this.getFileList();
+          this.getSuperviseList();
           this.$refs.activitySummary.disabled = this.disabled;
           this.$refs.activitySummary.init(this.form.detailedUuid);
           this.$refs.activityResolution.disabled = this.disabled;

@@ -1319,9 +1319,7 @@
         downLoadZip("/activity/detailed/exportArchives?detailedId=" + row.detailedId);
       },
       handleOpenSupervise(row){
-        this.$refs.activitySupervise.tableOpen= true;
-        this.$refs.activitySupervise.detailedUuid= row.detailedUuid
-        this.$refs.activitySupervise.queryParams.detailedUuid= row.detailedUuid
+        this.$refs.activitySupervise.init(row.detailedUuid);
       },
       getUser() {
         getUserProfile().then(response => {

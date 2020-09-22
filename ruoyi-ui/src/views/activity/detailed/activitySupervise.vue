@@ -112,6 +112,12 @@
       this.getUser();
     },
     methods: {
+      init(detailedUuid){
+        this.tableOpen= true;
+        this.detailedUuid= detailedUuid
+        this.queryParams.detailedUuid = detailedUuid
+        this.getList();
+      },
       getUser() {
         getUserProfile().then(response => {
           this.user = response.data;

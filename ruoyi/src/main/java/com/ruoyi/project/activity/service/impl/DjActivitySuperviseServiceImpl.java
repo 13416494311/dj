@@ -1,9 +1,20 @@
 package com.ruoyi.project.activity.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.activity.domain.DjActivityDetailed;
+import com.ruoyi.project.activity.service.IDjActivityDetailedService;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
+import com.ruoyi.project.sys.domain.DjSysTodo;
+import com.ruoyi.project.sys.service.IDjSysTodoService;
+import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivitySuperviseMapper;
@@ -23,6 +34,13 @@ public class DjActivitySuperviseServiceImpl implements IDjActivitySuperviseServi
     private DjActivitySuperviseMapper djActivitySuperviseMapper;
     @Autowired
     private IDjPartyMemberService djPartyMemberService;
+    @Autowired
+    private IDjActivityDetailedService djActivityDetailedService;
+    @Autowired
+    private ISysUserService userService;
+    @Autowired
+    private IDjSysTodoService djSysTodoService;
+
     /**
      * 查询活动督办
      *
@@ -69,8 +87,30 @@ public class DjActivitySuperviseServiceImpl implements IDjActivitySuperviseServi
     @Override
     public int insertDjActivitySupervise(DjActivitySupervise djActivitySupervise)
     {
+        djActivitySupervise.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());;
         djActivitySupervise.setCreateTime(DateUtils.getNowDate());
-        return djActivitySuperviseMapper.insertDjActivitySupervise(djActivitySupervise);
+        int result = djActivitySuperviseMapper.insertDjActivitySupervise(djActivitySupervise);
+        createTodo(djActivitySupervise);
+        return result;
+    }
+
+    private void createTodo(DjActivitySupervise djActivitySupervise){
+        DjActivityDetailed detailed = djActivityDetailedService.
+                selectDjActivityDetailedByDetailedUuid(djActivitySupervise.getDetailedUuid());
+        SysUser user = userService.selectUserByPartyMemberId(detailed.getPartyMemberId());
+        DjSysTodo sysTodo = new DjSysTodo();
+        sysTodo.setUuid(detailed.getDetailedUuid());
+        sysTodo.setType("5"); //活动督办
+        sysTodo.setTitle(detailed.getDjActivityPlan().getActivityTheme());
+        sysTodo.setUrlName("ActivityDetailed");
+        sysTodo.setUrlPath("todo/activityDetailed");
+        sysTodo.setUserId(user.getUserId());
+        sysTodo.setStatus("2");
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("detailedUuid", detailed.getDetailedUuid());
+        map.put("superviseId", djActivitySupervise.getSuperviseId().toString());
+        sysTodo.setUrlParams(JSON.toJSONString(map));
+        djSysTodoService.insertDjSysTodo(sysTodo);
     }
 
     /**
@@ -82,6 +122,7 @@ public class DjActivitySuperviseServiceImpl implements IDjActivitySuperviseServi
     @Override
     public int updateDjActivitySupervise(DjActivitySupervise djActivitySupervise)
     {
+        djActivitySupervise.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djActivitySupervise.setUpdateTime(DateUtils.getNowDate());
         return djActivitySuperviseMapper.updateDjActivitySupervise(djActivitySupervise);
     }

@@ -72,6 +72,7 @@ public class DjActivitySuperviseController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody DjActivitySupervise djActivitySupervise)
     {
+
         return toAjax(djActivitySuperviseService.insertDjActivitySupervise(djActivitySupervise));
     }
 
