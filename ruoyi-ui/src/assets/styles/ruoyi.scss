@@ -199,12 +199,6 @@
  .hide .el-upload--picture-card {
    display: none;
  }
- .file-name{
-   font-size: 12px;
-   line-height: 23px;
- }
-
-
 
  .el-tree-node .is-current  {
    color: #f5222d !important;
@@ -216,4 +210,28 @@
 
  .el-table .warn-row {
    background: #E6A23C;
+ }
+
+ .upload .el-upload-list--picture-card .el-upload-list__item-actions{
+   height: 70%;
+   border-radius: 6px;
+ }
+ .upload .el-upload-list--picture-card .el-upload-list__item {
+   border:0px;
+ }
+ .upload .upload-file{
+   height: 105px;;
+ }
+ .upload .upload-text{
+   height: 40px;
+   line-height: 20px;
+   font-size: 12px;
+   text-align: center;
+   position: relative;
+   word-break: break-all;
+   text-overflow: ellipsis;
+   display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
+   -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+   -webkit-line-clamp: 2; /** 显示的行数 **/
+   overflow: hidden; /** 隐藏超出的内容 **/
  }

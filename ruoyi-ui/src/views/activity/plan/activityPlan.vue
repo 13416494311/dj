@@ -325,10 +325,11 @@
             :file-list="fileList"
             :http-request="uploadFile"
             :class="{hide:disabled}"
+            class="upload"
             accept="image/*,.doc,.docx,.xls,.xlsx,.pdf,.ppt,.zip,.txt">
             <i slot="default" class="el-icon-plus"></i>
             <div slot="file" slot-scope="{file}" style="display: inline">
-              <div style="height: 70%">
+              <div class="upload-file">
               <img v-if="'jpeg,jpg,gif,png'.indexOf(file.name.split('.')[1]) != -1"
                    class="el-upload-list__item-thumbnail"
 
@@ -355,8 +356,10 @@
                     </span>
                   </span>
               </div>
-              <div style="height: 30%">
-                <span class="file-name">{{file.name}}</span>
+              <div class="upload-text">
+                <el-tooltip class="item" effect="dark" :content="setFileNameTip(file)" placement="top">
+                  <span>{{file.name}}</span>
+                </el-tooltip>
               </div>
             </div>
           </el-upload>
@@ -979,6 +982,9 @@
         getUserProfile().then(response => {
           this.user = response.data;
         });
+      },
+      setFileNameTip(file){
+        return file.name;
       }
     }
   };
