@@ -530,9 +530,16 @@
       },
       handleRemove(file) {
         //console.log(file);
-        delFile(file.uid).then(response => {
-          this.msgSuccess(response.msg);
-          this.getFileList();
+        this.$confirm('是否确认删除该附件?', "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info"
+        }).then(() => {
+          delFile(file.uid).then(response => {
+            this.msgSuccess(response.msg);
+            this.getFileList();
+          });
+        }).catch(function () {
         });
       },
       submitForm: function (status) {

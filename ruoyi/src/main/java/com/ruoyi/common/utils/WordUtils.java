@@ -25,13 +25,13 @@ public class WordUtils {
 
 
     public static void main(String[] args) {
-        String xmlTemplate = "test/test.xml";
-        String imageXmlTemplate ="test/test.xml.rels";
+        String xmlTemplate = "test.xml";
+        String imageXmlTemplate ="test.xml.rels";
 
-        String docxTemplate = "test/test.docx";
+        String docxTemplate = "test.docx";
         String uuid = UUID.randomUUID().toString();
         String fileOnlyName = "freemarker" + uuid + ".docx";
-        String toDocxFilePath = "H:\\wdf\\"+ fileOnlyName;
+        String toDocxFilePath = "D:\\wdf\\"+ fileOnlyName;
         File toDocxFile = new File(toDocxFilePath);
         Map<String, Object> dataMap = new HashMap<>();
 
@@ -47,20 +47,29 @@ public class WordUtils {
 
 
         List<File> imageFileList=new ArrayList<File>();
-        File file = new File("H:\\桌面\\图片\\测试.jpg");
+        File file = new File("C:\\Users\\万登枫\\Desktop\\dj\\13.jpg");
         byte[] fileByte = FileUtil.getBytesByFile(file);
         BASE64Encoder encoder = new BASE64Encoder();
         String imageData = encoder.encode(fileByte);
-        String fileName = "123.png";  //不能中文
-        dataMap.put("wdfp", fileName);
+        String fileName = "image-0.png";  //不能中文
         File targetFile = FileUtil.byteToFile(fileByte,fileName);
         imageFileList.add(targetFile);
 
+        File file1 = new File("C:\\Users\\万登枫\\Desktop\\dj\\14.gif");
+        byte[] fileByte1 = FileUtil.getBytesByFile(file1);
+        BASE64Encoder encoder1 = new BASE64Encoder();
+        String imageData1 = encoder1.encode(fileByte1);
+        String fileName1 = "image-1.png";  //不能中文
+        File targetFile1 = FileUtil.byteToFile(fileByte1,fileName1);
+        imageFileList.add(targetFile1);
+
+        dataMap.put("listLeadUrl", imageFileList);
+
         try {
             //带图片
-            //createWordDocx(xmlTemplate, dataMap,imageXmlTemplate, imageFileList,docxTemplate,toDocxFilePath);
+            createWordDocx(xmlTemplate, dataMap,imageXmlTemplate, imageFileList,docxTemplate,toDocxFile);
             //不带图片
-            createWordDocx(xmlTemplate, dataMap,null, null,docxTemplate,toDocxFile);
+            //createWordDocx(xmlTemplate, dataMap,null, null,docxTemplate,toDocxFilePath);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

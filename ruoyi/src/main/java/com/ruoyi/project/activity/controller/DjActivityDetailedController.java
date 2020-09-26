@@ -3,23 +3,27 @@ package com.ruoyi.project.activity.controller;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.pagehelper.PageHelper;
+import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.FileUtil;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.WordUtils;
 import com.ruoyi.common.utils.file.FileUtils;
-import com.ruoyi.common.utils.sql.SqlUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
+import com.ruoyi.framework.config.RuoYiConfig;
 import com.ruoyi.project.activity.domain.*;
 import com.ruoyi.project.activity.service.*;
+import com.ruoyi.project.system.domain.SysFile;
 import com.ruoyi.project.system.service.ISysDictDataService;
+import com.ruoyi.project.system.service.ISysFileService;
 import org.apache.commons.io.IOUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
@@ -28,6 +32,7 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,6 +59,8 @@ public class DjActivityDetailedController extends BaseController
     private ISysDictDataService dictDataService;
     @Autowired
     private IDjActivityMemberService djActivityMemberService;
+    @Autowired
+    private ISysFileService sysFileService;
 
     /**
      * 查询活动详情列表
@@ -243,12 +250,30 @@ public class DjActivityDetailedController extends BaseController
             activityResolution.setRecordContent(activityResolutionIndex[0]+"、"+activityResolution.getRecordContent());
         });
 
+        SysFile sysFile = new SysFile();
+        sysFile.setUuid(activityDetailed.getDetailedUuid());
+        sysFile.setFileTypeValue("pic");
+        List<SysFile> activityPicSysFileList = sysFileService.selectSysFileList(sysFile);
+
+        List<File> activityPicList = new ArrayList<File>();
+        final int[] index = {0};
+        activityPicSysFileList.stream().forEach(activityPicSysFile -> {
+            File file = new File(RuoYiConfig.getProfile()+
+                    activityPicSysFile.getFilePath().replace(Constants.RESOURCE_PREFIX,""));
+            byte[] fileByte = FileUtil.getBytesByFile(file);
+            String fileName = "image-"+index[0]+".png";  //不能中文
+            File targetFile = FileUtil.byteToFile(fileByte,fileName);
+            activityPicList.add(targetFile);
+            index[0]+=1;
+        });
+        dataMap.put("activityPicList", activityPicList);
+
         File docx = null ;
         try {
             String docxName = activityPlan.getActivityTheme() + System.currentTimeMillis() + ".docx";
             docx = new File(docxName);
             WordUtils.createWordDocx("activityDetailed/template.xml",dataMap,
-                    null, null,"activityDetailed/template.docx",docx);
+                    "activityDetailed/template.xml.rels", activityPicList,"activityDetailed/template.docx",docx);
             download(request,response, docx);
 
         }catch (Exception e){

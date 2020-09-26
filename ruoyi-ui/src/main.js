@@ -26,6 +26,8 @@ import Vue2OrgTree from 'vue2-org-tree';
 import 'vue2-org-tree/src/styles/org-tree.less';
 import VueAMap from 'vue-amap'
 
+import uploader from 'vue-simple-uploader'
+Vue.use(uploader)
 
 Vue.use(VueAMap)
 VueAMap.initAMapApiLoader({

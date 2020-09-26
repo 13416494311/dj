@@ -562,6 +562,39 @@
           </el-upload>
 
         </el-card>
+
+
+        <el-card shadow="always" style="margin-bottom: 30px;">
+          <div slot="header" style="height: 25px">
+            <span style="font-weight: bold;font-size: 16px">活动视频</span>
+            <el-button
+              v-if="!disabled"
+              type="primary"
+              icon="el-icon-plus"
+              size="mini"
+              @click="handleAddVideo"
+              style="float: right;margin-top: -5px"
+            >上传
+            </el-button>
+          </div>
+
+          <el-row v-for="(item,index) in videoFileList" style="margin-bottom: 30px">
+            <el-col :span="21">
+              <div  :id="setVideoId(item)" />
+            </el-col>
+            <el-col :span="3" v-if="!disabled">
+              <el-button
+                type="primary"
+                icon="el-icon-delete"
+                size="mini"
+                @click="handleDeleteVideo(item)"
+                style="margin-left: 10px;"
+              >删除
+              </el-button>
+             </el-col>
+          </el-row>
+
+        </el-card>
       </div>
 
 
@@ -609,6 +642,7 @@
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
     <activity-supervise ref="activitySupervise"/>
+    <big-file-upload ref="bigFileUpload" @callback="uploadVideoFile"/>
   </div>
 </template>
 
@@ -644,7 +678,7 @@
     exportDetailed
   } from "@/api/activity/detailed";
   import {delMember, listMember, updateMember, updateMembers} from "@/api/activity/member";
-  import {listFile, upload, delFile} from "@/api/system/file";
+  import {listFile, upload, delFile,addFile} from "@/api/system/file";
   import {downLoadZip} from "@/utils/zipdownload";
   import partyMember from "../../party/org/partyMemberChoose";
   import addressMap from "../../party/org/addressMap";
@@ -655,13 +689,14 @@
   import activityExperience from "./activityExperience";
   import activitySupervise from "./activitySupervise";
   import { getUserProfile } from "@/api/system/user";
+  import bigFileUpload from "@/components/bigFileUpload";
 
   export default {
     name: "Detailed",
     components: {
       partyMember, addressMap, memberTransfer, activitySummary,
       activityResolution, activitySuggestions, activityExperience,
-      activitySupervise
+      activitySupervise,bigFileUpload
     },
     data() {
       return {
@@ -684,6 +719,8 @@
         memberStatusOptions: [],
         planFileList: [],
         picFileList: [],
+        videoFileList:[],
+        videoPlayer:[],
         fileList: [],
         dialogImageUrl: '',
         dialogVisible: false,
@@ -903,6 +940,98 @@
             this.picFileList.push(file);
           }
         });
+      },
+      getVideoFileList() {
+        this.videoFileList = [];
+        listFile({'uuid': this.form.detailedUuid, 'fileTypeValue': 'video'}).then(response => {
+          this.videoFileList = response.rows;
+          setTimeout(()=>{
+            this.initVideo();
+          },100)
+        });
+      },
+      initVideo(){
+        for(let i=0;i<this.videoFileList.length;i++){
+          // 初始化播放器
+          this.videoPlayer[i] = new Aliplayer({
+            id: "video-"+this.videoFileList[i].id , // 容器id
+            source: process.env.VUE_APP_BASE_API+ this.videoFileList[i].filePath,//视频地址
+            // cover: "http://cdn.img.mtedu.com/images/assignment/day_3.jpg",  //播放器封面图
+            autoplay: false,      // 是否自动播放
+            width: "100%",       // 播放器宽度
+            height: "550px",      // 播放器高度
+            playsinline: true,
+            "skinLayout": [
+              {
+                "name": "bigPlayButton",
+                "align": "blabs",
+                "x": 30,
+                "y": 80
+              },
+              {
+                "name": "H5Loading",
+                "align": "cc"
+              },
+              {
+                "name": "errorDisplay",
+                "align": "tlabs",
+                "x": 0,
+                "y": 0
+              },
+              {
+                "name": "infoDisplay"
+              },
+              {
+                "name": "tooltip",
+                "align": "blabs",
+                "x": 0,
+                "y": 56
+              },
+              {
+                "name": "thumbnail"
+              },
+              {
+                "name": "controlBar",
+                "align": "blabs",
+                "x": 0,
+                "y": 0,
+                "children": [
+                  {
+                    "name": "progress",
+                    "align": "blabs",
+                    "x": 0,
+                    "y": 44
+                  },
+                  {
+                    "name": "playButton",
+                    "align": "tl",
+                    "x": 15,
+                    "y": 12
+                  },
+                  {
+                    "name": "timeDisplay",
+                    "align": "tl",
+                    "x": 10,
+                    "y": 7
+                  },
+                  {
+                    "name": "fullScreenButton",
+                    "align": "tr",
+                    "x": 10,
+                    "y": 12
+                  },
+                  {
+                    "name": "volume",
+                    "align": "tr",
+                    "x": 5,
+                    "y": 10
+                  }
+                ]
+              }
+            ]
+          })
+          //skinLayout设置只显示全屏和音量按钮
+        }
       },
       getFileList() {
         this.fileList = [];
@@ -1162,6 +1291,7 @@
           this.getPlanFileList();
           this.getJoinMemberList();
           this.getPicFileList();
+          this.getVideoFileList();
           this.getFileList();
           this.$refs.activitySummary.disabled = this.disabled;
           this.$refs.activitySummary.init(this.form.detailedUuid);
@@ -1188,6 +1318,7 @@
           this.getJoinMemberList();
           this.getPicFileList();
           this.getFileList();
+          this.getVideoFileList();
           this.$refs.activitySummary.disabled = this.disabled;
           this.$refs.activitySummary.init(this.form.detailedUuid);
           this.$refs.activityResolution.disabled = this.disabled;
@@ -1363,6 +1494,47 @@
           }
         }
         return '';
+      },
+      handleAddVideo(){
+        this.$refs.bigFileUpload.init("活动视频上传");
+      },
+      handleDeleteVideo(video){
+        this.$confirm('是否确认删除该视频?', "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info"
+        }).then(() => {
+          delFile(video.id).then(response => {
+            this.msgSuccess(response.msg);
+            this.getVideoFileList();
+          });
+        }).catch(function () {
+        });
+      },
+      uploadVideoFile(filePath,fileName){
+        var sysFile={
+          uuid:undefined,
+          fileType:undefined,
+          fileTypeValue:undefined,
+          filePath:undefined,
+          fileName:undefined,
+          };
+        sysFile.uuid =this.form.detailedUuid;
+        sysFile.fileType ="activityDetailed";
+        sysFile.fileTypeValue = "video";
+        sysFile.filePath = filePath ;
+        sysFile.fileName = fileName
+
+        addFile(sysFile).then(response => {
+          if (response.code === 200) {
+            this.getVideoFileList();
+          } else {
+            this.msgError(response.msg);
+          }
+        });
+      },
+      setVideoId(video){
+        return "video-"+video.id;
       },
     }
   };

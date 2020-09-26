@@ -48,7 +48,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2019 ruoyi.vip All Rights Reserved.</span>
+      <span>Copyright © 2020-2020 dj All Rights Reserved.</span>
     </div>
   </div>
 </template>
@@ -144,12 +144,12 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 .login {
-  display: flex;
+  /*display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center;*/
   height: 100%;
   width: 100%;
-  background: url("../assets/image/login-background.png") no-repeat;;
+  background: url("../assets/image/login_bg.jpg") no-repeat;;
   background-size: 100% 100%;
 }
 .title {
@@ -159,6 +159,9 @@ export default {
 }
 
 .login-form {
+  position: absolute;
+  left: 60%;
+  top:25%;
   border-radius: 6px;
   background: #ffffff;
   width: 400px;
