@@ -566,15 +566,24 @@
               let sex=''
               if(this.partyMember[field]){
                 sex = this.selectDictLabel(this.sexOptions, this.partyMember[field]);
+                callback(new Error("变更前："+sex));
+              }else{
+                callback(new Error("变更前：无"));
               }
-              callback(new Error(sex));
               break;
             case "birthday" :
               let birthday ='';
+
               if(this.partyMember[field]){
                 birthday=this.partyMember[field].substring(0,10);
+                if(birthday==value){
+                  callback();
+                }else{
+                  callback(new Error("变更前："+birthday));
+                }
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(birthday));
               break;
             case "deptId" :
               let deptName='';
@@ -582,16 +591,20 @@
                 getDept(this.partyMember[field]).then(response => {
                   deptName = response.data.deptName;
                 }).then(()=>{
-                  callback(new Error(deptName));
+                  callback(new Error("变更前："+deptName));
                 });
+              }else{
+                callback("变更前：无");
               }
               break;
             case "administrativePosition" :
               let administrativePosition = '';
               if(this.partyMember[field]){
                 administrativePosition = this.selectDictLabel(this.administrativePositionOptions, this.partyMember[field]);
+                callback(new Error("变更前："+administrativePosition));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(administrativePosition));
               break;
             case "postId" :
               let post='';
@@ -599,52 +612,71 @@
                 for(let i=0;i<this.postOptions.length;i++){
                   if(this.postOptions[i].postId == this.partyMember[field]){
                     post = this.postOptions[i].postName;
+                    callback(new Error("变更前："+post));
                   }
                 }
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(post));
+
               break;
             case "workingDate" :
               let workingDate ='';
               if(this.partyMember[field]){
                 workingDate=this.partyMember[field].substring(0,10);
+                if(workingDate==value){
+                  callback();
+                }else{
+                  callback(new Error("变更前："+workingDate));
+                }
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(workingDate));
               break;
             case "nation" :
               let nation ='';
               if(this.partyMember[field]){
                 nation = this.selectDictLabel(this.nationOptions, this.partyMember[field]);
+                callback(new Error("变更前："+nation));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(nation));
               break;
             case "polity" :
               let polity ='';
               if(this.partyMember[field]){
                 polity = this.selectDictLabel(this.polityOptions, this.partyMember[field]);
+                callback(new Error("变更前："+polity));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(polity));
               break;
             case "workIdentity" :
               let workIdentity ='';
               if(this.partyMember[field]){
                 workIdentity = this.selectDictLabel(this.workIdentityOptions, this.partyMember[field]);
+                callback(new Error("变更前："+workIdentity));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(workIdentity));
               break;
             case "education" :
               let education ='';
               if(this.partyMember[field]){
                 education = this.selectDictLabel(this.educationOptions, this.partyMember[field]);
+                callback(new Error("变更前："+education));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(education));
               break;
             case "academicDegree" :
               let academicDegree ='';
               if(this.partyMember[field]){
                 academicDegree = this.selectDictLabel(this.academicDegreeOptions, this.partyMember[field]);
+                callback(new Error("变更前："+academicDegree));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(academicDegree));
               break;
             case "partyOrgId" :
               let partyOrgName ='';
@@ -652,100 +684,140 @@
                 getPartyOrg(this.partyMember[field]).then(response => {
                   partyOrgName = response.data.partyOrgName;
                 }).then(()=>{
-                  callback(new Error(partyOrgName));
+                  callback(new Error("变更前："+partyOrgName));
                 });
+              }else{
+                callback("变更前：无");
               }
               break;
             case "memberType" :
               let memberType ='';
               if(this.partyMember[field]){
                 memberType = this.selectDictLabel(this.memberTypeOptions, this.partyMember[field]);
+                callback(new Error("变更前："+memberType));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(memberType));
               break;
             case "memberStatus" :
               let memberStatus ='';
               if(this.partyMember[field]){
                 memberStatus = this.selectDictLabel(this.memberStatusOptions, this.partyMember[field]);
+                callback(new Error("变更前："+memberStatus));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(memberStatus));
               break;
             case "joinBranchData" :
               let joinBranchData ='';
               if(this.partyMember[field]){
                 joinBranchData=this.partyMember[field].substring(0,10);
+                if(joinBranchData==value){
+                  callback();
+                }else{
+                  callback(new Error("变更前："+joinBranchData));
+                }
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(joinBranchData));
               break;
             case "joinData" :
               let joinData ='';
               if(this.partyMember[field]){
                 joinData=this.partyMember[field].substring(0,10);
+                if(joinData==value){
+                  callback();
+                }else{
+                  callback(new Error("变更前："+joinData));
+                }
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(joinData));
               break;
             case "formalData" :
               let formalData ='';
               if(this.partyMember[field]){
                 formalData=this.partyMember[field].substring(0,10);
+                if(formalData==value){
+                  callback();
+                }else{
+                  callback(new Error("变更前："+formalData));
+                }
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(formalData));
               break;
             case "floatingType" :
               let floatingType ='';
               if(this.partyMember[field]){
                 floatingType = this.selectDictLabel(this.floatingTypeOptions, this.partyMember[field]);
+                callback(new Error("变更前："+floatingType));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(floatingType));
               break;
             case "memberGroup" :
               let memberGroup ='';
               if(this.partyMember[field]){
                 memberGroup = this.selectDictLabel(this.memberGroupOptions, this.partyMember[field]);
+                callback(new Error("变更前："+memberGroup));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(memberGroup));
               break;
             case "lifeDifficulty" :
               let lifeDifficulty ='';
               if(this.partyMember[field]){
                 lifeDifficulty = this.selectDictLabel(this.lifeDifficultyOptions, this.partyMember[field]);
+                callback(new Error("变更前："+lifeDifficulty));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(lifeDifficulty));
               break;
             case "cognizance" :
               let cognizance ='';
               if(this.partyMember[field]){
                 cognizance = this.selectDictLabel(this.cognizanceOptions, this.partyMember[field]);
+                callback(new Error("变更前："+cognizance));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(cognizance));
               break;
             case "economicSituation" :
               let economicSituation ='';
               if(this.partyMember[field]){
                 economicSituation = this.selectDictLabel(this.economicSituationOptions, this.partyMember[field]);
+                callback(new Error("变更前："+economicSituation));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(economicSituation));
               break;
             case "physicalHealth" :
               let physicalHealth ='';
               if(this.partyMember[field]){
                 physicalHealth = this.selectDictLabel(this.physicalHealthOptions, this.partyMember[field]);
+                callback(new Error("变更前："+physicalHealth));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(physicalHealth));
               break;
             case "lifeDifficultyType" :
               let lifeDifficultyType ='';
               if(this.partyMember[field]){
                 lifeDifficultyType = this.selectDictLabel(this.lifeDifficultyTypeOptions, this.partyMember[field]);
+                callback(new Error("变更前："+lifeDifficultyType));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(lifeDifficultyType));
               break;
             case "enjoyHelp" :
               let enjoyHelp ='';
               if(this.partyMember[field]){
                 enjoyHelp = this.selectDictLabel(this.enjoyHelpOptions, this.partyMember[field]);
+                callback(new Error("变更前："+enjoyHelp));
+              }else{
+                callback("变更前：无");
               }
-              callback(new Error(enjoyHelp));
               break;
             default:
               callback(new Error(this.partyMember[field]));
@@ -1247,7 +1319,7 @@
       },
       submitAudit(form) {
         this.form.state = form.state;
-        this.form.reason = form.state;
+        this.form.reason = form.reason;
         this.form.sysLogId = this.sysLogId;
         updatePartyMemberChange(this.form).then(response => {
           if (response.code === 200) {

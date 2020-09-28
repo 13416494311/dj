@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="operTime != null "> and oper_time = #{operTime}</if>
             <if test="operReason != null  and operReason != ''"> and oper_reason = #{operReason}</if>
         </where>
-        order by oper_time asc
+        order by id desc
     </select>
 
     <select id="selectDjSysLogById" parameterType="Long" resultMap="DjSysLogResult">

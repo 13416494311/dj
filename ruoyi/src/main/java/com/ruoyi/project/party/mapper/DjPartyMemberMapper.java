@@ -28,6 +28,7 @@ public interface DjPartyMemberMapper
      */
     public List<DjPartyMember> selectDjPartyMemberList(DjPartyMember djPartyMember);
 
+    public List<DjPartyMember> selectPartyMemberList(DjPartyMember djPartyMember);
     /**
      * 新增党员信息
      *

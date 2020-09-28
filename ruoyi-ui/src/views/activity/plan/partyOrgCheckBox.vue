@@ -66,7 +66,7 @@
 <style lang="scss" scoped>
 
   .head-container {
-    overflow: auto;
+    overflow-x: hidden;
   }
 
 </style>

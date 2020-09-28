@@ -610,7 +610,7 @@
 
 <style lang="scss" scoped>
   .head-container {
-    overflow: auto;
+    overflow-x: hidden;
   }
 
   .avatar-upload {
@@ -1220,17 +1220,22 @@
         });
       },
       chooseAuditUser(){
-        if(this.form.memberId){
-          listPartyMemberChange({"partyMemberId":this.form.memberId, "auditState":"2"}).then(response => {
-            if(response.rows&&response.rows.length >0){
-              this.msgSuccess("该党员变更正在审批中！")
+        this.$refs["form"].validate(valid => {
+          if (valid) {
+            if(this.form.memberId){
+              listPartyMemberChange({"partyMemberId":this.form.memberId, "auditState":"2"}).then(response => {
+                if(response.rows&&response.rows.length >0){
+                  this.msgSuccess("该党员变更正在审批中！")
+                }else{
+                  this.$refs.chooseAuditUser.init(6,"edit",this.form.memberId)
+                }
+              });
             }else{
-              this.$refs.chooseAuditUser.init(6,"edit",this.form.memberId)
+              this.$refs.chooseAuditUser.init(6,"add",this.form.memberId)
             }
-          });
-        }else{
-          this.$refs.chooseAuditUser.init(6,"add",this.form.memberId)
-        }
+          }
+        });
+
 
 
       },

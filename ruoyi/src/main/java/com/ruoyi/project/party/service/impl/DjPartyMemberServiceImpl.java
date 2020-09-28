@@ -15,6 +15,7 @@ import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
 import com.ruoyi.project.system.service.ISysConfigService;
 import com.ruoyi.project.system.service.ISysDeptService;
+import com.ruoyi.project.system.service.ISysDictDataService;
 import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,18 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     private ISysConfigService configService;
     @Autowired
     private ISysUserService userService;
+    @Autowired
+    private ISysDictDataService dictDataService;
+
+    @Override
+    public DjPartyMember selectPartyMemberById(Long memberId)
+    {
+        DjPartyMember partyMember = djPartyMemberMapper.selectDjPartyMemberById(memberId);
+        if(StringUtils.isNotNull(partyMember.getDeptId())){
+            partyMember.setSysDept(deptService.selectDeptById(partyMember.getDeptId()));
+        }
+        return partyMember;
+    }
 
     /**
      * 查询党员信息
@@ -75,6 +88,25 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
             }
             if(member.getDeptId()!=null){
                 member.setSysDept(deptService.selectDeptById(member.getDeptId()));
+            }
+        });
+        return list;
+    }
+
+    @Override
+    public List<DjPartyMember> selectPartyMemberList(DjPartyMember djPartyMember)
+    {
+
+        List<DjPartyMember> list = djPartyMemberMapper.selectPartyMemberList(djPartyMember);
+        list.stream().forEach( member ->{
+            if(member.getPartyOrgId()!=null){
+                member.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(member.getPartyOrgId()));
+            }
+            if(member.getDeptId()!=null){
+                member.setSysDept(deptService.selectDeptById(member.getDeptId()));
+            }
+            if(member.getMemberType()!=null){
+                member.setMemberTypeText(dictDataService.selectDictLabel("party_member_type",member.getMemberType()));
             }
         });
         return list;

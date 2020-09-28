@@ -108,6 +108,8 @@ public class DjPartyMember extends BaseEntity
     @Excel(name = "党员类型")
     private String memberType;
 
+    private String memberTypeText;
+
     /** 党员状态 */
     @Excel(name = "党员状态")
     private String memberStatus;

@@ -68,7 +68,7 @@ public class DjPartyOrgController extends BaseController
         return AjaxResult.success(djPartyOrgService.getPartyOrgTreeData());
     }
 
-    @GetMapping("/treeselect")
+    @RequestMapping("/treeselect")
     public AjaxResult treeselect()
     {
         return AjaxResult.success(djPartyOrgService.getPartyOrgTreeDataList());

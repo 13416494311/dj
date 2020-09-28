@@ -584,7 +584,7 @@
             </el-button>
           </div>
 
-          <el-row v-for="(item,index) in videoFileList" style="margin-bottom: 30px">
+          <el-row v-for="(item,index) in videoFileList" :key="item.id" style="margin-bottom: 30px">
             <el-col :span="21">
               <div  :id="setVideoId(item)" />
             </el-col>

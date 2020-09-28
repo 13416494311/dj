@@ -22,6 +22,7 @@ import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.ISysConfigService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
@@ -61,6 +62,15 @@ public class DjPartyMemberController extends BaseController
         List<DjPartyMember> list = djPartyMemberService.selectDjPartyMemberList(djPartyMember);
         return getDataTable(list);
     }
+
+    @PostMapping("/listForApp")
+    public AjaxResult listForApp(@RequestBody DjPartyMember djPartyMember)
+    {
+
+        List<DjPartyMember> list = djPartyMemberService.selectPartyMemberList(djPartyMember);
+        return AjaxResult.success(list);
+    }
+
 
     /**
      * 导出党员信息列表

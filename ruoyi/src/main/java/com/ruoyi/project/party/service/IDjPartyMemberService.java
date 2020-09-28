@@ -12,6 +12,14 @@ import java.util.List;
  */
 public interface IDjPartyMemberService
 {
+
+    /**
+     * 查询党员信息
+     *
+     * @param memberId 党员信息ID
+     * @return 党员信息
+     */
+    public DjPartyMember selectPartyMemberById(Long memberId);
     /**
      * 查询党员信息
      *
@@ -27,6 +35,8 @@ public interface IDjPartyMemberService
      * @return 党员信息集合
      */
     public List<DjPartyMember> selectDjPartyMemberList(DjPartyMember djPartyMember);
+
+    public List<DjPartyMember> selectPartyMemberList(DjPartyMember djPartyMember);
 
     /**
      * 新增党员信息

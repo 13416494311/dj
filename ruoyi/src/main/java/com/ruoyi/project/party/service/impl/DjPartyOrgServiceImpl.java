@@ -47,7 +47,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
         }
         djPartyOrg.setPartyOrgFullName(partyOrgFullName+djPartyOrg.getPartyOrgName());
         if(StringUtils.isNotNull(djPartyOrg.getLeader())){
-            djPartyOrg.setLeaderMember(partyMemberService.selectDjPartyMemberById(djPartyOrg.getLeader()));
+            djPartyOrg.setLeaderMember(partyMemberService.selectPartyMemberById(djPartyOrg.getLeader()));
         }
         return djPartyOrg;
     }

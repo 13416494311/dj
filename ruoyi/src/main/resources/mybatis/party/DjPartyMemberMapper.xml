@@ -136,6 +136,61 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null "> and update_time = #{updateTime}</if>
     </select>
 
+
+    <select id="selectPartyMemberList" parameterType="DjPartyMember" resultMap="DjPartyMemberResult">
+        <include refid="selectDjPartyMemberVo1"/>
+        <where>
+        <if test="memberId != null "> and member_id = #{memberId}</if>
+        <if test="partyOrgId != null ">
+            AND pm.party_org_id = #{partyOrgId}
+        </if>
+        <if test="workNo != null  and workNo != ''"> and work_no = #{workNo}</if>
+        <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
+        <if test="memberName != null  and memberName != ''"> and member_name like concat('%', #{memberName}, '%')</if>
+        <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+        <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+        <if test="identityCard != null  and identityCard != ''"> and identity_card = #{identityCard}</if>
+        <if test="birthday != null "> and birthday = #{birthday}</if>
+        <if test="companyName != null  and companyName != ''"> and company_name like concat('%', #{companyName}, '%')</if>
+        <if test="deptId != null "> and dept_id = #{deptId}</if>
+        <if test="administrativePosition != null  and administrativePosition != ''"> and administrative_position = #{administrativePosition}</if>
+        <if test="title != null  and title != ''"> and title = #{title}</if>
+        <if test="postId != null  and postId != ''"> and post_id = #{postId}</if>
+        <if test="workingDate != null "> and working_date = #{workingDate}</if>
+        <if test="nation != null  and nation != ''"> and nation = #{nation}</if>
+        <if test="polity != null  and polity != ''"> and polity = #{polity}</if>
+        <if test="workIdentity != null  and workIdentity != ''"> and work_identity = #{workIdentity}</if>
+        <if test="education != null  and education != ''"> and education = #{education}</if>
+        <if test="academicDegree != null  and academicDegree != ''"> and academic_degree = #{academicDegree}</if>
+        <if test="nativePlace != null  and nativePlace != ''"> and native_place = #{nativePlace}</if>
+        <if test="homeAddress != null  and homeAddress != ''"> and home_address = #{homeAddress}</if>
+        <if test="housePhone != null  and housePhone != ''"> and house_phone = #{housePhone}</if>
+        <if test="email != null  and email != ''"> and email = #{email}</if>
+        <if test="qq != null  and qq != ''"> and qq = #{qq}</if>
+        <if test="wechat != null  and wechat != ''"> and wechat = #{wechat}</if>
+        <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
+        <if test="memberType != null  and memberType != ''"> and member_type = #{memberType}</if>
+        <if test="memberStatus != null  and memberStatus != ''"> and member_status = #{memberStatus}</if>
+        <if test="joinBranchData != null "> and join_branch_data = #{joinBranchData}</if>
+        <if test="joinData != null "> and join_data = #{joinData}</if>
+        <if test="formalData != null "> and formal_data = #{formalData}</if>
+        <if test="floatingType != null  and floatingType != ''"> and floating_type = #{floatingType}</if>
+        <if test="memberGroup != null  and memberGroup != ''"> and member_group = #{memberGroup}</if>
+        <if test="lifeDifficulty != null  and lifeDifficulty != ''"> and life_difficulty = #{lifeDifficulty}</if>
+        <if test="cognizance != null  and cognizance != ''"> and cognizance = #{cognizance}</if>
+        <if test="economicSituation != null  and economicSituation != ''"> and economic_situation = #{economicSituation}</if>
+        <if test="physicalHealth != null  and physicalHealth != ''"> and physical_health = #{physicalHealth}</if>
+        <if test="lifeDifficultyType != null  and lifeDifficultyType != ''"> and life_difficulty_type = #{lifeDifficultyType}</if>
+        <if test="enjoyHelp != null  and enjoyHelp != ''"> and enjoy_help = #{enjoyHelp}</if>
+        <if test="helpInfo != null  and helpInfo != ''"> and help_info = #{helpInfo}</if>
+        <if test="detail != null  and detail != ''"> and detail = #{detail}</if>
+        <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+        <if test="createTime != null "> and create_time = #{createTime}</if>
+        <if test="updateBy != null  and updateBy != ''"> and update_by = #{updateBy}</if>
+        <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+
     <select id="selectDjPartyMemberById" parameterType="Long" resultMap="DjPartyMemberResult">
         <include refid="selectDjPartyMemberVo"/>
         where member_id = #{memberId}
