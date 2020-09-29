@@ -11,10 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.pagehelper.PageHelper;
 import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.FileUtil;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.WordUtils;
+import com.ruoyi.common.utils.*;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.framework.config.RuoYiConfig;
@@ -165,6 +162,11 @@ public class DjActivityDetailedController extends BaseController
     @GetMapping("/exportArchives")
     public void exportArchives(HttpServletRequest request, HttpServletResponse response, String detailedId) throws IOException
     {
+
+
+
+        Map<String, List<File>> map = new HashMap<>();
+
         Map<String, Object> dataMap = new HashMap<>();
         DjActivityDetailed activityDetailed = djActivityDetailedService.
                 selectDjActivityDetailedById(Long.parseLong(detailedId));
@@ -202,7 +204,7 @@ public class DjActivityDetailedController extends BaseController
                     break;
                 case "2" :
                     memberActualNum[0] += 1;
-                break;
+                    break;
                 case "3" :
                     memberLateNum[0] += 1;
                     memberLateNames.append(member.getDjPartyMember().getMemberName()+"、");
@@ -250,12 +252,13 @@ public class DjActivityDetailedController extends BaseController
             activityResolution.setRecordContent(activityResolutionIndex[0]+"、"+activityResolution.getRecordContent());
         });
 
-        SysFile sysFile = new SysFile();
-        sysFile.setUuid(activityDetailed.getDetailedUuid());
-        sysFile.setFileTypeValue("pic");
-        List<SysFile> activityPicSysFileList = sysFileService.selectSysFileList(sysFile);
+        SysFile sysPicFile = new SysFile();
+        sysPicFile.setUuid(activityDetailed.getDetailedUuid());
+        sysPicFile.setFileTypeValue("pic");
+        List<SysFile> activityPicSysFileList = sysFileService.selectSysFileList(sysPicFile);
 
         List<File> activityPicList = new ArrayList<File>();
+        List<File> activityPicZipList = new ArrayList<File>();
         final int[] index = {0};
         activityPicSysFileList.stream().forEach(activityPicSysFile -> {
             File file = new File(RuoYiConfig.getProfile()+
@@ -264,27 +267,76 @@ public class DjActivityDetailedController extends BaseController
             String fileName = "image-"+index[0]+".png";  //不能中文
             File targetFile = FileUtil.byteToFile(fileByte,fileName);
             activityPicList.add(targetFile);
+
             index[0]+=1;
+
+            File targetFile1 = FileUtil.byteToFile(fileByte,activityPicSysFile.getFileName());
+            activityPicZipList.add(targetFile1);
         });
         dataMap.put("activityPicList", activityPicList);
+        map.put(ZipPackUtil.ACTIVITY_DETAILED_PIC_FILE,activityPicZipList);
 
-        File docx = null ;
+        SysFile sysFile = new SysFile();
+        sysFile.setUuid(activityDetailed.getDetailedUuid());
+        sysFile.setFileTypeValue("file");
+        List<SysFile> activitySysFileList = sysFileService.selectSysFileList(sysFile);
+        List<File> activityZipList = new ArrayList<File>();
+        activitySysFileList.stream().forEach(activitySysFile -> {
+            File file = new File(RuoYiConfig.getProfile()+
+                    activitySysFile.getFilePath().replace(Constants.RESOURCE_PREFIX,""));
+            byte[] fileByte = FileUtil.getBytesByFile(file);
+            File targetFile = FileUtil.byteToFile(fileByte,activitySysFile.getFileName());
+            activityZipList.add(targetFile);
+
+        });
+        map.put(ZipPackUtil.ACTIVITY_DETAILED_FILE,activityZipList);
+
+
+
+        SysFile sysPlanFile = new SysFile();
+        sysPlanFile.setUuid(activityDetailed.getPlanUuid());
+        List<SysFile> activityPlanSysFileList = sysFileService.selectSysFileList(sysPlanFile);
+        List<File> activityPlanList = new ArrayList<File>();
+        activityPlanSysFileList.stream().forEach(activityPlanFile -> {
+            File file = new File(RuoYiConfig.getProfile()+
+                    activityPlanFile.getFilePath().replace(Constants.RESOURCE_PREFIX,""));
+            byte[] fileByte = FileUtil.getBytesByFile(file);
+            File targetFile = FileUtil.byteToFile(fileByte,activityPlanFile.getFileName());
+            activityPlanList.add(targetFile);
+
+        });
+        map.put(ZipPackUtil.ACTIVITY_PLAN_FILE,activityPlanList);
+
+        File zip = null ;
         try {
-            String docxName = activityPlan.getActivityTheme() + System.currentTimeMillis() + ".docx";
-            docx = new File(docxName);
+            String docxName = activityPlan.getActivityTheme()  + ".docx";
+            File docx = new File(docxName);
             WordUtils.createWordDocx("activityDetailed/template.xml",dataMap,
                     "activityDetailed/template.xml.rels", activityPicList,"activityDetailed/template.docx",docx);
-            download(request,response, docx);
+            //download(request,response, docx);
+
+            List<File> fileZipList = new ArrayList<File>();
+            fileZipList.add(docx);
+            map.put(ZipPackUtil.ROOT,fileZipList);
+
+            zip = ZipPackUtil.zip(map,activityPlan.getActivityTheme() );
+            download(request,response, zip);
+
 
         }catch (Exception e){
             logger.error(e.getMessage(),e);
         }finally {
-            if(docx.exists()){
-                docx.delete();
+            if(zip.exists()){
+                zip.delete();
             }
+
         }
 
+
+
+
     }
+
 
     /**
      * 生成zip文件
