@@ -492,6 +492,7 @@
             action="#"
             list-type="picture-card"
             :file-list="picFileList"
+            multiple
             :http-request="uploadPicFile"
             :class="{hide:disabled}"
             accept="image/*,">
@@ -517,7 +518,7 @@
                     <span
                       v-if="!disabled"
                       class="el-upload-list__item-delete"
-                      @click="handleRemove(file)">
+                      @click="handlePicRemove(file)">
                       <i class="el-icon-delete"></i>
                     </span>
                   </span>
@@ -534,6 +535,7 @@
             action="#"
             list-type="picture-card"
             :file-list="fileList"
+            multiple
             :http-request="uploadFile"
             :class="{hide:disabled}"
             class="upload"
@@ -871,7 +873,12 @@
         formData.append("fileTypeValue", "pic");
         upload(formData).then(response => {
           if (response.code === 200) {
-            this.getPicFileList();
+            /*this.getPicFileList();*/
+            let file = {};
+            file.name = response.data.fileName;
+            file.url = process.env.VUE_APP_BASE_API + response.data.filePath;
+            file.uid = response.data.id;
+            this.picFileList.push(file);
             loading.close();
             this.msgSuccess("上传成功！")
           } else {
@@ -896,7 +903,12 @@
         formData.append("fileTypeValue", "file");
         upload(formData).then(response => {
           if (response.code === 200) {
-            this.getFileList();
+            //this.getFileList();
+            let file = {};
+            file.name = response.data.fileName;
+            file.url = process.env.VUE_APP_BASE_API + response.data.filePath;
+            file.uid = response.data.id;
+            this.fileList.push(file);
             loading.close();
             this.msgSuccess("上传成功！")
           } else {
@@ -937,6 +949,34 @@
         //console.log(file);
         downLoadZip("/system/file/download/" + file.uid);
 
+      },
+      handlePicRemove(file) {
+        //console.log(file);
+        this.$confirm('是否确认删除该附件?', "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info"
+        }).then(() => {
+          delFile(file.uid).then(response => {
+            this.msgSuccess(response.msg);
+            this.getPicFileList();
+          });
+        }).catch(function () {
+        });
+      },
+      handleRemove(file) {
+        //console.log(file);
+        this.$confirm('是否确认删除该附件?', "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info"
+        }).then(() => {
+          delFile(file.uid).then(response => {
+            this.msgSuccess(response.msg);
+            this.getFileList();
+          });
+        }).catch(function () {
+        });
       },
       getPlanFileList() {
         this.planFileList = [];

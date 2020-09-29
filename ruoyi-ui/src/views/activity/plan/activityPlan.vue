@@ -502,7 +502,6 @@
         },
         user: {},
         activitySources:undefined,
-        uploadTime:0,
 
       };
     },
@@ -661,7 +660,6 @@
       },
       /**附件上传*/
       uploadFile(file) {
-        this.uploadTime += 1;
         const loading = this.$loading({
           lock: true,
           text: '上传中……',
@@ -674,9 +672,12 @@
         formData.append("fileType", "activityPlan");
         upload(formData).then(response => {
           if (response.code === 200) {
-            if(this.uploadTime==1){
-              this.getFileList();
-            }
+            //this.getFileList();
+            let file = {};
+            file.name = response.data.fileName;
+            file.url = process.env.VUE_APP_BASE_API + response.data.filePath;
+            file.uid = response.data.id;
+            this.fileList.push(file);
             loading.close();
             this.msgSuccess("上传成功！")
           } else {
