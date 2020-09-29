@@ -21,10 +21,10 @@
             </el-row>
             <el-row>
               <el-col :span="12">
-                <el-form-item label="用户性别" prop="sex">
+                <el-form-item label="性别" prop="sex">
                   <el-select :disabled="disabled"
                              v-model="form.sex"
-                             style="width: 100%" placeholder="请选择用户性别">
+                             style="width: 100%" placeholder="请选择性别">
                     <el-option
                       v-for="dict in sexOptions"
                       :key="dict.dictValue"
@@ -83,21 +83,21 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="行政组织" prop="deptId">
+            <el-form-item label="部门" prop="deptId">
               <select-tree :value="form.deptId"
                            :disabled="disabled"
                            :options="deptOptions"
                            vModel="deptId"
                            @selected="setVModelValue"
-                           placeholder="请选择行政组织"
+                           placeholder="请选择部门"
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="行政职务" prop="administrativePosition">
+            <el-form-item label="职务" prop="administrativePosition">
               <el-select :disabled="disabled"
                          v-model="form.administrativePosition"
-                         style="width: 100%" placeholder="请选择行政职务">
+                         style="width: 100%" placeholder="请选择职务">
                 <el-option
                   v-for="dict in administrativePositionOptions"
                   :key="dict.dictValue"
@@ -847,7 +847,7 @@
         auditStateOptions: [],
         // 用户性别字典
         sexOptions: [],
-        // 行政职务字典
+        // 职务字典
         administrativePositionOptions: [],
         // 民族字典
         nationOptions: [],
@@ -939,7 +939,7 @@
             {validator: checkPartyMember, trigger: "blur"}
           ],
           mobile: [
-            {required: true, message: "手机号不能为空", trigger: "blur"},
+            /*{required: true, message: "手机号不能为空", trigger: "blur"},*/
             {validator: checkPartyMember, trigger: "blur"}
           ],
           identityCard: [
@@ -973,39 +973,49 @@
             {validator: checkPartyMember, trigger: "blur"}
           ],
           sex: [
+            {required: true, message: "性别不能为空", trigger: "blur"},
             {validator: checkPartyMember, trigger: "blur"}
           ],
           birthday: [
+            { required: true, message: "出生日期不能为空", trigger: "blur" },
             {validator: checkPartyMember, trigger: "blur"}
           ],
           companyName: [
+            { required: true, message: "所在单位不能为空", trigger: "blur" },
             {validator: checkPartyMember, trigger: "blur"}
           ],
           deptId: [
+            { required: true, message: "部门不能为空", trigger: "blur" },
             {validator: checkPartyMember, trigger: "blur"}
           ],
           administrativePosition: [
+            { required: true, message: "职务不能为空", trigger: "blur" },
             {validator: checkPartyMember, trigger: "blur"}
           ],
           title: [
             {validator: checkPartyMember, trigger: "blur"}
           ],
           postId: [
+            { required: true, message: "岗位不能为空", trigger: "blur" },
             {validator: checkPartyMember, trigger: "blur"}
           ],
           workingDate: [
+            { required: true, message: "参加工作日期不能为空", trigger: "blur" },
             {validator: checkPartyMember, trigger: "blur"}
           ],
           nation: [
+            { required: true, message: "民族不能为空", trigger: "blur" },
             {validator: checkPartyMember, trigger: "blur"}
           ],
           polity: [
+            { required: true, message: "政治面貌不能为空", trigger: "blur" },
             {validator: checkPartyMember, trigger: "blur"}
           ],
           workIdentity: [
             {validator: checkPartyMember, trigger: "blur"}
           ],
           education: [
+            { required: true, message: "学历不能为空", trigger: "blur" },
             {validator: checkPartyMember, trigger: "blur"}
           ],
           academicDegree: [
@@ -1030,9 +1040,11 @@
             {validator: checkPartyMember, trigger: "blur"}
           ],
           joinData: [
+            { required: true, message: "入党日期不能为空", trigger: "blur" },
             {validator: checkPartyMember, trigger: "blur"}
           ],
           formalData: [
+            { required: true, message: "转为正式党员日期不能为空", trigger: "blur" },
             {validator: checkPartyMember, trigger: "blur"}
           ],
           floatingType: [
@@ -1197,7 +1209,7 @@
           this.loading = false;
         });
       },
-      /** 查询行政组织下拉树结构 */
+      /** 查询部门下拉树结构 */
       getDeptTreeselect() {
         treeselect().then(response => {
           this.deptOptions = response.data;

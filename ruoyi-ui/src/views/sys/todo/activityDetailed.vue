@@ -1281,6 +1281,9 @@
               if (this.form.detailedId != undefined) {
                 updateDetailed(this.form).then(response => {
                   if (response.code === 200) {
+                    if(this.form.status == '5'){
+                      updateTodo({"todoId": this.todoId, "status": "2"})
+                    }
                     this.msgSuccess("修改成功");
                     this.open = false;
                     this.getList();
@@ -1292,6 +1295,9 @@
               } else {
                 addDetailed(this.form).then(response => {
                   if (response.code === 200) {
+                    if(this.form.status == '5'){
+                      updateTodo({"todoId": this.todoId, "status": "2"})
+                    }
                     this.msgSuccess("新增成功");
                     this.open = false;
                     this.getList();

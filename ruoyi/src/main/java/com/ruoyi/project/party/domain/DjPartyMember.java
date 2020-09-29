@@ -53,13 +53,13 @@ public class DjPartyMember extends BaseEntity
     /** 所在单位 */
     private String companyName;
 
-    /** 行政组织 */
-    @Excel(name = "行政组织")
+    /** 部门 */
+    @Excel(name = "部门")
     private Long deptId;
 
     private SysDept sysDept;
 
-    /** 行政职务 */
+    /** 职务 */
     private String administrativePosition;
 
     /** 职称 */

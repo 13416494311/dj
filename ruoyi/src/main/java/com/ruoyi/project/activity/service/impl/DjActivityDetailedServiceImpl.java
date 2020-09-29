@@ -173,7 +173,7 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
         }
 
         //归档时 修改待办为已办
-        if("5".equals(djActivityDetailed.getStatus())){
+        /*if("5".equals(djActivityDetailed.getStatus())){
             DjSysTodo sysTodo = new DjSysTodo();
             sysTodo.setUuid(djActivityDetailed.getDetailedUuid());
             List<DjSysTodo> sysTodoList = djSysTodoService.selectDjSysTodoList(sysTodo);
@@ -181,7 +181,7 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
                 djSysTodo.setStatus("1");
                 djSysTodoService.updateDjSysTodo(djSysTodo);
             });
-        }
+        }*/
 
         if(StringUtils.isNotNull(djActivityDetailed.getStatus())){
             createTodo(djActivityDetailed);

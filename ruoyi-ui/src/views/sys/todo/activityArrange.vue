@@ -524,6 +524,9 @@
             if (this.form.id != undefined) {
               updateArrange(this.form).then(response => {
                 if (response.code === 200) {
+                  if(this.form.status == '2'){
+                    updateTodo({"todoId": this.todoId, "status": "2"})
+                  }
                   this.msgSuccess("修改成功");
                   this.open = false;
                   this.getList();
@@ -535,6 +538,9 @@
             } else {
               addArrange(this.form).then(response => {
                 if (response.code === 200) {
+                  if(this.form.status == '2'){
+                    updateTodo({"todoId": this.todoId, "status": "2"})
+                  }
                   this.msgSuccess("新增成功");
                   this.open = false;
                   this.getList();

@@ -20,7 +20,7 @@
     <el-table v-loading="loading" :data="partyMemberChangeList" @selection-change="handleSelectionChange">
       <el-table-column label="党员姓名" align="center" prop="memberName"/>
       <el-table-column label="手机号" align="center" prop="mobile"/>
-      <el-table-column label="行政组织" align="center" prop="deptId" :formatter="deptIdFormat" />
+      <el-table-column label="部门" align="center" prop="deptId" :formatter="deptIdFormat" />
       <el-table-column label="党组织" align="center" prop="partyOrgId" :formatter="partyOrgIdFormat" />
       <el-table-column label="党员类型" align="center" prop="memberType" :formatter="memberTypeFormat"/>
       <el-table-column label="变更类型" align="center" prop="changeType":formatter="changeTypeFormat"/>
@@ -89,7 +89,7 @@
         auditStateOptions: [],
         // 用户性别字典
         sexOptions: [],
-        // 行政职务字典
+        // 职务字典
         administrativePositionOptions: [],
         // 民族字典
         nationOptions: [],
@@ -214,10 +214,10 @@
             {required: true, message: "所在单位不能为空", trigger: "blur"}
           ],
           deptId: [
-            {required: true, message: "行政组织不能为空", trigger: "blur"}
+            {required: true, message: "部门不能为空", trigger: "blur"}
           ],
           administrativePosition: [
-            {required: true, message: "行政职务不能为空", trigger: "blur"}
+            {required: true, message: "职务不能为空", trigger: "blur"}
           ],
           title: [
             {required: true, message: "职称不能为空", trigger: "blur"}
@@ -418,7 +418,7 @@
       sexFormat(row, column) {
         return this.selectDictLabel(this.sexOptions, row.sex);
       },
-      // 行政职务字典翻译
+      // 职务字典翻译
       administrativePositionFormat(row, column) {
         return this.selectDictLabel(this.administrativePositionOptions, row.administrativePosition);
       },
