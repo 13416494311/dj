@@ -93,6 +93,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="activityTheme != null  and activityTheme != ''">
                 and plan.activity_theme like concat('%', #{activityTheme}, '%')
             </if>
+            <if test="partyOrgId != null  and partyOrgId != ''">
+                and detailed.party_org_id = #{partyOrgId}
+            </if>
             <if test="state != null  and state != '' and '1'.toString == state">
                 and detailed.status in ('5')
             </if>

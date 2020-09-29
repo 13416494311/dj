@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
       <el-form-item label="活动主题" prop="activityTheme">
         <el-input
           v-model="queryParams.activityTheme"
@@ -8,6 +8,14 @@
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="活动党组织" prop="partyOrgId">
+        <select-tree :value="queryParams.partyOrgId"
+                     :options="partyOrgOptions"
+                     vModel="partyOrgId"
+                     @selected="setVModelValue"
+                     placeholder="请选择党组织"
         />
       </el-form-item>
       <el-form-item>
@@ -696,13 +704,15 @@
   import activitySupervise from "./activitySupervise";
   import { getUserProfile } from "@/api/system/user";
   import bigFileUpload from "@/components/bigFileUpload";
+  import { partyOrgTreeselect, getPartyOrg } from "@/api/party/org";
+  import selectTree from '../../components/selectTree';
 
   export default {
     name: "Detailed",
     components: {
       partyMember, addressMap, memberTransfer, activitySummary,
       activityResolution, activitySuggestions, activityExperience,
-      activitySupervise,bigFileUpload
+      activitySupervise,bigFileUpload,selectTree
     },
     data() {
       return {
@@ -760,6 +770,7 @@
           activityExamId: undefined,
           status: undefined,
         },
+        partyOrgOptions: [],
         // 表单参数
         form: {},
         djActivityPlan: {},
@@ -821,11 +832,17 @@
       });
       this.getPathType();
       this.getUser();
+      this.getPartyOrgTreeSelect();
       setTimeout(()=>{
         this.getList()
       },10);
     },
     methods: {
+      getPartyOrgTreeSelect() {
+        partyOrgTreeselect().then(response => {
+          this.partyOrgOptions = this.treeInitData(response.data);
+        });
+      },
       getPathType(){
         let path = this.$route.path;
         switch (path) {
@@ -1261,6 +1278,15 @@
       handleQuery() {
         this.queryParams.pageNum = 1;
         this.getList();
+      },
+      //下拉树选择后设置值
+      setVModelValue(vModel,val){
+        if(val!=null){
+          this.queryParams[vModel] =  val;
+        }else{
+          this.queryParams[vModel] =  undefined;
+        }
+        this.handleQuery();
       },
       /** 重置按钮操作 */
       resetQuery() {

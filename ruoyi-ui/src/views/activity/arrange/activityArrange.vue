@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
       <el-form-item label="活动主题" prop="activityTheme">
         <el-input
           v-model="queryParams.activityTheme"
@@ -8,6 +8,14 @@
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="活动党组织" prop="partyOrgId">
+        <select-tree :value="queryParams.partyOrgId"
+                     :options="partyOrgOptions"
+                     vModel="partyOrgId"
+                     @selected="setVModelValue"
+                     placeholder="请选择党组织"
         />
       </el-form-item>
       <el-form-item>
@@ -266,11 +274,13 @@
   import partyMember from "../../party/org/partyMemberChoose";
   import addressMap from "../../party/org/addressMap";
   import memberTransfer from "./memberTransfer";
+  import { partyOrgTreeselect, getPartyOrg } from "@/api/party/org";
+  import selectTree from '../../components/selectTree';
 
   export default {
     name: "Arrange",
     components: {
-      partyMember, addressMap,memberTransfer
+      partyMember, addressMap,memberTransfer,selectTree
     },
     data() {
       return {
@@ -307,6 +317,7 @@
           status: undefined,
           searchValue: undefined,
         },
+        partyOrgOptions: [],
         // 表单参数
         form: {},
         // 表单校验
@@ -352,6 +363,7 @@
     },
     created() {
       this.getList();
+      this.getPartyOrgTreeSelect();
       this.getDicts("activity_type").then(response => {
         this.activityTypeOptions = response.data;
       });
@@ -366,6 +378,11 @@
       });
     },
     methods: {
+      getPartyOrgTreeSelect() {
+        partyOrgTreeselect().then(response => {
+          this.partyOrgOptions = this.treeInitData(response.data);
+        });
+      },
       openOrgMemberTransfer(type) {
         this.$refs.memberTransfer.open = true;
         this.$refs.memberTransfer.title = "选择活动参与人";
@@ -468,6 +485,15 @@
       handleQuery() {
         this.queryParams.pageNum = 1;
         this.getList();
+      },
+      //下拉树选择后设置值
+      setVModelValue(vModel,val){
+        if(val!=null){
+          this.queryParams[vModel] =  val;
+        }else{
+          this.queryParams[vModel] =  undefined;
+        }
+        this.handleQuery();
       },
       /** 重置按钮操作 */
       resetQuery() {

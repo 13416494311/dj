@@ -323,6 +323,7 @@
             action="#"
             list-type="picture-card"
             :file-list="fileList"
+            multiple
             :http-request="uploadFile"
             :class="{hide:disabled}"
             class="upload"
@@ -501,6 +502,7 @@
         },
         user: {},
         activitySources:undefined,
+        uploadTime:0,
 
       };
     },
@@ -659,6 +661,7 @@
       },
       /**附件上传*/
       uploadFile(file) {
+        this.uploadTime += 1;
         const loading = this.$loading({
           lock: true,
           text: '上传中……',
@@ -671,7 +674,9 @@
         formData.append("fileType", "activityPlan");
         upload(formData).then(response => {
           if (response.code === 200) {
-            this.getFileList();
+            if(this.uploadTime==1){
+              this.getFileList();
+            }
             loading.close();
             this.msgSuccess("上传成功！")
           } else {

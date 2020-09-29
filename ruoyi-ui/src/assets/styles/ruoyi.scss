@@ -205,11 +205,13 @@
  }
 
  .el-table .danger-row {
-   background: #F56C6C;
+   /*background: #F56C6C;*/
+   color: #F56C6C;
  }
 
  .el-table .warn-row {
-   background: #E6A23C;
+   /*background: #E6A23C;*/
+   color: #E6A23C;
  }
 
  .upload .el-upload-list--picture-card .el-upload-list__item-actions{
