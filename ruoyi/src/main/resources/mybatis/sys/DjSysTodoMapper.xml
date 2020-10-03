@@ -40,9 +40,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="selectDjSysTodoById" parameterType="Long" resultMap="DjSysTodoResult">
+    <select id="selectDjSysTodoById" parameterType="DjSysTodo"  resultMap="DjSysTodoResult">
         <include refid="selectDjSysTodoVo"/>
-        where todo_id = #{todoId}
+        <where>
+            <if test="todoId != null  and todoId != ''"> and todo_id = #{todoId}</if>
+            <if test="uuid != null  and uuid != ''"> and uuid = #{uuid}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="urlName != null  and urlName != ''"> and url_name like concat('%', #{urlName}, '%')</if>
+            <if test="urlPath != null  and urlPath != ''"> and url_path = #{urlPath}</if>
+            <if test="urlParams != null  and urlParams != ''"> and url_params = #{urlParams}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+        </where>
     </select>
 
     <insert id="insertDjSysTodo" parameterType="DjSysTodo" useGeneratedKeys="true" keyProperty="todoId">

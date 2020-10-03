@@ -197,6 +197,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from dj_party_org where find_in_set(#{partyOrgId}, ancestors) and del_flag = '0'
 	</select>
 
+
     <select id="getPartyOrgTreeData" parameterType="Long" resultMap="PartyOrgTreeData">
 		select
 		party_org_id as id ,
@@ -204,6 +205,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		party_org_name as label
 		from dj_party_org
 		where del_flag = '0'
+        <if test="partyOrgs != null and partyOrgs.size() > 0 ">
+            and party_org_id in
+            <foreach collection="partyOrgs" item="item" index="index"
+                     separator="," open="(" close=")">
+                #{item.partyOrgId}
+            </foreach>
+        </if>
 	</select>
 
 </mapper>

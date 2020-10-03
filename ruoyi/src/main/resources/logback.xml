@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <property resource="application.yml"/>
     <!-- 日志存放路径 -->
     <springProperty scope="context" name="log.path" source="logback.logpath"/>
     <!-- 日志输出格式 -->

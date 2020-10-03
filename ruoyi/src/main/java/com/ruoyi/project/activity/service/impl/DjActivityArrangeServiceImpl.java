@@ -20,9 +20,12 @@ import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
+import com.ruoyi.project.sys.domain.DjSysMessage;
 import com.ruoyi.project.sys.domain.DjSysTodo;
+import com.ruoyi.project.sys.service.IDjSysMessageService;
 import com.ruoyi.project.sys.service.IDjSysTodoService;
 import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.service.ISysDictDataService;
 import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +58,10 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
     private ISysUserService userService;
     @Autowired
     private IDjSysTodoService djSysTodoService;
+    @Autowired
+    private IDjSysMessageService sysMessageService;
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     /**
      * 查询活动安排
@@ -193,7 +200,7 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
     private void createTodo(DjActivityDetailed detailed){
         SysUser user = userService.selectUserByPartyMemberId(detailed.getPartyMemberId());
         DjSysTodo sysTodo = new DjSysTodo();
-        sysTodo.setUuid(detailed.getDetailedUuid());
+        sysTodo.setUuid(UUID.randomUUID().toString());
         sysTodo.setType("4"); //活动管理
         sysTodo.setTitle(detailed.getDjActivityPlan().getActivityTheme());
         sysTodo.setUrlName("ActivityDetailed");
@@ -204,6 +211,17 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
         map.put("detailedUuid", detailed.getDetailedUuid());
         sysTodo.setUrlParams(JSON.toJSONString(map));
         djSysTodoService.insertDjSysTodo(sysTodo);
+
+        DjSysMessage sysMessage = new DjSysMessage();
+        sysMessage.setMessageUuid(sysTodo.getUuid());
+        sysMessage.setTitle(dictDataService.selectDictLabel("sys_todo_type",sysTodo.getType()));
+        sysMessage.setContent("您收到一条"+sysTodo.getTitle()+"的待办，请及时登陆系统处理!");
+        sysMessage.setType(2);
+        sysMessage.setPlatform(0);
+        sysMessage.setGroupName("");
+        sysMessage.setStatus("0");
+        sysMessage.setUserIds(sysTodo.getUserId().toString());
+        sysMessageService.insertDjSysMessage(sysMessage);
     }
     /**
      * 批量删除活动安排

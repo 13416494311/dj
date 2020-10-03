@@ -17,7 +17,7 @@ public interface DjSysTodoMapper
      * @param todoId 待办ID
      * @return 待办
      */
-    public DjSysTodo selectDjSysTodoById(Long todoId);
+    public DjSysTodo selectDjSysTodoById(DjSysTodo djSysTodo);
 
     /**
      * 查询待办列表

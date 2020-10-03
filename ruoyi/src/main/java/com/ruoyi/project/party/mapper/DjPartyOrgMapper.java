@@ -117,11 +117,10 @@ public interface DjPartyOrgMapper
      * @return 党组织架构列表
      */
     public List<DjPartyOrg> selectChildrenPartyOrgById(Long partyOrgId);
-
     /**
      * 获取党组织架构树数据
      *
      * @return
      */
-    public List<PartyOrgTreeData> getPartyOrgTreeData();
+    public List<PartyOrgTreeData> getPartyOrgTreeData(@Param("partyOrgs") List<DjPartyOrg> partyOrgs);
 }

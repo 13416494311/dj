@@ -3,6 +3,7 @@ package com.ruoyi.project.activity.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.utils.DateUtils;
@@ -11,9 +12,12 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.activity.domain.DjActivityDetailed;
 import com.ruoyi.project.activity.service.IDjActivityDetailedService;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
+import com.ruoyi.project.sys.domain.DjSysMessage;
 import com.ruoyi.project.sys.domain.DjSysTodo;
+import com.ruoyi.project.sys.service.IDjSysMessageService;
 import com.ruoyi.project.sys.service.IDjSysTodoService;
 import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.service.ISysDictDataService;
 import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +44,10 @@ public class DjActivitySuperviseServiceImpl implements IDjActivitySuperviseServi
     private ISysUserService userService;
     @Autowired
     private IDjSysTodoService djSysTodoService;
+    @Autowired
+    private IDjSysMessageService sysMessageService;
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     /**
      * 查询活动督办
@@ -99,7 +107,7 @@ public class DjActivitySuperviseServiceImpl implements IDjActivitySuperviseServi
                 selectDjActivityDetailedByDetailedUuid(djActivitySupervise.getDetailedUuid());
         SysUser user = userService.selectUserByPartyMemberId(detailed.getPartyMemberId());
         DjSysTodo sysTodo = new DjSysTodo();
-        sysTodo.setUuid(detailed.getDetailedUuid());
+        sysTodo.setUuid(UUID.randomUUID().toString());
         sysTodo.setType("5"); //活动督办
         sysTodo.setTitle(detailed.getDjActivityPlan().getActivityTheme());
         sysTodo.setUrlName("ActivityDetailed");
@@ -111,6 +119,17 @@ public class DjActivitySuperviseServiceImpl implements IDjActivitySuperviseServi
         map.put("superviseId", djActivitySupervise.getSuperviseId().toString());
         sysTodo.setUrlParams(JSON.toJSONString(map));
         djSysTodoService.insertDjSysTodo(sysTodo);
+
+        DjSysMessage sysMessage = new DjSysMessage();
+        sysMessage.setMessageUuid(sysTodo.getUuid());
+        sysMessage.setTitle(dictDataService.selectDictLabel("sys_todo_type",sysTodo.getType()));
+        sysMessage.setContent("您收到一条"+sysTodo.getTitle()+"的"+sysMessage.getTitle()+"，内容如下："+djActivitySupervise.getContent());
+        sysMessage.setType(2);
+        sysMessage.setPlatform(0);
+        sysMessage.setGroupName("");
+        sysMessage.setStatus("0");
+        sysMessage.setUserIds(sysTodo.getUserId().toString());
+        sysMessageService.insertDjSysMessage(sysMessage);
     }
 
     /**

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ruoyi.project.system.domain.SysUser;
 
 /**
  * Entity基类
@@ -24,6 +25,8 @@ public class BaseEntity implements Serializable
 
     /** 创建者 */
     private String createBy;
+
+    private SysUser createUser;
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -87,6 +90,14 @@ public class BaseEntity implements Serializable
     public void setCreateBy(String createBy)
     {
         this.createBy = createBy;
+    }
+
+    public SysUser getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(SysUser createUser) {
+        this.createUser = createUser;
     }
 
     public Date getCreateTime()

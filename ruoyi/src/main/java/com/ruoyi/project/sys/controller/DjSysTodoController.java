@@ -39,7 +39,7 @@ public class DjSysTodoController extends BaseController
     /**
      * 查询待办列表
      */
-    @GetMapping("/list")
+    @RequestMapping("/list")
     public TableDataInfo list(DjSysTodo djSysTodo)
     {
         startPage();
@@ -48,6 +48,17 @@ public class DjSysTodoController extends BaseController
         }
         List<DjSysTodo> list = djSysTodoService.selectDjSysTodoList(djSysTodo);
         return getDataTable(list);
+    }
+
+    @RequestMapping("/listForApp")
+    public AjaxResult listForApp(@RequestBody DjSysTodo djSysTodo)
+    {
+        startPage();
+        if(!SecurityUtils.isAdmin(SecurityUtils.getLoginUser().getUser().getUserId())){
+            djSysTodo.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
+        }
+        List<DjSysTodo> list = djSysTodoService.selectDjSysTodoList(djSysTodo);
+        return AjaxResult.success(list);
     }
 
     /**
@@ -68,18 +79,7 @@ public class DjSysTodoController extends BaseController
     @GetMapping(value = "/{todoId}")
     public AjaxResult getInfo(@PathVariable("todoId") Long todoId)
     {
-        DjSysTodo djSysTodo = new DjSysTodo();
-        djSysTodo.setTodoId(todoId);
-        if(!SecurityUtils.isAdmin(SecurityUtils.getLoginUser().getUser().getUserId())){
-            djSysTodo.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
-        }
-        List<DjSysTodo> list = djSysTodoService.selectDjSysTodoList(djSysTodo);
-        if(StringUtils.isNotEmpty(list)){
-            return AjaxResult.success(list.get(0));
-        }else{
-            return AjaxResult.success(null);
-        }
-
+        return AjaxResult.success(djSysTodoService.selectDjSysTodoById(todoId));
     }
 
     /**

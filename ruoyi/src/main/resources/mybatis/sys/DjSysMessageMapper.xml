@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.sys.mapper.DjSysMessageMapper">
+
+    <resultMap type="DjSysMessage" id="DjSysMessageResult">
+        <result property="messageId"    column="message_id"    />
+        <result property="messageUuid"    column="message_uuid"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="type"    column="type"    />
+        <result property="platform"    column="platform"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="userIds"    column="user_ids"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjSysMessageVo">
+        select message_id, message_uuid, title, content, type, platform, group_name, user_ids, status, del_flag, create_by, create_time, update_by, update_time from dj_sys_message
+    </sql>
+
+    <select id="selectDjSysMessageList" parameterType="DjSysMessage" resultMap="DjSysMessageResult">
+        <include refid="selectDjSysMessageVo"/>
+        <where>
+            <if test="messageUuid != null  and messageUuid != ''"> and message_uuid = #{messageUuid}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="type != null and type != 0"> and type = #{type}</if>
+            <if test="platform != null "> and platform = #{platform}</if>
+            <if test="groupName != null  and groupName != ''"> and group_name like concat('%', #{groupName}, '%')</if>
+            <if test="userIds != null  and userIds != ''"> and user_ids = #{userIds}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectDjSysMessageById" parameterType="Long" resultMap="DjSysMessageResult">
+        <include refid="selectDjSysMessageVo"/>
+        where message_id = #{messageId}
+    </select>
+
+    <insert id="insertDjSysMessage" parameterType="DjSysMessage" useGeneratedKeys="true" keyProperty="messageId">
+        insert into dj_sys_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="messageUuid != null  and messageUuid != ''">message_uuid,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="type != null ">type,</if>
+            <if test="platform != null ">platform,</if>
+            <if test="groupName != null  and groupName != ''">group_name,</if>
+            <if test="userIds != null  and userIds != ''">user_ids,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="messageUuid != null  and messageUuid != ''">#{messageUuid},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="type != null ">#{type},</if>
+            <if test="platform != null ">#{platform},</if>
+            <if test="groupName != null  and groupName != ''">#{groupName},</if>
+            <if test="userIds != null  and userIds != ''">#{userIds},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjSysMessage" parameterType="DjSysMessage">
+        update dj_sys_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="messageUuid != null  and messageUuid != ''">message_uuid = #{messageUuid},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="type != null ">type = #{type},</if>
+            <if test="platform != null ">platform = #{platform},</if>
+            <if test="groupName != null  and groupName != ''">group_name = #{groupName},</if>
+            <if test="userIds != null  and userIds != ''">user_ids = #{userIds},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where message_id = #{messageId}
+    </update>
+
+    <delete id="deleteDjSysMessageById" parameterType="Long">
+        delete from dj_sys_message where message_id = #{messageId}
+    </delete>
+
+    <delete id="deleteDjSysMessageByIds" parameterType="String">
+        delete from dj_sys_message where message_id in
+        <foreach item="messageId" collection="array" open="(" separator="," close=")">
+            #{messageId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -2,7 +2,9 @@ package com.ruoyi.project.party.domain;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.project.system.domain.SysDept;
+import com.ruoyi.project.system.domain.SysPost;
 import lombok.Data;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
@@ -48,6 +50,7 @@ public class DjPartyMember extends BaseEntity
     private String identityCard;
 
     /** 出生日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthday;
 
     /** 所在单位 */
@@ -62,26 +65,40 @@ public class DjPartyMember extends BaseEntity
     /** 职务 */
     private String administrativePosition;
 
+    /** 职务 */
+    private String administrativePositionText;
+
     /** 职称 */
     private String title;
 
     /** 岗位 */
     private Long postId;
 
+    /** 岗位 */
+    private SysPost sysPost;
+
     /** 参加工作日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date workingDate;
 
     /** 民族 */
     private String nation;
 
+    private String nationText;
+
     /** 政治面貌 */
     private String polity;
+
+    private String polityText;
 
     /** 身份 */
     private String workIdentity;
 
     /** 学历 */
     private String education;
+
+    /** 学历 */
+    private String educationText;
 
     /** 学位 */
     private String academicDegree;
@@ -115,12 +132,15 @@ public class DjPartyMember extends BaseEntity
     private String memberStatus;
 
     /** 加入党支部日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date joinBranchData;
 
     /** 加入党日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date joinData;
 
     /** 转为正式党员日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date formalData;
 
     /** 流动党员（1：是  0：否） */

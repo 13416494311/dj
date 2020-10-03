@@ -26,6 +26,8 @@ public class DjSysTodo extends BaseEntity
     @Excel(name = "待办类型")
     private String type;
 
+    private String typeText;
+
     /** 待办标题 */
     @Excel(name = "待办标题")
     private String title;
@@ -42,9 +44,11 @@ public class DjSysTodo extends BaseEntity
     @Excel(name = "参数json字符串")
     private String urlParams;
 
-    /** 完成状态（0：未完成 1：已完成） */
-    @Excel(name = "完成状态", readConverterExp = "0=：未完成,1=：已完成")
+    /**   */
+    @Excel(name = "待办状态")
     private String status;
+
+    private String statusText;
 
     /** 处理人userid */
     @Excel(name = "处理人userid")

@@ -15,11 +15,14 @@ import com.ruoyi.project.party.domain.DjPartyMemberChange;
 import com.ruoyi.project.party.service.IDjPartyMemberChangeService;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.sys.domain.DjSysLog;
+import com.ruoyi.project.sys.domain.DjSysMessage;
 import com.ruoyi.project.sys.domain.DjSysTodo;
 import com.ruoyi.project.sys.service.IDjSysLogService;
+import com.ruoyi.project.sys.service.IDjSysMessageService;
 import com.ruoyi.project.sys.service.IDjSysTodoService;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.ISysConfigService;
+import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
@@ -51,11 +54,15 @@ public class DjPartyMemberController extends BaseController
     private IDjSysLogService djSysLogService;
     @Autowired
     private IDjSysTodoService djSysTodoService;
+    @Autowired
+    private IDjSysMessageService sysMessageService;
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     /**
      * 查询党员信息列表
      */
-    @GetMapping("/list")
+    @RequestMapping("/list")
     public TableDataInfo list(DjPartyMember djPartyMember)
     {
         startPage();
@@ -66,7 +73,7 @@ public class DjPartyMemberController extends BaseController
     @PostMapping("/listForApp")
     public AjaxResult listForApp(@RequestBody DjPartyMember djPartyMember)
     {
-
+        startPage();
         List<DjPartyMember> list = djPartyMemberService.selectPartyMemberList(djPartyMember);
         return AjaxResult.success(list);
     }
@@ -169,7 +176,7 @@ public class DjPartyMemberController extends BaseController
         djSysLogService.insertDjSysLog(nextSysLog);
 
         DjSysTodo sysTodo = new DjSysTodo();
-        sysTodo.setUuid(memberChange.getMemberUuid());
+        sysTodo.setUuid(UUID.randomUUID().toString());
         sysTodo.setType("3"); //党员变更审批
         switch (memberChange.getChangeType()){
             case "add" : sysTodo.setTitle(memberChange.getMemberName()+" 新增审批");;  break;
@@ -186,6 +193,17 @@ public class DjPartyMemberController extends BaseController
         map.put("memberUuid", memberChange.getMemberUuid());
         sysTodo.setUrlParams(JSON.toJSONString(map));
         djSysTodoService.insertDjSysTodo(sysTodo);
+
+        DjSysMessage sysMessage = new DjSysMessage();
+        sysMessage.setMessageUuid(sysTodo.getUuid());
+        sysMessage.setTitle(dictDataService.selectDictLabel("sys_todo_type",sysTodo.getType()));
+        sysMessage.setContent("您收到一条"+sysTodo.getTitle()+"的待办，请及时登陆系统处理!");
+        sysMessage.setType(2);
+        sysMessage.setPlatform(0);
+        sysMessage.setGroupName("");
+        sysMessage.setStatus("0");
+        sysMessage.setUserIds(sysTodo.getUserId().toString());
+        sysMessageService.insertDjSysMessage(sysMessage);
     }
 
     /**

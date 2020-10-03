@@ -1,12 +1,15 @@
 package com.ruoyi.project.party.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.exception.CustomException;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.party.domain.PartyOrgTreeData;
+import com.ruoyi.project.system.domain.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
@@ -61,7 +64,39 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
     @Override
     public List<DjPartyOrg> selectDjPartyOrgList(DjPartyOrg djPartyOrg)
     {
-        return djPartyOrgMapper.selectDjPartyOrgList(djPartyOrg);
+        SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+        List<DjPartyOrg> list =new ArrayList<DjPartyOrg>();
+        if(SecurityUtils.isAdmin(sysUser.getUserId())){
+            list = djPartyOrgMapper.selectDjPartyOrgList(djPartyOrg);
+        }else{
+            if(StringUtils.isNotNull(sysUser.getDjPartyMember())){
+                list = selectPartyOrgLineByOrgId(sysUser.getDjPartyMember().getPartyOrgId());
+            }
+        }
+        return list;
+    }
+
+    private List<DjPartyOrg> selectPartyOrgLineByOrgId(Long partyOrgId){
+        List<DjPartyOrg> list =new ArrayList<DjPartyOrg>();
+        list.addAll(djPartyOrgMapper.selectChildrenPartyOrgById(partyOrgId));
+        list.addAll(selectParentPartyOrgById(partyOrgId));
+        return list;
+    }
+
+
+    public List<DjPartyOrg>  selectParentPartyOrgById(Long partyOrgId)
+    {
+        List<DjPartyOrg> list =new ArrayList<DjPartyOrg>();
+        DjPartyOrg org = djPartyOrgMapper.selectDjPartyOrgById(partyOrgId);
+        list.add(org);
+        Arrays.asList(org.getAncestors().split(",")).stream().forEach(parent->{
+            if(!"0".equals(parent)){
+                DjPartyOrg partyOrg = djPartyOrgMapper.selectDjPartyOrgById(Long.parseLong(parent));
+                list.add(partyOrg);
+            }
+        });
+        return list;
+
     }
 
     /**
@@ -231,8 +266,17 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
 
     @Override
     public List<PartyOrgTreeData> getPartyOrgTreeDataList(){
-
-        List<PartyOrgTreeData> list = getfatherNode(djPartyOrgMapper.getPartyOrgTreeData());
+        List<PartyOrgTreeData> list = null;
+        SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+        List<DjPartyOrg> partyOrgs =new ArrayList<DjPartyOrg>();
+        if(!SecurityUtils.isAdmin(sysUser.getUserId())){
+            if(StringUtils.isNotNull(sysUser.getDjPartyMember())){
+                partyOrgs = selectPartyOrgLineByOrgId(sysUser.getDjPartyMember().getPartyOrgId());
+                list = getfatherNode(djPartyOrgMapper.getPartyOrgTreeData(partyOrgs));
+            }
+        }else{
+            list = getfatherNode(djPartyOrgMapper.getPartyOrgTreeData(null));
+        }
         return list;
     }
 
@@ -243,9 +287,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
      */
     @Override
     public PartyOrgTreeData getPartyOrgTreeData(){
-
-
-        List<PartyOrgTreeData> list = getfatherNode(djPartyOrgMapper.getPartyOrgTreeData());
+        List<PartyOrgTreeData> list = getfatherNode(djPartyOrgMapper.getPartyOrgTreeData(null));
         if (StringUtils.isNotEmpty(list)){
             return list.get(0);
         }else{
@@ -253,7 +295,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
         }
     }
 
-    public final static List<PartyOrgTreeData> getfatherNode(List<PartyOrgTreeData> treeDataList) {
+    public List<PartyOrgTreeData> getfatherNode(List<PartyOrgTreeData> treeDataList) {
         List<PartyOrgTreeData> newTreeDataList = new ArrayList<PartyOrgTreeData>();
         for (PartyOrgTreeData jsonTreeData : treeDataList) {
             if(jsonTreeData.getParentId()==0) {
@@ -266,7 +308,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
         return newTreeDataList;
     }
 
-    private final static List<PartyOrgTreeData> getChildrenNode(PartyOrgTreeData fatherNode, List<PartyOrgTreeData> treeDataList) {
+    private List<PartyOrgTreeData> getChildrenNode(PartyOrgTreeData fatherNode, List<PartyOrgTreeData> treeDataList) {
         List<PartyOrgTreeData> newTreeDataList = new ArrayList<PartyOrgTreeData>();
         for (PartyOrgTreeData jsonTreeData : treeDataList) {
             if(jsonTreeData.getParentId() == null){

@@ -939,7 +939,6 @@
     },
     created() {
       this.getUser();
-      this.getList();
       this.getPartyOrgTreeSelect();
       this.getDeptTreeselect();
       this.postOptionSelect();
@@ -994,6 +993,7 @@
       this.getDicts("sys_yes_no").then(response => {
         this.enjoyHelpOptions = response.data;
       });
+
     },
     methods: {
       //下拉树选择后设置值
@@ -1348,6 +1348,11 @@
       getUser() {
         getUserProfile().then(response => {
           this.user = response.data;
+          if(this.user.djPartyMember){
+            this.queryParams.partyOrgId = this.user.djPartyMember.partyOrgId;
+          }
+        }).then(()=>{
+          this.getList();
         });
       },
       showHandleUpdate(row){

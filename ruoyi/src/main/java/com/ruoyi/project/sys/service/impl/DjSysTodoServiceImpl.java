@@ -1,8 +1,13 @@
 package com.ruoyi.project.sys.service.impl;
 
 import java.util.List;
+
+import com.apicloud.sdk.api.Push;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.system.service.ISysDictDataService;
+import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.sys.mapper.DjSysTodoMapper;
@@ -20,6 +25,10 @@ public class DjSysTodoServiceImpl implements IDjSysTodoService
 {
     @Autowired
     private DjSysTodoMapper djSysTodoMapper;
+    @Autowired
+    private ISysDictDataService dictDataService;
+    @Autowired
+    private ISysUserService sysUserService;
 
     /**
      * 查询待办
@@ -30,7 +39,12 @@ public class DjSysTodoServiceImpl implements IDjSysTodoService
     @Override
     public DjSysTodo selectDjSysTodoById(Long todoId)
     {
-        return djSysTodoMapper.selectDjSysTodoById(todoId);
+        DjSysTodo djSysTodo = new DjSysTodo();
+        djSysTodo.setTodoId(todoId);
+        if(!SecurityUtils.isAdmin(SecurityUtils.getLoginUser().getUser().getUserId())){
+            djSysTodo.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
+        }
+        return djSysTodoMapper.selectDjSysTodoById(djSysTodo);
     }
 
     /**
@@ -42,7 +56,19 @@ public class DjSysTodoServiceImpl implements IDjSysTodoService
     @Override
     public List<DjSysTodo> selectDjSysTodoList(DjSysTodo djSysTodo)
     {
-        return djSysTodoMapper.selectDjSysTodoList(djSysTodo);
+        List<DjSysTodo> list = djSysTodoMapper.selectDjSysTodoList(djSysTodo);
+        list.stream().forEach(sysTodo->{
+            if(StringUtils.isNotNull(sysTodo.getCreateBy())){
+                sysTodo.setCreateUser(sysUserService.selectUserById(Long.parseLong(sysTodo.getCreateBy())));
+            }
+            if(sysTodo.getType()!=null){
+                sysTodo.setTypeText(dictDataService.selectDictLabel("sys_todo_type",sysTodo.getType()));
+            }
+            if(sysTodo.getStatus()!=null){
+                sysTodo.setStatusText(dictDataService.selectDictLabel("sys_todo_status",sysTodo.getStatus()));
+            }
+        });
+        return list;
     }
 
     /**

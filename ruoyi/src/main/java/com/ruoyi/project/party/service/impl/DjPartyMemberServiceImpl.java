@@ -13,10 +13,7 @@ import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
-import com.ruoyi.project.system.service.ISysConfigService;
-import com.ruoyi.project.system.service.ISysDeptService;
-import com.ruoyi.project.system.service.ISysDictDataService;
-import com.ruoyi.project.system.service.ISysUserService;
+import com.ruoyi.project.system.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +38,8 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     private ISysUserService userService;
     @Autowired
     private ISysDictDataService dictDataService;
+    @Autowired
+    private ISysPostService postService;
 
     @Override
     public DjPartyMember selectPartyMemberById(Long memberId)
@@ -61,14 +60,35 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     @Override
     public DjPartyMember selectDjPartyMemberById(Long memberId)
     {
-        DjPartyMember partyMember = djPartyMemberMapper.selectDjPartyMemberById(memberId);
-        if(StringUtils.isNotNull(partyMember.getPartyOrgId())){
-            partyMember.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(partyMember.getPartyOrgId()));
+        DjPartyMember member = djPartyMemberMapper.selectDjPartyMemberById(memberId);
+        if(StringUtils.isNotNull(member.getPartyOrgId())){
+            member.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(member.getPartyOrgId()));
         }
-        if(StringUtils.isNotNull(partyMember.getDeptId())){
-            partyMember.setSysDept(deptService.selectDeptById(partyMember.getDeptId()));
+        if(StringUtils.isNotNull(member.getDeptId())){
+            member.setSysDept(deptService.selectDeptById(member.getDeptId()));
         }
-        return partyMember;
+        if(member.getMemberType()!=null){
+            member.setMemberTypeText(dictDataService.selectDictLabel("party_member_type",member.getMemberType()));
+        }
+        if(member.getAdministrativePosition()!=null){
+            member.setAdministrativePositionText(dictDataService.selectDictLabel("administrative_position_type",member.getAdministrativePosition()));
+        }
+        if(member.getPostId()!=null){
+            member.setSysPost(postService.selectPostById(member.getPostId()));
+        }
+        if(member.getEducation()!=null){
+            member.setEducationText(dictDataService.selectDictLabel("education_type",member.getEducation()));
+        }
+        if(member.getEducation()!=null){
+            member.setEducationText(dictDataService.selectDictLabel("education_type",member.getEducation()));
+        }
+        if(member.getNation()!=null){
+            member.setNationText(dictDataService.selectDictLabel("nation_type",member.getNation()));
+        }
+        if(member.getPolity()!=null){
+            member.setPolityText(dictDataService.selectDictLabel("polity_type",member.getPolity()));
+        }
+        return member;
     }
 
     /**
@@ -81,13 +101,16 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     public List<DjPartyMember> selectDjPartyMemberList(DjPartyMember djPartyMember)
     {
 
-        List<DjPartyMember> list = djPartyMemberMapper.selectDjPartyMemberList(djPartyMember);
+        List<DjPartyMember> list = djPartyMemberMapper.selectPartyMemberList(djPartyMember);
         list.stream().forEach( member ->{
             if(member.getPartyOrgId()!=null){
                 member.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(member.getPartyOrgId()));
             }
             if(member.getDeptId()!=null){
                 member.setSysDept(deptService.selectDeptById(member.getDeptId()));
+            }
+            if(member.getMemberType()!=null){
+                member.setMemberTypeText(dictDataService.selectDictLabel("party_member_type",member.getMemberType()));
             }
         });
         return list;
@@ -108,6 +131,25 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
             if(member.getMemberType()!=null){
                 member.setMemberTypeText(dictDataService.selectDictLabel("party_member_type",member.getMemberType()));
             }
+            if(member.getAdministrativePosition()!=null){
+                member.setAdministrativePositionText(dictDataService.selectDictLabel("administrative_position_type",member.getAdministrativePosition()));
+            }
+            if(member.getPostId()!=null){
+                member.setSysPost(postService.selectPostById(member.getPostId()));
+            }
+            if(member.getEducation()!=null){
+                member.setEducationText(dictDataService.selectDictLabel("education_type",member.getEducation()));
+            }
+            if(member.getEducation()!=null){
+                member.setEducationText(dictDataService.selectDictLabel("education_type",member.getEducation()));
+            }
+            if(member.getNation()!=null){
+                member.setNationText(dictDataService.selectDictLabel("nation_type",member.getNation()));
+            }
+            if(member.getPolity()!=null){
+                member.setPolityText(dictDataService.selectDictLabel("polity_type",member.getPolity()));
+            }
+
         });
         return list;
     }

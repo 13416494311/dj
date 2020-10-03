@@ -13,7 +13,9 @@ import com.ruoyi.project.activity.domain.DjActivityDetailed;
 import com.ruoyi.project.activity.mapper.DjActivityDetailedMapper;
 import com.ruoyi.project.activity.service.IDjActivityArrangeService;
 import com.ruoyi.project.activity.service.IDjActivityDetailedService;
+import com.ruoyi.project.sys.domain.DjSysMessage;
 import com.ruoyi.project.sys.domain.DjSysTodo;
+import com.ruoyi.project.sys.service.IDjSysMessageService;
 import com.ruoyi.project.sys.service.IDjSysTodoService;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.ISysDictDataService;
@@ -40,6 +42,8 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
     private IDjActivityArrangeService djActivityArrangeService;
     @Autowired
     private ISysDictDataService dictDataService;
+    @Autowired
+    private IDjSysMessageService sysMessageService;
     @Autowired
     private ISysUserService userService;
     @Autowired
@@ -204,7 +208,7 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
     private void createTodo(DjActivityArrange activityArrange){
         SysUser user = userService.selectUserByPartyMemberId(activityArrange.getDjPartyOrg().getLeader());
         DjSysTodo sysTodo = new DjSysTodo();
-        sysTodo.setUuid(activityArrange.getId().toString());
+        sysTodo.setUuid(UUID.randomUUID().toString());
         sysTodo.setType("6"); //活动安排
         sysTodo.setTitle(activityArrange.getDjActivityPlan().getActivityTheme());
         sysTodo.setUrlName("ActivityArrange");
@@ -215,6 +219,17 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
         map.put("arrangeId", activityArrange.getId().toString());
         sysTodo.setUrlParams(JSON.toJSONString(map));
         djSysTodoService.insertDjSysTodo(sysTodo);
+
+        DjSysMessage sysMessage = new DjSysMessage();
+        sysMessage.setMessageUuid(sysTodo.getUuid());
+        sysMessage.setTitle(dictDataService.selectDictLabel("sys_todo_type",sysTodo.getType()));
+        sysMessage.setContent("您收到一条"+sysTodo.getTitle()+"的待办，请及时登陆系统处理!");
+        sysMessage.setType(2);
+        sysMessage.setPlatform(0);
+        sysMessage.setGroupName("");
+        sysMessage.setStatus("0");
+        sysMessage.setUserIds(sysTodo.getUserId().toString());
+        sysMessageService.insertDjSysMessage(sysMessage);
     }
     /**
      * 批量删除活动计划
