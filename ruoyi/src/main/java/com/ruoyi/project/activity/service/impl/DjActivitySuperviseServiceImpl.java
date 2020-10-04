@@ -107,7 +107,7 @@ public class DjActivitySuperviseServiceImpl implements IDjActivitySuperviseServi
                 selectDjActivityDetailedByDetailedUuid(djActivitySupervise.getDetailedUuid());
         SysUser user = userService.selectUserByPartyMemberId(detailed.getPartyMemberId());
         DjSysTodo sysTodo = new DjSysTodo();
-        sysTodo.setUuid(UUID.randomUUID().toString());
+        sysTodo.setUuid(detailed.getDetailedUuid());
         sysTodo.setType("5"); //活动督办
         sysTodo.setTitle(detailed.getDjActivityPlan().getActivityTheme());
         sysTodo.setUrlName("ActivityDetailed");

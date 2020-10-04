@@ -176,7 +176,7 @@ public class DjPartyMemberController extends BaseController
         djSysLogService.insertDjSysLog(nextSysLog);
 
         DjSysTodo sysTodo = new DjSysTodo();
-        sysTodo.setUuid(UUID.randomUUID().toString());
+        sysTodo.setUuid(memberChange.getMemberUuid());
         sysTodo.setType("3"); //党员变更审批
         switch (memberChange.getChangeType()){
             case "add" : sysTodo.setTitle(memberChange.getMemberName()+" 新增审批");;  break;

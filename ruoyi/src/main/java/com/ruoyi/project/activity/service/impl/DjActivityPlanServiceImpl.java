@@ -208,7 +208,7 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
     private void createTodo(DjActivityArrange activityArrange){
         SysUser user = userService.selectUserByPartyMemberId(activityArrange.getDjPartyOrg().getLeader());
         DjSysTodo sysTodo = new DjSysTodo();
-        sysTodo.setUuid(UUID.randomUUID().toString());
+        sysTodo.setUuid(activityArrange.getId().toString());
         sysTodo.setType("6"); //活动安排
         sysTodo.setTitle(activityArrange.getDjActivityPlan().getActivityTheme());
         sysTodo.setUrlName("ActivityArrange");

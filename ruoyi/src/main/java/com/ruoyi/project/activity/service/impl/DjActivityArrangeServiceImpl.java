@@ -160,6 +160,16 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
 
         if("2".equals(djActivityArrange.getStatus())){
 
+            //活动安排 发布时 有代办就修改为已办
+            DjSysTodo sysTodo = new DjSysTodo();
+            sysTodo.setUuid(djActivityArrange.getId().toString());
+            sysTodo.setType("6");
+            List<DjSysTodo> sysTodoList = djSysTodoService.selectDjSysTodoList(sysTodo);
+            sysTodoList.stream().forEach(djSysTodo->{
+                djSysTodo.setStatus("1");
+                djSysTodoService.updateDjSysTodo(djSysTodo);
+            });
+
             DjActivityDetailed detailed =new DjActivityDetailed();
             detailed.setPlanUuid(djActivityArrange.getPlanUuid());
             detailed.setPartyOrgId(djActivityArrange.getPartyOrgId());
@@ -200,7 +210,7 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
     private void createTodo(DjActivityDetailed detailed){
         SysUser user = userService.selectUserByPartyMemberId(detailed.getPartyMemberId());
         DjSysTodo sysTodo = new DjSysTodo();
-        sysTodo.setUuid(UUID.randomUUID().toString());
+        sysTodo.setUuid(detailed.getDetailedUuid());
         sysTodo.setType("4"); //活动管理
         sysTodo.setTitle(detailed.getDjActivityPlan().getActivityTheme());
         sysTodo.setUrlName("ActivityDetailed");

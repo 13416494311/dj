@@ -180,15 +180,16 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
         }
 
         //归档时 修改待办为已办
-        /*if("5".equals(djActivityDetailed.getStatus())){
+        if("5".equals(djActivityDetailed.getStatus())){
             DjSysTodo sysTodo = new DjSysTodo();
             sysTodo.setUuid(djActivityDetailed.getDetailedUuid());
+            sysTodo.setType("4");
             List<DjSysTodo> sysTodoList = djSysTodoService.selectDjSysTodoList(sysTodo);
             sysTodoList.stream().forEach(djSysTodo->{
                 djSysTodo.setStatus("1");
                 djSysTodoService.updateDjSysTodo(djSysTodo);
             });
-        }*/
+        }
 
         if(StringUtils.isNotNull(djActivityDetailed.getStatus())){
             createTodo(djActivityDetailed);
@@ -212,7 +213,7 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
                     SysUser user = userService.selectUserByPartyMemberId(member.getPartyMemberId());
                     if (StringUtils.isNotNull(user)) {
                         DjSysTodo sysTodo = new DjSysTodo();
-                        sysTodo.setUuid(UUID.randomUUID().toString());
+                        sysTodo.setUuid(detailed.getDetailedUuid());
                         sysTodo.setType("1"); //建言献策
                         sysTodo.setTitle(activityPlan.getActivityTheme());
                         sysTodo.setUrlName("ActivitySuggestions");
@@ -246,7 +247,7 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
                     SysUser user = userService.selectUserByPartyMemberId(member.getPartyMemberId());
                     if (StringUtils.isNotNull(user)) {
                         DjSysTodo sysTodo = new DjSysTodo();
-                        sysTodo.setUuid(UUID.randomUUID().toString());
+                        sysTodo.setUuid(detailed.getDetailedUuid());
                         sysTodo.setType("2"); //心得体会
                         sysTodo.setTitle(activityPlan.getActivityTheme());
                         sysTodo.setUrlName("ActivityExperience");

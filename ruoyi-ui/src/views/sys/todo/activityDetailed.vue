@@ -1282,7 +1282,7 @@
                 updateDetailed(this.form).then(response => {
                   if (response.code === 200) {
                     if(this.form.status == '5'){
-                      updateTodo({"todoId": this.todoId, "status": "2"})
+                      updateTodo({"todoId": this.todoId, "status": "1"})
                     }
                     this.msgSuccess("修改成功");
                     this.open = false;
