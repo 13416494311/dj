@@ -140,6 +140,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectPartyMemberList" parameterType="DjPartyMember" resultMap="DjPartyMemberResult">
         <include refid="selectDjPartyMemberVo1"/>
         <where>
+            del_flag = '0'
         <if test="memberId != null "> and member_id = #{memberId}</if>
         <if test="partyOrgId != null ">
             AND pm.party_org_id = #{partyOrgId}

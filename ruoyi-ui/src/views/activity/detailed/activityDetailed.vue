@@ -662,7 +662,7 @@
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
   .info-span{
     color:#909399;
   }

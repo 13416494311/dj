@@ -149,7 +149,7 @@ export default {
   align-items: center;*/
   height: 100%;
   width: 100%;
-  background: url("../assets/image/login_bg.jpg") no-repeat;;
+  background: url("../assets/image/login_bg.jpg") no-repeat;
   background-size: 100% 100%;
 }
 .title {
