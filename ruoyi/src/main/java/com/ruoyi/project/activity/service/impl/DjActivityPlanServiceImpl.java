@@ -154,6 +154,7 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
                 list = null ;
                 break;
         }
+        djActivityPlanMapper.updateDjActivityPlan(djActivityPlan);
 
         if("2".equals(djActivityPlan.getStatus())){
             DjActivityArrange activityArrange = new DjActivityArrange();
