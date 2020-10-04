@@ -14,6 +14,11 @@ import com.ruoyi.project.activity.domain.DjActivityParams;
  */
 public interface IDjActivityDetailedService
 {
+
+    public Map<String,Integer[]> getActivityChartData(int year);
+
+    public int getActivityCount(DjActivityDetailed djActivityDetailed);
+
     /**
      * 查询活动详情
      *

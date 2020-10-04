@@ -59,6 +59,13 @@ public class DjPartyMemberController extends BaseController
     @Autowired
     private ISysDictDataService dictDataService;
 
+
+    @GetMapping("/getMemberCount")
+    public AjaxResult getMemberCount()
+    {
+        return AjaxResult.success(djPartyMemberService.getMemberCount());
+    }
+
     /**
      * 查询党员信息列表
      */

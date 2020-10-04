@@ -42,6 +42,11 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     private ISysPostService postService;
 
     @Override
+    public int getMemberCount(){
+        return djPartyMemberMapper.getMemberCount();
+    }
+
+    @Override
     public DjPartyMember selectPartyMemberById(Long memberId)
     {
         DjPartyMember partyMember = djPartyMemberMapper.selectDjPartyMemberById(memberId);

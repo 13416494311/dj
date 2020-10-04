@@ -39,6 +39,18 @@ public class DjPartyOrgController extends BaseController
     @Autowired
     private IDjPartyOrgService djPartyOrgService;
 
+
+    @GetMapping("/getOrgMemberChartData")
+    public AjaxResult getOrgMemberChartData()
+    {
+        return AjaxResult.success(djPartyOrgService.getOrgMemberChartData());
+    }
+
+    @GetMapping("/getOrgCount")
+    public AjaxResult getOrgCount()
+    {
+        return AjaxResult.success(djPartyOrgService.getOrgCount());
+    }
     /**
      * 查询党组织架构列表
      */

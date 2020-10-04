@@ -57,6 +57,50 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     private ISysDictDataService dictDataService;
 
 
+    public Map<String,Integer[]> getActivityChartData(int year){
+
+        Map<String,Integer[]> map = new HashMap<>();
+        Integer[] planData = getIntegerData(year,null);
+        map.put("planData", planData);
+        Integer[] actualData = getIntegerData(year,"5");
+        map.put("actualData", actualData);
+        Integer[] ingData = getIntegerData(year,"3");
+        map.put("ingData", ingData);
+        Integer[] otherData = new Integer[12];
+        for(int i=0;i<12;i++){
+            otherData[i]=planData[i]-actualData[i]-ingData[i];
+        }
+        map.put("otherData", otherData);
+        return map;
+    }
+
+    private Integer[] getIntegerData(int year,String status){
+        List<Map<String, Object>> list =djActivityDetailedMapper.getActivityChartData(year,status);
+        Integer[] data = new Integer[12];
+        list.stream().forEach(map->{
+            switch (map.get("month").toString()){
+                case "1":data[0]=StringUtils.isNull(map.get("count"))?0: Integer.parseInt(map.get("count").toString());break;
+                case "2":data[1]=StringUtils.isNull(map.get("count"))?0: Integer.parseInt(map.get("count").toString());break;
+                case "3":data[2]=StringUtils.isNull(map.get("count"))?0: Integer.parseInt(map.get("count").toString());break;
+                case "4":data[3]=StringUtils.isNull(map.get("count"))?0: Integer.parseInt(map.get("count").toString());break;
+                case "5":data[4]=StringUtils.isNull(map.get("count"))?0: Integer.parseInt(map.get("count").toString());break;
+                case "6":data[5]=StringUtils.isNull(map.get("count"))?0: Integer.parseInt(map.get("count").toString());break;
+                case "7":data[6]=StringUtils.isNull(map.get("count"))?0: Integer.parseInt(map.get("count").toString());break;
+                case "8":data[7]=StringUtils.isNull(map.get("count"))?0: Integer.parseInt(map.get("count").toString());break;
+                case "9":data[8]=StringUtils.isNull(map.get("count"))?0: Integer.parseInt(map.get("count").toString());break;
+                case "10":data[9]=StringUtils.isNull(map.get("count"))?0: Integer.parseInt(map.get("count").toString());break;
+                case "11":data[10]=StringUtils.isNull(map.get("count"))?0: Integer.parseInt(map.get("count").toString());break;
+                case "12":data[11]=StringUtils.isNull(map.get("count"))?0: Integer.parseInt(map.get("count").toString());break;
+                default:;break;
+            }
+        });
+        return data;
+    }
+
+    public int getActivityCount(DjActivityDetailed djActivityDetailed){
+        return djActivityDetailedMapper.getActivityCount(djActivityDetailed);
+    }
+
     /**
      * 查询活动详情
      *

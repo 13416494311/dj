@@ -1,6 +1,8 @@
 package com.ruoyi.project.party.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.project.party.domain.DjPartyOrg;
 import com.ruoyi.project.party.domain.PartyOrgTreeData;
 
@@ -12,6 +14,10 @@ import com.ruoyi.project.party.domain.PartyOrgTreeData;
  */
 public interface IDjPartyOrgService
 {
+    public List<Map<String,Object>> getOrgMemberChartData();
+
+    public int getOrgCount();
+
     /**
      * 查询党组织架构
      *

@@ -25,10 +25,10 @@ import Pagination from "@/components/Pagination";
 import Vue2OrgTree from 'vue2-org-tree';
 import 'vue2-org-tree/src/styles/org-tree.less';
 import VueAMap from 'vue-amap'
-
 import uploader from 'vue-simple-uploader'
-Vue.use(uploader)
+import echarts from "echarts";
 
+Vue.use(uploader)
 Vue.use(VueAMap)
 VueAMap.initAMapApiLoader({
   key: '8516d119353dc5890b59169dd05e28d6',
@@ -50,6 +50,7 @@ Vue.prototype.getNowFormatDate = getNowFormatDate
 Vue.prototype.getDateYearSub = getDateYearSub
 Vue.prototype.getTreeNode = getTreeNode
 Vue.prototype.uuid = uuid
+Vue.prototype.$echarts = echarts;
 
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });

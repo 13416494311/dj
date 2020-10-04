@@ -8,6 +8,22 @@ export function listPartyOrg(query) {
     params: query
   })
 }
+
+//
+export function getOrgCount() {
+  return request({
+    url: '/party/org/getOrgCount',
+    method: 'get'
+  })
+}
+
+export function getOrgMemberChartData() {
+  return request({
+    url: '/party/org/getOrgMemberChartData',
+    method: 'get'
+  })
+}
+
 // 查询党组织架构列表
 export function childrenListPartyOrg(partyOrgId) {
   return request({

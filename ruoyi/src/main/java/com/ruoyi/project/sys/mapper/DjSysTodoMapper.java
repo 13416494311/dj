@@ -2,6 +2,7 @@ package com.ruoyi.project.sys.mapper;
 
 import java.util.List;
 import com.ruoyi.project.sys.domain.DjSysTodo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 待办Mapper接口
@@ -11,6 +12,9 @@ import com.ruoyi.project.sys.domain.DjSysTodo;
  */
 public interface DjSysTodoMapper
 {
+
+    public int getTodoCount( DjSysTodo djSysTodo);
+
     /**
      * 查询待办
      *

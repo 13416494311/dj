@@ -13,6 +13,7 @@ import java.util.List;
 public interface IDjPartyMemberService
 {
 
+    public int getMemberCount();
     /**
      * 查询党员信息
      *

@@ -36,6 +36,13 @@ public class DjSysTodoController extends BaseController
     @Autowired
     private IDjSysTodoService djSysTodoService;
 
+    @GetMapping(value = "/getTodoCount/{status}")
+    public AjaxResult getTodoCount(@PathVariable("status") String status)
+    {
+        return AjaxResult.success(djSysTodoService.getTodoCount(status));
+    }
+
+
     /**
      * 查询待办列表
      */

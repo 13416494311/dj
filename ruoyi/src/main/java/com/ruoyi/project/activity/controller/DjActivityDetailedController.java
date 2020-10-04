@@ -59,6 +59,18 @@ public class DjActivityDetailedController extends BaseController
     @Autowired
     private ISysFileService sysFileService;
 
+    @GetMapping("/getActivityChartData/{year}")
+    public AjaxResult getActivityChartData(@PathVariable("year") int year)
+    {
+        return AjaxResult.success(djActivityDetailedService.getActivityChartData(year));
+    }
+
+    @GetMapping("/getActivityCount")
+    public AjaxResult getActivityCount(DjActivityDetailed djActivityDetailed)
+    {
+        return AjaxResult.success(djActivityDetailedService.getActivityCount(djActivityDetailed));
+    }
+
     /**
      * 查询活动详情列表
      */

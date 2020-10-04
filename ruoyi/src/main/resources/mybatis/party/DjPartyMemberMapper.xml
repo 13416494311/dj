@@ -376,4 +376,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select member_id, identity_card from dj_party_member where identity_card = #{identityCard}
 	</select>
 
+    <select id="getMemberCount" resultType="Integer">
+	    select count(1) from dj_party_member
+		where del_flag = '0'
+	</select>
+
 </mapper>

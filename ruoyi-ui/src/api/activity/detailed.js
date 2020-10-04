@@ -9,6 +9,22 @@ export function listDetailed(query) {
   })
 }
 
+//
+export function getActivityCount(query) {
+  return request({
+    url: '/activity/detailed/getActivityCount',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getActivityChartData(year) {
+  return request({
+    url: '/activity/detailed/getActivityChartData/'+year,
+    method: 'get',
+  })
+}
+
 // 查询活动详情列表
 export function listDetailedByParam(query) {
   return request({

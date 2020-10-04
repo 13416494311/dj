@@ -1,70 +1,113 @@
 <template>
-  <div class="app-container">
-    <el-tabs v-model="activeTab" @tab-click="handleTabClick">
-      <el-tab-pane label="待办" name="0">
-        <to-do ref="toDo"/>
-      </el-tab-pane>
-      <el-tab-pane label="已办" name="1">
-        <have-done ref="haveDone"/>
-      </el-tab-pane>
-      <el-tab-pane label="待阅" name="2">
-        <to-read ref="toRead"/>
-      </el-tab-pane>
-      <el-tab-pane label="已阅" name="3">
-        <have-read ref="haveRead"/>
-      </el-tab-pane>
-    </el-tabs>
+  <div class="dashboard-editor-container">
+
+    <panel-group />
+
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <div>
+        <span class="chart-title">活动召开情况</span>
+        <el-select v-model="year" style="float:right" >
+          <el-option
+            v-for="dict in cycleYearOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+        <el-divider></el-divider>
+        <activity-chart :chart-data="activityChartData" />
+      </div>
+    </el-row>
+
+
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <div class="chart-wrapper">
+        <span class="chart-title">各党组织党员比例</span>
+        <el-divider></el-divider>
+        <org-member-chart />
+      </div>
+    </el-row>
+
   </div>
 </template>
 
 <script>
-  import toDo from "./sys/todoType/toDo";
-  import haveDone from "./sys/todoType/haveDone";
-  import toRead from "./sys/todoType/toRead";
-  import haveRead from "./sys/todoType/haveRead";
+import PanelGroup from './dashboard/PanelGroup'
+import ActivityChart from './dashboard/ActivityChart'
+import OrgMemberChart from './dashboard/OrgMemberChart'
+import { getActivityChartData } from "@/api/activity/detailed";
 
-  export default {
-    name: "index",
-    components: { toDo,haveDone,toRead, haveRead},
-    data() {
-      return {
-        activeTab: "0",
-      };
-    },
-    mounted() {
-    },
-    created() {
-      this.init();
-    },
-    methods: {
-      init(){
-        setTimeout(()=>{
-          this.$refs.toDo.init("0"); //待办
-          this.$refs.haveDone.init("1"); //已办
-          this.$refs.toRead.init("2"); //待阅
-          this.$refs.haveRead.init("3"); //已阅
-        },10)
+export default {
+  name: 'Index',
+  components: {
+    PanelGroup,
+    ActivityChart,
+    OrgMemberChart,
+  },
+  data() {
+    return {
+      activityChartData: {
+        planData: [],
+        actualData: [],
+        ingData: [],
+        otherData: []
       },
-      handleTabClick(tab, event){
-        switch (tab.name) {
-          case "0":
-            this.$refs.toDo.init("0"); //待办
-            break;
-          case "1":
-            this.$refs.haveDone.init("1"); //已办
-            break;
-          case "2":
-            this.$refs.toRead.init("2"); //待阅
-            break;
-          case "3":
-            this.$refs.haveRead.init("3"); //已阅
-            break;
-          default:
-            break;
-        }
-      },
-
-
+      cycleYearOptions: [],
+      year:undefined,
     }
-  };
+  },
+  created(){
+    let year = new Date().getFullYear();
+    this.year = year;
+    this.setCycleYearOptions();
+    this.getActivityChartData();
+  },
+  methods: {
+    setCycleYearOptions() {
+      let year = this.year;
+      for (let i = 0; i <= (Number(year)-Number(2020)); i++) {
+        let cycleYearOption = {};
+        cycleYearOption.dictValue = Number(year) + Number(i);
+        cycleYearOption.dictLabel = Number(year) + Number(i) + "年";
+        this.cycleYearOptions.push(cycleYearOption);
+      }
+    },
+    getActivityChartData(){
+      let year = this.year;
+      getActivityChartData(year).then((response)=>{
+        this.activityChartData = response.data
+      })
+
+
+    },
+
+  }
+}
 </script>
+
+<style lang="scss" scoped>
+  .chart-title{
+    line-height: 18px;
+    color: rgba(0,0,0,0.45);
+    font-size: 16px;
+    margin-bottom: 12px;
+    font-weight: bold;
+  }
+.dashboard-editor-container {
+  padding: 32px;
+  background-color: rgb(240, 242, 245);
+  position: relative;
+
+  .chart-wrapper {
+    background: #fff;
+    padding: 16px 16px 0;
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width:1024px) {
+  .chart-wrapper {
+    padding: 8px;
+  }
+}
+</style>

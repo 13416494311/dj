@@ -3,6 +3,7 @@ package com.ruoyi.project.party.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.exception.CustomException;
@@ -30,6 +31,15 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
     @Autowired
     private DjPartyMemberServiceImpl partyMemberService;
 
+
+    @Override
+    public List<Map<String,Object>> getOrgMemberChartData(){
+        return djPartyOrgMapper.getOrgMemberChartData();
+    }
+    @Override
+    public int getOrgCount(){
+        return djPartyOrgMapper.getOrgCount();
+    }
     /**
      * 查询党组织架构
      *

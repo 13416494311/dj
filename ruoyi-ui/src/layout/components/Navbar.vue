@@ -25,6 +25,16 @@
 
       </template>
 
+      <el-tooltip content="待办事项" effect="dark" placement="bottom">
+        <router-link to="/sysTodo/index">
+          <div id="sys-todo" class="right-menu-item hover-effect">
+            <div class="el-icon-message-solid" style="font-size: 20px;vertical-align: -0.15em;"></div>
+            <el-badge class="todo-badge" :max="99" :value="todoCount" />
+          </div>
+        </router-link>
+      </el-tooltip>
+
+
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar">
@@ -57,6 +67,7 @@
   import RuoYiGit from '@/components/RuoYi/Git'
   import RuoYiDoc from '@/components/RuoYi/Doc'
   import store from "@/store";
+  import { getTodoCount } from "@/api/sys/todo";
 
   export default {
     components: {
@@ -70,7 +81,8 @@
     },
     data() {
       return {
-        userName:store.getters.name
+        userName:store.getters.name,
+        todoCount:0
       }
     },
     computed: {
@@ -91,7 +103,19 @@
         }
       }
     },
+    created(){
+      this.getTodoCount();
+    },
     methods: {
+      getTodoCount(){
+        this.todoCount = 0;
+        getTodoCount("0").then((respone)=>{
+          this.todoCount = respone.data;
+          getTodoCount("2").then((respone)=>{
+            this.todoCount = Number(respone.data)+Number(this.todoCount);
+          })
+        })
+      },
       toggleSideBar() {
         this.$store.dispatch('app/toggleSideBar')
       },
@@ -111,6 +135,11 @@
 </script>
 
 <style lang="scss" scoped>
+  .todo-badge{
+    margin-left: -10px;
+  }
+
+
   .user-name {
     font-size: 14px;
     float: right;

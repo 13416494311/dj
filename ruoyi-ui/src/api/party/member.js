@@ -9,6 +9,14 @@ export function listPartyMember(query) {
   })
 }
 
+//
+export function getMemberCount() {
+  return request({
+    url: '/party/member/getMemberCount',
+    method: 'get'
+  })
+}
+
 // 查询党员信息详细
 export function getPartyMember(memberId) {
   return request({

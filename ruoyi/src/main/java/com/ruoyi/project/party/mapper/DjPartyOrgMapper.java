@@ -1,6 +1,7 @@
 package com.ruoyi.project.party.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.project.party.domain.PartyOrgTreeData;
 import org.apache.ibatis.annotations.Param;
@@ -14,6 +15,10 @@ import com.ruoyi.project.party.domain.DjPartyOrg;
  */
 public interface DjPartyOrgMapper
 {
+
+    public List<Map<String,Object>> getOrgMemberChartData();
+
+    public int getOrgCount();
     /**
      * 查询党组织架构
      *

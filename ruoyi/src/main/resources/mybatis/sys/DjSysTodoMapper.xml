@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
         </where>
-        order by create_time desc ;
+        order by create_time desc
     </select>
 
     <select id="selectDjSysTodoById" parameterType="DjSysTodo"  resultMap="DjSysTodoResult">
@@ -127,5 +127,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{todoId}
         </foreach>
     </delete>
+
+    <select id="getTodoCount" resultType="Integer">
+	    select count(1)
+	    from dj_sys_todo
+		where del_flag = '0'
+        <if test="status != null  and status != ''"> and  status = #{status} </if>
+        <if test="userId != null ">and  user_id = #{userId} </if>
+	</select>
 
 </mapper>

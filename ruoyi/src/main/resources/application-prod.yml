@@ -13,6 +13,10 @@ ruoyi:
   # 获取ip地址开关
   addressEnabled: true
 
+app:
+  appId: A6044929225267
+  appKey: B535493D-6C7B-487A-CEF0-20F08DD32A74
+
 logback:
   logpath: /dj/logs
 

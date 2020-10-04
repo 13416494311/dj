@@ -12,6 +12,9 @@ import java.util.List;
  */
 public interface DjPartyMemberMapper
 {
+
+    public int getMemberCount();
+
     /**
      * 查询党员信息
      *

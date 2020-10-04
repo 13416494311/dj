@@ -1,54 +1,54 @@
 <template>
   <el-row :gutter="40" class="panel-group">
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
-        <div class="card-panel-icon-wrapper icon-people">
+      <div class="card-panel">
+        <div class="card-panel-icon-wrapper icon-tree">
+          <svg-icon icon-class="tree" class-name="card-panel-icon" />
+        </div>
+        <div class="card-panel-description">
+          <div class="card-panel-text">
+            党组织数
+          </div>
+          <count-to :start-val="0" :end-val="orgCount" :duration="2600" class="card-panel-num" />
+        </div>
+      </div>
+    </el-col>
+    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+      <div class="card-panel">
+        <div class="card-panel-icon-wrapper icon-peoples">
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            访客
+            党员人数
           </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="memberCount" :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('messages')">
-        <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="message" class-name="card-panel-icon" />
+      <div class="card-panel">
+        <div class="card-panel-icon-wrapper icon-date">
+          <svg-icon icon-class="date" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            消息
+            活动计划召开数
           </div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="planActivityCount" :duration="3200" class="card-panel-num" />
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('purchases')">
-        <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="money" class-name="card-panel-icon" />
+      <div class="card-panel">
+        <div class="card-panel-icon-wrapper icon-star">
+          <svg-icon icon-class="star" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            金额
+            活动实际召开数
           </div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel" @click="handleSetLineChartData('shoppings')">
-        <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon icon-class="shopping" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            订单
-          </div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="actualActivityCount" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -57,15 +57,49 @@
 
 <script>
 import CountTo from 'vue-count-to'
+import { getOrgCount } from "@/api/party/org";
+import { getMemberCount } from "@/api/party/member";
+import { getActivityCount } from "@/api/activity/detailed";
 
 export default {
   components: {
     CountTo
   },
-  methods: {
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
+  data() {
+    return {
+      orgCount: undefined,
+      memberCount: undefined,
+      planActivityCount: undefined,
+      actualActivityCount: undefined,
     }
+  },
+  created(){
+    this.getOrgCount();
+    this.getMemberCount();
+    this.getPlanActivityCount();
+    this.getActualActivityCount();
+  },
+  methods: {
+    getOrgCount(){
+      getOrgCount().then((response)=>{
+        this.orgCount = response.data;
+      })
+    },
+    getMemberCount(){
+      getMemberCount().then((response)=>{
+        this.memberCount = response.data;
+      })
+    },
+    getPlanActivityCount(){
+      getActivityCount({}).then((response)=>{
+        this.planActivityCount = response.data;
+      })
+    },
+    getActualActivityCount(){
+      getActivityCount({"status":5}).then((response)=>{
+        this.actualActivityCount = response.data;
+      })
+    },
   }
 }
 </script>
@@ -94,37 +128,37 @@ export default {
         color: #fff;
       }
 
-      .icon-people {
+      .icon-tree {
         background: #40c9c6;
       }
 
-      .icon-message {
+      .icon-peoples {
         background: #36a3f7;
       }
 
-      .icon-money {
-        background: #f4516c;
+      .icon-date {
+        background: #34bfa3;
       }
 
-      .icon-shopping {
-        background: #34bfa3
+      .icon-star {
+        background: #f4516c
       }
     }
 
-    .icon-people {
+    .icon-tree {
       color: #40c9c6;
     }
 
-    .icon-message {
+    .icon-peoples {
       color: #36a3f7;
     }
 
-    .icon-money {
-      color: #f4516c;
+    .icon-date {
+      color: #34bfa3
     }
 
-    .icon-shopping {
-      color: #34bfa3
+    .icon-star {
+      color: #f4516c;
     }
 
     .card-panel-icon-wrapper {

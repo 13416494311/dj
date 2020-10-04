@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ruoyi.project.activity.domain.DjActivityDetailed;
 import com.ruoyi.project.activity.domain.DjActivityParams;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 活动详情Mapper接口
@@ -14,6 +15,11 @@ import com.ruoyi.project.activity.domain.DjActivityParams;
  */
 public interface DjActivityDetailedMapper
 {
+
+    public List<Map<String, Object>> getActivityChartData(@Param("year") int year , @Param("status") String status);
+
+
+    public int getActivityCount(DjActivityDetailed djActivityDetailed);
     /**
      * 查询活动详情
      *

@@ -8,6 +8,13 @@ export function listTodo(query) {
     params: query
   })
 }
+// 查询待办详细
+export function getTodoCount(status) {
+  return request({
+    url: '/sys/todo/getTodoCount/' + status,
+    method: 'get'
+  })
+}
 
 // 查询待办详细
 export function getTodo(todoId) {

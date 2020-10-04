@@ -30,6 +30,14 @@ public class DjSysTodoServiceImpl implements IDjSysTodoService
     @Autowired
     private ISysUserService sysUserService;
 
+    public int getTodoCount(String status){
+        DjSysTodo djSysTodo = new DjSysTodo();
+        djSysTodo.setStatus(status);
+        if(!SecurityUtils.isAdmin(SecurityUtils.getLoginUser().getUser().getUserId())){
+            djSysTodo.setUserId(SecurityUtils.getLoginUser().getUser().getUserId());
+        }
+        return djSysTodoMapper.getTodoCount(djSysTodo);
+    }
     /**
      * 查询待办
      *

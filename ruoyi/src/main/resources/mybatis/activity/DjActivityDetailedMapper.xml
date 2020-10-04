@@ -253,4 +253,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+    <select id="getActivityCount" resultType="Integer">
+	    select count(1) from dj_activity_detailed
+		where del_flag = '0'
+        <if test="status != null  and status != 0"> and  status = #{status} </if>
+	</select>
+
+    <select id="getActivityChartData" resultType="java.util.HashMap">
+        SELECT
+        b.month,
+        a.count
+        FROM
+        ( SELECT YEAR ( plan_start_time ) AS year, MONTH ( plan_start_time ) AS month, count(1) AS count
+          FROM dj_activity_detailed
+          WHERE  YEAR ( plan_start_time )=  #{year} and del_flag = '0'
+                <if test="status != null  and status != ''"> and  status = #{status} </if>
+          GROUP BY YEAR ( plan_start_time ), MONTH ( plan_start_time ) ) a
+        RIGHT JOIN (
+          SELECT '1' as month from  DUAL UNION ALL
+          SELECT '2' as month from  DUAL UNION ALL
+          SELECT '3' as month from  DUAL UNION ALL
+          SELECT '4' as month from  DUAL UNION ALL
+          SELECT '5' as month from  DUAL UNION ALL
+          SELECT '6' as month from  DUAL UNION ALL
+          SELECT '7' as month from  DUAL UNION ALL
+          SELECT '8' as month from  DUAL UNION ALL
+          SELECT '9' as month from  DUAL UNION ALL
+          SELECT '10' as month from  DUAL UNION ALL
+          SELECT '11' as month from  DUAL UNION ALL
+          SELECT '12' as month from  DUAL ) b
+        on a.month = b.month
+
+    </select>
+
 </mapper>

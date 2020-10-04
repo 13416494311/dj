@@ -80,6 +80,20 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/sysTodo',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index',
+        component: (resolve) => require(['@/views/sys/todoType/indexTodo'], resolve),
+        name: 'indexTodo',
+        meta: { title: '待办事项', icon: 'user' }
+      }
+    ]
+  },
+  {
     path: '/dict',
     component: Layout,
     hidden: true,

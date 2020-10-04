@@ -11,6 +11,8 @@ import com.ruoyi.project.sys.domain.DjSysTodo;
  */
 public interface IDjSysTodoService
 {
+
+    public int getTodoCount(String status);
     /**
      * 查询待办
      *
