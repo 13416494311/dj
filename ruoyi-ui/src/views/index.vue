@@ -6,7 +6,9 @@
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <div>
         <span class="chart-title">活动召开情况</span>
-        <el-select v-model="year" style="float:right" @change="getActivityChartData">
+        <el-select v-model="year" style="float:right"
+                   @change="getActivityChartData"
+                   size="mini">
           <el-option
             v-for="dict in cycleYearOptions"
             :key="dict.dictValue"

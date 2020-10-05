@@ -671,7 +671,7 @@
   }
   .dot{
     position:absolute;
-    top:6px;
+    top:12px;
     width:15px;
     height:15px;
     border-radius:15px;
