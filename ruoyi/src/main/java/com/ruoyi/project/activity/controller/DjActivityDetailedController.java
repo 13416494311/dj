@@ -71,6 +71,14 @@ public class DjActivityDetailedController extends BaseController
         return AjaxResult.success(djActivityDetailedService.getActivityCount(djActivityDetailed));
     }
 
+    @GetMapping("/getActivityCountByStatus/{status}")
+    public AjaxResult getActivityCountByStatus(@PathVariable("status") String status)
+    {
+        DjActivityDetailed djActivityDetailed = new DjActivityDetailed();
+        djActivityDetailed.setStatus(status);
+        return AjaxResult.success(djActivityDetailedService.getActivityCount(djActivityDetailed));
+    }
+
     /**
      * 查询活动详情列表
      */

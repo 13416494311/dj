@@ -50,7 +50,7 @@ public class DjSysMessageController extends BaseController
     }
 
     @RequestMapping("/listForApp")
-    public AjaxResult listForApp(DjSysMessage djSysMessage)
+    public AjaxResult listForApp(@RequestBody DjSysMessage djSysMessage)
     {
         startPage();
         if(!SecurityUtils.isAdmin(SecurityUtils.getLoginUser().getUser().getUserId())){

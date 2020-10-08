@@ -331,7 +331,7 @@
             <i slot="default" class="el-icon-plus"></i>
             <div slot="file" slot-scope="{file}" style="display: inline">
               <div class="upload-file">
-              <img v-if="'jpeg,jpg,gif,png'.indexOf(file.name.split('.')[1]) != -1"
+              <img v-if="'jpeg,jpg,gif,png,JPEG,JPG,GIF,PNG'.indexOf(file.name.split('.')[1]) != -1"
                    class="el-upload-list__item-thumbnail"
 
                    :src="file.url" :alt="file.name"/>
@@ -339,7 +339,7 @@
                    class="el-upload-list__item-thumbnail"
                    :src="defaultFilePicUrl" :alt="file.name"/>
               <span class="el-upload-list__item-actions">
-                    <span v-if="'jpeg,jpg,gif,png'.indexOf(file.name.split('.')[1]) != -1"
+                    <span v-if="'jpeg,jpg,gif,png,JPEG,JPG,GIF,PNG'.indexOf(file.name.split('.')[1]) != -1"
                           class="el-upload-list__item-preview"
                           @click="handlePictureCardPreview(file)">
                        <i class="el-icon-zoom-in"></i>

@@ -157,7 +157,7 @@ mybatis:
 # PageHelper分页插件
 pagehelper:
   helperDialect: mysql
-  reasonable: true
+  reasonable: false
   supportMethodsArguments: true
   params: count=countSql
 
