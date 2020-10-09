@@ -134,7 +134,7 @@
           this.form = response.data;
           let params = eval('(' + this.form.urlParams + ')');
           params.todoId = this.form.todoId;
-          this.$router.push({path: this.form.urlPath, query: {"todoId": this.form.todoId}})
+          this.$router.push({path: "/"+this.form.urlPath, query: {"todoId": this.form.todoId}})
         });
       },
 
