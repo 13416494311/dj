@@ -1,5 +1,7 @@
 package com.ruoyi.common.utils;
 
+import com.ruoyi.common.constant.RoleConstans;
+import com.ruoyi.project.system.domain.SysRole;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -7,9 +9,11 @@ import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.framework.security.LoginUser;
 
+import java.util.List;
+
 /**
  * 安全服务工具类
- * 
+ *
  * @author ruoyi
  */
 public class SecurityUtils
@@ -79,12 +83,24 @@ public class SecurityUtils
 
     /**
      * 是否为管理员
-     * 
+     *
      * @param userId 用户ID
      * @return 结果
      */
     public static boolean isAdmin(Long userId)
     {
         return userId != null && 1L == userId;
+    }
+
+    public static boolean isPartyOrgAll(){
+        final boolean[] result = {false};
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        List<SysRole> roles= loginUser.getUser().getRoles();
+        roles.stream().forEach(sysRole -> {
+            if(RoleConstans.partyOrgAll.equals(sysRole.getRoleId().toString())){
+                result[0] = true;
+            }
+        });
+        return result[0];
     }
 }

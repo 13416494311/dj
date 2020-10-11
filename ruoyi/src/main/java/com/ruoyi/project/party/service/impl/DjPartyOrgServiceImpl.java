@@ -5,11 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.constant.RoleConstans;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.project.party.domain.PartyOrgTreeData;
+import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.domain.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,7 +79,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
     {
         SysUser sysUser = SecurityUtils.getLoginUser().getUser();
         List<DjPartyOrg> list =new ArrayList<DjPartyOrg>();
-        if(SecurityUtils.isAdmin(sysUser.getUserId())){
+        if(SecurityUtils.isAdmin(sysUser.getUserId())||SecurityUtils.isPartyOrgAll()){
             list = djPartyOrgMapper.selectDjPartyOrgList(djPartyOrg);
         }else{
             if(StringUtils.isNotNull(sysUser.getDjPartyMember())){
@@ -85,6 +88,8 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
         }
         return list;
     }
+
+
 
     private List<DjPartyOrg> selectPartyOrgLineByOrgId(Long partyOrgId){
         List<DjPartyOrg> list =new ArrayList<DjPartyOrg>();
@@ -279,7 +284,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
         List<PartyOrgTreeData> list = null;
         SysUser sysUser = SecurityUtils.getLoginUser().getUser();
         List<DjPartyOrg> partyOrgs =new ArrayList<DjPartyOrg>();
-        if(!SecurityUtils.isAdmin(sysUser.getUserId())){
+        if(!SecurityUtils.isAdmin(sysUser.getUserId())&&!SecurityUtils.isPartyOrgAll()){
             if(StringUtils.isNotNull(sysUser.getDjPartyMember())){
                 partyOrgs = selectPartyOrgLineByOrgId(sysUser.getDjPartyMember().getPartyOrgId());
                 list = getfatherNode(djPartyOrgMapper.getPartyOrgTreeData(partyOrgs));

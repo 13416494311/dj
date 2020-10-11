@@ -233,7 +233,7 @@
             <el-row>
               <el-col :span="24">
                 <el-form-item label="活动内容" prop="activityContent">
-                  <el-input :disabled="disabled || !disabled1  " v-model="form.activityContent"
+                  <el-input :disabled="disabled" v-model="form.activityContent"
                             type="textarea"
                             :autosize="{ minRows: 3, maxRows: 6}"
                             placeholder="请输入内容"/>
@@ -244,7 +244,7 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="活动计划召开时间" prop="activityPlanStartTime">
-                  <el-date-picker :disabled="disabled  || !disabled1 "
+                  <el-date-picker :disabled="disabled"
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.activityPlanStartTime"
@@ -257,7 +257,7 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="活动计划结束时间" prop="activityPlanEndTime">
-                  <el-date-picker :disabled="disabled  || !disabled1 "
+                  <el-date-picker :disabled="disabled"
                                   clearable
                                   size="small"
                                   style="width: 100%"
@@ -275,7 +275,7 @@
               <el-col :span="12">
                 <el-form-item label="活动实际开始时间" prop="actualStartTime"
                               :rules="[{required: actualRequired ,message: `请选择活动实际开始时间`,trigger: 'blur'}]">
-                  <el-date-picker :disabled="disabled  || !disabled3 "
+                  <el-date-picker :disabled="disabled"
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.actualStartTime"
@@ -289,7 +289,7 @@
               <el-col :span="12">
                 <el-form-item label="活动实际结束时间" prop="actualEndTime"
                               :rules="[{required: actualRequired,message: `请选择活动实际结束时间`,trigger: 'blur'}]">
-                  <el-date-picker :disabled="disabled || !disabled3"
+                  <el-date-picker :disabled="disabled"
                                   clearable size="small"
                                   style="width: 100%"
                                   v-model="form.actualEndTime"
