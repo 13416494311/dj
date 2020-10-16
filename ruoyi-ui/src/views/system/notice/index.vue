@@ -309,13 +309,13 @@ export default {
     getNoticeTypeByPath(){
       let path = this.$route.path;
       switch (path) {
-        case "/system/notice/1" :
+        case "/office/notice/1" :
           this.noticeType = "1";
           break;
-        case "/system/notice/2" :
+        case "/office/notice/2" :
           this.noticeType = "2";
           break;
-        case "/system/notice/3" :
+        case "/office/notice/3" :
           this.noticeType = "3";
           break;
         default:

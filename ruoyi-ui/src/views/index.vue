@@ -25,7 +25,7 @@
         <el-card shadow="always" style="margin-bottom: 20px;height: 330px;overflow-y:hidden">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">通知公告</span>
-            <router-link to="/system/notice/1">
+            <router-link to="/office/notice/1">
               <el-button
                 type="text"
                 icon="el-icon-plus"
@@ -46,7 +46,7 @@
         <el-card shadow="always" style="margin-bottom: 20px;height: 280px;overflow-y:hidden">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">制度办法</span>
-            <router-link to="/system/notice/2">
+            <router-link to="/office/notice/2">
               <el-button
                 type="text"
                 icon="el-icon-plus"
@@ -64,7 +64,7 @@
         <el-card shadow="always" style="margin-bottom: 20px;height: 280px;overflow-y:hidden">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">党建风采</span>
-            <router-link to="/system/notice/3">
+            <router-link to="/office/notice/3">
               <el-button
                 type="text"
                 icon="el-icon-plus"

@@ -64,6 +64,7 @@
         queryParams: {
           pageNum: 1,
           pageSize: 5,
+          status:0,
           noticeTitle: undefined,
           createBy: undefined,
           status: undefined,

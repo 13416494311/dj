@@ -12,6 +12,7 @@ ruoyi:
   profile: /dj/upload
   # 获取ip地址开关
   addressEnabled: true
+  envPre: /prod-api
 
 app:
   appId: A6044929225267

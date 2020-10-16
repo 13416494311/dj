@@ -12,6 +12,7 @@ ruoyi:
   profile: H:/ruoyi/uploadPath
   # 获取ip地址开关
   addressEnabled: true
+  envPre: /dev-api
 
 app:
   appId: A6044929225267

@@ -48,7 +48,6 @@
     text-indent:2em
   }
   img {
-    margin-left:2em ;
     width: 95%;
   }
   .m_xl_t {
