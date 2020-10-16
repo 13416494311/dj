@@ -142,12 +142,12 @@ export default {
     }
   }
 };
-</script> 
+</script>
 
 <style>
 .editor {
   line-height: normal !important;
-  height: 192px;
+  height: 550px;
 }
 .quill-img {
   display: none;

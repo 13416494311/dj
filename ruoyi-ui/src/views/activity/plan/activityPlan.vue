@@ -775,11 +775,7 @@
         return this.selectDictLabel(this.conveneCycleOptions, row.conveneCycle);
       },
       planStatusFormat(row, column) {
-        if(row.activitySources =='3'){
-          return "已发布";
-        }else{
-          return this.selectDictLabel(this.planStatusOptions, row.status);
-        }
+        return this.selectDictLabel(this.planStatusOptions, row.status);
       },
       // 取消按钮
       cancel() {

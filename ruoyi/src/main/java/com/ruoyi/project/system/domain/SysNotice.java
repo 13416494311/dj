@@ -2,15 +2,18 @@ package com.ruoyi.project.system.domain;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
 /**
  * 通知公告表 sys_notice
- * 
+ *
  * @author ruoyi
  */
+@Data
 public class SysNotice extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -18,6 +21,7 @@ public class SysNotice extends BaseEntity
     /** 公告ID */
     private Long noticeId;
 
+    private String noticeUuid;
     /** 公告标题 */
     private String noticeTitle;
 
@@ -38,6 +42,14 @@ public class SysNotice extends BaseEntity
     public void setNoticeId(Long noticeId)
     {
         this.noticeId = noticeId;
+    }
+
+    public String getNoticeUuid() {
+        return noticeUuid;
+    }
+
+    public void setNoticeUuid(String noticeUuid) {
+        this.noticeUuid = noticeUuid;
     }
 
     public void setNoticeTitle(String noticeTitle)

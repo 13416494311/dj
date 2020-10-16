@@ -35,6 +35,7 @@
                   <el-button
                     size="small"
                     type="text"
+                    icon="el-icon-paperclip"
                     @click="handleDownload(item)"
                     style="float:left;"
                   >{{item.fileName}}

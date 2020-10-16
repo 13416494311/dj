@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '党建管理系统',
+      title: '智慧党建系统',
       logo: logoImg
     }
   }
@@ -48,7 +48,7 @@ export default {
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background: #962a2d;
+  background: #A51010;
   text-align: center;
   overflow: hidden;
 

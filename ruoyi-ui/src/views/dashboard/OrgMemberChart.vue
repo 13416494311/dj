@@ -79,7 +79,7 @@ export default {
               center: ['40%', '50%'],
               data: data,
               animationEasing: 'cubicInOut',
-              animationDuration: 2600
+              guan: 2600
             }
           ]
 

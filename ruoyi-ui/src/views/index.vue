@@ -1,85 +1,110 @@
 <template>
-  <div class="dashboard-editor-container">
+  <div class="dashboard-editor-container" style="padding-top: 10px;">
 
     <panel-group />
-
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <div>
-        <span class="chart-title">活动召开情况</span>
-        <el-select v-model="year" style="float:right"
-                   @change="getActivityChartData"
-                   size="mini">
-          <el-option
-            v-for="dict in cycleYearOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          ></el-option>
-        </el-select>
-        <el-divider></el-divider>
-        <activity-chart :chart-data="activityChartData" />
-      </div>
+    <el-row :gutter="20">
+      <el-col :span="12" :xs="24">
+        <el-card shadow="always" style="margin-bottom: 20px; height: 330px;overflow-y:hidden ">
+          <div slot="header" style="height: 25px">
+            <span style="font-weight: bold;font-size: 16px">待办事项</span>
+            <router-link to="/sysTodo/index">
+              <el-button
+                type="text"
+                icon="el-icon-plus"
+                size="small"
+                @click=""
+                style="float: right;margin-top: -5px"
+              >更多
+              </el-button>
+            </router-link>
+          </div>
+          <todo-index ref="todoIndex"></todo-index>
+        </el-card>
+      </el-col>
+      <el-col :span="12" :xs="24">
+        <el-card shadow="always" style="margin-bottom: 20px;height: 330px;overflow-y:hidden">
+          <div slot="header" style="height: 25px">
+            <span style="font-weight: bold;font-size: 16px">通知公告</span>
+            <router-link to="/system/notice/1">
+              <el-button
+                type="text"
+                icon="el-icon-plus"
+                size="small"
+                @click=""
+                style="float: right;margin-top: -5px"
+              >更多
+              </el-button>
+            </router-link>
+          </div>
+          <notice-table noticeType="1"></notice-table>
+        </el-card>
+      </el-col>
     </el-row>
 
-
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <div class="chart-wrapper">
-        <span class="chart-title">各党组织党员比例</span>
-        <el-divider></el-divider>
-        <org-member-chart />
-      </div>
+    <el-row :gutter="20">
+      <el-col :span="12" :xs="24">
+        <el-card shadow="always" style="margin-bottom: 20px;height: 280px;overflow-y:hidden">
+          <div slot="header" style="height: 25px">
+            <span style="font-weight: bold;font-size: 16px">制度办法</span>
+            <router-link to="/system/notice/2">
+              <el-button
+                type="text"
+                icon="el-icon-plus"
+                size="small"
+                @click=""
+                style="float: right;margin-top: -5px"
+              >更多
+              </el-button>
+            </router-link>
+          </div>
+          <notice-table noticeType="2"></notice-table>
+        </el-card>
+      </el-col>
+      <el-col :span="12" :xs="24">
+        <el-card shadow="always" style="margin-bottom: 20px;height: 280px;overflow-y:hidden">
+          <div slot="header" style="height: 25px">
+            <span style="font-weight: bold;font-size: 16px">党建风采</span>
+            <router-link to="/system/notice/3">
+              <el-button
+                type="text"
+                icon="el-icon-plus"
+                size="small"
+                @click=""
+                style="float: right;margin-top: -5px"
+              >更多
+              </el-button>
+            </router-link>
+          </div>
+          <notice-table noticeType="3"></notice-table>
+        </el-card>
+      </el-col>
     </el-row>
+
 
   </div>
 </template>
 
 <script>
 import PanelGroup from './dashboard/PanelGroup'
-import ActivityChart from './dashboard/ActivityChart'
-import OrgMemberChart from './dashboard/OrgMemberChart'
-import { getActivityChartData } from "@/api/activity/detailed";
+import TodoIndex from './sys/todoIndex/todoIndex'
+import NoticeTable from './system/notice/noticeTable'
 
 export default {
   name: 'Index',
   components: {
     PanelGroup,
-    ActivityChart,
-    OrgMemberChart,
+    TodoIndex,
+    NoticeTable
   },
   data() {
     return {
-      activityChartData: {
-        planData: [],
-        actualData: [],
-        ingData: [],
-        otherData: []
-      },
-      cycleYearOptions: [],
-      year:undefined,
     }
   },
   created(){
-    let year = new Date().getFullYear();
-    this.year = year;
-    this.setCycleYearOptions();
-    this.getActivityChartData();
+
   },
   methods: {
-    setCycleYearOptions() {
-      let year = this.year;
-      for (let i = 0; i <= (Number(year)-Number(2020)); i++) {
-        let cycleYearOption = {};
-        cycleYearOption.dictValue = Number(year) + Number(i);
-        cycleYearOption.dictLabel = Number(year) + Number(i) + "年";
-        this.cycleYearOptions.push(cycleYearOption);
-      }
-    },
-    getActivityChartData(){
-      let year = this.year;
-      getActivityChartData(year).then((response)=>{
-        this.activityChartData = response.data
-      })
-    },
+
 
   }
 }

@@ -1,7 +1,10 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">党建管理系统</h3>
+      <div style="width: 100%;height: 64px;text-align: center;margin-bottom: 20px;">
+        <img :src="logo" style="width: 64px;height: 64px;float: left"/>
+        <div class="h3">中铁三局广东公司智慧党建系统</div>
+      </div>
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
@@ -57,11 +60,13 @@
 import { getCodeImg } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from '@/utils/jsencrypt'
+import logo from '@/assets/logo/logo1.png'
 
 export default {
   name: "Login",
   data() {
     return {
+      logo,
       codeUrl: "",
       cookiePassword: "",
       loginForm: {
@@ -144,9 +149,9 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 .login {
-  /*display: flex;
+  display: flex;
   justify-content: center;
-  align-items: center;*/
+  align-items: center;
   height: 100%;
   width: 100%;
   background: url("../assets/image/login_bg.jpg") no-repeat;
@@ -159,12 +164,9 @@ export default {
 }
 
 .login-form {
-  position: absolute;
-  left: 60%;
-  top:25%;
   border-radius: 6px;
   background: #ffffff;
-  width: 400px;
+  width: 450px;
   padding: 25px 25px 5px 25px;
   .el-input {
     height: 38px;
@@ -204,4 +206,11 @@ export default {
   font-size: 12px;
   letter-spacing: 1px;
 }
+  .h3{
+    display: inline;
+    font-size: 20px;
+    font-weight: bold;
+    color: #707070;
+    line-height:64px;
+  }
 </style>

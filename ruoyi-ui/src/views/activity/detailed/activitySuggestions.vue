@@ -10,8 +10,9 @@
           <div v-for="(item, index) in scope.row.sysFiles" :key="index">
             <el-row>
               <el-button
-                size="mini"
+                size="small"
                 type="text"
+                icon="el-icon-paperclip"
                 @click="handleDownload(item)"
                 style="float:left;"
               >{{item.fileName}}
