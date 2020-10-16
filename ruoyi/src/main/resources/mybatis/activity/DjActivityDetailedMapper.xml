@@ -89,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         on arrange.plan_uuid = detailed.plan_uuid  and arrange.party_org_id = detailed.party_org_id
         left join dj_activity_plan plan on arrange.plan_uuid = plan.plan_uuid
         <where>
-            arrange.status ='2'
+            arrange.status ='2' and arrange.del_flag = '0'
             <if test="activityTheme != null  and activityTheme != ''">
                 and plan.activity_theme like concat('%', #{activityTheme}, '%')
             </if>

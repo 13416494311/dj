@@ -254,6 +254,9 @@ public class DjActivityArrangeServiceImpl implements IDjActivityArrangeService
     @Override
     public int deleteDjActivityArrangeById(Long id)
     {
-        return djActivityArrangeMapper.deleteDjActivityArrangeById(id);
+        DjActivityArrange djActivityArrange =new DjActivityArrange();
+        djActivityArrange.setId(id);
+        djActivityArrange.setDelFlag("1");
+        return djActivityArrangeMapper.updateDjActivityArrange(djActivityArrange);
     }
 }

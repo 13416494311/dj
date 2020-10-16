@@ -119,10 +119,10 @@ public class DjActivityArrangeController extends BaseController
      * 删除活动安排
      */
     @Log(title = "活动安排", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+	@DeleteMapping("/{id}")
+    public AjaxResult remove(@PathVariable Long id)
     {
-        return toAjax(djActivityArrangeService.deleteDjActivityArrangeByIds(ids));
+        return toAjax(djActivityArrangeService.deleteDjActivityArrangeById(id));
     }
 
 

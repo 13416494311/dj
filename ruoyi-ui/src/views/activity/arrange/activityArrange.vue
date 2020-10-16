@@ -452,6 +452,7 @@
       getList() {
         this.arrangeList=[];
         this.loading = true;
+        this.queryParams.delFlag='0';
         listArrangeByParam(this.queryParams).then(response => {
           this.arrangeList = response.rows;
           this.total = response.total;

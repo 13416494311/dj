@@ -52,6 +52,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partyOrgId != null  and partyOrgId != ''">
                 and arrange.party_org_id = #{partyOrgId}
             </if>
+            <if test="delFlag != null  and delFlag != ''">
+                and arrange.del_flag = #{delFlag}
+            </if>
             ${dataScope}
         </where>
     </select>

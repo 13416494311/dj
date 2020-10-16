@@ -391,10 +391,9 @@
                   <el-table-column label="姓名" align="center" prop="djPartyMember.memberName"/>
                   <el-table-column label="所属党组织" align="center" prop="djPartyMember.djPartyOrg.partyOrgFullName"/>
                   <el-table-column label="联系方式" align="center" prop="djPartyMember.mobile"/>
-                  <!--<el-table-column v-if="!disabled" label="操作" align="center" class-name="small-padding fixed-width">
+                  <el-table-column v-if="!disabled" label="操作" align="center" class-name="small-padding fixed-width">
                     <template slot-scope="scope">
                       <el-button
-                        v-if="scope.row.type=='2'"
                         size="small"
                         type="text"
                         icon="el-icon-delete"
@@ -402,7 +401,7 @@
                       >删除
                       </el-button>
                     </template>
-                  </el-table-column>-->
+                  </el-table-column>
                 </el-table>
               </el-tab-pane>
 

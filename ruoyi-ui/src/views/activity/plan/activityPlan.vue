@@ -68,6 +68,15 @@
             v-hasPermi="['activity:plan:remove']"
           >删除
           </el-button>
+          <el-button
+            v-if="scope.row.status == '2'"
+            size="small"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleCancel(scope.row)"
+            v-hasPermi="['activity:plan:edit']"
+          >取消
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -281,7 +290,7 @@
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">计划参与党组织</span>
             <el-button
-              v-if="!disabled && this.activitySources =='3'"
+              v-if="!disabled && this.activitySources =='3'&&!cancelDisabled"
               type="primary"
               icon="el-icon-plus"
               size="mini"
@@ -301,14 +310,25 @@
               </template>
             </el-table-column>
             <el-table-column label="党组织简介" align="center" prop="djPartyOrg.description"/>
+            <el-table-column label="计划状态" align="center" prop="delFlag"
+                             :formatter="delFlagFormat"/>
             <el-table-column  v-if="!disabled && this.form.activitySources =='3'" label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
+                  v-if="!cancelDisabled"
                   @click="handleArrangeDelete(scope.row)"
                 >删除
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-delete"
+                  v-if="cancelDisabled"
+                  @click="handleArrangeCancel(scope.row)"
+                >取消
                 </el-button>
               </template>
             </el-table-column>
@@ -373,10 +393,10 @@
 
       </el-form>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button v-show="!disabled  " type="primary" @click="submitForm(1)">保 存</el-button>
-        <el-button v-show="!disabled && this.activitySources =='1'" type="primary"
+        <el-button v-show="!disabled &&!cancelDisabled " type="primary" @click="submitForm(1)">保 存</el-button>
+        <el-button v-show="!disabled && this.activitySources =='1'&&!cancelDisabled" type="primary"
                    @click="submitForm(2)">备 案</el-button>
-        <el-button v-show="!disabled&& (this.activitySources =='2'||this.activitySources =='3')" type="primary"
+        <el-button v-show="!disabled&& (this.activitySources =='2'||this.activitySources =='3')&&!cancelDisabled" type="primary"
                    @click="submitForm(2)">发 布</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -434,6 +454,7 @@
         // 周期 （月份）字典
         cycleYearMonthUnitOptions: [],
         orgTypeOptions: [],
+        delFlagOptions: [],
         // 周期 （季度）字典
         cycleYearQuarterUnitOptions: [],
         // 查询参数
@@ -483,6 +504,7 @@
         dialogImageUrl: '',
         dialogVisible: false,
         disabled: false,
+        cancelDisabled:false,
         fileList: [],
         defaultFilePicUrl: undefined,
 
@@ -518,6 +540,9 @@
       this.getDicts("org_type").then(response => {
         this.orgTypeOptions = response.data;
       });
+      this.getDicts("del_flag").then(response => {
+        this.delFlagOptions = response.data;
+      });
       this.getDicts("activity_type").then(response => {
         this.activityTypeOptions = response.data;
       });
@@ -539,6 +564,9 @@
     methods: {
       orgTypeFormat(row, column) {
         return this.selectDictLabel(this.orgTypeOptions, row.djPartyOrg.orgType);
+      },
+      delFlagFormat(row, column) {
+        return this.selectDictLabel(this.delFlagOptions, row.delFlag);
       },
       openOrgTransfer() {
         this.$refs.orgTransfer.open = true;
@@ -762,6 +790,20 @@
         }).catch(function () {
         });
       },
+      handleArrangeCancel(row){
+        const ids = row.id ;
+        this.$confirm('是否确认取消该党组织计划活动?', "警告", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(function () {
+          return delArrange(ids);
+        }).then(() => {
+          this.getJoinOrgList();
+          this.msgSuccess("删除成功");
+        }).catch(function () {
+        });
+      },
       // 活动来源字典翻译
       activitySourcesFormat(row, column) {
         return this.selectDictLabel(this.activitySourcesOptions, row.activitySources);
@@ -808,6 +850,7 @@
         };
         this.resetForm("form");
         this.show =true ;
+        this.cancelDisabled =false ;
       },
       /** 搜索按钮操作 */
       handleQuery() {
@@ -895,6 +938,21 @@
           this.getJoinOrgList();
           this.getFileList();
         });
+      },
+      handleCancel(row){
+        this.reset();
+        this.disabled = false;
+        const planId = row.planId || this.ids
+        getPlan(planId).then(response => {
+          this.form = response.data;
+          this.open = true;
+          this.title = "修改活动计划";
+        }).then(() => {
+          this.conveneCycleChange();
+          this.getJoinOrgList();
+          this.getFileList();
+        });
+        this.cancelDisabled = true;
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
