@@ -33,7 +33,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['memberFlow:memberFlow:add']"
+          v-hasPermi="['party:memberFlow:add']"
         >新增
         </el-button>
       </el-col>
@@ -45,6 +45,11 @@
       <el-table-column label="流动类型" align="center" prop="flowType" :formatter="flowTypeFormat"/>
       <el-table-column label="流动原因" align="center" prop="flowReasons"/>
       <el-table-column label="联系方式" align="center" prop="flowContact"/>
+      <el-table-column label="创建时间" align="center" prop="createTime">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -59,7 +64,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['memberFlow:memberFlow:edit']"
+            v-hasPermi="['party:memberFlow:edit']"
           >修改
           </el-button>
         </template>

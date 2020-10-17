@@ -67,7 +67,6 @@
           status:0,
           noticeTitle: undefined,
           createBy: undefined,
-          status: undefined,
         },
         fileList: [],
       };
