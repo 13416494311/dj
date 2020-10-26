@@ -81,6 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''"> and detailed.status = #{status}</if>
             ${dataScope}
         </where>
+        order by detailed.plan_start_time desc
     </select>
 
     <select id="selectDetailedListByParam" parameterType="DjActivityParams" resultMap="DjActivityDetailedResult">
@@ -104,6 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
             ${dataScope}
         </where>
+        order by detailed.plan_start_time desc
     </select>
 
     <select id="selectDjActivityDetailedById" parameterType="Long" resultMap="DjActivityDetailedResult">

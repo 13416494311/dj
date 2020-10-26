@@ -85,6 +85,7 @@
             <if test="status != null  and status != ''">and p.status = #{status}</if>
             ${dataScope}
         </where>
+        order by p.create_time desc
     </select>
 
     <select id="selectDjActivityPlanById" parameterType="Long" resultMap="DjActivityPlanResult">

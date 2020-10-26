@@ -39,6 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="venue != null  and venue != ''"> and arrange.venue = #{venue}</if>
             <if test="status != null  and status != ''"> and arrange.status = #{status}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectArrangeListByParam" parameterType="DjActivityParams" resultMap="DjActivityArrangeResult">
@@ -57,6 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
             ${dataScope}
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectDjActivityArrangeById" parameterType="Long" resultMap="DjActivityArrangeResult">

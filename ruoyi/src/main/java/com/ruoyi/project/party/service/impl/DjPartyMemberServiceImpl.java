@@ -133,7 +133,14 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     public List<DjPartyMember> selectPartyMemberList(DjPartyMember djPartyMember)
     {
 
-        List<DjPartyMember> list = djPartyMemberMapper.selectPartyMemberList(djPartyMember);
+        List<DjPartyMember> list = new ArrayList<DjPartyMember>();
+        SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+        if(SecurityUtils.isAdmin(sysUser.getUserId())||SecurityUtils.isPartyOrgAll()){
+            list = djPartyMemberMapper.selectDjPartyMemberList(djPartyMember);
+        }else{
+            djPartyMember.setPartyOrgId(sysUser.getDjPartyMember().getPartyOrgId());
+            list = djPartyMemberMapper.selectPartyMemberList(djPartyMember);
+        }
         list.stream().forEach( member ->{
             if(member.getPartyOrgId()!=null){
                 member.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(member.getPartyOrgId()));

@@ -8,6 +8,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 通知公告表 sys_notice
  *
@@ -33,6 +35,8 @@ public class SysNotice extends BaseEntity
 
     /** 公告状态（0正常 1关闭） */
     private String status;
+
+    private List<SysFile> fileList ;
 
     public Long getNoticeId()
     {
@@ -92,6 +96,14 @@ public class SysNotice extends BaseEntity
     public String getStatus()
     {
         return status;
+    }
+
+    public List<SysFile> getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(List<SysFile> fileList) {
+        this.fileList = fileList;
     }
 
     @Override

@@ -3,6 +3,8 @@ package com.ruoyi.project.system.service.impl;
 import java.util.List;
 
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.system.domain.SysFile;
+import com.ruoyi.project.system.service.ISysFileService;
 import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class SysNoticeServiceImpl implements ISysNoticeService
     private SysNoticeMapper noticeMapper;
     @Autowired
     private ISysUserService sysUserService;
+    @Autowired
+    private ISysFileService sysFileService;
 
     /**
      * 查询公告信息
@@ -32,7 +36,13 @@ public class SysNoticeServiceImpl implements ISysNoticeService
     @Override
     public SysNotice selectNoticeById(Long noticeId)
     {
-        return noticeMapper.selectNoticeById(noticeId);
+        SysNotice notice = noticeMapper.selectNoticeById(noticeId);
+
+        SysFile sysFile = new SysFile();
+        sysFile.setUuid(notice.getNoticeUuid());
+        notice.setFileList(sysFileService.selectSysFileList(sysFile));
+
+        return notice;
     }
 
     /**

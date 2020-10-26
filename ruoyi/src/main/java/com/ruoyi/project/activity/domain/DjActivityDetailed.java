@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.domain.DjPartyOrg;
+import com.ruoyi.project.system.domain.SysFile;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -124,6 +125,17 @@ public class DjActivityDetailed extends BaseEntity
     private String delFlag;
 
     private List<DjActivityMember> djActivityMemberList;
+
+    //活动纪要
+    private List<DjActivitySummary> summaryList;
+    //活动决议
+    private List<DjActivityResolution> resolutionList;
+    //活动图片
+    private List<SysFile> picList;
+    //活动资料
+    private List<SysFile> fileList;
+    //活动视频
+    private List<SysFile> videoList;
 
 
 }

@@ -74,7 +74,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleCancel(scope.row)"
-            v-hasPermi="['activity:plan:edit']"
+            v-hasPermi="['activity:plan:cancel']"
           >取消
           </el-button>
         </template>

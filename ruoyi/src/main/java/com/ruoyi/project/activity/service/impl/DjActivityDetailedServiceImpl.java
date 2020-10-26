@@ -9,25 +9,22 @@ import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.project.activity.domain.DjActivityMember;
-import com.ruoyi.project.activity.domain.DjActivityParams;
-import com.ruoyi.project.activity.domain.DjActivityPlan;
-import com.ruoyi.project.activity.service.IDjActivityMemberService;
-import com.ruoyi.project.activity.service.IDjActivityPlanService;
+import com.ruoyi.project.activity.domain.*;
+import com.ruoyi.project.activity.service.*;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
 import com.ruoyi.project.sys.domain.DjSysMessage;
 import com.ruoyi.project.sys.domain.DjSysTodo;
 import com.ruoyi.project.sys.service.IDjSysMessageService;
 import com.ruoyi.project.sys.service.IDjSysTodoService;
+import com.ruoyi.project.system.domain.SysFile;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.ISysDictDataService;
+import com.ruoyi.project.system.service.ISysFileService;
 import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivityDetailedMapper;
-import com.ruoyi.project.activity.domain.DjActivityDetailed;
-import com.ruoyi.project.activity.service.IDjActivityDetailedService;
 
 /**
  * 活动详情Service业务层处理
@@ -55,6 +52,12 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     private IDjSysMessageService sysMessageService;
     @Autowired
     private ISysDictDataService dictDataService;
+    @Autowired
+    private ISysFileService sysFileService;
+    @Autowired
+    private IDjActivitySummaryService summaryService;
+    @Autowired
+    private IDjActivityResolutionService resolutionService;
 
 
     public Map<String,Integer[]> getActivityChartData(int year){
@@ -122,6 +125,27 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
         DjActivityMember djActivityMember = new DjActivityMember();
         djActivityMember.setDetailedUuid(detailed.getDetailedUuid());
         detailed.setDjActivityMemberList(djActivityMemberService.selectDjActivityMemberList(djActivityMember));
+
+        DjActivitySummary summary = new DjActivitySummary();
+        summary.setDetailedUuid(detailed.getDetailedUuid());
+        detailed.setSummaryList(summaryService.selectDjActivitySummaryList(summary));
+
+        DjActivityResolution resolution = new DjActivityResolution();
+        resolution.setDetailedUuid(detailed.getDetailedUuid());
+        detailed.setResolutionList(resolutionService.selectDjActivityResolutionList(resolution));
+
+
+        SysFile sysFile = new SysFile();
+        sysFile.setUuid(detailed.getDetailedUuid());
+
+        sysFile.setFileTypeValue("pic");
+        detailed.setPicList(sysFileService.selectSysFileList(sysFile));
+
+        sysFile.setFileTypeValue("file");
+        detailed.setFileList(sysFileService.selectSysFileList(sysFile));
+
+        sysFile.setFileTypeValue("video");
+        detailed.setVideoList(sysFileService.selectSysFileList(sysFile));
 
         return detailed;
     }

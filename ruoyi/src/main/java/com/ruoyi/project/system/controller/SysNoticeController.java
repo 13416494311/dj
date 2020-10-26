@@ -45,6 +45,15 @@ public class SysNoticeController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('system:notice:list')")
+    @PostMapping("/listForApp")
+    public AjaxResult listByParamForApp(@RequestBody SysNotice notice)
+    {
+        startPage();
+        List<SysNotice> list = noticeService.selectNoticeList(notice);
+        return AjaxResult.success(list);
+    }
+
     /**
      * 根据通知公告编号获取详细信息
      */

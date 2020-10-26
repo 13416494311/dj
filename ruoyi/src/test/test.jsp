@@ -7,175 +7,158 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>AUI快速完成布局</title>
     <link rel="stylesheet" type="text/css" href="../css/aui/aui.css"/>
+    <style type="text/css">
+        .aui-active{
+            color: red !important;
+        }
+    </style>
 </head>
-<style>
-    html,
-    body {
-
-    }
-
-</style>
 <body>
-<section class="aui-content">
-    <div class="aui-card-list">
-        <div class="aui-card-list-header">
-            各党组织党员比例
-        </div>
-        <div class="aui-card-list-content" id="orgMemberChart" style="width: 100%;height:400px;">
+<header class="aui-bar aui-bar-nav aui-bg-danger" id="aui-header">
+    <a class="aui-btn aui-pull-left" >
+        <span></span>
+    </a>
+    <div class="aui-title" id="headerTitle"></div>
+</header>
 
-        </div>
-
+<footer class="aui-bar aui-bar-tab" id="footer">
+    <div id="hometabbar" class="aui-bar-tab-item aui-active" tapmode onclick="randomSwitchBtn(this,'首页',0)">
+        <i class="aui-iconfont aui-icon-home"></i>
+        <div class="aui-bar-tab-label">首页</div>
     </div>
-
-    <div class="aui-card-list">
-        <div class="aui-card-list-header">
-            活动召开情况
-        </div>
-        <div class="aui-card-list-content" id="activityChart" style="width: 100%;height:400px;">
-
-        </div>
-
+    <%--<div id="worktabbar" class="aui-bar-tab-item" tapmode onclick="randomSwitchBtn(this,'组织生活',1)">
+        <i class="aui-iconfont aui-icon-like"></i>
+        <div class="aui-bar-tab-label">智慧党建</div>
+    </div>--%>
+    <div id="messagetabbar" class="aui-bar-tab-item" tapmode onclick="randomSwitchBtn(this,'消息',2)">
+        <i class="aui-iconfont aui-icon-comment"></i>
+        <div class="aui-bar-tab-label">消息</div>
     </div>
-</section>
-
+    <div id="mytabbar" class="aui-bar-tab-item" tapmode onclick="randomSwitchBtn(this,'我是党员',3)">
+        <i class="aui-iconfont aui-icon-my"></i>
+        <div class="aui-bar-tab-label">个人中心</div>
+    </div>
+</footer>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
-<script type="text/javascript" src="../script/request.js"></script>
-<script type="text/javascript" src="../script/echarts/echarts.js"></script>
 
 <script type="text/javascript">
-
+    var push;
+    var header ,footer;
+    var headerH ,footerH;
     apiready = function () {
         api.parseTapmode();
-        //
-        initActivityChart();
-        //各党组织党员比例  饼图
-        initOrgMemberChart();
+        push = api.require('push');
+
+        header = $api.byId('aui-header'); // 获取 header 标签元素
+
+        $api.fixStatusBar(header);
+        headerH = $api.fixStatusBar(header);
+
+        footer = $api.dom('footer'); // 获取 footer 标签元素
+        footerH = $api.fixTabBar(footer);
+
+
+        fnBindPush();
+        fnListenerPush();
+        fnOpenMainCenterFrameGroup();
+    }
+
+    function fnBindPush() {
+        push.bind({
+            userName: $api.getStorage('loginUser').nickName,
+            userId: $api.getStorage('loginUser').userId
+        }, function (ret, err) {
+
+        });
 
     }
 
-    function initOrgMemberChart() {
-        var orgMemberChart = echarts.init($api.byId('orgMemberChart'));
-        fnPost('/party/org/getOrgMemberChartData', {}, 'get', true, function (ret, err) {
-            if (ret.code == '200') {
-                let data = ret.data;
-                var option = {
+    //监听消息  监听不了通知但是接受到消息之后 可以显示到通知
+    function fnListenerPush() {
+        push.setListener(function (ret, err) {
+            if (ret) {
+                console.log(JSON.stringify(ret));
+                //var message = $api.byId('message');
+                //message.innerHTML = '1';
 
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: '{a} <br/>{b} : {c} ({d}%)'
-                    },
-                    toolbox: {
-                        show: true,
-                        feature: {
-                            dataView: {show: true, readOnly: false},
-                            saveAsImage: {show: true}
-                        }
-                    },
-                    series: [
-                        {
-                            name: '各党组织党员人数',
-                            type: 'pie',
-                            radius: '70%',
-                            center: ['50%', '50%'],
-                            data: data,
-                            animationEasing: 'cubicInOut',
-                            animationDuration: 2600
-                        }
-                    ]
-                };
-                orgMemberChart.setOption(option);
-            } else {
-                api.toast({
-                    msg: '网络错误',
-                    duration: 2000,
-                    location: 'bottom'
+                api.notification({
+                    notify: {
+                        title: '【系统消息】',
+                        content: ret.data
+                    }
+                });
+
+                api.setAppIconBadge({
+                    badge: 1
                 });
             }
         });
     }
 
-    function initActivityChart() {
-        var activityChart = echarts.init($api.byId('activityChart'));
-        fnPost('/party/org/getOrgMemberChartData', {}, 'get', true, function (ret, err) {
-            if (ret.code == '200') {
-                let data = ret.data;
-                var option = {
-                    color: ['#45dedb', '#36a3f7', '#ff8e2c', '#f4516c'],
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {
-                            type: 'cross'
-                        },
-                        padding: [5, 10]
-                    },
-                    legend: {
-                        data: ['计划数', '已归档', "进行中", "未启动"]
-                    },
-                    toolbox: {
-                        show: true,
-                        feature: {
-                            dataView: {show: true, readOnly: false},
-                            magicType: {show: true, type: ['line', 'bar']},
-                            restore: {show: true},
-                            saveAsImage: {show: true}
-                        }
-                    },
-                    calculable: true,
-                    xAxis: [
-                        {
-                            type: 'category',
-                            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
 
-                        }
-                    ],
-                    grid: {
-                        left: 10,
-                        right: 10,
-                        bottom: 20,
-                        top: 30,
-                        containLabel: true
-                    },
-                    yAxis: [
-                        {
-                            type: 'value'
-                        }
-                    ],
-                    series: [
-                        {
-                            name: '计划数',
-                            type: 'bar',
-                            data: planData,
-                        },
-                        {
-                            name: '已归档',
-                            type: 'bar',
-                            data: actualData,
-                        },
-                        {
-                            name: '进行中',
-                            type: 'bar',
-                            data: ingData,
-                        },
-                        {
-                            name: '未启动',
-                            type: 'bar',
-                            data: otherData,
-                        }
-                    ]
-                };
-                activityChart.setOption(option);
-            } else {
-                api.toast({
-                    msg: '网络错误',
-                    duration: 2000,
-                    location: 'bottom'
-                });
+    function fnOpenMainCenterFrameGroup() {
+
+        api.openFrameGroup({
+            name: 'footer_tab_frame',
+            scrollEnabled: true,
+            rect: { // 推荐使用Margin布局，用于适配屏幕的动态变化
+                marginTop: headerH, // main页面距离win顶部的高度
+                marginBottom: footerH, // main页面距离win底部的高度
+                w: 'auto' // main页面的宽度 自适应屏幕宽度
+            },
+            index: 0,
+            preload: 0,
+            frames: [{
+                name: 'footer_tab_home',
+                url: 'home_frm.html',
+                bounces: false
+            }/*, {
+                name: 'footer_tab_work',
+                url: 'work_frm.html',
+                bounces: false
+            }*/, {
+                name: 'footer_tab_message',
+                url: 'message_frm.html',
+                bounces: false
+            }, {
+                name: 'footer_tab_my',
+                url: 'my_frm.html',
+                bounces: false
+            }]
+        }, function (ret, err) {
+            var footer = $api.byId('footer');
+            var footerAct = $api.dom(footer, '.aui-bar-tab-item.aui-active');
+            $api.removeCls(footerAct, 'aui-active');
+            if (ret.index == '0') {
+                $api.text($api.byId('headerTitle'), '首页');
+                $api.addCls($api.byId('hometabbar'), 'aui-active');
+            } else if (ret.index == '1') {
+                $api.text($api.byId('headerTitle'), '智慧党建');
+                $api.addCls($api.byId('worktabbar'), 'aui-active');
+            } else if (ret.index == '2') {
+                $api.text($api.byId('headerTitle'), '消息');
+                $api.addCls($api.byId('messagetabbar'), 'aui-active');
+            } else if (ret.index == '3') {
+                $api.text($api.byId('headerTitle'), '个人中心');
+                $api.addCls($api.byId('mytabbar'), 'aui-active');
             }
         });
-
     }
 
 
+    function randomSwitchBtn(obj, name, index) {
+        $api.text($api.byId('headerTitle'), name);
+        var footer = $api.byId('footer');
+        var footerAct = $api.dom(footer, '.aui-bar-tab-item.aui-active');
+        $api.removeCls(footerAct, 'aui-active');
+        $api.addCls(obj, 'aui-active');
+        api.setFrameGroupIndex({
+            name: 'footer_tab_frame',
+            index: index,
+            scroll: true
+        });
+
+    }
 </script>
 </html>
