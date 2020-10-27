@@ -1,0 +1,157 @@
+
+/* CSS reset */
+dssdjt-main {
+  font: 14px/1.5 Microsoft YaHei, Tahoma, Helvetica, "宋体", san-serif;
+  background-size: 100% auto;
+  line-height: 150%;
+}
+
+dssdjt-main.dj {
+  font: 14px/1.5 Microsoft YaHei, Tahoma, Helvetica, "宋体", san-serif;
+  /*background: #fff url(bgdj.jpg) no-repeat left top;*/
+  background-size: 100% auto
+}
+
+body, div, p, form, ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+}
+p{
+  line-height: 150%;
+}
+h3{
+  font-size:20px ;
+  line-height: 150%;
+}
+
+img {
+  border: 0;
+  width: auto;
+}
+
+i {
+  font-style: normal
+}
+
+ul, ol {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+a:link, a:visited {
+  color: #666;
+  text-decoration: none;
+  outline: none;
+}
+
+a:hover {
+  color: #000;
+}
+
+a:active {
+  text-decoration: none;
+}
+
+.clearfloat {
+  clear: both;
+  height: 0;
+  font-size: 1px;
+  line-height: 0;
+}
+
+.mgr {
+  margin-right: 10px;
+}
+
+.mg10 {
+  margin-bottom: 10px;
+}
+
+
+
+.dssdjt {
+  background: #cf001c url(bg-img.jpg) no-repeat center top;
+  position: relative;
+  width: 1024px;
+  text-align: center;
+  margin: 0 auto;
+  height: 100%;
+}
+
+.dssdjt-title {
+  padding-top: 50px;
+  padding-left: 25px;
+  text-align: center;
+}
+
+.dssdjt-star {
+  position: absolute;
+  height: 80px;
+  width: 980px;
+  top: 60px;
+  left: 0;
+  background: url(star-img.png) no-repeat right top;
+  z-index: 1;
+}
+
+.dssdjt-content {
+  position: relative;
+  margin: 20px auto 20px auto;
+  width: 960px;
+  background-color: #fcf2d1;
+  box-shadow: 4px 4px 10px #992529;
+  overflow: hidden;
+  zoom: 1;
+  z-index: 9998
+}
+
+.dssdjt-content .dssdjt-cont-show {
+  margin: 15px;
+  padding: 10px;
+  background-color: #fff;
+  border: 2px solid #dbcb9a;
+  text-align: left;
+  min-height: 400px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.dssdjt-cont-bg {
+  position: absolute;
+  left: -5px;
+  right: 0;
+  top: 35px;
+  height: 400px;
+  background: url(content-bg.png) no-repeat left top;
+  z-index: 9997
+}
+
+.dssdjt-box{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 9999;
+}
+.dssdjt-main{
+  width: 100%;
+  height: 100%;
+}
+
+.dssdjt-footer {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+}
+
+.dssdjt-close {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+}

@@ -80,7 +80,7 @@
       </el-col>
     </el-row>
 
-
+    <history ref="history"></history>
   </div>
 </template>
 
@@ -88,13 +88,15 @@
 import PanelGroup from './dashboard/PanelGroup'
 import TodoIndex from './sys/todoIndex/todoIndex'
 import NoticeTable from './system/notice/noticeTable'
+import History from './sys/history/history'
 
 export default {
   name: 'Index',
   components: {
     PanelGroup,
     TodoIndex,
-    NoticeTable
+    NoticeTable,
+    History
   },
   data() {
     return {

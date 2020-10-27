@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.sys.mapper.DjHistoryMapper">
+    
+    <resultMap type="DjHistory" id="DjHistoryResult">
+        <result property="historyId"    column="history_id"    />
+        <result property="month"    column="month"    />
+        <result property="day"    column="day"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjHistoryVo">
+        select history_id, month, day, title, content, del_flag, create_by, create_time, update_by, update_time from dj_history
+    </sql>
+
+    <select id="selectDjHistoryList" parameterType="DjHistory" resultMap="DjHistoryResult">
+        <include refid="selectDjHistoryVo"/>
+        <where>  
+            <if test="month != null  and month != ''"> and month = #{month}</if>
+            <if test="day != null  and day != ''"> and day = #{day}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+    
+    <select id="selectDjHistoryById" parameterType="Long" resultMap="DjHistoryResult">
+        <include refid="selectDjHistoryVo"/>
+        where history_id = #{historyId}
+    </select>
+        
+    <insert id="insertDjHistory" parameterType="DjHistory" useGeneratedKeys="true" keyProperty="historyId">
+        insert into dj_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="month != null  and month != ''">month,</if>
+            <if test="day != null  and day != ''">day,</if>
+            <if test="title != null  and title != ''">title,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="month != null  and month != ''">#{month},</if>
+            <if test="day != null  and day != ''">#{day},</if>
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjHistory" parameterType="DjHistory">
+        update dj_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="month != null  and month != ''">month = #{month},</if>
+            <if test="day != null  and day != ''">day = #{day},</if>
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where history_id = #{historyId}
+    </update>
+
+    <delete id="deleteDjHistoryById" parameterType="Long">
+        delete from dj_history where history_id = #{historyId}
+    </delete>
+
+    <delete id="deleteDjHistoryByIds" parameterType="String">
+        delete from dj_history where history_id in 
+        <foreach item="historyId" collection="array" open="(" separator="," close=")">
+            #{historyId}
+        </foreach>
+    </delete>
+    
+</mapper>
