@@ -48,6 +48,14 @@ public interface IDjPartyMemberService
     public int insertDjPartyMember(DjPartyMember djPartyMember);
 
     /**
+     * 新增党员信息
+     *
+     * @param djPartyMember 党员信息
+     * @return 结果
+     */
+    public int insertDjPartyMemberForApp(DjPartyMember djPartyMember,String password);
+
+    /**
      * 修改党员信息
      *
      * @param djPartyMember 党员信息

@@ -206,6 +206,35 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     }
 
     /**
+     * 新增党员信息
+     *
+     * @param djPartyMember 党员信息
+     * @return 结果
+     */
+    @Override
+    public int insertDjPartyMemberForApp(DjPartyMember djPartyMember,String password)
+    {
+        djPartyMember.setPartyOrgId((long) 52);
+        djPartyMember.setCreateTime(DateUtils.getNowDate());
+        djPartyMemberMapper.insertDjPartyMember(djPartyMember);
+
+        SysUser sysUser = new SysUser();
+        sysUser.setAvatar(djPartyMember.getAvatar());
+        sysUser.setDeptId(djPartyMember.getDeptId());
+        sysUser.setUserName(djPartyMember.getMemberName());
+        sysUser.setNickName(djPartyMember.getMemberName());
+        sysUser.setPartyMemberId(djPartyMember.getMemberId());
+        sysUser.setSex(djPartyMember.getSex());
+        sysUser.setPhonenumber(djPartyMember.getMobile());
+        sysUser.setEmail(djPartyMember.getEmail());
+        sysUser.setPassword(SecurityUtils.encryptPassword(password));
+        sysUser.setRoleIds(new Long[]{Long.valueOf(3)});  //设置普通角色
+        sysUser.setPostIds(new Long[]{Long.valueOf(4)});  //设置普通员工
+        sysUser.setCreateTime(DateUtils.getNowDate());
+        return userService.insertUserForApp(sysUser);
+    }
+
+    /**
      * 修改党员信息
      *
      * @param djPartyMember 党员信息

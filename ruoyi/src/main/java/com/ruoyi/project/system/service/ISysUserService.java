@@ -98,6 +98,14 @@ public interface ISysUserService
     public int insertUser(SysUser user);
 
     /**
+     * 新增用户信息
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    public int insertUserForApp(SysUser user);
+
+    /**
      * 修改用户信息
      *
      * @param user 用户信息

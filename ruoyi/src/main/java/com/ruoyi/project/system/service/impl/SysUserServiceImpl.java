@@ -254,6 +254,26 @@ public class SysUserServiceImpl implements ISysUserService
     }
 
     /**
+     * 新增保存用户信息
+     *
+     * @param user 用户信息
+     * @return 结果
+     */
+    @Override
+    @Transactional
+    public int insertUserForApp(SysUser user)
+    {
+        user.setCreateTime(DateUtils.getNowDate());
+        // 新增用户信息
+        int rows = userMapper.insertUser(user);
+        // 新增用户岗位关联
+        insertUserPost(user);
+        // 新增用户与角色管理
+        insertUserRole(user);
+        return rows;
+    }
+
+    /**
      * 修改保存用户信息
      *
      * @param user 用户信息
