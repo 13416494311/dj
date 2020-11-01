@@ -151,5 +151,29 @@ public class SysFileController extends BaseController
         }
     }
 
+    @RequestMapping(value = "/downloadForApp/{id}")
+    public void downloadForApp(@PathVariable Long id, HttpServletResponse response)
+    {
+        SysFile sysFile = sysFileService.selectSysFileById(id);
+        // 本地资源路径
+        String localPath = RuoYiConfig.getProfile();
+        String downloadPath = localPath + StringUtils.substringAfter(sysFile.getFilePath(),
+                Constants.RESOURCE_PREFIX);
+        File file =new File(downloadPath);
+        String fileName= null;
+        try {
+            fileName = URLEncoder.encode(sysFile.getFileName(), "utf-8");
+            response.reset();
+            response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+            response.addHeader("Content-Length", "" + FileUtil.getBytesByFile(file).length);
+            response.setContentType("application/octet-stream; charset=UTF-8");
+            IOUtils.write(FileUtil.getBytesByFile(file), response.getOutputStream());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

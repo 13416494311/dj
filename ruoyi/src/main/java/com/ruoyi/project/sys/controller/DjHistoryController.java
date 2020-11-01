@@ -22,7 +22,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 党史Controller
- * 
+ *
  * @author ruoyi
  * @date 2020-10-27
  */
@@ -36,7 +36,6 @@ public class DjHistoryController extends BaseController
     /**
      * 查询党史列表
      */
-    @PreAuthorize("@ss.hasPermi('sys:history:list')")
     @GetMapping("/list")
     public TableDataInfo list(DjHistory djHistory)
     {

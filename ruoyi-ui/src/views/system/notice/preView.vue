@@ -18,7 +18,7 @@
                 type="text"
                 icon="el-icon-paperclip"
                 @click="handleDownload(item)"
-                style="float:left;"
+                style="float:left;font-size: 16px"
               >{{item.fileName}}
               </el-button>
               <br/>
@@ -33,46 +33,11 @@
   </el-dialog>
 
 </template>
-<style>
-  .m_xl {
-    padding: 16px;
-    padding-bottom: 30px;
-  }
-  body, object, iframe, h1, h2, h3, h4, h5, h6, blockquote, a, code, em, img, q, small, strong, dd, dl, dt, li, ol, ul, fieldset, form, label, table, tbody, tr, th, td, input, textarea, p, div {
-    margin: 0px;
-    padding: 0px;
-    font-size: 100%;
-    font-family: '微软雅黑';
-  }
-  p{
-    text-indent:2em
-  }
-  img {
-    width: 95%;
-  }
-  .m_xl_t {
-    font-weight: bold;
-    font-size: 24px;
-    color: #3f4145;
-    line-height: 30px;
-    text-align: center;
-  }
-  .m_xl_z {
-    text-align: center;
-    padding-top: 10px;
-  }
-  .m_xl_c {
-    padding-top: 16px;
-  }
-  .m_xl_c p {
-    font-size: 16px;
-    color: #666;
-    line-height: 200%;
-  }
-  .m_xl_f {
-    margin: 20px 0 0 auto;
-  }
+
+<style scoped>
+  @import '../../../assets/styles/notice/notice.css';
 </style>
+
 <script>
   import {listFile, upload, delFile} from "@/api/system/file";
   import {downLoadZip} from "@/utils/zipdownload";

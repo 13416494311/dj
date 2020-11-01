@@ -1,6 +1,5 @@
 <template>
   <div class="dashboard-editor-container" style="padding-top: 10px;">
-
     <panel-group />
     <el-row :gutter="20">
       <el-col :span="12" :xs="24">
@@ -40,7 +39,6 @@
         </el-card>
       </el-col>
     </el-row>
-
     <el-row :gutter="20">
       <el-col :span="12" :xs="24">
         <el-card shadow="always" style="margin-bottom: 20px;height: 280px;overflow-y:hidden">
@@ -79,8 +77,6 @@
         </el-card>
       </el-col>
     </el-row>
-
-    <history ref="history"></history>
   </div>
 </template>
 
@@ -88,7 +84,6 @@
 import PanelGroup from './dashboard/PanelGroup'
 import TodoIndex from './sys/todoIndex/todoIndex'
 import NoticeTable from './system/notice/noticeTable'
-import History from './sys/history/history'
 
 export default {
   name: 'Index',
@@ -96,7 +91,6 @@ export default {
     PanelGroup,
     TodoIndex,
     NoticeTable,
-    History
   },
   data() {
     return {

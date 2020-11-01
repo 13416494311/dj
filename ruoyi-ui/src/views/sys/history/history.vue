@@ -1,6 +1,6 @@
 <template>
-  <div class="dssdjt-main">
-    <div class="dssdjt-box" v-if="open">
+  <div class="dssdjt-main" v-if="open">
+    <div class="dssdjt-box">
       <div class="dssdjt">
         <div class="dssdjt-title"><img src="../../../assets/styles/history/title.png" alt=""/></div>
         <div class="dssdjt-star"></div>
@@ -15,10 +15,10 @@
         <div class="dssdjt-cont-bg"></div>
       </div>
       <div class="dssdjt-footer" :style="{textAlign:'center'}">
-        <el-link @click="cancel" style="color: white">关 闭</el-link>
+        <el-link @click="cancel" style="color: gold">关 闭</el-link>
       </div>
       <div class="dssdjt-close" >
-        <el-button @click="cancel" icon="el-icon-close" circle></el-button>
+        <el-button @click="cancel" icon="el-icon-close" size="small" style="background-color: gold" circle></el-button>
       </div>
     </div>
   </div>
@@ -57,6 +57,9 @@
         let day = new Date().getDate();
         listHistory({month:month,day:day}).then(response => {
           this.historyList = response.rows;
+          if(this.historyList.length == 0){
+            this.open= false;
+          }
 
         });
       },
