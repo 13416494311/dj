@@ -515,11 +515,15 @@
 
     <party-member ref="partyMember" @callbackMember="setMember"/>
     <member-transfer ref="memberTransfer" @callback="getJoinMemberList"/>
-    <el-dialog :visible.sync="dialogVisible"
+    <!--<el-dialog :visible.sync="dialogVisible"
                append-to-body
                :close-on-click-modal="false">
       <img width="100%" :src="dialogImageUrl" alt="">
-    </el-dialog>
+    </el-dialog>-->
+    <el-image-viewer
+      v-if="dialogVisible"
+      :on-close="closeViewer"
+      :url-list="srcList" />
     <activity-supervise ref="activitySupervise"/>
     <big-file-upload ref="bigFileUpload" @callback="uploadVideoFile"/>
   </div>
@@ -551,13 +555,14 @@
   import {listTodo, getTodo, delTodo, addTodo, updateTodo, exportTodo} from "@/api/sys/todo";
   import {listSupervise} from "@/api/activity/supervise";
   import bigFileUpload from "@/components/bigFileUpload";
+  import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
 
   export default {
     name: "Detailed",
     components: {
       partyMember, addressMap, memberTransfer, activitySummary,
       activityResolution, activitySuggestions, activityExperience,
-      activitySupervise,bigFileUpload
+      activitySupervise,bigFileUpload,ElImageViewer,
     },
     data() {
       return {
@@ -585,6 +590,7 @@
         fileList: [],
         dialogImageUrl: '',
         dialogVisible: false,
+        srcList:[],
         defaultFilePicUrl: undefined,
         memberStatus: '1',
         // 弹出层标题
@@ -801,8 +807,14 @@
 
       },
       handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
+        //this.dialogImageUrl = file.url;
         this.dialogVisible = true;
+        this.srcList.push(file.url)
+
+      },
+      closeViewer() {
+        this.dialogVisible = false;
+        this.srcList=[];
       },
       handleDownload(file) {
         //console.log(file);

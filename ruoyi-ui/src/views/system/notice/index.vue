@@ -199,11 +199,15 @@
                   </div>
                 </div>
               </el-upload>
-              <el-dialog :visible.sync="dialogVisible"
+              <!--<el-dialog :visible.sync="dialogVisible"
                          append-to-body
                          :close-on-click-modal="false">
                 <img width="100%" :src="dialogImageUrl" alt="">
-              </el-dialog>
+              </el-dialog>-->
+              <el-image-viewer
+                v-if="dialogVisible"
+                :on-close="closeViewer"
+                :url-list="srcList" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -233,12 +237,13 @@ import Editor from '@/components/Editor';
 import {listFile, upload, delFile} from "@/api/system/file";
 import {downLoadZip} from "@/utils/zipdownload";
 import PreView from './preView';
+import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
 
 
 export default {
   name: "Notice",
   components: {
-    Editor,PreView
+    Editor,PreView,ElImageViewer,
   },
   data() {
     return {
@@ -288,6 +293,7 @@ export default {
       defaultFilePicUrl: undefined,
       dialogImageUrl: '',
       dialogVisible: false,
+      srcList:[],
       noticeUuid:undefined,
       noticeType:undefined,
     };
@@ -371,8 +377,14 @@ export default {
       return file.name;
     },
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
+      //this.dialogImageUrl = file.url;
       this.dialogVisible = true;
+      this.srcList.push(file.url)
+
+    },
+    closeViewer() {
+      this.dialogVisible = false;
+      this.srcList=[];
     },
     handleDownload(file) {
       //console.log(file);

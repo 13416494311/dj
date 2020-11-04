@@ -384,11 +384,17 @@
               </div>
             </div>
           </el-upload>
-          <el-dialog :visible.sync="dialogVisible"
+          <!--<el-dialog :visible.sync="dialogVisible"
                      append-to-body
                      :close-on-click-modal="false">
             <img width="100%" :src="dialogImageUrl" alt="">
-          </el-dialog>
+          </el-dialog>-->
+
+          <el-image-viewer
+            v-if="dialogVisible"
+            :on-close="closeViewer"
+            :url-list="srcList" />
+
         </el-card>
 
       </el-form>
@@ -415,10 +421,14 @@
   import OrgTransfer from "./orgTransfer";
   import {addArrange,listArrange, delArrange} from "@/api/activity/arrange";
   import { getUserProfile } from "@/api/system/user";
+  import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
 
   export default {
     name: "Plan",
-    components: {OrgTransfer},
+    components: {
+      OrgTransfer,
+      ElImageViewer,
+    },
     data() {
       return {
         // 遮罩层
@@ -503,6 +513,7 @@
         },
         dialogImageUrl: '',
         dialogVisible: false,
+        srcList:[],
         disabled: false,
         cancelDisabled:false,
         fileList: [],
@@ -732,8 +743,14 @@
 
       },
       handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
+        //this.dialogImageUrl = file.url;
         this.dialogVisible = true;
+        this.srcList.push(file.url)
+
+      },
+      closeViewer() {
+        this.dialogVisible = false;
+        this.srcList=[];
       },
       handleDownload(file) {
         //console.log(file);
