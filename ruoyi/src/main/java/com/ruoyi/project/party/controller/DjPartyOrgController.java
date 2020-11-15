@@ -7,6 +7,8 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.party.domain.PartyOrgTreeData;
+import com.ruoyi.project.system.domain.SysUser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -39,6 +41,8 @@ public class DjPartyOrgController extends BaseController
     @Autowired
     private IDjPartyOrgService djPartyOrgService;
 
+    @Autowired
+    private IDjPartyOrgService partyOrgService;
 
     @GetMapping("/getOrgMemberChartData")
     public AjaxResult getOrgMemberChartData()
@@ -83,7 +87,19 @@ public class DjPartyOrgController extends BaseController
     @RequestMapping("/treeselect")
     public AjaxResult treeselect()
     {
-        return AjaxResult.success(djPartyOrgService.getPartyOrgTreeDataList());
+        List<PartyOrgTreeData> list =  new ArrayList<PartyOrgTreeData>();
+
+        SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+        if(sysUser.getDjPartyMember()!=null&&sysUser.getDjPartyMember().getPartyOrgId().longValue()==(long)52){
+            PartyOrgTreeData partyOrgTreeData = new PartyOrgTreeData();
+            DjPartyOrg partyOrg = partyOrgService.selectDjPartyOrgById((long)52);
+            partyOrgTreeData.setId(partyOrg.getPartyOrgId());
+            partyOrgTreeData.setLabel(partyOrg.getPartyOrgName());
+            list.add(partyOrgTreeData);
+        }else{
+            list = djPartyOrgService.getPartyOrgTreeDataList();
+        }
+        return AjaxResult.success(list);
     }
     /**
      * 导出党组织架构列表

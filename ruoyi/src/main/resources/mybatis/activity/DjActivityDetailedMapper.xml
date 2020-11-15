@@ -57,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              on arrange.plan_uuid = detailed.plan_uuid  and arrange.party_org_id = detailed.party_org_id
         left join dj_activity_plan plan on arrange.plan_uuid = plan.plan_uuid
         <where>
+            detailed.del_flag = '0'
             <if test="detailedUuid != null  and detailedUuid != ''"> and detailed.detailed_uuid = #{detailedUuid}</if>
             <if test="planUuid != null  and planUuid != ''"> and detailed.plan_uuid = #{planUuid}</if>
             <if test="partyOrgId != null "> and detailed.party_org_id = #{partyOrgId}</if>
@@ -79,6 +80,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="activityVoteId != null "> and detailed.activity_vote_id = #{activityVoteId}</if>
             <if test="activityExamId != null "> and detailed.activity_exam_id = #{activityExamId}</if>
             <if test="status != null  and status != ''"> and detailed.status = #{status}</if>
+            <if test="params.state != null  and params.state != '' and '1'.toString == params.state">
+                and detailed.status in ('5')
+            </if>
+            <if test="params.state != null  and params.state != '' and '0'.toString == params.state">
+                and detailed.status in ('2','3','4','6')
+            </if>
             ${dataScope}
         </where>
         order by detailed.plan_start_time desc
@@ -102,6 +109,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
             <if test="state != null  and state != '' and '0'.toString == state">
                 and detailed.status in ('2','3','4','6')
+            </if>
+            <if test="delFlag != null  and delFlag != ''">
+                and detailed.del_flag = #{delFlag}
             </if>
             ${dataScope}
         </where>

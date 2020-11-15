@@ -16,10 +16,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"       column="update_by"       />
         <result property="updateTime"     column="update_time"     />
         <result property="remark"         column="remark"          />
+        <result property="delFlg"         column="del_flg"          />
     </resultMap>
 
     <sql id="selectNoticeVo">
-        select notice_id, notice_uuid, notice_title, notice_type, notice_content, status, create_by, create_time, update_by, update_time, remark
+        select notice_id, notice_uuid, notice_title, notice_type, notice_content, status, create_by, create_time, update_by, update_time, remark,del_flg
 		from sys_notice
     </sql>
 
@@ -43,6 +44,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null and status != ''">
                 AND status = #{status}
             </if>
+            <if test="delFlg != null and delFlg != ''">
+                AND del_flg = #{delFlg}
+            </if>
 		</where>
         order by create_time desc
     </select>
@@ -56,6 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="status != null and status != '' ">status, </if>
 			<if test="remark != null and remark != ''">remark,</if>
  			<if test="createBy != null and createBy != ''">create_by,</if>
+        	<if test="delFlg != null and delFlg != ''">del_flg,</if>
  			create_time
  		)values(
             <if test="noticeUuid != null and noticeUuid != ''">#{noticeUuid}, </if>
@@ -65,6 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="status != null and status != ''">#{status}, </if>
 			<if test="remark != null and remark != ''">#{remark},</if>
  			<if test="createBy != null and createBy != ''">#{createBy},</if>
+        	<if test="delFlg != null and delFlg != ''">#{delFlg},</if>
  			sysdate()
 		)
     </insert>
@@ -77,6 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="noticeContent != null">notice_content = #{noticeContent}, </if>
             <if test="status != null and status != ''">status = #{status}, </if>
             <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="delFlg != null and delFlg != ''">del_flg = #{delFlg},</if>
  			update_time = sysdate()
         </set>
         where notice_id = #{noticeId}

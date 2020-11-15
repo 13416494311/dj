@@ -17,7 +17,10 @@ import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.framework.config.RuoYiConfig;
 import com.ruoyi.project.activity.domain.*;
 import com.ruoyi.project.activity.service.*;
+import com.ruoyi.project.party.service.IDjPartyMemberService;
+import com.ruoyi.project.party.service.IDjPartyOrgService;
 import com.ruoyi.project.system.domain.SysFile;
+import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.ISysDictDataService;
 import com.ruoyi.project.system.service.ISysFileService;
 import org.apache.commons.io.IOUtils;
@@ -58,6 +61,10 @@ public class DjActivityDetailedController extends BaseController
     private IDjActivityMemberService djActivityMemberService;
     @Autowired
     private ISysFileService sysFileService;
+    @Autowired
+    private IDjPartyMemberService djPartyMemberService;
+    @Autowired
+    private IDjPartyOrgService djPartyOrgService;
 
     @GetMapping("/getActivityChartData/{year}")
     public AjaxResult getActivityChartData(@PathVariable("year") int year)
@@ -98,6 +105,7 @@ public class DjActivityDetailedController extends BaseController
     public TableDataInfo list(DjActivityParams params)
     {
         startPage();
+        params.setDelFlag("0");
         List<DjActivityDetailed> list = djActivityDetailedService.selectDetailedListByParam(params);
         return getDataTable(list);
     }
@@ -107,11 +115,39 @@ public class DjActivityDetailedController extends BaseController
     @DataScope(partyOrgAlias = "detailed")
     public AjaxResult listByParamForApp(@RequestBody DjActivityParams params)
     {
+        SysUser sysUser = SecurityUtils.getLoginUser().getUser();
         if (StringUtils.isNotNull(params.getPageNum()) && StringUtils.isNotNull(params.getPageSize()))
         {
             PageHelper.startPage(params.getPageNum(), params.getPageSize());
         }
-        List<DjActivityDetailed> list = djActivityDetailedService.selectDetailedListByParam(params);
+
+        List<DjActivityDetailed> list = new ArrayList<DjActivityDetailed>();
+
+        if(sysUser.getDjPartyMember()!=null&&sysUser.getDjPartyMember().getPartyOrgId().longValue()==(long)52){
+
+            DjActivityDetailed activityDetailed = new DjActivityDetailed();
+            activityDetailed.setPartyOrgId((long)52);
+
+            Map<String, Object> param = new HashMap<String, Object>();
+            param.put("state",params.getState());
+            activityDetailed.setParams(param);
+            list = djActivityDetailedService.selectDjActivityDetailedList(activityDetailed);
+
+            list.stream().forEach(detailed -> {
+                if (StringUtils.isNotNull(detailed.getPartyMemberId())) {
+                    detailed.setDjPartyMember(djPartyMemberService.selectDjPartyMemberById(detailed.getPartyMemberId()));
+                }
+                if (StringUtils.isNotNull(detailed.getPartyOrgId())) {
+                    detailed.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(detailed.getPartyOrgId()));
+                }
+                if (StringUtils.isNotNull(detailed.getPlanUuid())) {
+                    detailed.setDjActivityPlan(djActivityPlanService.selectDjActivityPlanByPlanUuid(detailed.getPlanUuid()));
+                }
+            });
+        }else{
+            list = djActivityDetailedService.selectDetailedListByParam(params);
+        }
+
         return AjaxResult.success(list);
     }
 

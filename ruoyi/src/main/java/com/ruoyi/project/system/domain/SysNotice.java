@@ -36,6 +36,8 @@ public class SysNotice extends BaseEntity
     /** 公告状态（0正常 1关闭） */
     private String status;
 
+    private String delFlg;
+
     private List<SysFile> fileList ;
 
     public Long getNoticeId()
@@ -96,6 +98,14 @@ public class SysNotice extends BaseEntity
     public String getStatus()
     {
         return status;
+    }
+
+    public String getDelFlg() {
+        return delFlg;
+    }
+
+    public void setDelFlg(String delFlg) {
+        this.delFlg = delFlg;
     }
 
     public List<SysFile> getFileList() {

@@ -1,6 +1,8 @@
 package com.ruoyi.project.system.controller;
 
 import java.util.List;
+
+import com.ruoyi.project.system.domain.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -41,6 +43,7 @@ public class SysNoticeController extends BaseController
     public TableDataInfo list(SysNotice notice)
     {
         startPage();
+        notice.setDelFlg("0");
         List<SysNotice> list = noticeService.selectNoticeList(notice);
         return getDataTable(list);
     }
@@ -49,6 +52,13 @@ public class SysNoticeController extends BaseController
     @PostMapping("/listForApp")
     public AjaxResult listByParamForApp(@RequestBody SysNotice notice)
     {
+
+        SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+        if(sysUser.getDjPartyMember()!=null&&sysUser.getDjPartyMember().getPartyOrgId().longValue()==(long)52){
+            notice.setDelFlg("1");
+        }else{
+            notice.setDelFlg("0");
+        }
         startPage();
         List<SysNotice> list = noticeService.selectNoticeList(notice);
         return AjaxResult.success(list);
