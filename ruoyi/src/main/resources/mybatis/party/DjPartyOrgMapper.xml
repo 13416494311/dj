@@ -225,6 +225,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	           count( member.member_id ) AS  value
         FROM dj_party_org org
 	    LEFT JOIN dj_party_member member ON member.party_org_id = org.party_org_id
+	     where org.party_org_id != 52
+        GROUP BY org.party_org_id
+    </select>
+
+    <select id="getRegistOrgMemberChartData" resultType="java.util.HashMap">
+        SELECT org.party_org_name AS name,
+	           count( member.member_id ) AS  value
+        FROM dj_party_org org
+	    LEFT JOIN dj_party_member member ON member.party_org_id = org.party_org_id
+	    where org.party_org_id = 52
         GROUP BY org.party_org_id
     </select>
 

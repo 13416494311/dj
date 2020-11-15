@@ -12,6 +12,8 @@ public class DjActivityParams extends BaseEntity {
 
     private String state ;
 
+    private String status ;
+
     private String delFlag;
 
 }

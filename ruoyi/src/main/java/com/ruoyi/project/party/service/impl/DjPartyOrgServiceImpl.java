@@ -39,6 +39,13 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
     public List<Map<String,Object>> getOrgMemberChartData(){
         return djPartyOrgMapper.getOrgMemberChartData();
     }
+
+    @Override
+    public List<Map<String,Object>> getRegistOrgMemberChartData(){
+        return djPartyOrgMapper.getRegistOrgMemberChartData();
+    }
+
+
     @Override
     public int getOrgCount(){
         return djPartyOrgMapper.getOrgCount();

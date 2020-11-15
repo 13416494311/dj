@@ -16,6 +16,8 @@ public interface IDjPartyOrgService
 {
     public List<Map<String,Object>> getOrgMemberChartData();
 
+    public List<Map<String,Object>> getRegistOrgMemberChartData();
+
     public int getOrgCount();
 
     /**

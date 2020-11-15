@@ -2,6 +2,7 @@ package com.ruoyi.project.party.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.DateUtils;
@@ -47,7 +48,16 @@ public class DjPartyOrgController extends BaseController
     @GetMapping("/getOrgMemberChartData")
     public AjaxResult getOrgMemberChartData()
     {
-        return AjaxResult.success(djPartyOrgService.getOrgMemberChartData());
+
+        List<Map<String,Object>> list = new ArrayList<>();
+        SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+        if(sysUser.getDjPartyMember()!=null&&sysUser.getDjPartyMember().getPartyOrgId().longValue()==(long)52){
+            list = djPartyOrgService.getRegistOrgMemberChartData();
+        }else{
+            list = djPartyOrgService.getOrgMemberChartData();
+        }
+
+        return AjaxResult.success(list);
     }
 
     @GetMapping("/getOrgCount")

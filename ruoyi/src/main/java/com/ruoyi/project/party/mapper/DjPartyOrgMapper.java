@@ -18,6 +18,8 @@ public interface DjPartyOrgMapper
 
     public List<Map<String,Object>> getOrgMemberChartData();
 
+    public List<Map<String,Object>> getRegistOrgMemberChartData();
+
     public int getOrgCount();
     /**
      * 查询党组织架构

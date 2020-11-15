@@ -18,6 +18,20 @@
                      placeholder="请选择党组织"
         />
       </el-form-item>
+
+      <el-form-item label="活动状态" prop="status">
+        <el-select v-model="queryParams.status"
+                   clearable
+                   placeholder="请选择活动状态">
+          <el-option
+            v-for="dict in arrangeStatusOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
