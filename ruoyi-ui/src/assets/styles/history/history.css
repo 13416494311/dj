@@ -16,9 +16,6 @@ body, div, p, form, ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6 {
   margin: 0;
   padding: 0;
 }
-p{
-  line-height: 150%;
-}
 
 img {
   border: 0;
@@ -115,11 +112,14 @@ a:active {
   max-height: 500px;
   overflow-y: auto;
 }
-.dssdjt-content .dssdjt-cont-show h3{
+.dssdjt-cont-show-h3{
   font-size:20px ;
   line-height: 150%;
 }
-
+.dssdjt-cont-show-p{
+  text-indent:2em;
+  line-height: 150%;
+}
 
 .dssdjt-cont-bg {
   position: absolute;
@@ -155,4 +155,5 @@ a:active {
   position: absolute;
   top: 50px;
   right: 50px;
+  z-index:9998;
 }

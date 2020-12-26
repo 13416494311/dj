@@ -49,6 +49,15 @@ export function partyOrgTreeselect(query) {
   })
 }
 
+// 查询党组织架构列表tree
+export function partyOrgTreeselectByEdit(query) {
+  return request({
+    url: '/party/org/treeselectByEdit',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询党组织架构详细
 export function getPartyOrg(partyOrgId) {
   return request({

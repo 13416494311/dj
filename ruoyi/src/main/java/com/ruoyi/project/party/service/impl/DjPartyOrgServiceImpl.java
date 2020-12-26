@@ -302,6 +302,12 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
         return list;
     }
 
+    @Override
+    public List<PartyOrgTreeData> getPartyOrgTreeDataListByEdit(){
+        List<PartyOrgTreeData> list = getfatherNode(djPartyOrgMapper.getPartyOrgTreeData(null));
+        return list;
+    }
+
     /**
      * 获取党组织架构树数据
      *

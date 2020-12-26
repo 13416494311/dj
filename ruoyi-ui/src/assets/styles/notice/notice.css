@@ -8,12 +8,6 @@ body, object, iframe, h1, h2, h3, h4, h5, h6, blockquote, a, code, em, img, q, s
   font-size: 100%;
   font-family: '微软雅黑';
 }
-p{
-  text-indent:2em
-}
-.m_xl_c img {
-  width: 95%;
-}
 .m_xl_t {
   font-weight: bold;
   font-size: 24px;
@@ -32,7 +26,11 @@ p{
   font-size: 16px;
   color: #666;
   line-height: 200%;
+  text-indent:2em;
 }
+.m_xl_c img {
+   width: 95%;
+ }
 .m_xl_f {
   margin: 20px 0 0 auto;
 }

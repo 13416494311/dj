@@ -45,7 +45,7 @@
     height: 500px;
   }
   .el-transfer-panel__list.is-filterable{
-    height: 500px;
+    height: 400px;
   }
 </style>
 <script>
@@ -76,6 +76,7 @@
           label: 'label',       // 标签显示
           children: 'children', // 子级
         },
+        clickWaitFlag:false,
       }
     },
     mounted() {
@@ -133,6 +134,10 @@
       },
       /** 查询党组织下拉树结构 */
       getPartyOrgSelect(partyOrgId) {
+        if(this.clickWaitFlag == true){
+          return;
+        }
+        this.clickWaitFlag = true;
         this.data = []
         childrenListPartyOrg(partyOrgId).then(response => {
           let partyOrgs = response.data;
@@ -142,6 +147,7 @@
               key: partyOrg.partyOrgId,
             });
           });
+          this.clickWaitFlag = false;
         });
       },
       /** 对话框自适应高度 */

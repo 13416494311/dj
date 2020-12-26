@@ -383,7 +383,7 @@
               <el-form-item label="党组织" prop="partyOrgId">
                 <select-tree :value="form.partyOrgId"
                              :disabled="disabled"
-                             :options="partyOrgOptions"
+                             :options="orgOptions"
                              vModel="partyOrgId"
                              @selected="setVModelValue"
                              placeholder="请选择党组织"
@@ -649,7 +649,7 @@
   } from "@/api/party/member";
   import { listPartyMemberChange } from "@/api/party/memberChange";
   import { postOptionSelect } from "@/api/system/post";
-  import { partyOrgTreeselect, getPartyOrg } from "@/api/party/org";
+  import { partyOrgTreeselect,partyOrgTreeselectByEdit, getPartyOrg } from "@/api/party/org";
   import { getDept } from "@/api/system/dept";
   import { treeselect } from "@/api/system/dept";
   import Treeselect from "@riophae/vue-treeselect";
@@ -807,7 +807,9 @@
         // 生活困难类型字典
         lifeDifficultyTypeOptions: [],
         // 党组织架构树选项
+        orgOptions: [],
         partyOrgOptions: [],
+        partyOrgOptionsByEdait: [],
         // 部门树选项
         deptOptions: [],
         // 享受帮扶字典
@@ -940,6 +942,7 @@
     created() {
       this.getUser();
       this.getPartyOrgTreeSelect();
+      this.getPartyOrgTreeSelectByEdit();
       this.getDeptTreeselect();
       this.postOptionSelect();
       this.getDicts("sys_user_sex").then(response => {
@@ -1060,6 +1063,12 @@
       getPartyOrgTreeSelect() {
         partyOrgTreeselect().then(response => {
           this.partyOrgOptions = this.treeInitData(response.data);
+        });
+      },
+      /** 修改时查询党组织下拉树结构 */
+      getPartyOrgTreeSelectByEdit() {
+        partyOrgTreeselectByEdit().then(response => {
+          this.partyOrgOptionsByEdait = this.treeInitData(response.data);
         });
       },
       /** 查询党员信息列表 */
@@ -1229,6 +1238,7 @@
       handleAdd() {
         this.reset();
         this.disabled = false;
+        this.orgOptions= this.partyOrgOptions;
         this.form.partyOrgId = Number(this.partyOrg.partyOrgId);
         this.open = true;
         this.title = "添加党员信息";
@@ -1238,6 +1248,7 @@
         this.reset();
         this.disabled = true;
         const memberId = row.memberId || this.ids
+        this.orgOptions= this.partyOrgOptionsByEdait;
         getPartyMember(memberId).then(response => {
           this.form = response.data;
           this.avatarUrl=process.env.VUE_APP_BASE_API + this.form.avatar;
@@ -1250,6 +1261,7 @@
         this.reset();
         this.disabled = false;
         const memberId = row.memberId || this.ids
+        this.orgOptions= this.partyOrgOptionsByEdait;
         getPartyMember(memberId).then(response => {
           this.form = response.data;
           this.avatarUrl=process.env.VUE_APP_BASE_API + this.form.avatar;

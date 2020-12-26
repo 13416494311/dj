@@ -111,6 +111,13 @@ public class DjPartyOrgController extends BaseController
         }
         return AjaxResult.success(list);
     }
+
+    @RequestMapping("/treeselectByEdit")
+    public AjaxResult treeselectByEdit()
+    {
+        List<PartyOrgTreeData>  list = djPartyOrgService.getPartyOrgTreeDataListByEdit();
+        return AjaxResult.success(list);
+    }
     /**
      * 导出党组织架构列表
      */

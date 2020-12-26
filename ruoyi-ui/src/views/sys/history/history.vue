@@ -7,8 +7,8 @@
         <div class="dssdjt-content">
           <div class="dssdjt-cont-show">
             <div v-for="history in historyList" :key="history.historyId">
-              <h3>{{history.title}}</h3>
-              <p>{{history.content}}</p>
+              <h3 class="dssdjt-cont-show-h3">{{history.title}}</h3>
+              <p class="dssdjt-cont-show-p">{{history.content}}</p>
             </div>
           </div>
         </div>

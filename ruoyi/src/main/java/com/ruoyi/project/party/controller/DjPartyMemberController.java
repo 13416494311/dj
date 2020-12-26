@@ -281,4 +281,33 @@ public class DjPartyMemberController extends BaseController
         return AjaxResult.success();
     }
 
+    /**
+     *  检查姓名 手机号 身份证 邮箱等唯一性
+     * @param djPartyMember
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("/checkPartyMemberUniquePc")
+    public AjaxResult checkPartyMemberUniquePc(@Validated @RequestBody DjPartyMember djPartyMember) throws IOException
+    {
+
+        if (UserConstants.NOT_UNIQUE.equals(djPartyMemberService.checkPartyMemberNameUnique(djPartyMember)))
+        {
+            return AjaxResult.success("姓名已存在");
+        }
+        else if (UserConstants.NOT_UNIQUE.equals(djPartyMemberService.checkPartyMemberMobileUnique(djPartyMember)))
+        {
+            return AjaxResult.success("手机号已存在");
+        }
+        else if (UserConstants.NOT_UNIQUE.equals(djPartyMemberService.checkPartyMemberEmailUnique(djPartyMember)))
+        {
+            return AjaxResult.success("Email已存在");
+        }
+        else if (UserConstants.NOT_UNIQUE.equals(djPartyMemberService.checkPartyMemberIdentityCardUnique(djPartyMember)))
+        {
+            return AjaxResult.success("身份证号已存在");
+        }
+        return AjaxResult.success();
+    }
+
 }

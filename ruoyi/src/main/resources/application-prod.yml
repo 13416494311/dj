@@ -35,6 +35,8 @@ server:
     max-threads: 800
     # Tomcat启动初始化的线程数，默认值25
     min-spare-threads: 30
+    # 临时文件目录
+    basedir: /dj/upload/temp/
 
 # 日志配置
 logging:
@@ -122,7 +124,7 @@ spring:
     # 端口，默认为6379
     port: 6379
     # 密码
-    password: 12345678
+    password: 63798888
     # 连接超时时间
     timeout: 10s
     lettuce:

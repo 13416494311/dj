@@ -73,7 +73,7 @@ export function uploadAvatar(data) {
 // 用户头像上传
 export function checkPartyMemberUnique(data) {
   return request({
-    url: '/party/member/checkPartyMemberUnique',
+    url: '/party/member/checkPartyMemberUniquePc',
     method: 'post',
     data: data
   })

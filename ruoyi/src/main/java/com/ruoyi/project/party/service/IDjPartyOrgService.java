@@ -122,4 +122,11 @@ public interface IDjPartyOrgService
      * @return
      */
     public List<PartyOrgTreeData> getPartyOrgTreeDataList();
+
+    /**
+     * 获取党组织架构树数据
+     *
+     * @return
+     */
+    public List<PartyOrgTreeData> getPartyOrgTreeDataListByEdit();
 }
