@@ -80,9 +80,9 @@
         width="100"
       />
       <el-table-column label="创建者" align="center" prop="createUser.userName" width="100" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="100">
+      <el-table-column label="发布时间" align="center" prop="sendTime" width="100">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.sendTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -140,6 +140,18 @@
               </el-select>
             </el-form-item>
           </el-col>-->
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="发布时间" prop="sendTime">
+              <el-date-picker clearable size="small" style="width: 100%"
+                              v-model="form.sendTime"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              placeholder="选择发布日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
@@ -282,6 +294,9 @@ export default {
         noticeTitle: [
           { required: true, message: "标题不能为空", trigger: "blur" }
         ],
+        sendTime: [
+          { required: true, message: "发布时间不能为空", trigger: "blur" }
+        ],
       },
       bodyStyle: {
         overflowY: 'auto',
@@ -323,6 +338,9 @@ export default {
           break;
         case "/office/notice/3" :
           this.noticeType = "3";
+          break;
+        case "/study/notice/4" :
+          this.noticeType = "4";
           break;
         default:
           break;
@@ -437,6 +455,7 @@ export default {
         noticeTitle: undefined,
         noticeType: undefined,
         noticeContent: undefined,
+        sendTime: undefined,
         status: "0"
       };
       this.resetForm("form");

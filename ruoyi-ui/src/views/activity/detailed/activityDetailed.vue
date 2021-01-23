@@ -112,9 +112,17 @@
             v-if="scope.row.status !='5' && pathType=='2'"
             size="small"
             type="text"
-            icon="el-icon-download"
-            @click="handleOpenSupervise(scope.row)"
+            icon="el-icon-message"
+            @click="handleSendSupervise(scope.row)"
           >督办
+          </el-button>
+          <el-button
+            v-if="scope.row.superviseList.length > 0 "
+            size="small"
+            type="text"
+            icon="el-icon-document-copy"
+            @click="handleOpenSupervise(scope.row)"
+          >督办记录
           </el-button>
         </template>
       </el-table-column>
@@ -727,7 +735,8 @@
   import bigFileUpload from "@/components/bigFileUpload";
   import { partyOrgTreeselect, getPartyOrg } from "@/api/party/org";
   import selectTree from '../../components/selectTree';
-  import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
+  import ElImageViewer from 'element-ui/packages/image/src/image-viewer';
+  import {addSupervise} from "@/api/activity/supervise";
 
   export default {
     name: "Detailed",
@@ -755,6 +764,7 @@
         memberList: [],
         leaveMemberList: [],
         memberStatusOptions: [],
+        superviseContentTemplate: undefined,
         planFileList: [],
         picFileList: [],
         videoFileList:[],
@@ -821,6 +831,7 @@
         },
         // 党员活动类型字典
         activityTypeOptions: [],
+        detailedStatusOptions:[],
         //活动详情状态
         arrangeStatusOptions: [],
         activeTab: "1",
@@ -852,6 +863,9 @@
       });
       this.getDicts("activity_member_status").then(response => {
         this.memberStatusOptions = response.data;
+      });
+      this.getConfigKey("activity.supervise.content").then(response => {
+        this.superviseContentTemplate = response.msg;
       });
       this.getPathType();
       this.getUser();
@@ -1548,7 +1562,24 @@
       handleExportArchives(row) {
         downLoadZip("/activity/detailed/exportArchives?detailedId=" + row.detailedId);
       },
+      handleSendSupervise(row){
+        let supervise = {
+          detailedUuid:row.detailedUuid,
+          partyMemberId:this.user.partyMemberId,
+          content:this.superviseContentTemplate.replace("{djActivityPlan.activityTheme}",row.djActivityPlan.activityTheme)
+        }
+        addSupervise(supervise).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("督办成功");
+            this.open = false;
+            this.getList();
+          } else {
+            this.msgError(response.msg);
+          }
+        });
+      },
       handleOpenSupervise(row){
+        console.log(row.superviseList.length)
         this.$refs.activitySupervise.init(row.detailedUuid);
       },
       getUser() {

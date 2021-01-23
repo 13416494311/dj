@@ -88,6 +88,12 @@ public class DjPartyMemberChangeController extends BaseController
         return AjaxResult.success(djPartyMemberChangeService.selectDjPartyMemberChangeByMemberUuid(memberUuid));
     }
 
+    @GetMapping(value = "/getPrePartyMemberChange/{partyMemberId}")
+    public AjaxResult getPrePartyMemberChange(@PathVariable("partyMemberId") String partyMemberId)
+    {
+        return AjaxResult.success(djPartyMemberChangeService.selectPrePartyMemberChangeByPartyMemberId(partyMemberId));
+    }
+
     /**
      * 新增党员变更表
      */

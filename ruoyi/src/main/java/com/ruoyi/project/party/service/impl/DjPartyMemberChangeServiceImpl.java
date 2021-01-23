@@ -60,6 +60,26 @@ public class DjPartyMemberChangeServiceImpl implements IDjPartyMemberChangeServi
         return partyMemberChange;
     }
 
+    @Override
+    public DjPartyMemberChange selectPrePartyMemberChangeByPartyMemberId(String partyMemberId)
+    {
+        DjPartyMemberChange djPartyMemberChange = new DjPartyMemberChange();
+        djPartyMemberChange.setPartyMemberId(Long.parseLong(partyMemberId));
+        List<DjPartyMemberChange> partyMemberChangeList = djPartyMemberChangeMapper.selectDjPartyMemberChangeList(djPartyMemberChange);
+
+        DjPartyMemberChange partyMemberChange = null;
+        if(partyMemberChangeList!=null && partyMemberChangeList.size()>1){
+            partyMemberChange = partyMemberChangeList.get(1);
+            if(StringUtils.isNotNull(partyMemberChange.getPartyOrgId())){
+                partyMemberChange.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(partyMemberChange.getPartyOrgId()));
+            }
+            if(StringUtils.isNotNull(partyMemberChange.getDeptId())){
+                partyMemberChange.setSysDept(deptService.selectDeptById(partyMemberChange.getDeptId()));
+            }
+        }
+
+        return partyMemberChange;
+    }
     /**
      * 查询党员变更表列表
      *

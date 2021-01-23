@@ -5,7 +5,7 @@
       <div class="m_xl_m">
         <div class="m_xl_t">{{item.noticeTitle}}</div>
         <div class="m_xl_z">
-          <span>{{item.createTime}}</span>
+          <span>{{item.sendTime}}</span>
         </div>
         <div class="m_xl_c" v-html="item.noticeContent">
           {{item.noticeContent}}

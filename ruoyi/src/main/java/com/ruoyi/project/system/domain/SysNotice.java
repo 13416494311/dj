@@ -3,11 +3,13 @@ package com.ruoyi.project.system.domain;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.framework.web.domain.BaseEntity;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +34,10 @@ public class SysNotice extends BaseEntity
 
     /** 公告内容 */
     private String noticeContent;
+
+    /** 出生日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date sendTime;
 
     /** 公告状态（0正常 1关闭） */
     private String status;

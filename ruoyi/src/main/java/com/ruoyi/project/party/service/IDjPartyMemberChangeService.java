@@ -21,6 +21,8 @@ public interface IDjPartyMemberChangeService
 
     public DjPartyMemberChange selectDjPartyMemberChangeByMemberUuid(String memberUuid);
 
+    public DjPartyMemberChange selectPrePartyMemberChangeByPartyMemberId(String partyMemberId);
+
     /**
      * 查询党员变更表列表
      *

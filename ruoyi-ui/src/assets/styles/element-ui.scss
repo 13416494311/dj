@@ -78,6 +78,10 @@
   display: inline-flex !important;
 }
 
+.el-input__inner{
+  color: black !important;
+}
+
 // to fix el-date-picker css style
 .el-range-separator {
   box-sizing: content-box;

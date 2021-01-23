@@ -2,11 +2,13 @@ package com.ruoyi.project.party.controller;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.config.RuoYiConfig;
@@ -309,5 +311,15 @@ public class DjPartyMemberController extends BaseController
         }
         return AjaxResult.success();
     }
+
+    @PostMapping("/listPartyMemberWithPartyPositionType")
+    public AjaxResult listPartyMemberWithPartyPositionType(@Validated @RequestBody DjPartyMember djPartyMember) throws IOException
+    {
+        List<DjPartyMember> djPartyMemberList = djPartyMemberService.selectDjPartyMemberList(djPartyMember);
+        return AjaxResult.success(djPartyMemberList.stream().filter(partyMember ->
+            StringUtils.isNotNull(partyMember.getPartyPositionType())
+        ).collect(Collectors.toList()));
+    }
+
 
 }

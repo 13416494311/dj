@@ -29,6 +29,8 @@ public class DjActivityDetailed extends BaseEntity
 
     private String detailedUuid;
 
+    private List<DjActivitySupervise> superviseList;
+
     /** 计划uuid */
     @Excel(name = "计划uuid")
     private String planUuid;

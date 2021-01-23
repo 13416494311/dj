@@ -21,10 +21,10 @@
         :formatter="typeFormat"
         width="80"
       />-->
-      <el-table-column label="创建者" align="left" prop="createUser.userName" width="80" />
-      <el-table-column label="创建时间" align="left" prop="createTime" width="100">
+      <!--<el-table-column label="创建者" align="left" prop="createUser.userName" width="80" />-->
+      <el-table-column label="发布时间" align="left" prop="sendTime" width="100">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.sendTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
     </el-table>

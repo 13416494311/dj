@@ -68,6 +68,9 @@ public class DjPartyMember extends BaseEntity
     /** 职务 */
     private String administrativePositionText;
 
+    /** 党内职务 */
+    private String partyPositionType;
+
     /** 职称 */
     private String title;
 
@@ -148,6 +151,9 @@ public class DjPartyMember extends BaseEntity
 
     /** 党员分组 */
     private String memberGroup;
+
+    /** 上一个党组织ID */
+    private Long prePartyOrgId;
 
     /** 生活困难（1：是  0：否） */
     private String lifeDifficulty;

@@ -3,7 +3,7 @@
     <el-card shadow="always" style="margin-bottom: 30px;">
       <div slot="header" style="height: 25px">
         <span style="font-weight: bold;font-size: 16px">党组织职务</span>
-        <el-button
+        <!--<el-button
           type="primary"
           icon="el-icon-plus"
           size="small"
@@ -11,15 +11,14 @@
           style="float: right;margin-top: -5px"
           v-show="!disabled"
         >新增
-        </el-button>
+        </el-button>-->
       </div>
-      <el-table v-loading="loading" :data="partyOrgPostList"
+      <el-table v-loading="loading" :data="partyMemberList"
                 @selection-change="handleSelectionChange">
-        <el-table-column label="党员姓名" align="center" prop="partyMemberId"
-                         :formatter="partyMemberIdFormat"/>
-        <el-table-column label="职务" align="center" prop="partyPositionType"
+        <el-table-column label="党员姓名" align="center" prop="memberName"/>
+        <el-table-column label="党内职务" align="center" prop="partyPositionType"
                          :formatter="partyPositionTypeFormat"/>
-        <el-table-column label="任职时间" align="center" prop="tenureTime" width="180">
+        <!--<el-table-column label="任职时间" align="center" prop="tenureTime" width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.tenureTime, '{y}-{m}-{d}') }}</span>
           </template>
@@ -41,7 +40,7 @@
             >删除
             </el-button>
           </template>
-        </el-table-column>
+        </el-table-column>-->
       </el-table>
     </el-card>
 
@@ -95,8 +94,10 @@
     delPartyOrgPost,
     addPartyOrgPost,
     updatePartyOrgPost,
-    exportPartyOrgPost
+    exportPartyOrgPost,
+    listPartyMemberWithPartyPositiontype
   } from "@/api/party/orgPost";
+  import { listPartyMemberWithPartyPositionType } from "@/api/party/member";
   import treeTransfer from 'el-tree-transfer'
   import PartyMember from "./partyMemberChoose";
 
@@ -128,7 +129,7 @@
         // 总条数
         total: 0,
         // 党组织职务表格数据
-        partyOrgPostList: [],
+        partyMemberList: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层
@@ -212,9 +213,9 @@
         this.loading = true;
         let params = {};
         params.partyOrgUuid = this.partyOrgUuid;
-        listPartyOrgPost(params).then(response => {
-          this.partyOrgPostList = response.rows;
-          this.total = response.total;
+        listPartyMemberWithPartyPositionType(params).then(response => {
+          this.partyMemberList = response.data;
+          //this.total = response.total;
           this.loading = false;
         });
       },

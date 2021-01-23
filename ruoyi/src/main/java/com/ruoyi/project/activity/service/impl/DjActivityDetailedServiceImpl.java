@@ -10,6 +10,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.activity.domain.*;
+import com.ruoyi.project.activity.mapper.DjActivitySuperviseMapper;
 import com.ruoyi.project.activity.service.*;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
@@ -58,6 +59,8 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     private IDjActivitySummaryService summaryService;
     @Autowired
     private IDjActivityResolutionService resolutionService;
+    @Autowired
+    private DjActivitySuperviseMapper djActivitySuperviseMapper;
 
 
     public Map<String,Integer[]> getActivityChartData(int year){
@@ -206,6 +209,11 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
             }
             if (StringUtils.isNotNull(detailed.getPlanUuid())) {
                 detailed.setDjActivityPlan(djActivityPlanService.selectDjActivityPlanByPlanUuid(detailed.getPlanUuid()));
+            }
+            if (StringUtils.isNotNull(detailed.getDetailedUuid())) {
+                DjActivitySupervise djActivitySupervise = new DjActivitySupervise();
+                djActivitySupervise.setDetailedUuid(detailed.getDetailedUuid());
+                detailed.setSuperviseList(djActivitySuperviseMapper.selectDjActivitySuperviseList(djActivitySupervise));
             }
         });
         return list;

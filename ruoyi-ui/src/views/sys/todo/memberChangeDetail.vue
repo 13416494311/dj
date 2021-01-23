@@ -110,8 +110,17 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <el-form-item label="职称" prop="title">
-              <el-input :disabled="disabled" v-model="form.title" placeholder="请输入职称"/>
+            <el-form-item label="党内职务" prop="partyPositionType">
+              <el-select :disabled="disabled"
+                         v-model="form.partyPositionType"
+                         style="width: 100%" placeholder="请选择党内职务">
+                <el-option
+                  v-for="dict in partyPositionTypeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                ></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -145,6 +154,11 @@
         </el-row>
         <el-row>
           <el-col :span="8">
+            <el-form-item label="职称" prop="title">
+              <el-input :disabled="disabled" v-model="form.title" placeholder="请输入职称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="民族" prop="nation">
               <el-select :disabled="disabled"
                          v-model="form.nation"
@@ -172,6 +186,8 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="8">
             <el-form-item label="身份" prop="workIdentity">
               <el-select :disabled="disabled"
@@ -186,8 +202,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="8">
             <el-form-item label="学历" prop="education">
               <el-select :disabled="disabled"
@@ -216,13 +230,13 @@
               </el-select>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="8">
             <el-form-item label="籍贯" prop="nativePlace">
               <el-input :disabled="disabled" v-model="form.nativePlace" placeholder="请输入籍贯"/>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="8">
             <el-form-item label="家庭住址" prop="homeAddress">
               <el-input :disabled="disabled" v-model="form.homeAddress" placeholder="请输入家庭住址"/>
@@ -233,13 +247,13 @@
               <el-input :disabled="disabled" v-model="form.housePhone" placeholder="请输入固定电话"/>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="8">
             <el-form-item label="电子邮箱" prop="email">
               <el-input :disabled="disabled" v-model="form.email" placeholder="请输入电子邮箱"/>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="8">
             <el-form-item label="QQ" prop="qq">
               <el-input :disabled="disabled" v-model="form.qq" placeholder="请输入QQ"/>
@@ -366,6 +380,17 @@
                   :value="dict.dictValue"
                 ></el-option>
               </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="上一个党组织" prop="prePartyOrgId">
+              <select-tree :value="form.prePartyOrgId"
+                           :disabled="disabled"
+                           :options="partyOrgOptions"
+                           vModel="prePartyOrgId"
+                           @selected="setVModelValue"
+                           placeholder="请选择上一个党组织"
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -606,6 +631,15 @@
                 callback("变更前：无");
               }
               break;
+            case "partyPositionType" :
+              let partyPositionType = '';
+              if(this.partyMember[field]){
+                partyPositionType = this.selectDictLabel(this.partyPositionTypeOptions, this.partyMember[field]);
+                callback(new Error("变更前："+partyPositionType));
+              }else{
+                callback("变更前：无");
+              }
+              break;
             case "postId" :
               let post='';
               if(this.partyMember[field]){
@@ -765,6 +799,18 @@
                 callback("变更前：无");
               }
               break;
+            case "prePartyOrgId" :
+              let prePartyOrgName ='';
+              if(this.partyMember[field]){
+                getPartyOrg(this.partyMember[field]).then(response => {
+                  prePartyOrgName = response.data.partyOrgName;
+                }).then(()=>{
+                  callback(new Error("变更前："+prePartyOrgName));
+                });
+              }else{
+                callback("变更前：无");
+              }
+              break;
             case "lifeDifficulty" :
               let lifeDifficulty ='';
               if(this.partyMember[field]){
@@ -849,6 +895,8 @@
         sexOptions: [],
         // 职务字典
         administrativePositionOptions: [],
+        // 党内职务字典
+        partyPositionTypeOptions: [],
         // 民族字典
         nationOptions: [],
         // 政治面貌字典
@@ -898,6 +946,7 @@
           companyName: undefined,
           deptId: undefined,
           administrativePosition: undefined,
+          partyPositionType: undefined,
           title: undefined,
           postId: undefined,
           workingDate: undefined,
@@ -958,8 +1007,6 @@
             {required: true, message: "党员状态不能为空", trigger: "blur"},
             {validator: checkPartyMember, trigger: "blur"}
           ],
-
-
           housePhone: [
             {validator: checkPartyMember, trigger: "blur"}
           ],
@@ -990,6 +1037,9 @@
           ],
           administrativePosition: [
             { required: true, message: "职务不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          partyPositionType: [
             {validator: checkPartyMember, trigger: "blur"}
           ],
           title: [
@@ -1051,6 +1101,9 @@
             {validator: checkPartyMember, trigger: "blur"}
           ],
           memberGroup: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          prePartyOrgId: [
             {validator: checkPartyMember, trigger: "blur"}
           ],
           lifeDifficulty: [
@@ -1124,6 +1177,9 @@
       });
       this.getDicts("administrative_position_type").then(response => {
         this.administrativePositionOptions = response.data;
+      });
+      this.getDicts("party_position_type").then(response => {
+        this.partyPositionTypeOptions = response.data;
       });
       this.getDicts("nation_type").then(response => {
         this.nationOptions = response.data;
@@ -1254,6 +1310,7 @@
           companyName: undefined,
           deptId: undefined,
           administrativePosition: undefined,
+          partyPositionType: undefined,
           title: undefined,
           postId: undefined,
           workingDate: undefined,
@@ -1276,6 +1333,7 @@
           formalData: undefined,
           floatingType: undefined,
           memberGroup: undefined,
+          prePartyOrgId: undefined,
           lifeDifficulty: undefined,
           cognizance: undefined,
           economicSituation: undefined,

@@ -19,7 +19,7 @@
 
     <el-table v-loading="loading" :data="partyMemberChangeList" @selection-change="handleSelectionChange">
       <el-table-column label="党员姓名" align="center" prop="memberName"/>
-      <el-table-column label="手机号" align="center" prop="mobile"/>
+      <el-table-column label="党内职务" align="center" prop="partyPositionType" :formatter="partyPositionTypeFormat" />
       <el-table-column label="部门" align="center" prop="deptId" :formatter="deptIdFormat" />
       <el-table-column label="党组织" align="center" prop="partyOrgId" :formatter="partyOrgIdFormat" />
       <el-table-column label="党员类型" align="center" prop="memberType" :formatter="memberTypeFormat"/>
@@ -91,6 +91,8 @@
         sexOptions: [],
         // 职务字典
         administrativePositionOptions: [],
+        // 党内职务字典
+        partyPositionTypeOptions: [],
         // 民族字典
         nationOptions: [],
         // 政治面貌字典
@@ -335,6 +337,9 @@
       this.getDicts("administrative_position_type").then(response => {
         this.administrativePositionOptions = response.data;
       });
+      this.getDicts("party_position_type").then(response => {
+        this.partyPositionTypeOptions = response.data;
+      });
       this.getDicts("nation_type").then(response => {
         this.nationOptions = response.data;
       });
@@ -421,6 +426,10 @@
       // 职务字典翻译
       administrativePositionFormat(row, column) {
         return this.selectDictLabel(this.administrativePositionOptions, row.administrativePosition);
+      },
+      // 党内职务字典翻译
+      partyPositionTypeFormat(row, column) {
+        return this.selectDictLabel(this.partyPositionTypeOptions, row.partyPositionType);
       },
       // 民族字典翻译
       nationFormat(row, column) {

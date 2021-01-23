@@ -113,8 +113,17 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="职称" prop="title">
-                <el-input :disabled="disabled" v-model="form.title" placeholder="请输入职称"/>
+              <el-form-item label="党内职务" prop="partyPositionType">
+                <el-select :disabled="disabled"
+                           v-model="form.partyPositionType"
+                           style="width: 100%" placeholder="请选择党内职务">
+                  <el-option
+                    v-for="dict in partyPositionTypeOptions"
+                    :key="dict.dictValue"
+                    :label="dict.dictLabel"
+                    :value="dict.dictValue"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -148,6 +157,11 @@
           </el-row>
           <el-row>
             <el-col :span="8">
+              <el-form-item label="职称" prop="title">
+                <el-input :disabled="disabled" v-model="form.title" placeholder="请输入职称"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
               <el-form-item label="民族" prop="nation">
                 <el-select :disabled="disabled"
                            v-model="form.nation"
@@ -175,6 +189,8 @@
                 </el-select>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="身份" prop="workIdentity">
                 <el-select :disabled="disabled"
@@ -189,8 +205,6 @@
                 </el-select>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="学历" prop="education">
                 <el-select :disabled="disabled"
@@ -219,13 +233,13 @@
                 </el-select>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="籍贯" prop="nativePlace">
                 <el-input :disabled="disabled" v-model="form.nativePlace" placeholder="请输入籍贯"/>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="家庭住址" prop="homeAddress">
                 <el-input :disabled="disabled" v-model="form.homeAddress" placeholder="请输入家庭住址"/>
@@ -236,13 +250,13 @@
                 <el-input :disabled="disabled" v-model="form.housePhone" placeholder="请输入固定电话"/>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="电子邮箱" prop="email">
                 <el-input :disabled="disabled" v-model="form.email" placeholder="请输入电子邮箱"/>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="QQ" prop="qq">
                 <el-input :disabled="disabled" v-model="form.qq" placeholder="请输入QQ"/>
@@ -369,6 +383,17 @@
                     :value="dict.dictValue"
                   ></el-option>
                 </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="上一个党组织" prop="prePartyOrgId">
+                <select-tree :value="form.prePartyOrgId"
+                             :disabled="disabled"
+                             :options="partyOrgOptions"
+                             vModel="prePartyOrgId"
+                             @selected="setVModelValue"
+                             placeholder="请选择上一个党组织"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -539,7 +564,8 @@
     delPartyMemberChange,
     addPartyMemberChange,
     updatePartyMemberChange,
-    exportPartyMemberChange
+    exportPartyMemberChange,
+    getPrePartyMemberChange,
   } from "@/api/party/memberChange";
   import {getPartyMember} from "@/api/party/member";
   import { postOptionSelect } from "@/api/system/post";
@@ -557,7 +583,7 @@
     data() {
       let checkPartyMember = (rule, value, callback) => {
         let field = rule.field;
-        if (value != this.partyMember[field]) {
+        if (this.partyMember != undefined && value != this.partyMember[field]) {
           switch (field) {
             case "sex" :
               let sex=''
@@ -599,6 +625,15 @@
               if(this.partyMember[field]){
                 administrativePosition = this.selectDictLabel(this.administrativePositionOptions, this.partyMember[field]);
                 callback(new Error("变更前："+administrativePosition));
+              }else{
+                callback("变更前：无");
+              }
+              break;
+            case "partyPositionType" :
+              let partyPositionType = '';
+              if(this.partyMember[field]){
+                partyPositionType = this.selectDictLabel(this.partyPositionTypeOptions, this.partyMember[field]);
+                callback(new Error("变更前："+partyPositionType));
               }else{
                 callback("变更前：无");
               }
@@ -850,6 +885,8 @@
         sexOptions: [],
         // 职务字典
         administrativePositionOptions: [],
+        // 党内职务字典
+        partyPositionTypeOptions: [],
         // 民族字典
         nationOptions: [],
         // 政治面貌字典
@@ -899,6 +936,7 @@
           companyName: undefined,
           deptId: undefined,
           administrativePosition: undefined,
+          partyPositionTypePosition: undefined,
           title: undefined,
           postId: undefined,
           workingDate: undefined,
@@ -935,76 +973,153 @@
         rules: {
           memberName: [
             {required: true, message: "党员姓名不能为空", trigger: "blur"},
-            /*{validator: checkMemberName, trigger: 'blur'}*/
-          ],
-          sex: [
-            {required: true, message: "性别不能为空", trigger: "blur"},
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           mobile: [
             /*{required: true, message: "手机号不能为空", trigger: "blur"},*/
-            /*{ validator: checkMobile, trigger: "blur" }*/
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           identityCard: [
-            { required: true, message: "身份证号不能为空", trigger: "blur" },
-            /*{validator: checkIdentityCard, trigger: 'blur'}*/
+            {required: true, message: "身份证号不能为空", trigger: "blur"},
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          partyOrgId: [
+            {required: true, message: "党组织不能为空", trigger: "blur"},
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          memberType: [
+            {required: true, message: "党员类型不能为空", trigger: "blur"},
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          memberStatus: [
+            {required: true, message: "党员状态不能为空", trigger: "blur"},
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+
+
+          housePhone: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          email: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          workNo: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          avatar: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          sex: [
+            {required: true, message: "性别不能为空", trigger: "blur"},
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           birthday: [
             { required: true, message: "出生日期不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           companyName: [
             { required: true, message: "所在单位不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           deptId: [
             { required: true, message: "部门不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           administrativePosition: [
             { required: true, message: "职务不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          partyPositionType: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          title: [
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           postId: [
             { required: true, message: "岗位不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           workingDate: [
             { required: true, message: "参加工作日期不能为空", trigger: "blur" },
-          ],
-          nativePlace: [
-            /* { required: true, message: "籍贯不能为空", trigger: "blur" },*/
-          ],
-          polity: [
-            { required: true, message: "政治面貌不能为空", trigger: "blur" },
-          ],
-          education: [
-            { required: true, message: "学历不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           nation: [
             { required: true, message: "民族不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          polity: [
+            { required: true, message: "政治面貌不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          workIdentity: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          education: [
+            { required: true, message: "学历不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          academicDegree: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          nativePlace: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          homeAddress: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          qq: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          wechat: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          remark: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          joinBranchData: [
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           joinData: [
             { required: true, message: "入党日期不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
           ],
           formalData: [
             { required: true, message: "转为正式党员日期不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
           ],
-          housePhone: [
-            /*{ validator: checkPhone, trigger: "blur" }*/
+          floatingType: [
+            {validator: checkPartyMember, trigger: "blur"}
           ],
-          email: [
-            {
-              type: "email",
-              message: "请输入正确的邮箱地址",
-              trigger: ["blur", "change"]
-            },
-            /*{validator: checkEmail, trigger: 'blur'}*/
+          memberGroup: [
+            {validator: checkPartyMember, trigger: "blur"}
           ],
-          partyOrgId: [
-            { required: true, message: "党组织不能为空", trigger: "blur" }
+          prePartyOrgId: [
+            {validator: checkPartyMember, trigger: "blur"}
           ],
-          memberType: [
-            { required: true, message: "党员类型不能为空", trigger: "blur" }
+          lifeDifficulty: [
+            {validator: checkPartyMember, trigger: "blur"}
           ],
-          memberStatus: [
-            { required: true, message: "党员状态不能为空", trigger: "blur" }
+          cognizance: [
+            {validator: checkPartyMember, trigger: "blur"}
           ],
-
+          economicSituation: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          physicalHealth: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          lifeDifficultyType: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          enjoyHelp: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          helpInfo: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          detail: [
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
         },
         bodyStyle: {
           overflowY: 'auto',
@@ -1027,6 +1142,7 @@
         // 部门树选项
         deptOptions: [],
         logList: [],
+        partyMember:undefined,
       };
     },
     mounted() {
@@ -1048,6 +1164,12 @@
       });
       this.getDicts("administrative_position_type").then(response => {
         this.administrativePositionOptions = response.data;
+      });
+      this.getDicts("party_position_type").then(response => {
+        this.partyPositionTypeOptions = response.data;
+      });
+      this.getDicts("party_position_type").then(response => {
+        this.partyPositionTypeOptions = response.data;
       });
       this.getDicts("nation_type").then(response => {
         this.nationOptions = response.data;
@@ -1169,6 +1291,10 @@
       administrativePositionFormat(row, column) {
         return this.selectDictLabel(this.administrativePositionOptions, row.administrativePosition);
       },
+      // 党内职务字典翻译
+      partyPositionTypeFormat(row, column) {
+        return this.selectDictLabel(this.partyPositionTypeOptions, row.partyPositionType);
+      },
       // 民族字典翻译
       nationFormat(row, column) {
         return this.selectDictLabel(this.nationOptions, row.nation);
@@ -1275,6 +1401,7 @@
           formalData: undefined,
           floatingType: undefined,
           memberGroup: undefined,
+          prePartyOrgId: undefined,
           lifeDifficulty: undefined,
           cognizance: undefined,
           economicSituation: undefined,
@@ -1326,7 +1453,7 @@
           this.getLogList();
         }).then(() => {
           if (this.form.changeType == "edit") {
-            getPartyMember(this.form.partyMemberId).then(response => {
+            getPrePartyMemberChange(this.form.partyMemberId).then(response => {
               this.partyMember = response.data;
               this.$refs["form"].validate(valid => {
               });

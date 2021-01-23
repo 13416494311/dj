@@ -32,7 +32,7 @@
         // 是否显示弹出层
         open: false,
         data: {},
-        horizontal: false,  //  横向还是竖向
+        horizontal: true,  //  横向还是竖向
         collapsable: true,  //是否可以展开
         expandAll: true,    //全部展开
         labelClassName: "bg-white", //节点Class

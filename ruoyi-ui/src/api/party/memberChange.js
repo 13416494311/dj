@@ -17,6 +17,14 @@ export function getPartyMemberChange(memberId) {
   })
 }
 
+// 查询该党员上一次的变更
+export function getPrePartyMemberChange(partyMemberId) {
+  return request({
+    url: '/party/partyMemberChange/getPrePartyMemberChange/' + partyMemberId,
+    method: 'get'
+  })
+}
+
 // 查询党员变更表详细
 export function getPartyMemberChangeByMemberUuid(memberUuid) {
   return request({

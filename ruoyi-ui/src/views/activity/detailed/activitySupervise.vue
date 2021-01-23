@@ -7,14 +7,14 @@
         <el-card shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">活动督办</span>
-            <el-button
+            <!--<el-button
               type="primary"
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
               style="float: right;margin-top: -5px"
             >新增
-            </el-button>
+            </el-button>-->
           </div>
           <el-table v-loading="loading" :data="superviseList">
             <el-table-column label="督办内容" align="left" prop="content" min-width="60%"/>
@@ -34,7 +34,7 @@
                :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" label-width="150px">
         <el-form-item label="督办内容" prop="content">
-          <el-input v-model="form.content" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" placeholder="请输入内容"/>
+          <el-input v-model="form.addSupervise" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" placeholder="请输入内容"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">

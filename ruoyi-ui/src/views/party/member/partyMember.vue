@@ -73,8 +73,9 @@
           </el-col>-->
         </el-row>
         <el-table v-loading="loading" :data="partyMemberList" @selection-change="handleSelectionChange">
+          <el-table-column label="序号" align="center" type="index" :index="indexMethod"/>
           <el-table-column label="党员姓名" align="center" prop="memberName"/>
-          <el-table-column label="手机号" align="center" prop="mobile"/>
+          <el-table-column label="党内职务" align="center" prop="partyPositionType" :formatter="partyPositionTypeFormat" />
           <el-table-column label="部门" align="center" prop="deptId" :formatter="deptIdFormat" />
           <el-table-column label="党组织" align="center" prop="partyOrgId" :formatter="partyOrgIdFormat" />
           <el-table-column label="党员类型" align="center" prop="memberType" :formatter="memberTypeFormat"/>
@@ -231,8 +232,17 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="职称" prop="title">
-                <el-input :disabled="disabled" v-model="form.title" placeholder="请输入职称"/>
+              <el-form-item label="党内职务" prop="partyPositionType">
+                <el-select :disabled="disabled"
+                           v-model="form.partyPositionType"
+                           style="width: 100%" placeholder="请选择党内职务">
+                  <el-option
+                    v-for="dict in partyPositionTypeOptions"
+                    :key="dict.dictValue"
+                    :label="dict.dictLabel"
+                    :value="dict.dictValue"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -266,6 +276,11 @@
           </el-row>
           <el-row>
             <el-col :span="8">
+              <el-form-item label="职称" prop="title">
+                <el-input :disabled="disabled" v-model="form.title" placeholder="请输入职称"/>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
               <el-form-item label="民族" prop="nation">
                 <el-select :disabled="disabled"
                            v-model="form.nation"
@@ -293,6 +308,8 @@
                 </el-select>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="身份">
                 <el-select :disabled="disabled"
@@ -307,8 +324,6 @@
                 </el-select>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="学历" prop="education">
                 <el-select :disabled="disabled"
@@ -337,13 +352,13 @@
                 </el-select>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="籍贯" prop="nativePlace">
                 <el-input :disabled="disabled"v-model="form.nativePlace" placeholder="请输入籍贯"/>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="家庭住址" prop="homeAddress">
                 <el-input :disabled="disabled"v-model="form.homeAddress" placeholder="请输入家庭住址"/>
@@ -354,13 +369,13 @@
                 <el-input :disabled="disabled"v-model="form.housePhone" placeholder="请输入固定电话"/>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="电子邮箱" prop="email">
                 <el-input :disabled="disabled" v-model="form.email" placeholder="请输入电子邮箱"/>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="QQ" prop="qq">
                 <el-input :disabled="disabled"v-model="form.qq" placeholder="请输入QQ"/>
@@ -488,6 +503,17 @@
                     :value="dict.dictValue"
                   ></el-option>
                 </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="上一个党组织" prop="prePartyOrgId">
+                <select-tree :value="form.prePartyOrgId"
+                             :disabled="disabled"
+                             :options="orgOptions"
+                             vModel="prePartyOrgId"
+                             @selected="setVModelValue"
+                             placeholder="请选择上一个党组织"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -776,6 +802,8 @@
         sexOptions: [],
         // 职务字典
         administrativePositionOptions: [],
+        // 党内职务字典
+        partyPositionTypeOptions: [],
         // 岗位选项
         postOptions: [],
         // 民族字典
@@ -951,6 +979,9 @@
       this.getDicts("administrative_position_type").then(response => {
         this.administrativePositionOptions = response.data;
       });
+      this.getDicts("party_position_type").then(response => {
+        this.partyPositionTypeOptions = response.data;
+      });
       this.getDicts("nation_type").then(response => {
         this.nationOptions = response.data;
       });
@@ -1080,6 +1111,11 @@
           this.loading = false;
         });
       },
+      indexMethod(index) {
+        let pageNum = Number(this.queryParams.pageNum);
+        let pageSize = Number(this.queryParams.pageSize);
+        return  (pageNum -1)*pageSize+index+1;
+      },
       // 用户性别字典翻译
       sexFormat(row, column) {
         return this.selectDictLabel(this.sexOptions, row.sex);
@@ -1087,6 +1123,10 @@
       // 职务字典翻译
       administrativePositionFormat(row, column) {
         return this.selectDictLabel(this.administrativePositionOptions, row.administrativePosition);
+      },
+      // 党内职务字典翻译
+      partyPositionTypeFormat(row, column) {
+        return this.selectDictLabel(this.partyPositionTypeOptions, row.partyPositionType);
       },
       // 民族字典翻译
       nationFormat(row, column) {
@@ -1202,6 +1242,7 @@
           formalData: undefined,
           floatingType: undefined,
           memberGroup: undefined,
+          prePartyOrgId: undefined,
           lifeDifficulty: undefined,
           cognizance: undefined,
           economicSituation: undefined,

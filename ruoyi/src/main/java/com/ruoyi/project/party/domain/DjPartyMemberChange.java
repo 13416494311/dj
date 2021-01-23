@@ -88,6 +88,9 @@ public class DjPartyMemberChange extends BaseEntity
     @Excel(name = "职务")
     private String administrativePosition;
 
+    /** 党内职务 */
+    private String partyPositionType;
+
     /** 职称 */
     @Excel(name = "职称")
     private String title;
@@ -175,6 +178,9 @@ public class DjPartyMemberChange extends BaseEntity
     /** 党员分组 */
     @Excel(name = "党员分组")
     private String memberGroup;
+
+    /** 上一个党组织ID */
+    private Long prePartyOrgId;
 
     /** 生活困难（1：是  0：否） */
     @Excel(name = "生活困难", readConverterExp = "1=：是,0=：否")

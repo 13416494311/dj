@@ -78,3 +78,12 @@ export function checkPartyMemberUnique(data) {
     data: data
   })
 }
+
+// 用户头像上传
+export function listPartyMemberWithPartyPositionType(data) {
+  return request({
+    url: '/party/member/listPartyMemberWithPartyPositionType',
+    method: 'post',
+    data: data
+  })
+}
