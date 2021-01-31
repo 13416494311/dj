@@ -32,7 +32,7 @@
         // 是否显示弹出层
         open: false,
         data: {},
-        horizontal: true,  //  横向还是竖向
+        horizontal: false,  //  横向还是竖向
         collapsable: true,  //是否可以展开
         expandAll: true,    //全部展开
         labelClassName: "bg-white", //节点Class
@@ -141,6 +141,10 @@
   .org-tree-node-label {
     white-space: nowrap;
   }
+  .org-tree-node-label-inner{
+    writing-mode:tb-rl !important;
+    letter-spacing:3px;
+  }
 
   .bg-white {
     background-color: white;
@@ -148,6 +152,10 @@
 
   .bg-red {
     background-color: #f10006;
+    color: white !important;
+  }
+  .bg-white {
+    color: black ;
   }
 
   .text-center {

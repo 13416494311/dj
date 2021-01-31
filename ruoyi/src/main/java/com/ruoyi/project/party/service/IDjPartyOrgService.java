@@ -129,4 +129,12 @@ public interface IDjPartyOrgService
      * @return
      */
     public List<PartyOrgTreeData> getPartyOrgTreeDataListByEdit();
+
+    /**
+     * 查询党组织架构
+     *
+     * @param partyOrgUuid 党组织架构UUID
+     * @return 党组织架构
+     */
+    public DjPartyOrg selectDjPartyOrgByPartyOrgUuid(String partyOrgUuid);
 }

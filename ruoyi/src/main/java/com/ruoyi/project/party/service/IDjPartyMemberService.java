@@ -29,6 +29,8 @@ public interface IDjPartyMemberService
      */
     public DjPartyMember selectDjPartyMemberById(Long memberId);
 
+    public List<DjPartyMember> getDjPartyMemberList(DjPartyMember djPartyMember);
+
     /**
      * 查询党员信息列表
      *

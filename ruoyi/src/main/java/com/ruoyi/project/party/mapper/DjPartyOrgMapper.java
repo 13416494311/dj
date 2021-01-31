@@ -30,6 +30,14 @@ public interface DjPartyOrgMapper
     public DjPartyOrg selectDjPartyOrgById(Long partyOrgId);
 
     /**
+     * 查询党组织架构
+     *
+     * @param partyOrgId 党组织架构ID
+     * @return 党组织架构
+     */
+    public DjPartyOrg selectDjPartyOrgByUuid(String partyOrgUuid);
+
+    /**
      * 查询党组织架构列表
      *
      * @param djPartyOrg 党组织架构

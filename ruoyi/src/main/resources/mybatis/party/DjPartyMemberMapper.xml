@@ -161,9 +161,6 @@
             <if test="partyOrgId != null ">
                 AND pm.party_org_id = #{partyOrgId}
             </if>
-            <if test="partyOrgUuid != null ">
-                AND pm.party_org_uuid = #{partyOrgUuid}
-            </if>
             <if test="workNo != null  and workNo != ''">and work_no = #{workNo}</if>
             <if test="avatar != null  and avatar != ''">and avatar = #{avatar}</if>
             <if test="memberName != null  and memberName != ''">and member_name like concat('%', #{memberName}, '%')

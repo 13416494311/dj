@@ -353,6 +353,24 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
     }
 
 
+    @Override
+    public DjPartyOrg selectDjPartyOrgByPartyOrgUuid(String partyOrgUuid)
+    {
+
+        DjPartyOrg djPartyOrg = djPartyOrgMapper.selectDjPartyOrgByUuid(partyOrgUuid);
+        String[] djPartyOrgIds =djPartyOrg.getAncestors().split(",");
+        String partyOrgFullName ="";
+        for(String djPartyOrgId:djPartyOrgIds){
+            if(!"0".equals(djPartyOrgId)){
+                partyOrgFullName+=djPartyOrgMapper.selectDjPartyOrgById(Long.parseLong(djPartyOrgId)).getPartyOrgName()+"/";
+            }
+        }
+        djPartyOrg.setPartyOrgFullName(partyOrgFullName+djPartyOrg.getPartyOrgName());
+        if(StringUtils.isNotNull(djPartyOrg.getLeader())){
+            djPartyOrg.setLeaderMember(partyMemberService.selectPartyMemberById(djPartyOrg.getLeader()));
+        }
+        return djPartyOrg;
+    }
 
 
 }

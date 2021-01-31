@@ -366,9 +366,11 @@
     },
     watch:{
       'form.partyOrgUuid'(val){
-        this.$nextTick(()=>{
-          this.$refs.partyOrgPost.init(val);
-        })
+        if(val!= undefined){
+          this.$nextTick(()=>{
+            this.$refs.partyOrgPost.init(val);
+          })
+        }
       }
     },
     created() {

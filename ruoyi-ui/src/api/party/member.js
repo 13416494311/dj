@@ -79,11 +79,9 @@ export function checkPartyMemberUnique(data) {
   })
 }
 
-// 用户头像上传
-export function listPartyMemberWithPartyPositionType(data) {
+export function listPartyOrgPositionType(partyOrgUuid) {
   return request({
-    url: '/party/member/listPartyMemberWithPartyPositionType',
-    method: 'post',
-    data: data
+    url: '/party/member/listPartyOrgPositionType/'+partyOrgUuid,
+    method: 'get',
   })
 }

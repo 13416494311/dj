@@ -69,6 +69,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where party_org_id = #{partyOrgId}
     </select>
 
+    <select id="selectDjPartyOrgByUuid" parameterType="String" resultMap="DjPartyOrgResult">
+        <include refid="selectDjPartyOrgVo"/>
+        where party_org_uuid = #{partyOrgUuid}
+    </select>
+
     <insert id="insertDjPartyOrg" parameterType="DjPartyOrg" useGeneratedKeys="true" keyProperty="partyOrgId">
         insert into dj_party_org
         <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -14,8 +14,10 @@ import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.config.RuoYiConfig;
 import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.domain.DjPartyMemberChange;
+import com.ruoyi.project.party.domain.DjPartyOrg;
 import com.ruoyi.project.party.service.IDjPartyMemberChangeService;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
+import com.ruoyi.project.party.service.IDjPartyOrgService;
 import com.ruoyi.project.sys.domain.DjSysLog;
 import com.ruoyi.project.sys.domain.DjSysMessage;
 import com.ruoyi.project.sys.domain.DjSysTodo;
@@ -60,6 +62,9 @@ public class DjPartyMemberController extends BaseController
     private IDjSysMessageService sysMessageService;
     @Autowired
     private ISysDictDataService dictDataService;
+    @Autowired
+    private IDjPartyOrgService djPartyOrgService;
+
 
 
     @GetMapping("/getMemberCount")
@@ -312,14 +317,16 @@ public class DjPartyMemberController extends BaseController
         return AjaxResult.success();
     }
 
-    @PostMapping("/listPartyMemberWithPartyPositionType")
-    public AjaxResult listPartyMemberWithPartyPositionType(@Validated @RequestBody DjPartyMember djPartyMember) throws IOException
+    @GetMapping("/listPartyOrgPositionType/{partyOrgUuid}")
+    public AjaxResult listPartyOrgPositionType(@PathVariable("partyOrgUuid") String partyOrgUuid)
     {
-        List<DjPartyMember> djPartyMemberList = djPartyMemberService.selectDjPartyMemberList(djPartyMember);
+        DjPartyOrg partyOrg = djPartyOrgService.selectDjPartyOrgByPartyOrgUuid(partyOrgUuid);
+        DjPartyMember djPartyMember = new DjPartyMember();
+        djPartyMember.setPartyOrgId(partyOrg.getPartyOrgId());
+        List<DjPartyMember> djPartyMemberList = djPartyMemberService.getDjPartyMemberList(djPartyMember);
         return AjaxResult.success(djPartyMemberList.stream().filter(partyMember ->
-            StringUtils.isNotNull(partyMember.getPartyPositionType())
+                StringUtils.isNotNull(partyMember.getPartyPositionType())
         ).collect(Collectors.toList()));
     }
-
 
 }

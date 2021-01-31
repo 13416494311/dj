@@ -97,7 +97,7 @@
     exportPartyOrgPost,
     listPartyMemberWithPartyPositiontype
   } from "@/api/party/orgPost";
-  import { listPartyMemberWithPartyPositionType } from "@/api/party/member";
+  import { listPartyOrgPositionType } from "@/api/party/member";
   import treeTransfer from 'el-tree-transfer'
   import PartyMember from "./partyMemberChoose";
 
@@ -185,7 +185,7 @@
       window.addEventListener('resize', this.getHeight);
     },
     created() {
-      this.getList();
+      //this.getList();
       this.getDicts("party_position_type").then(response => {
         this.partyPositionTypeOptions = response.data;
       });
@@ -211,9 +211,7 @@
       /** 查询党组织职务列表 */
       getList() {
         this.loading = true;
-        let params = {};
-        params.partyOrgUuid = this.partyOrgUuid;
-        listPartyMemberWithPartyPositionType(params).then(response => {
+        listPartyOrgPositionType(this.partyOrgUuid).then(response => {
           this.partyMemberList = response.data;
           //this.total = response.total;
           this.loading = false;

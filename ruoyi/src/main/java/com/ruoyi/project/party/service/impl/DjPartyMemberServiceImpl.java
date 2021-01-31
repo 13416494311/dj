@@ -97,6 +97,12 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
         return member;
     }
 
+    @Override
+    public List<DjPartyMember> getDjPartyMemberList(DjPartyMember djPartyMember)
+    {
+        return djPartyMemberMapper.selectPartyMemberList(djPartyMember);
+    }
+
     /**
      * 查询党员信息列表
      *
