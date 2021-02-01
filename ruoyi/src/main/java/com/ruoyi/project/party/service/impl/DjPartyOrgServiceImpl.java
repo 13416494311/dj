@@ -372,5 +372,15 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
         return djPartyOrg;
     }
 
+    @Override
+    public List<Map<String,Object>> echarts_2(){
+        return djPartyOrgMapper.echarts_2();
+    }
+
+    @Override
+    public List<Map<String,Object>> echarts_1(){
+        return djPartyOrgMapper.echarts_1();
+    }
+
 
 }

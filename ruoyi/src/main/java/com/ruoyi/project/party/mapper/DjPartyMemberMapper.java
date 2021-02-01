@@ -3,6 +3,7 @@ package com.ruoyi.project.party.mapper;
 import com.ruoyi.project.party.domain.DjPartyMember;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 党员信息Mapper接口
@@ -97,4 +98,9 @@ public interface DjPartyMemberMapper
     public DjPartyMember checkIdentityCardUnique(String identityCard);
 
 
+    public List<Map<String,Object>> echarts_31();
+
+    public List<Map<String,Object>> echarts_32();
+
+    public List<Map<String,Object>> echarts_33();
 }

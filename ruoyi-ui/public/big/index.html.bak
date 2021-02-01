@@ -1,0 +1,163 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>index</title>
+<script type="text/javascript" src="js/jquery.js"></script>
+<link rel="stylesheet" href="css/comon0.css">
+
+
+</head>
+
+	<script>
+	$(window).load(function(){  
+             $(".loading").fadeOut()
+            })  
+			
+/****/
+$(document).ready(function(){
+	var whei=$(window).width()
+	$("html").css({fontSize:whei/20})
+	$(window).resize(function(){
+		var whei=$(window).width()
+	 $("html").css({fontSize:whei/20})
+});
+	});
+	</script>
+	<script type="text/javascript" src="js/echarts.min.js"></script> 
+	<script language="JavaScript" src="js/js.js"></script> 
+<body>
+<div class="canvas" style="opacity: .2">
+	<iframe frameborder="0" src="js/index.html" style="width: 100%; height: 100%"></iframe>
+	</div>
+<div class="loading">
+  <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
+</div>
+</div>
+
+<div class="head">
+  <h1>智慧党建综合大数据</h1>
+  <div class="weather"><!--<img src="picture/weather.png"><span>多云转小雨</span>--><span id="showTime"></span></div>
+	
+	<script>
+var t = null;
+    t = setTimeout(time,1000);//開始运行
+    function time()
+    {
+       clearTimeout(t);//清除定时器
+       dt = new Date();
+		var y=dt.getFullYear();
+		var mt=dt.getMonth()+1;
+		var day=dt.getDate();
+       var h=dt.getHours();//获取时
+       var m=dt.getMinutes();//获取分
+       var s=dt.getSeconds();//获取秒
+       document.getElementById("showTime").innerHTML = y+"年"+mt+"月"+day+"-"+h+"时"+m+"分"+s+"秒";
+       t = setTimeout(time,1000); //设定定时器，循环运行     
+    } 
+
+</script>
+<script type="text/javascript" src="js/china.js"></script> 
+<script type="text/javascript" src="js/area_echarts.js"></script> 
+
+	
+
+<div class="mainbox">
+  <ul class="clearfix">
+    <li>
+      <div class="boxall" style="height: 2.5rem">
+        <div class="alltitle">党支部地域分布</div>
+        <div class="allnav" id="echart1"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 5.2rem">
+        <div class="alltitle">各支部党员人数</div>
+        <div class="allnav" id="echart2"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div style="height:100%; width: 100%;">
+		  	<div class="sy" id="fb1"></div>
+				<div class="sy" id="fb2"></div>
+				<div class="sy" id="fb3"></div>
+		  </div>
+        <div class="boxfoot">
+			
+		</video>
+		  </div>
+      </div>
+
+    </li>
+    <li>
+      <div class="bar">
+        <div class="barbox">
+          <ul class="clearfix">
+            <li class="pulll_left counter">619</li>
+            <li class="pulll_left counter">586</li>
+          </ul>
+        </div>
+        <div class="barbox2">
+          <ul class="clearfix">
+            <li class="pulll_left">组织活动计划召开总数</li>
+            <li class="pulll_left">组织活动实际召开总数</li>
+          </ul>
+        </div>
+      </div>
+	  <div class="boxall" style="height:4rem"><iframe frameborder ="0" src="videojs-playlist-master/index.html" width="100%" height="100%"></iframe></div>
+	 
+	 
+      <div class="map">
+        <div class="map1" style="top:-40px"><img src="picture/lbx.png"></div>
+        <div class="map2" style="top:0"><img src="picture/jt.png"></div>
+        <div class="map3" style="top:0"><img src="picture/map.png"></div>
+        <div class="map4" style="top:-50px" id="map_1"></div>
+      </div>
+	   
+    </li>
+    <li>
+          <div class="boxall" style="height:4rem">
+        <div class="alltitle">各支部活动组织完成率排名</div>
+        <div class="allnav" id="echart4"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 4rem">
+        <div class="alltitle">年度党建工作计划</div>
+		<div style="min-height:250px;overflow-y:auto;max-height:150px;" class="alltitle1">一、一季度计划召开中共中铁三局集团广东建设工程有限公司第二次代表大会、2020年度党员领导班子民主生活会，并完成对各党支部的党建工作责任制考核。
+		<br />二、七一对先进党支部、党员先锋模范、优秀党务工作者和优秀共产党员进行表彰。
+		<br />三、三季度计划举办党支部书记。
+		<br />四、结合2021年重点工作任务部署，开展党委书记专题党课。
+		<br />五、2021年，公司党委计划开展不少于6次的党委理论学习中心组学习，并督促各单位跟进学习。
+		<br />六、持续推动“一室两册一考核”，实现基层党建工作标准化，推动基层党建在新平台、新项目中落地实施。
+		<br />七、围绕生产经营中心工作，开展一批专项党建特色活动。
+		<br />八、重点加强与地方媒体的沟通联系，推动宣传工作在新标准、新高度上实现突破。</div>
+        <div class="allnav" id="echart5"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.5rem">
+        <div class="alltitle">月度党建工作计划</div>
+		<div class="alltitle1">一、1月15日召开2020年度党员领导班子民主生活会。</div>
+		<div class="alltitle1">二、1月15日至16日召开中共中铁三局集团广东建设工程有限公司第二次代表大会。</div>
+		<div class="alltitle1">三、1月17日召开党务分口工作会，基层党组织书记进行抓基层党建工作述职报告。</div>
+		<div class="alltitle1">四、1月完成对各党支部的党建工作责任制考核。</div>
+        <div class="allnav" id="echart6"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+  </ul>
+  <!--
+	    <div class="container">
+            <section class="main-content">
+                <p>
+                    <button id="view-fullscreen">全屏</button>
+                    <button id="cancel-fullscreen">退出全屏</button>
+                </p>
+            </section>
+     </div>
+   <script src="js/base.js"></script>
+   -->
+</div>
+<div class="back"></div>
+
+
+</body>
+</html>

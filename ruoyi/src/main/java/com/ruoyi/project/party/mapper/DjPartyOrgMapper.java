@@ -138,4 +138,8 @@ public interface DjPartyOrgMapper
      * @return
      */
     public List<PartyOrgTreeData> getPartyOrgTreeData(@Param("partyOrgs") List<DjPartyOrg> partyOrgs);
+
+    public List<Map<String,Object>> echarts_2();
+
+    public List<Map<String,Object>> echarts_1();
 }

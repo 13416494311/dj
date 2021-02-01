@@ -156,6 +156,10 @@ public class DjPartyMemberChangeController extends BaseController
                 memberFlow.setFlowType("1");
                 djPartyMemberFlowService.insertDjPartyMemberFlow(memberFlow);
                 break;
+            case "enable":
+                memberFlow.setFlowType("0");
+                djPartyMemberFlowService.insertDjPartyMemberFlow(memberFlow);
+                break;
             default:break;
         }
     }
@@ -187,6 +191,11 @@ public class DjPartyMemberChangeController extends BaseController
             case "del" :
                 partyMember.setMemberId(memberChange.getPartyMemberId());
                 partyMember.setDelFlag("1");
+                djPartyMemberService.updateDjPartyMember(partyMember);
+                break;
+            case "enable" :
+                partyMember.setMemberId(memberChange.getPartyMemberId());
+                partyMember.setDelFlag("0");
                 djPartyMemberService.updateDjPartyMember(partyMember);
                 break;
             default:

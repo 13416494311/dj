@@ -138,6 +138,9 @@
       },
       /** 查询党组织成员 */
       getPartyMemberSelect(partyOrgId) {
+        if(partyOrgId ==undefined){
+          return;
+        }
         if(this.clickWaitFlag == true){
           return;
         }

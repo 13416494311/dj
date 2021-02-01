@@ -85,4 +85,8 @@ public interface DjActivityDetailedMapper
      * @return 结果
      */
     public int deleteDjActivityDetailedByIds(Long[] activityIds);
+
+    public List<Map<String,Object>> echarts_4();
+
+    public Map<String,Object> count();
 }

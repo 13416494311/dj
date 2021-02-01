@@ -137,4 +137,8 @@ public interface IDjPartyOrgService
      * @return 党组织架构
      */
     public DjPartyOrg selectDjPartyOrgByPartyOrgUuid(String partyOrgUuid);
+
+    public List<Map<String,Object>> echarts_2();
+
+    public List<Map<String,Object>> echarts_1();
 }

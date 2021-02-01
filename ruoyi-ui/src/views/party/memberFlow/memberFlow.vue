@@ -275,6 +275,10 @@
       /** 查询党员流动列表 */
       getList() {
         this.loading = true;
+        if(this.queryParams.flowMemberName!=undefined){
+          this.queryParams.flowMember={}
+          this.queryParams.flowMember.memberName = this.queryParams.flowMemberName
+        }
         listMemberFlow(this.queryParams).then(response => {
           this.memberFlowList = response.rows;
           this.total = response.total;
@@ -319,7 +323,21 @@
       /** 重置按钮操作 */
       resetQuery() {
         this.resetForm("queryForm");
-        this.handleQuery();
+        this.queryParams ={
+          pageNum: 1,
+          pageSize: 10,
+          flowMemberId: undefined,
+          flowMemberName: undefined,
+          flowType: undefined,
+          flowReasons: undefined,
+          flowContact: undefined,
+          flowPartyBranchContactPeople: undefined,
+          flowPartyBranchContact: undefined,
+          flowCompany: undefined,
+          flowCompanyPeople: undefined,
+          flowCompanyContact: undefined,
+        },
+          this.handleQuery();
       },
       // 多选框选中数据
       handleSelectionChange(selection) {

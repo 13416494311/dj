@@ -55,6 +55,9 @@ public class DjPartyOrg extends TreeEntity
     @Excel(name = "邮箱")
     private String email;
 
+    @Excel(name = "区域代码")
+    private String regionCode;
+
     @Excel(name = "地址")
     private String address;
 

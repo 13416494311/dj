@@ -2,6 +2,7 @@ package com.ruoyi.project.party.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.DateUtils;
@@ -360,6 +361,20 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
         return UserConstants.UNIQUE;
     }
 
+    @Override
+    public List<Map<String,Object>> echarts_31(){
+        return djPartyMemberMapper.echarts_31();
+    }
+
+    @Override
+    public List<Map<String,Object>> echarts_32(){
+        return djPartyMemberMapper.echarts_32();
+    }
+
+    @Override
+    public List<Map<String,Object>> echarts_33(){
+        return djPartyMemberMapper.echarts_33();
+    }
 
 
 

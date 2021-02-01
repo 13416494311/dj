@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.party.mapper.DjPartyMemberFlowMapper">
-    
+
     <resultMap type="DjPartyMemberFlow" id="DjPartyMemberFlowResult">
         <result property="flowId"    column="flow_id"    />
         <result property="flowMemberId"    column="flow_member_id"    />
@@ -23,29 +23,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDjPartyMemberFlowVo">
-        select flow_id, flow_member_id, flow_type, flow_reasons, flow_contact, flow_party_branch_contact_people, flow_party_branch_contact, flow_company, flow_company_people, flow_company_contact, del_flag, create_by, create_time, update_by, update_time from dj_party_member_flow
+        select flow.flow_id, flow.flow_member_id, flow.flow_type, flow.flow_reasons, flow.flow_contact, flow.flow_party_branch_contact_people,
+        flow.flow_party_branch_contact, flow.flow_company, flow.flow_company_people, flow.flow_company_contact, flow.del_flag,
+        flow.create_by, flow.create_time, flow.update_by, flow.update_time from dj_party_member_flow flow
     </sql>
 
     <select id="selectDjPartyMemberFlowList" parameterType="DjPartyMemberFlow" resultMap="DjPartyMemberFlowResult">
         <include refid="selectDjPartyMemberFlowVo"/>
-        <where>  
-            <if test="flowMemberId != null "> and flow_member_id = #{flowMemberId}</if>
-            <if test="flowType != null  and flowType != ''"> and flow_type = #{flowType}</if>
-            <if test="flowReasons != null  and flowReasons != ''"> and flow_reasons = #{flowReasons}</if>
-            <if test="flowContact != null  and flowContact != ''"> and flow_contact = #{flowContact}</if>
-            <if test="flowPartyBranchContactPeople != null  and flowPartyBranchContactPeople != ''"> and flow_party_branch_contact_people = #{flowPartyBranchContactPeople}</if>
-            <if test="flowPartyBranchContact != null  and flowPartyBranchContact != ''"> and flow_party_branch_contact = #{flowPartyBranchContact}</if>
-            <if test="flowCompany != null  and flowCompany != ''"> and flow_company = #{flowCompany}</if>
-            <if test="flowCompanyPeople != null  and flowCompanyPeople != ''"> and flow_company_people = #{flowCompanyPeople}</if>
-            <if test="flowCompanyContact != null  and flowCompanyContact != ''"> and flow_company_contact = #{flowCompanyContact}</if>
+        left join dj_party_member member on member.member_id = flow.flow_member_id
+        <where>
+            <if test="flowMemberId != null "> and flow.flow_member_id = #{flowMemberId}</if>
+            <if test="flowMember!=null and flowMember.memberName != null "> and member.member_name like concat('%', #{flowMember.memberName}, '%')  </if>
+            <if test="flowType != null  and flowType != ''"> and flow.flow_type = #{flowType}</if>
+            <if test="flowReasons != null  and flowReasons != ''"> and flow.flow_reasons = #{flowReasons}</if>
+            <if test="flowContact != null  and flowContact != ''"> and flow.flow_contact = #{flowContact}</if>
+            <if test="flowPartyBranchContactPeople != null  and flowPartyBranchContactPeople != ''"> and flow.flow_party_branch_contact_people = #{flowPartyBranchContactPeople}</if>
+            <if test="flowPartyBranchContact != null  and flowPartyBranchContact != ''"> and flow.flow_party_branch_contact = #{flowPartyBranchContact}</if>
+            <if test="flowCompany != null  and flowCompany != ''"> and flow.flow_company = #{flowCompany}</if>
+            <if test="flowCompanyPeople != null  and flowCompanyPeople != ''"> and flow.flow_company_people = #{flowCompanyPeople}</if>
+            <if test="flowCompanyContact != null  and flowCompanyContact != ''"> and flow.flow_company_contact = #{flowCompanyContact}</if>
         </where>
+        order by flow.create_time desc
     </select>
-    
+
     <select id="selectDjPartyMemberFlowById" parameterType="Long" resultMap="DjPartyMemberFlowResult">
         <include refid="selectDjPartyMemberFlowVo"/>
-        where flow_id = #{flowId}
+        where flow.flow_id = #{flowId}
     </select>
-        
+
     <insert id="insertDjPartyMemberFlow" parameterType="DjPartyMemberFlow" useGeneratedKeys="true" keyProperty="flowId">
         insert into dj_party_member_flow
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -108,10 +113,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDjPartyMemberFlowByIds" parameterType="String">
-        delete from dj_party_member_flow where flow_id in 
+        delete from dj_party_member_flow where flow_id in
         <foreach item="flowId" collection="array" open="(" separator="," close=")">
             #{flowId}
         </foreach>
     </delete>
-    
+
 </mapper>

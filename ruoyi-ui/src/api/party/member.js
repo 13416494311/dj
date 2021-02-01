@@ -52,6 +52,14 @@ export function delPartyMember(data) {
   })
 }
 
+export function enablePartyMember(data) {
+  return request({
+    url: '/party/member/enable',
+    method: 'post',
+    data: data
+  })
+}
+
 // 导出党员信息
 export function exportPartyMember(query) {
   return request({

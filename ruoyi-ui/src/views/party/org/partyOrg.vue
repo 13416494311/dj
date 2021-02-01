@@ -224,8 +224,19 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <el-form-item label="地址" prop="description">
-                <el-input :disabled="disabled" v-model="form.address" placeholder="请输入地址">
+              <el-form-item label="区域" prop="description">
+                <el-cascader :disabled="disabled" style="width: 100%"
+                             v-model="form.regionCode"
+                             ref="region"
+                             :options="regionOptions"
+                             :props="{ checkStrictly: true }"
+                             placeholder="请输入出发地">
+                </el-cascader>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="详细地址" prop="description">
+                <el-input :disabled="disabled" v-model="form.address" placeholder="请输入详细地址">
                   <el-button :disabled="disabled" slot="append" icon="el-icon-map-location"
                              @click="openMap"></el-button>
                 </el-input>
@@ -250,7 +261,7 @@
           </el-row>
         </el-card>
 
-        <party-org-post ref="partyOrgPost" :disabled="disabled" />
+        <party-org-post v-if="!addFlag" ref="partyOrgPost" :disabled="disabled" />
 
       </el-form>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
@@ -272,6 +283,7 @@
   import addressMap from "./addressMap";
   import selectTree from '../../components/selectTree';
   import partyMember from "../../party/org/partyMemberChoose";
+  import {listRegion} from "@/api/system/region";
 
   export default {
     name: "PartyOrg",
@@ -359,6 +371,9 @@
             return date.getTime() > Date.now();
           }
         },
+        //区域
+        regionOptions: [],
+        addFlag:false,
       };
     },
     mounted() {
@@ -366,7 +381,7 @@
     },
     watch:{
       'form.partyOrgUuid'(val){
-        if(val!= undefined){
+        if(val!= undefined && !this.addFlag){
           this.$nextTick(()=>{
             this.$refs.partyOrgPost.init(val);
           })
@@ -383,6 +398,9 @@
       });
       this.getDicts("sys_normal_disable").then(response => {
         this.statusOptions = response.data;
+      });
+      listRegion().then(response => {
+        this.regionOptions = this.cityTreeData(response.data);
       });
     },
     methods: {
@@ -479,6 +497,7 @@
           leaderName: undefined,
           phone: undefined,
           email: undefined,
+          regionCode: undefined,
           address: undefined,
           description: undefined,
           orderNum: undefined,
@@ -492,6 +511,7 @@
         this.resetForm("form");
 
         this.mapOpen = false;
+        this.addFlag = false;
       },
       /** 搜索按钮操作 */
       handleQuery() {
@@ -506,6 +526,7 @@
       handleAdd() {
         this.reset();
         this.form.partyOrgUuid = this.uuid();
+        this.addFlag = true;
         this.mapOpen = false;
         this.disabled = false;
         this.getTreeselect();
@@ -526,6 +547,9 @@
           if(response.data.leaderMember != undefined){
             this.form.leaderName = response.data.leaderMember.memberName
           }
+          if(response.data.regionCode != undefined){
+            this.form.regionCode = response.data.regionCode.split("-");
+          }
           this.open = true;
           this.title = "查看党组织架构";
         });
@@ -544,6 +568,9 @@
           if(response.data.leaderMember != undefined){
             this.form.leaderName = response.data.leaderMember.memberName
           }
+          if(response.data.regionCode != undefined){
+            this.form.regionCode = response.data.regionCode.split("-");
+          }
           this.open = true;
           this.title = "修改党组织架构";
         });
@@ -552,6 +579,9 @@
       submitForm: function () {
         this.$refs["form"].validate(valid => {
           if (valid) {
+            if(this.form.regionCode){
+              this.form.regionCode = this.form.regionCode.join("-");
+            }
             if (this.form.partyOrgId != undefined) {
               updatePartyOrg(this.form).then(response => {
                 if (response.code === 200) {

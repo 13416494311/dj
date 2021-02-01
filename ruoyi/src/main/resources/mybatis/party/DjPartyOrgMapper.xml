@@ -16,6 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="leader"    column="leader"    />
         <result property="phone"    column="phone"    />
         <result property="email"    column="email"    />
+        <result property="regionCode"    column="region_code"    />
         <result property="address"    column="address"    />
         <result property="description"    column="description"    />
         <result property="orderNum"    column="order_num"    />
@@ -36,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectDjPartyOrgVo">
         select party_org_id,party_org_uuid, parent_id, ancestors, party_org_name, org_type,party_org_type,
         build_time, leader, phone,
-        email, address ,description, order_num, status, del_flag, create_by, create_time, update_by, update_time
+        email, region_code, address ,description, order_num, status, del_flag, create_by, create_time, update_by, update_time
         from dj_party_org
     </sql>
 
@@ -56,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="leader != null  and leader != ''"> and leader = #{leader}</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="regionCode != null  and regionCode != ''"> and region_code = #{regionCode}</if>
             <if test="address != null  and address != ''"> and address = #{address}</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
             <if test="orderNum != null "> and order_num = #{orderNum}</if>
@@ -87,6 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="leader != null  and leader != ''">leader,</if>
             <if test="phone != null  and phone != ''">phone,</if>
             <if test="email != null  and email != ''">email,</if>
+            <if test="regionCode != null  and regionCode != ''">region_code,</if>
             <if test="address != null  and address != ''">address,</if>
             <if test="description != null  and description != ''">description,</if>
             <if test="orderNum != null ">order_num,</if>
@@ -108,6 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="leader != null  and leader != ''">#{leader},</if>
             <if test="phone != null  and phone != ''">#{phone},</if>
             <if test="email != null  and email != ''">#{email},</if>
+            <if test="regionCode != null  and regionCode != ''">#{regionCode},</if>
             <if test="address != null  and address != ''">#{address},</if>
             <if test="description != null  and description != ''">#{description},</if>
             <if test="orderNum != null ">#{orderNum},</if>
@@ -133,6 +137,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="leader != null  and leader != ''">leader = #{leader},</if>
             <if test="phone != null  and phone != ''">phone = #{phone},</if>
             <if test="email != null  and email != ''">email = #{email},</if>
+            <if test="regionCode != null  and regionCode != ''">region_code = #{regionCode},</if>
             <if test="address != null  and address != ''">address = #{address},</if>
             <if test="description != null  and description != ''">description = #{description},</if>
             <if test="orderNum != null ">order_num = #{orderNum},</if>
@@ -241,6 +246,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    LEFT JOIN dj_party_member member ON member.party_org_id = org.party_org_id
 	    where org.party_org_id = 52
         GROUP BY org.party_org_id
+    </select>
+
+    <select id="echarts_2" resultType="java.util.HashMap">
+        SELECT org.party_org_name  AS name,
+	            count( 1 ) AS value
+        FROM dj_party_member member
+	    INNER JOIN dj_party_org org ON member.party_org_id = org.party_org_id
+	          AND org.del_flag = '0'
+        WHERE member.del_flag = '0'
+	          AND member.party_org_id != 52
+        GROUP BY member.party_org_id
+        ORDER BY org.party_org_id asc ,org.order_num asc
+    </select>
+
+    <select id="echarts_1" resultType="java.util.HashMap">
+        SELECT REPLACE(region.region_name,'市','') AS name,
+	          temp.value as value
+        FROM ( SELECT org.region_code, count( 1 ) AS value
+		       FROM dj_party_org org
+               WHERE org.region_code IS NOT NULL
+		             AND org.del_flag = '0'
+		             AND org.party_org_id != '52'
+	           GROUP BY org.region_code
+	           ORDER BY org.region_code ASC
+	         ) temp
+	    LEFT JOIN sys_region region ON region.region_code = RIGHT ( temp.region_code, 6)
     </select>
 
 </mapper>

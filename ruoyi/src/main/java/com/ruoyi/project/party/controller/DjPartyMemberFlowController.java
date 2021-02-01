@@ -36,8 +36,8 @@ public class DjPartyMemberFlowController extends BaseController
     /**
      * 查询党员流动列表
      */
-    @GetMapping("/list")
-    public TableDataInfo list(DjPartyMemberFlow djPartyMemberFlow)
+    @PostMapping("/list")
+    public TableDataInfo list(@RequestBody DjPartyMemberFlow djPartyMemberFlow)
     {
         startPage();
         List<DjPartyMemberFlow> list = djPartyMemberFlowService.selectDjPartyMemberFlowList(djPartyMemberFlow);

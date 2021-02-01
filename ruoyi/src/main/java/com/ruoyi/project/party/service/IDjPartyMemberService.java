@@ -3,6 +3,7 @@ package com.ruoyi.project.party.service;
 import com.ruoyi.project.party.domain.DjPartyMember;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 党员信息Service接口
@@ -109,4 +110,10 @@ public interface IDjPartyMemberService
      * @return
      */
     public String checkPartyMemberIdentityCardUnique(DjPartyMember djPartyMember);
+
+    public List<Map<String,Object>> echarts_31();
+
+    public List<Map<String,Object>> echarts_32();
+
+    public List<Map<String,Object>> echarts_33();
 }

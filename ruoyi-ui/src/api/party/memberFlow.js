@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 // 查询党员流动列表
-export function listMemberFlow(query) {
+export function listMemberFlow(data) {
   return request({
     url: '/party/memberFlow/list',
-    method: 'get',
-    params: query
+    method: 'post',
+    data: data
   })
 }
 

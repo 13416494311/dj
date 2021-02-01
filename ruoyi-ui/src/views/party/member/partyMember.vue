@@ -102,10 +102,21 @@
                 size="small"
                 type="text"
                 icon="el-icon-delete"
-                @click="chooseAuditUser1(scope.row)"
+                @click="chooseAuditUser1(scope.row,'del')"
                 v-if="showHandleUpdate(scope.row)"
+                v-show="scope.row.delFlag ==0"
                 v-hasPermi="['party:member:remove']"
-              >删除
+              >禁用
+              </el-button>
+              <el-button
+                size="small"
+                type="text"
+                icon="el-icon-delete"
+                @click="chooseAuditUser1(scope.row,'enable')"
+                v-if="showHandleUpdate(scope.row)"
+                v-show="scope.row.delFlag ==1"
+                v-hasPermi="['party:member:remove']"
+              >启用
               </el-button>
             </template>
           </el-table-column>
@@ -630,7 +641,7 @@
       </div>
     </el-dialog>
 
-    <choose-audit-user ref="chooseAuditUser"  @ok="submitForm" @del="handleDelete"/>
+    <choose-audit-user ref="chooseAuditUser"  @ok="submitForm" @del="handleDelete" @enable="handleEnable"/>
   </div>
 </template>
 
@@ -667,6 +678,7 @@
     listPartyMember,
     getPartyMember,
     delPartyMember,
+    enablePartyMember,
     addPartyMember,
     updatePartyMember,
     exportPartyMember,
@@ -1069,6 +1081,7 @@
       },
       // 节点单击事件
       handleNodeClick(data) {
+        this.queryParams.pageNum = 1;
         this.queryParams.partyOrgId = data.id;
         this.partyOrg.partyOrgId = data.id;
         this.partyOrg.partyOrgName = data.label;
@@ -1105,6 +1118,7 @@
       /** 查询党员信息列表 */
       getList() {
         this.loading = true;
+        this.queryParams.delFlag = "all";
         listPartyMember(this.queryParams).then(response => {
           this.partyMemberList = response.rows;
           this.total = response.total;
@@ -1364,18 +1378,28 @@
           }
         });
       },
-      chooseAuditUser1(row){
+      chooseAuditUser1(row,type){
         listPartyMemberChange({"partyMemberId":row.memberId, "auditState":"2"}).then(response => {
           if(response.rows&&response.rows.length >0){
             this.msgSuccess("该党员变更正在审批中！")
           }else{
-            this.$refs.chooseAuditUser.init(6,'del',row.memberId)
+            this.$refs.chooseAuditUser.init(6,type,row.memberId)
           }
         });
       },
       /** 删除按钮操作 */
       handleDelete(form) {
         delPartyMember(form).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("提交审批成功");
+            this.getList();
+          } else {
+            this.msgError(response.msg);
+          }
+        });
+      },
+      handleEnable(form) {
+        enablePartyMember(form).then(response => {
           if (response.code === 200) {
             this.msgSuccess("提交审批成功");
             this.getList();

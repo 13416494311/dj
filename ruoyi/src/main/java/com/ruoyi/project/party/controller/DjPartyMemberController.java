@@ -80,6 +80,11 @@ public class DjPartyMemberController extends BaseController
     public TableDataInfo list(DjPartyMember djPartyMember)
     {
         startPage();
+        if(StringUtils.isNull(djPartyMember.getDelFlag())){
+            djPartyMember.setDelFlag("0");
+        }else if("all".equals(djPartyMember.getDelFlag())){
+            djPartyMember.setDelFlag(null);
+        }
         List<DjPartyMember> list = djPartyMemberService.selectDjPartyMemberList(djPartyMember);
         return getDataTable(list);
     }
@@ -88,6 +93,9 @@ public class DjPartyMemberController extends BaseController
     public AjaxResult listForApp(@RequestBody DjPartyMember djPartyMember)
     {
         startPage();
+        if(StringUtils.isNull(djPartyMember.getDelFlag())){
+            djPartyMember.setDelFlag("0");
+        }
         List<DjPartyMember> list = djPartyMemberService.selectPartyMemberList(djPartyMember);
         return AjaxResult.success(list);
     }
@@ -170,7 +178,8 @@ public class DjPartyMemberController extends BaseController
         switch (memberChange.getChangeType()){
             case "add" : sysLog.setOperResult("提交新增变更");  break;
             case "edit" : sysLog.setOperResult("提交修改变更");  break;
-            case "del" : sysLog.setOperResult("提交删除变更");  break;
+            case "del" : sysLog.setOperResult("提交禁用变更");  break;
+            case "enable" : sysLog.setOperResult("提交启用变更");  break;
             default:break;
         }
         sysLog.setOperTime(new Date());
@@ -183,7 +192,8 @@ public class DjPartyMemberController extends BaseController
         switch (memberChange.getChangeType()){
             case "add" : nextSysLog.setStepName("新增变更审批");  break;
             case "edit" : nextSysLog.setStepName("修改变更审批");  break;
-            case "del" : nextSysLog.setStepName("删除变更审批");  break;
+            case "del" : nextSysLog.setStepName("禁用变更审批");  break;
+            case "enable" : nextSysLog.setStepName("启用变更审批");  break;
             default:break;
         }
         nextSysLog.setOperUserId(auditUserId);
@@ -195,7 +205,8 @@ public class DjPartyMemberController extends BaseController
         switch (memberChange.getChangeType()){
             case "add" : sysTodo.setTitle(memberChange.getMemberName()+" 新增审批");;  break;
             case "edit" : sysTodo.setTitle(memberChange.getMemberName()+" 修改审批");;  break;
-            case "del" : sysTodo.setTitle(memberChange.getMemberName()+" 删除审批");;  break;
+            case "del" : sysTodo.setTitle(memberChange.getMemberName()+" 禁用审批");;  break;
+            case "enable" : sysTodo.setTitle(memberChange.getMemberName()+" 启用审批");;  break;
             default:break;
         }
         sysTodo.setUrlName("MemberChangeDetail");
@@ -233,6 +244,26 @@ public class DjPartyMemberController extends BaseController
         BeanUtils.copyBeanProp(memberChange,djPartyMember);
         memberChange.setMemberUuid(UUID.randomUUID().toString());
         memberChange.setChangeType("del");
+        memberChange.setPartyMemberId(djPartyMember.getMemberId());
+        memberChange.setAuditState("2");
+
+        createSysLogAndTodo( memberChange,
+                Long.parseLong(params.get("auditUserId").toString()),
+                params.get("operReason")==null?null:params.get("operReason").toString());
+
+        return toAjax(djPartyMemberChangeService.insertDjPartyMemberChange(memberChange));
+    }
+
+    @Log(title = "党员信息", businessType = BusinessType.DELETE)
+    @PostMapping("/enable")
+    public AjaxResult enable(@RequestBody Map<String,Object> params)
+    {
+        DjPartyMember djPartyMember = djPartyMemberService.selectDjPartyMemberById(Long.parseLong(params.get("memberId").toString()));
+
+        DjPartyMemberChange memberChange = new DjPartyMemberChange();
+        BeanUtils.copyBeanProp(memberChange,djPartyMember);
+        memberChange.setMemberUuid(UUID.randomUUID().toString());
+        memberChange.setChangeType("enable");
         memberChange.setPartyMemberId(djPartyMember.getMemberId());
         memberChange.setAuditState("2");
 

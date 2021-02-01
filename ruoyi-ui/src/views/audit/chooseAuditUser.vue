@@ -112,6 +112,9 @@
             if(this.type=="del"){
               this.form.memberId = this.memberId;
               this.$emit("del",this.form);
+            }else if(this.type=="enable"){
+              this.form.memberId = this.memberId;
+              this.$emit("enable",this.form);
             }else{
               this.$emit("ok",this.form);
             }

@@ -20,7 +20,7 @@ import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel,
   download, handleTree,treeInitData,getDateYearSub,getNowFormatDate,getTreeNode,
-  uuid} from "@/utils/ruoyi";
+  uuid,cityTreeData} from "@/utils/ruoyi";
 import Pagination from "@/components/Pagination";
 import Vue2OrgTree from 'vue2-org-tree';
 import 'vue2-org-tree/src/styles/org-tree.less';
@@ -51,6 +51,7 @@ Vue.prototype.getDateYearSub = getDateYearSub
 Vue.prototype.getTreeNode = getTreeNode
 Vue.prototype.uuid = uuid
 Vue.prototype.$echarts = echarts;
+Vue.prototype.cityTreeData = cityTreeData
 
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });

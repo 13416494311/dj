@@ -84,4 +84,8 @@ public interface IDjActivityDetailedService
      * @return 结果
      */
     public int deleteDjActivityDetailedById(Long activityId);
+
+    public List<Map<String,Object>> echarts_4();
+
+    public Map<String,Object> count();
 }

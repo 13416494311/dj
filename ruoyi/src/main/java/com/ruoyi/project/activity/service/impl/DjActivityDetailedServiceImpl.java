@@ -386,4 +386,14 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     public int deleteDjActivityDetailedById(Long activityId) {
         return djActivityDetailedMapper.deleteDjActivityDetailedById(activityId);
     }
+
+    @Override
+    public List<Map<String,Object>> echarts_4(){
+        return djActivityDetailedMapper.echarts_4();
+    }
+
+    @Override
+    public Map<String,Object> count(){
+        return djActivityDetailedMapper.count();
+    }
 }

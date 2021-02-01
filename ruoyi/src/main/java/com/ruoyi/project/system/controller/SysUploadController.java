@@ -7,6 +7,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.ServletUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import com.ruoyi.framework.config.RuoYiConfig;
@@ -59,15 +60,18 @@ public class SysUploadController extends BaseController
     public AjaxResult upload(MultipartFileParam param) throws Exception
     {
 
-        String path= "/bigFile/"+ DateUtils.datePath()+"/";
-        String newFileName = UUID.randomUUID().toString().replace("-","")
-                +"."+FileUploadUtils.getExtension(param.getFile());;
-        // response.setStatus对接前端插件
-        //        200, 201, 202: 当前块上传成功，不需要重传。
-        //        404, 415. 500, 501: 当前块上传失败，会取消整个文件上传。
-        //        其他状态码: 出错了，但是会自动重试上传。
-
         try {
+            FileUploadUtils.assertAllowed(param.getFile(), MimeTypeUtils.MEDIA_EXTENSION);
+
+            String path= "/bigFile/"+ DateUtils.datePath()+"/";
+            String newFileName = UUID.randomUUID().toString().replace("-","")
+                +"."+FileUploadUtils.getExtension(param.getFile());;
+                // response.setStatus对接前端插件
+            //        200, 201, 202: 当前块上传成功，不需要重传。
+            //        404, 415. 500, 501: 当前块上传失败，会取消整个文件上传。
+            //        其他状态码: 出错了，但是会自动重试上传。
+
+
             param.setTaskId(param.getIdentifier());
             chunkUploadByMappedByteBuffer(param,path,newFileName);
             return AjaxResult.success(Constants.RESOURCE_PREFIX+path+newFileName);

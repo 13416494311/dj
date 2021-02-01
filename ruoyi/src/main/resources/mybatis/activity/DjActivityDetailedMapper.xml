@@ -301,4 +301,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </select>
 
+    <select id="echarts_4" resultType="java.util.HashMap">
+        select a.orgName as name ,
+               ROUND(a.finishedCount/a.allCount*100,0) as value
+        from (
+            select dj_party_org.party_org_name as orgName,
+                 dj_activity_detailed.party_org_id as orgId,
+                 count(*) as allCount,
+                 COUNT(IF(dj_activity_detailed.status='5',dj_activity_detailed.status,NULL)) as finishedCount
+            from dj_activity_detailed
+            INNER join dj_party_org on dj_activity_detailed.party_org_id = dj_party_org.party_org_id and dj_party_org.del_flag ='0'
+            WHERE dj_activity_detailed.del_flag = '0' and dj_activity_detailed.party_org_id !='52'
+            GROUP BY dj_activity_detailed.party_org_id
+            ORDER BY dj_party_org.order_num asc , dj_party_org.party_org_id asc) a
+            ORDER BY value desc
+    </select>
+
+    <select id="count" resultType="java.util.HashMap">
+        SELECT count(*) AS allCount,
+	        COUNT( IF ( dj_activity_detailed.STATUS = '5', dj_activity_detailed.STATUS, NULL )) AS finishedCount
+        FROM dj_activity_detailed
+        WHERE dj_activity_detailed.del_flag = '0'
+	          AND dj_activity_detailed.party_org_id != '52'
+    </select>
+
+
 </mapper>

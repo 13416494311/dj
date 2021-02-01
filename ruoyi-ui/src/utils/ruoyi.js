@@ -229,3 +229,19 @@ export function uuid(){
   let uuidA = s.join("");
   return uuidA;
 }
+
+
+export function cityTreeData(data,level){
+  // 循环遍历json数据
+  for (var i = 0; i < data.length; i++) {
+    if (data[i].children.length < 1||level==2) {
+      // children若为空数组，则将children设为undefined
+      //data[i].children = undefined;
+      delete data[i].children;
+    } else {
+      // children若不为空数组，则继续 递归调用 本方法
+      this.cityTreeData(data[i].children,2);
+    }
+  }
+  return data;
+}
