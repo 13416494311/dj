@@ -572,7 +572,9 @@
       },
       /** 分享按钮操作 */
       handleShare(row){
-        this.$refs.qrcode.init("党组织信息","http://192.168.0.3/orgInfo/"+row.partyOrgId);
+        let url = window.location.href;
+        let path = this.$route.path;
+        this.$refs.qrcode.init("党组织信息",url.replace(path,'')+"/orgInfo/"+row.partyOrgId);
       },
       /** 查看按钮操作 */
       handleSee(row) {
