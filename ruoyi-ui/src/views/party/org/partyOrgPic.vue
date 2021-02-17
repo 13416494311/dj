@@ -70,20 +70,21 @@
         this.data = {};
         partyOrgTree(this.queryParams).then(response => {
           this.data = response.data;
-        });
+          this.data.selectedKey = true;
+        })
       },
       renderContent(h, data) {
         return data.label;
       },
       onExpand(e, data) {
-        if ('expand' in data) {
+        /*if ('expand' in data) {
           data.expand = !data.expand
           if (!data.expand && data.children) {
             this.collapse(data.children)
           }
         } else {
           this.$set(data, 'expand', true)
-        }
+        }*/
       },
       onNodeMouseOver(e, data) {
         console.log('MOUSE OVER', e);
@@ -92,9 +93,9 @@
         console.log('MOUSE OUT', e);
       },
       onNodeClick(e, data) {
-        this.cleanSelectNode(this.data);
+        /*this.cleanSelectNode(this.data);
         this.$set(data, 'selectedKey', !data['selectedKey']);
-        this.$refs.orgTree.$forceUpdate()
+        this.$refs.orgTree.$forceUpdate()*/
       },
       cleanSelectNode(data) {
         data.selectedKey = false;
@@ -146,22 +147,24 @@
     letter-spacing:3px;
   }
 
-  .bg-white {
-    background-color: white;
-  }
-
   .bg-red {
-    background-color: #f10006;
+    background-color: #f10006 !important;
     color: white !important;
   }
   .bg-white {
-    color: black ;
+    color: white !important;
+    background-color: #FF4500;
   }
 
   .text-center {
     width: 98%;
     margin-left: 1%;
     overflow: auto;
+  }
+
+  .org-tree-container{
+    background: url("../../../assets/image/org_bg.png") no-repeat;
+    background-size: 100% 100%;
   }
 
 

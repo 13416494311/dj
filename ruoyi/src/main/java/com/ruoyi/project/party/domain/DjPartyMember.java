@@ -62,6 +62,8 @@ public class DjPartyMember extends BaseEntity
 
     private SysDept sysDept;
 
+    private String deptAdminiPosFullName ;
+
     /** 职务 */
     private String administrativePosition;
 

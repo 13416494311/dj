@@ -56,17 +56,21 @@
       :data="partyOrgList"
       row-key="partyOrgId"
       default-expand-all
+      :stripe="true"
+      :border="true"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column label="党组织名称" align="left" prop="partyOrgName"/>
+      <el-table-column label="序号" align="center" type="index"/>
+      <el-table-column label="党组织名称" align="left" prop="partyOrgName" width="300"/>
       <el-table-column label="组织类型" align="center" prop="orgType" :formatter="orgTypeFormat"/>
-      <el-table-column label="党组织类别" align="center" prop="partyOrgType" :formatter="partyOrgTypeFormat"/>
+      <!--<el-table-column label="党组织类别" align="center" prop="partyOrgType" :formatter="partyOrgTypeFormat"/>-->
+      <el-table-column label="党组织负责人" align="center" prop="partyOrgPost" :formatter="partyPositionFormat"/>
       <el-table-column label="建立时间" align="center" prop="buildTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.buildTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="排序" align="center" prop="orderNum"/>
+      <!--<el-table-column label="排序" align="center" prop="orderNum"/>
       <el-table-column label="禁用状态" align="center" prop="status">
         <template slot-scope="scope">
           <el-switch
@@ -78,7 +82,7 @@
             disabled
           ></el-switch>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -88,6 +92,24 @@
             @click="handleSee(scope.row)"
           >查看
           </el-button>
+
+          <el-button
+            size="small"
+            type="text"
+            icon="el-icon-share"
+            @click="handleShare(scope.row)"
+            v-hasPermi="['party:org:share']"
+          >分享
+          </el-button>
+          <el-button
+            size="small"
+            type="text"
+            icon="el-icon-document-copy"
+            @click="handleArchives(scope.row)"
+            v-hasPermi="['party:org:archives']"
+          >档案
+          </el-button>
+
           <el-button
             size="small"
             type="text"
@@ -180,8 +202,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="负责人" prop="leader">
-                <el-input :disabled="true" v-model="form.leaderName" placeholder="请选择负责人">
+              <el-form-item label="活动负责人" prop="leader">
+                <el-input :disabled="true" v-model="form.leaderName" placeholder="请选择活动负责人">
                   <el-button :disabled="disabled" slot="append" icon="el-icon-search"
                              @click="openMemberChoose"></el-button>
                 </el-input>
@@ -468,6 +490,15 @@
       orgTypeFormat(row, column) {
         return this.selectDictLabel(this.orgTypeOptions, row.orgType);
       },
+      partyPositionFormat(row, column) {
+        var result = "";
+        for(let i in row.partyPositionMemberList){
+          if(row.partyPositionMemberList[i].partyPositionType =='1'){
+            result = row.partyPositionMemberList[i].memberName
+          }
+        }
+        return result;
+      },
       // 党组织类别字典翻译
       partyOrgTypeFormat(row, column) {
         return this.selectDictLabel(this.partyOrgTypeOptions, row.partyOrgType);
@@ -532,6 +563,14 @@
         this.getTreeselect();
         this.open = true;
         this.title = "添加党组织架构";
+      },
+      /** 档案按钮操作 */
+      handleArchives(row){
+
+      },
+      /** 分享按钮操作 */
+      handleShare(row){
+
       },
       /** 查看按钮操作 */
       handleSee(row) {

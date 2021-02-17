@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.ruoyi.common.constant.RoleConstans;
 import com.ruoyi.common.constant.UserConstants;
@@ -11,7 +12,9 @@ import com.ruoyi.common.exception.CustomException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.security.LoginUser;
+import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.domain.PartyOrgTreeData;
+import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.domain.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +36,8 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
     private DjPartyOrgMapper djPartyOrgMapper;
     @Autowired
     private DjPartyMemberServiceImpl partyMemberService;
+    @Autowired
+    private DjPartyMemberMapper djPartyMemberMapper;
 
 
     @Override
@@ -93,6 +98,18 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
                 list = selectPartyOrgLineByOrgId(sysUser.getDjPartyMember().getPartyOrgId());
             }
         }
+        list.stream().forEach(org ->{
+            DjPartyMember djPartyMember = new DjPartyMember();
+            djPartyMember.setPartyOrgId(org.getPartyOrgId());
+            List<DjPartyMember> djPartyMemberList = djPartyMemberMapper.selectPartyMemberList(djPartyMember);
+            org.setPartyPositionMemberList(
+                    djPartyMemberList.stream().filter(partyMember ->StringUtils.isNotNull(partyMember.getPartyPositionType())).collect(Collectors.toList())
+            );
+        });
+
+
+
+
         return list;
     }
 

@@ -51,7 +51,8 @@
       </el-col>
     </el-row>-->
 
-    <el-table v-loading="loading" :data="arrangeList" @selection-change="handleSelectionChange">
+    <el-table :stripe="true"
+              :border="true" v-loading="loading" :data="arrangeList" @selection-change="handleSelectionChange">
       <el-table-column label="活动主题" align="center" prop="djActivityPlan.activityTheme"/>
       <el-table-column label="活动类型" align="center" prop="djActivityPlan.activityType"
                        :formatter="activityTypeFormat"/>

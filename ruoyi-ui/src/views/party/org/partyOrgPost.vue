@@ -18,6 +18,7 @@
         <el-table-column label="党员姓名" align="center" prop="memberName"/>
         <el-table-column label="党内职务" align="center" prop="partyPositionType"
                          :formatter="partyPositionTypeFormat"/>
+        <el-table-column label="工作岗位" align="center" prop="deptAdminiPosFullName"/>
         <!--<el-table-column label="任职时间" align="center" prop="tenureTime" width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.tenureTime, '{y}-{m}-{d}') }}</span>

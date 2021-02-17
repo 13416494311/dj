@@ -44,7 +44,9 @@
     </el-form>
 
 
-    <el-table v-loading="loading"
+    <el-table :stripe="true"
+              :border="true"
+              v-loading="loading"
               :data="detailedList"
               :row-class-name="tableRowClassName">
       <el-table-column label="活动名称" align="center" prop="djActivityPlan.activityTheme"/>

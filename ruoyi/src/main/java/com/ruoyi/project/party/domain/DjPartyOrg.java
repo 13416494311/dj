@@ -1,6 +1,8 @@
 package com.ruoyi.project.party.domain;
 
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
@@ -72,4 +74,5 @@ public class DjPartyOrg extends TreeEntity
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
 
+    private List<DjPartyMember> partyPositionMemberList;
 }

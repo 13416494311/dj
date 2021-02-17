@@ -72,7 +72,8 @@
             </el-button>
           </el-col>-->
         </el-row>
-        <el-table v-loading="loading" :data="partyMemberList" @selection-change="handleSelectionChange">
+        <el-table :stripe="true"
+                  :border="true" v-loading="loading" :data="partyMemberList" @selection-change="handleSelectionChange">
           <el-table-column label="序号" align="center" type="index" :index="indexMethod"/>
           <el-table-column label="党员姓名" align="center" prop="memberName"/>
           <el-table-column label="党内职务" align="center" prop="partyPositionType" :formatter="partyPositionTypeFormat" />

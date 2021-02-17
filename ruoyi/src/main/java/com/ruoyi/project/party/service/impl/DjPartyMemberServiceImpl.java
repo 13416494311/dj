@@ -13,6 +13,7 @@ import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
+import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
 import com.ruoyi.project.system.service.*;
@@ -42,6 +43,8 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     private ISysDictDataService dictDataService;
     @Autowired
     private ISysPostService postService;
+    @Autowired
+    private SysDeptMapper sysDeptMapper;
 
     @Override
     public int getMemberCount(){
@@ -101,7 +104,26 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     @Override
     public List<DjPartyMember> getDjPartyMemberList(DjPartyMember djPartyMember)
     {
-        return djPartyMemberMapper.selectPartyMemberList(djPartyMember);
+        List<DjPartyMember> partyMemberList = djPartyMemberMapper.selectPartyMemberList(djPartyMember);
+        partyMemberList.stream().forEach(partyMember -> {
+            String deptAdminiPosFullName ="";
+            if(partyMember.getDeptId()!=null){
+                SysDept sysDept = sysDeptMapper.selectDeptById(partyMember.getDeptId());
+                String[] sysDeptIds =sysDept.getAncestors().split(",");
+                for(String sysDeptId:sysDeptIds){
+                    if(!"100".equals(sysDeptId)&&!"0".equals(sysDeptId)){
+                        deptAdminiPosFullName+=sysDeptMapper.selectDeptById(Long.parseLong(sysDeptId)).getDeptName()+"/";
+                    }
+                }
+                deptAdminiPosFullName+=sysDept.getDeptName();
+            }
+            if(partyMember.getAdministrativePosition()!=null){
+                deptAdminiPosFullName +="  "+ dictDataService.selectDictLabel("administrative_position_type",partyMember.getAdministrativePosition());
+            }
+            partyMember.setDeptAdminiPosFullName(deptAdminiPosFullName);
+        });
+
+        return partyMemberList;
     }
 
     /**
