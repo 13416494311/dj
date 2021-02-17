@@ -113,20 +113,6 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="党内职务" prop="partyPositionType">
-                <el-select :disabled="disabled"
-                           v-model="form.partyPositionType"
-                           style="width: 100%" placeholder="请选择党内职务">
-                  <el-option
-                    v-for="dict in partyPositionTypeOptions"
-                    :key="dict.dictValue"
-                    :label="dict.dictLabel"
-                    :value="dict.dictValue"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
               <el-form-item label="岗位" prop="postId">
                 <el-select :disabled="disabled"
                            v-model="form.postId"
@@ -154,13 +140,13 @@
                 </el-date-picker>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="职称" prop="title">
                 <el-input :disabled="disabled" v-model="form.title" placeholder="请输入职称"/>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="民族" prop="nation">
                 <el-select :disabled="disabled"
@@ -189,8 +175,6 @@
                 </el-select>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="身份" prop="workIdentity">
                 <el-select :disabled="disabled"
@@ -205,6 +189,8 @@
                 </el-select>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="学历" prop="education">
                 <el-select :disabled="disabled"
@@ -233,13 +219,13 @@
                 </el-select>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="籍贯" prop="nativePlace">
                 <el-input :disabled="disabled" v-model="form.nativePlace" placeholder="请输入籍贯"/>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="家庭住址" prop="homeAddress">
                 <el-input :disabled="disabled" v-model="form.homeAddress" placeholder="请输入家庭住址"/>
@@ -250,13 +236,13 @@
                 <el-input :disabled="disabled" v-model="form.housePhone" placeholder="请输入固定电话"/>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="电子邮箱" prop="email">
                 <el-input :disabled="disabled" v-model="form.email" placeholder="请输入电子邮箱"/>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="QQ" prop="qq">
                 <el-input :disabled="disabled" v-model="form.qq" placeholder="请输入QQ"/>
@@ -320,18 +306,6 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="加入党支部日期" prop="joinBranchData">
-                <el-date-picker :disabled="disabled"
-                                clearable size="small" style="width: 100%"
-                                v-model="form.joinBranchData"
-                                type="date"
-                                value-format="yyyy-MM-dd"
-                                :picker-options="afterTimeOption"
-                                placeholder="选择加入党支部日期">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
               <el-form-item label="加入党日期" prop="joinData">
                 <el-date-picker :disabled="disabled"
                                 clearable size="small" style="width: 100%"
@@ -355,29 +329,27 @@
                 </el-date-picker>
               </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="加入党支部日期" prop="joinBranchData">
+                <el-date-picker :disabled="disabled"
+                                clearable size="small" style="width: 100%"
+                                v-model="form.joinBranchData"
+                                type="date"
+                                value-format="yyyy-MM-dd"
+                                :picker-options="afterTimeOption"
+                                placeholder="选择加入党支部日期">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="流动党员" prop="floatingType">
+              <el-form-item label="党内职务" prop="partyPositionType">
                 <el-select :disabled="disabled"
-                           v-model="form.floatingType"
-                           style="width: 100%" placeholder="请选择流动党员">
+                           v-model="form.partyPositionType"
+                           style="width: 100%" placeholder="请选择党内职务">
                   <el-option
-                    v-for="dict in floatingTypeOptions"
-                    :key="dict.dictValue"
-                    :label="dict.dictLabel"
-                    :value="dict.dictValue"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="党员分组" prop="memberGroup">
-                <el-select :disabled="disabled"
-                           v-model="form.memberGroup"
-                           style="width: 100%" placeholder="请选择党员分组">
-                  <el-option
-                    v-for="dict in memberGroupOptions"
+                    v-for="dict in partyPositionTypeOptions"
                     :key="dict.dictValue"
                     :label="dict.dictLabel"
                     :value="dict.dictValue"
@@ -394,6 +366,36 @@
                              @selected="setVModelValue"
                              placeholder="请选择上一个党组织"
                 />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="流动党员" prop="floatingType">
+                <el-select :disabled="disabled"
+                           v-model="form.floatingType"
+                           style="width: 100%" placeholder="请选择流动党员">
+                  <el-option
+                    v-for="dict in floatingTypeOptions"
+                    :key="dict.dictValue"
+                    :label="dict.dictLabel"
+                    :value="dict.dictValue"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="党员分组" prop="memberGroup">
+                <el-select :disabled="disabled"
+                           v-model="form.memberGroup"
+                           style="width: 100%" placeholder="请选择党员分组">
+                  <el-option
+                    v-for="dict in memberGroupOptions"
+                    :key="dict.dictValue"
+                    :label="dict.dictLabel"
+                    :value="dict.dictValue"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -852,7 +854,11 @@
               }
               break;
             default:
-              callback(new Error(this.partyMember[field]));
+              if(this.partyMember[field]){
+                callback(new Error("变更前："+this.partyMember[field]));
+              }else{
+                callback("变更前：无");
+              }
               break;
           }
 
