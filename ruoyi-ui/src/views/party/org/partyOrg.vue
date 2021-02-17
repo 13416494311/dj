@@ -292,6 +292,7 @@
       </div>
     </el-dialog>
     <party-member ref="partyMember" @callbackMember="setMember"/>
+    <q-rcode  ref="qrcode"></q-rcode>
   </div>
 </template>
 
@@ -306,10 +307,11 @@
   import selectTree from '../../components/selectTree';
   import partyMember from "../../party/org/partyMemberChoose";
   import {listRegion} from "@/api/system/region";
+  import QRcode from "../../../components/QRcode/index";
 
   export default {
     name: "PartyOrg",
-    components: {Treeselect, partyOrgPic,partyOrgPost, addressMap, selectTree,partyMember},
+    components: {QRcode, Treeselect, partyOrgPic,partyOrgPost, addressMap, selectTree,partyMember},
     data() {
       return {
         disabled: false,
@@ -570,7 +572,7 @@
       },
       /** 分享按钮操作 */
       handleShare(row){
-
+        this.$refs.qrcode.init("党组织信息","http://192.168.0.3/orgInfo/"+row.partyOrgId);
       },
       /** 查看按钮操作 */
       handleSee(row) {

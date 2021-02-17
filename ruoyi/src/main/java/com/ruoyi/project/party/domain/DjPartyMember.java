@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.project.system.domain.SysDept;
+import com.ruoyi.project.system.domain.SysDictData;
 import com.ruoyi.project.system.domain.SysPost;
 import lombok.Data;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
@@ -72,6 +73,8 @@ public class DjPartyMember extends BaseEntity
 
     /** 党内职务 */
     private String partyPositionType;
+
+    private String partyPositionTypeText;
 
     /** 职称 */
     private String title;

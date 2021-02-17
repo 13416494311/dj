@@ -5,6 +5,7 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import lombok.SneakyThrows;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,6 +17,11 @@ import java.util.Hashtable;
 import java.util.Random;
 
 public class QRCodeUtils {
+
+    @SneakyThrows
+    public static void main(String[] args) {
+        encode("https://www.baidu.com/","H:\\桌面\\DJ");
+    }
 
     private static final String CHARSET = "utf-8";
     private static final String FORMAT_NAME = "JPG";
@@ -179,6 +185,19 @@ public class QRCodeUtils {
      */
     public static void encode(String content, String destPath) throws Exception {
         QRCodeUtils.encode(content, null, destPath, false);
+    }
+
+    /**
+     * 生成二维码
+     *
+     * @param content
+     *            内容
+     * @throws Exception
+     */
+    public static void encode(String content) throws Exception {
+        String imgPath = QRCodeUtils.class.getClassLoader().
+                getResource("image/logo.png").getPath();
+        QRCodeUtils.encode(content, imgPath, "H:\\桌面\\DJ", false);
     }
 
     /**

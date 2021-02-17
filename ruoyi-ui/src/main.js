@@ -53,6 +53,7 @@ Vue.prototype.uuid = uuid
 Vue.prototype.$echarts = echarts;
 Vue.prototype.cityTreeData = cityTreeData
 
+
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });
 }

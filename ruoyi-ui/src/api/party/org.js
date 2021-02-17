@@ -59,6 +59,14 @@ export function partyOrgTreeselectByEdit(query) {
 }
 
 // 查询党组织架构详细
+export function getPartyOrgInfo(partyOrgId) {
+  return request({
+    url: '/party/org/getPartyOrgInfo/' + partyOrgId,
+    method: 'get'
+  })
+}
+
+// 查询党组织架构详细
 export function getPartyOrg(partyOrgId) {
   return request({
     url: '/party/org/' + partyOrgId,

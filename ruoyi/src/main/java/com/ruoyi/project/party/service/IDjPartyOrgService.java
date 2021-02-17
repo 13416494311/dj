@@ -28,6 +28,8 @@ public interface IDjPartyOrgService
      */
     public DjPartyOrg selectDjPartyOrgById(Long partyOrgId);
 
+    public DjPartyOrg getPartyOrgInfo(Long partyOrgId);
+
     /**
      * 查询党组织架构列表
      *

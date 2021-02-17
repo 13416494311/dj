@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth'
 
 NProgress.configure({ showSpinner: false })
 
-const whiteList = ['/login', '/auth-redirect', '/bind', '/register',]
+const whiteList = ['/login', '/auth-redirect', '/bind', '/register','/orgInfo']
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
@@ -49,7 +49,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     // 没有token
-    if (whiteList.indexOf(to.path) !== -1) {
+    if (whiteList.indexOf(to.path) !== -1||to.path.indexOf('/orgInfo/') !== -1) {
       // 在免登录白名单，直接进入
       next()
     } else {
