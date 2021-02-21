@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.party.mapper.DjPartyMemberPoliticalBirthdayMapper">
+
+    <resultMap type="DjPartyMemberPoliticalBirthday" id="DjPartyMemberPoliticalBirthdayResult">
+        <result property="birthdayId"    column="birthday_id"    />
+        <result property="birthdayUuid"    column="birthday_uuid"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="partyOrgId"    column="party_org_id"    />
+        <result property="politicalBirthday"    column="political_birthday"    />
+        <result property="politicalAge"    column="political_age"    />
+        <result property="sendTime"    column="send_time"    />
+        <result property="theme"    column="theme"    />
+        <result property="content"    column="content"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjPartyMemberPoliticalBirthdayVo">
+        select birthday_id, birthday_uuid, member_id, party_org_id, political_birthday, political_age, send_time, theme, content, del_flag, create_by, create_time, update_by, update_time from dj_party_member_political_birthday
+    </sql>
+
+    <sql id="selectDjPartyMemberPoliticalBirthday">
+        select b.birthday_id, b.birthday_uuid, b.member_id, b.party_org_id, b.political_birthday,
+        b.political_age, b.send_time, b.theme, b.content, b.del_flag, b.create_by, b.create_time, b.update_by,
+        b.update_time from dj_party_member_political_birthday b
+    </sql>
+
+    <select id="selectDjPartyMemberPoliticalBirthdayList" parameterType="DjPartyMemberPoliticalBirthday" resultMap="DjPartyMemberPoliticalBirthdayResult">
+        <include refid="selectDjPartyMemberPoliticalBirthday"/>
+        left join dj_party_org o on o.party_org_id = b.party_org_id
+        <where>
+            <if test="birthdayUuid != null  and birthdayUuid != ''"> and b.birthday_uuid = #{birthdayUuid}</if>
+            <if test="memberId != null "> and b.member_id = #{memberId}</if>
+            <if test="partyOrgId != null "> and b.party_org_id = #{partyOrgId}</if>
+            <if test="politicalBirthday != null "> and b.political_birthday = #{politicalBirthday}</if>
+            <if test="politicalAge != null "> and b.political_age = #{politicalAge}</if>
+            <if test="sendTime != null "> and b.send_time = #{sendTime}</if>
+            <if test="theme != null  and theme != ''"> and b.theme = #{theme}</if>
+            <if test="content != null  and content != ''"> and b.content = #{content}</if>
+            ${dataScope}
+        </where>
+    </select>
+
+    <select id="selectDjPartyMemberPoliticalBirthdayById" parameterType="Long" resultMap="DjPartyMemberPoliticalBirthdayResult">
+        <include refid="selectDjPartyMemberPoliticalBirthdayVo"/>
+        where birthday_id = #{birthdayId}
+    </select>
+
+    <insert id="insertDjPartyMemberPoliticalBirthday" parameterType="DjPartyMemberPoliticalBirthday" useGeneratedKeys="true" keyProperty="birthdayId">
+        insert into dj_party_member_political_birthday
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="birthdayUuid != null  and birthdayUuid != ''">birthday_uuid,</if>
+            <if test="memberId != null ">member_id,</if>
+            <if test="partyOrgId != null ">party_org_id,</if>
+            <if test="politicalBirthday != null ">political_birthday,</if>
+            <if test="politicalAge != null ">political_age,</if>
+            <if test="sendTime != null ">send_time,</if>
+            <if test="theme != null  and theme != ''">theme,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="birthdayUuid != null  and birthdayUuid != ''">#{birthdayUuid},</if>
+            <if test="memberId != null ">#{memberId},</if>
+            <if test="partyOrgId != null ">#{partyOrgId},</if>
+            <if test="politicalBirthday != null ">#{politicalBirthday},</if>
+            <if test="politicalAge != null ">#{politicalAge},</if>
+            <if test="sendTime != null ">#{sendTime},</if>
+            <if test="theme != null  and theme != ''">#{theme},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjPartyMemberPoliticalBirthday" parameterType="DjPartyMemberPoliticalBirthday">
+        update dj_party_member_political_birthday
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="birthdayUuid != null  and birthdayUuid != ''">birthday_uuid = #{birthdayUuid},</if>
+            <if test="memberId != null ">member_id = #{memberId},</if>
+            <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
+            <if test="politicalBirthday != null ">political_birthday = #{politicalBirthday},</if>
+            <if test="politicalAge != null ">political_age = #{politicalAge},</if>
+            <if test="sendTime != null ">send_time = #{sendTime},</if>
+            <if test="theme != null  and theme != ''">theme = #{theme},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where birthday_id = #{birthdayId}
+    </update>
+
+    <delete id="deleteDjPartyMemberPoliticalBirthdayById" parameterType="Long">
+        delete from dj_party_member_political_birthday where birthday_id = #{birthdayId}
+    </delete>
+
+    <delete id="deleteDjPartyMemberPoliticalBirthdayByIds" parameterType="String">
+        delete from dj_party_member_political_birthday where birthday_id in
+        <foreach item="birthdayId" collection="array" open="(" separator="," close=")">
+            #{birthdayId}
+        </foreach>
+    </delete>
+
+</mapper>

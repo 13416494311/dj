@@ -156,7 +156,7 @@ public class DjPartyChangeServiceImpl implements IDjPartyChangeService
             if(changeDetail.getPreMemberId()!=null){
                 DjPartyMember partyMember =  djPartyMemberMapper.selectDjPartyMemberById(changeDetail.getPreMemberId());
                 partyMember.setPartyPositionType("");
-                djPartyMemberMapper.updateDjPartyMember(partyMember);
+                djPartyMemberMapper.updatePartyPositionType(partyMember);
             }
             if(changeDetail.getCurMemberId()!=null){
                 DjPartyMember partyMember =  djPartyMemberMapper.selectDjPartyMemberById(changeDetail.getCurMemberId());

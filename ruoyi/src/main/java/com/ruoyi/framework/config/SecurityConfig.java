@@ -111,6 +111,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/system/register/*").anonymous()
                 .antMatchers("/bigDataShow/*").anonymous()
                 .antMatchers("/party/org/getPartyOrgInfo/**").anonymous()
+                .antMatchers("/webSocket/**").anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated()
                 .and()

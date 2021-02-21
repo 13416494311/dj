@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.SysCommentMapper">
+    
+    <resultMap type="SysComment" id="SysCommentResult">
+        <result property="id"    column="id"    />
+        <result property="businessUuid"    column="business_uuid"    />
+        <result property="commentType"    column="comment_type"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="commentUserId"    column="comment_user_id"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="targetUserId"    column="target_user_id"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+
+    <sql id="selectSysCommentVo">
+        select id, business_uuid, comment_type, parent_id, comment_user_id, create_date, target_user_id, content from sys_comment
+    </sql>
+
+    <select id="selectSysCommentList" parameterType="SysComment" resultMap="SysCommentResult">
+        <include refid="selectSysCommentVo"/>
+        <where>  
+            <if test="businessUuid != null  and businessUuid != ''"> and business_uuid = #{businessUuid}</if>
+            <if test="commentType != null  and commentType != ''"> and comment_type = #{commentType}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="commentUserId != null "> and comment_user_id = #{commentUserId}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="targetUserId != null "> and target_user_id = #{targetUserId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysCommentById" parameterType="Long" resultMap="SysCommentResult">
+        <include refid="selectSysCommentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSysComment" parameterType="SysComment" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="businessUuid != null  and businessUuid != ''">business_uuid,</if>
+            <if test="commentType != null  and commentType != ''">comment_type,</if>
+            <if test="parentId != null ">parent_id,</if>
+            <if test="commentUserId != null ">comment_user_id,</if>
+            <if test="createDate != null ">create_date,</if>
+            <if test="targetUserId != null ">target_user_id,</if>
+            <if test="content != null  and content != ''">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="businessUuid != null  and businessUuid != ''">#{businessUuid},</if>
+            <if test="commentType != null  and commentType != ''">#{commentType},</if>
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="commentUserId != null ">#{commentUserId},</if>
+            <if test="createDate != null ">#{createDate},</if>
+            <if test="targetUserId != null ">#{targetUserId},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysComment" parameterType="SysComment">
+        update sys_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="businessUuid != null  and businessUuid != ''">business_uuid = #{businessUuid},</if>
+            <if test="commentType != null  and commentType != ''">comment_type = #{commentType},</if>
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="commentUserId != null ">comment_user_id = #{commentUserId},</if>
+            <if test="createDate != null ">create_date = #{createDate},</if>
+            <if test="targetUserId != null ">target_user_id = #{targetUserId},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysCommentById" parameterType="Long">
+        delete from sys_comment where id = #{id}
+    </delete>
+
+    <delete id="deleteSysCommentByIds" parameterType="String">
+        delete from sys_comment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

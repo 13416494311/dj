@@ -111,6 +111,9 @@ public interface IDjPartyMemberService
      */
     public String checkPartyMemberIdentityCardUnique(DjPartyMember djPartyMember);
 
+
+
+
     public List<Map<String,Object>> echarts_31();
 
     public List<Map<String,Object>> echarts_32();

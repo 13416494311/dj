@@ -2,6 +2,7 @@ package com.ruoyi.project.party.mapper;
 
 import com.ruoyi.project.party.domain.DjPartyMember;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,8 @@ public interface DjPartyMemberMapper
     public List<DjPartyMember> selectDjPartyMemberList(DjPartyMember djPartyMember);
 
     public List<DjPartyMember> selectPartyMemberList(DjPartyMember djPartyMember);
+
+    public List<DjPartyMember> selectPoliticalBirthdayPartyMemberList();
     /**
      * 新增党员信息
      *
@@ -49,6 +52,8 @@ public interface DjPartyMemberMapper
      */
     public int updateDjPartyMember(DjPartyMember djPartyMember);
 
+
+    public int updatePartyPositionType(DjPartyMember djPartyMember);
     /**
      * 删除党员信息
      *

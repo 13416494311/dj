@@ -151,9 +151,16 @@
             <if test="updateBy != null  and updateBy != ''">and update_by = #{updateBy}</if>
             <if test="updateTime != null ">and update_time = #{updateTime}</if>
         </where>
-        order by pm.party_position_type is null,pm.party_position_type asc , CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
+        order by pm.party_position_type is null || pm.party_position_type='' asc,pm.party_position_type asc , CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
+
+    <select id="selectPoliticalBirthdayPartyMemberList"  resultMap="DjPartyMemberResult">
+        <include refid="selectDjPartyMemberVo1"/>
+        where month(pm.join_data) = month(NOW()) and day(pm.join_data) = day(NOW())
+        order by pm.party_position_type is null || pm.party_position_type='' asc,
+        pm.party_position_type asc , CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
+    </select>
 
     <select id="selectPartyMemberList" parameterType="DjPartyMember" resultMap="DjPartyMemberResult">
         <include refid="selectDjPartyMemberVo1"/>
@@ -220,7 +227,7 @@
             <if test="createTime != null ">and create_time = #{createTime}</if>
             <if test="updateBy != null  and updateBy != ''">and update_by = #{updateBy}</if>
             <if test="updateTime != null ">and update_time = #{updateTime}</if>
-            order by pm.party_position_type is null, pm.party_position_type asc , CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
+            order by pm.party_position_type is null || pm.party_position_type='' asc, pm.party_position_type asc , CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
         </where>
     </select>
 
@@ -349,7 +356,7 @@
             <if test="administrativePosition != null  and administrativePosition != ''">administrative_position =
                 #{administrativePosition},
             </if>
-            <if test="partyPositionType != null">party_position_type =
+            <if test="partyPositionType != null   and partyPositionType != ''">party_position_type =
                 #{partyPositionType},
             </if>
             <if test="title != null  and title != ''">title = #{title},</if>
@@ -393,6 +400,13 @@
             <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
         </trim>
+        where member_id = #{memberId}
+    </update>
+
+
+    <update id="updatePartyPositionType" parameterType="DjPartyMember">
+        update dj_party_member
+        set party_position_type = null
         where member_id = #{memberId}
     </update>
 

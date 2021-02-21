@@ -3,12 +3,13 @@ package com.ruoyi.common.utils;
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * 时间工具类
- * 
+ *
  * @author ruoyi
  */
 public class DateUtils extends org.apache.commons.lang3.time.DateUtils
@@ -22,15 +23,15 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
     public static String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
     public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
-    
+
     private static String[] parsePatterns = {
-            "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM", 
+            "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM",
             "yyyy/MM/dd", "yyyy/MM/dd HH:mm:ss", "yyyy/MM/dd HH:mm", "yyyy/MM",
             "yyyy.MM.dd", "yyyy.MM.dd HH:mm:ss", "yyyy.MM.dd HH:mm", "yyyy.MM"};
 
     /**
      * 获取当前Date型日期
-     * 
+     *
      * @return Date() 当前日期
      */
     public static Date getNowDate()
@@ -40,7 +41,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
 
     /**
      * 获取当前日期, 默认格式为yyyy-MM-dd
-     * 
+     *
      * @return String
      */
     public static String getDate()
@@ -121,7 +122,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
             return null;
         }
     }
-    
+
     /**
      * 获取服务器启动时间
      */
@@ -151,5 +152,28 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         // 计算差多少秒//输出结果
         // long sec = diff % nd % nh % nm / ns;
         return day + "天" + hour + "小时" + min + "分钟";
+    }
+
+    /**
+     * 计算年份差
+     * @param fromDate
+     * @param toDate
+     * @return
+     */
+    public static int getYearReduce(Date fromDate,Date toDate){
+        Calendar from  =  Calendar.getInstance();
+        from.setTime(fromDate);
+        Calendar  to  =  Calendar.getInstance();
+        to.setTime(toDate);
+        int fromYear = from.get(Calendar.YEAR);
+        int fromMonth = from.get(Calendar.MONTH);
+        int fromDay = from.get(Calendar.DAY_OF_MONTH);
+        int toYear = to.get(Calendar.YEAR);
+        int toMonth = to.get(Calendar.MONTH);
+        int toDay = to.get(Calendar.DAY_OF_MONTH);
+        int year = toYear  -  fromYear;
+        int month = toMonth  - fromMonth;
+        int day = toDay  - fromDay;
+        return toYear - fromYear;
     }
 }

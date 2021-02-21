@@ -58,6 +58,8 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
         if(StringUtils.isNotNull(partyMember.getDeptId())){
             partyMember.setSysDept(deptService.selectDeptById(partyMember.getDeptId()));
         }
+        SysUser sysUser = userService.selectUserByPartyMemberId(memberId);
+        partyMember.setSysUser(sysUser);
         return partyMember;
     }
 

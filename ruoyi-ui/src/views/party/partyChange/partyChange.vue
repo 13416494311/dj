@@ -2,12 +2,11 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
       <el-form-item label="党组织名称" prop="partyOrgId">
-        <el-input
-          v-model="queryParams.partyOrgId"
-          placeholder="请输入党组织名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
+        <select-tree :value="queryParams.partyOrgId"
+                     :options="partyOrgOptions"
+                     vModel="partyOrgId"
+                     @selected="setQueryParamsValue"
+                     placeholder="请选择党组织"
         />
       </el-form-item>
       <el-form-item>
@@ -230,6 +229,7 @@
       this.getDicts("audit_state").then(response => {
         this.statusOptions = response.data;
       });
+      this.getTreeselect()
     },
     watch:{
       'form.changeUuid'(val){
@@ -246,6 +246,13 @@
       },
       chooseAuditUser(){
         this.$refs.chooseAuditUser.init(9)
+      },
+      setQueryParamsValue(vModel, val) {
+        if(val!=null){
+          this.queryParams[vModel] =  val;
+        }else{
+          this.queryParams[vModel] =  undefined;
+        }
       },
       //下拉树选择后设置值
       setVModelValue(vModel, val) {
@@ -317,12 +324,10 @@
         this.disabled = false;
         this.title = "添加党组织换届";
         this.form.changeUuid = this.uuid();
-        this.getTreeselect();
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
-        this.getTreeselect()
         const changeId = row.changeId || this.ids
         this.disabled = false;
         getPartyChange(changeId).then(response => {
@@ -337,7 +342,6 @@
       /** 查看按钮操作 */
       handleSee(row) {
         this.reset();
-        this.getTreeselect()
         const changeId = row.changeId || this.ids
         this.disabled = true;
         getPartyChange(changeId).then(response => {

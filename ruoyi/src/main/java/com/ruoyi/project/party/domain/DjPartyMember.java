@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysDictData;
 import com.ruoyi.project.system.domain.SysPost;
+import com.ruoyi.project.system.domain.SysUser;
 import lombok.Data;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.BaseEntity;
@@ -187,5 +188,6 @@ public class DjPartyMember extends BaseEntity
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
 
+    private SysUser sysUser;
 
 }
