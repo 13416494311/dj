@@ -26,7 +26,7 @@
         换届时间：
       </el-col>
       <el-col :span="16" class="org-info-content">
-        xxxxx
+        {{ partyOrg.params.changeTime==null?'':parseTime(partyOrg.params.changeTime, '{y}-{m}-{d}') }}
       </el-col>
     </el-row>
     <el-row >

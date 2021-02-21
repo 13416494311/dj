@@ -6,11 +6,14 @@ import java.util.stream.Collectors;
 import com.ruoyi.common.constant.RoleConstans;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.exception.CustomException;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.security.LoginUser;
+import com.ruoyi.project.party.domain.DjPartyChange;
 import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.domain.PartyOrgTreeData;
+import com.ruoyi.project.party.mapper.DjPartyChangeMapper;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.domain.SysUser;
@@ -38,6 +41,8 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
     private DjPartyMemberMapper djPartyMemberMapper;
     @Autowired
     private ISysDictDataService dictDataService;
+    @Autowired
+    private DjPartyChangeMapper djPartyChangeMapper;
 
 
     @Override
@@ -94,6 +99,17 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
         }
         djPartyOrg.setPartyOrgFullName(partyOrgFullName+djPartyOrg.getPartyOrgName());
 
+        Map<String, Object> params = new HashMap<>();
+
+        DjPartyChange partyChange = new DjPartyChange();
+        partyChange.setPartyOrgId(partyOrgId);
+        List<DjPartyChange> partyChangeList = djPartyChangeMapper.selectDjPartyChangeList(partyChange);
+
+        if(partyChangeList!= null && partyChangeList.size()>0){
+            params.put("changeTime", DateUtils.dateTime(partyChangeList.get(0).getChangeTime()) );
+        }
+
+
         DjPartyMember djPartyMember = new DjPartyMember();
         djPartyMember.setPartyOrgId(partyOrgId);
         List<DjPartyMember> djPartyMemberList = djPartyMemberMapper.selectPartyMemberList(djPartyMember);
@@ -108,13 +124,13 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
                 prepareCount[0]++;
             }
         });
-        Map<String, Object> params = new HashMap<>();
+
         params.put("formalCount",formalCount[0]);
         params.put("prepareCount",prepareCount[0]);
         djPartyOrg.setParams(params);
 
         djPartyMemberList = djPartyMemberList.stream().filter(partyMember ->
-                StringUtils.isNotNull(partyMember.getPartyPositionType())).collect(Collectors.toList());
+                StringUtils.isNotEmpty(partyMember.getPartyPositionType())).collect(Collectors.toList());
         djPartyMemberList.stream().forEach(partyMember->{
             partyMember.setPartyPositionTypeText(dictDataService.selectDictLabel("party_position_type",partyMember.getPartyPositionType()));
         });
@@ -145,7 +161,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
             djPartyMember.setPartyOrgId(org.getPartyOrgId());
             List<DjPartyMember> djPartyMemberList = djPartyMemberMapper.selectPartyMemberList(djPartyMember);
             org.setPartyPositionMemberList(
-                    djPartyMemberList.stream().filter(partyMember ->StringUtils.isNotNull(partyMember.getPartyPositionType())).collect(Collectors.toList())
+                    djPartyMemberList.stream().filter(partyMember ->StringUtils.isNotEmpty(partyMember.getPartyPositionType())).collect(Collectors.toList())
             );
         });
 

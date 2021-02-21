@@ -356,7 +356,7 @@ public class DjPartyMemberController extends BaseController
         djPartyMember.setPartyOrgId(partyOrg.getPartyOrgId());
         List<DjPartyMember> djPartyMemberList = djPartyMemberService.getDjPartyMemberList(djPartyMember);
         return AjaxResult.success(djPartyMemberList.stream().filter(partyMember ->
-                StringUtils.isNotNull(partyMember.getPartyPositionType())
+                StringUtils.isNotEmpty(partyMember.getPartyPositionType())
         ).collect(Collectors.toList()));
     }
 

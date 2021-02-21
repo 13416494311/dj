@@ -35,7 +35,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDjActivityDetailedVo">
-        select detailed_id, detailed_uuid,plan_uuid,party_org_id, cycle, party_member_id, venue, activity_content, plan_start_time, plan_end_time, activity_plan_start_time, activity_plan_end_time, actual_start_time, actual_end_time, recorder, mentors, presenter, speaker, allow_comment, activity_vote_id, activity_exam_id, status, del_flag, create_by, create_time, update_by, update_time from dj_activity_detailed
+        select detailed_id, detailed_uuid,plan_uuid,party_org_id, cycle, party_member_id, venue,
+         activity_content, plan_start_time, plan_end_time, activity_plan_start_time,
+         activity_plan_end_time, actual_start_time, actual_end_time, recorder, mentors,
+         presenter, speaker, allow_comment, activity_vote_id, activity_exam_id, status,
+         del_flag, create_by, create_time, update_by, update_time from dj_activity_detailed
     </sql>
 
     <sql id="selectDjActivityDetailed">

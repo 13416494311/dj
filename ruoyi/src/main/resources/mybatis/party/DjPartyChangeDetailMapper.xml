@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.party.mapper.DjPartyChangeDetailMapper">
+
+    <resultMap type="DjPartyChangeDetail" id="DjPartyChangeDetailResult">
+        <result property="changeDetailId"    column="change_detail_id"    />
+        <result property="changeUuid"    column="change_uuid"    />
+        <result property="partyOrgId"    column="party_org_id"    />
+        <result property="changeType"    column="change_type"    />
+        <result property="preMemberId"    column="pre_member_id"    />
+        <result property="curMemberId"    column="cur_member_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjPartyChangeDetailVo">
+        select change_detail_id, change_uuid, party_org_id, change_type,
+        pre_member_id, cur_member_id, create_by, create_time, update_by,
+        update_time from dj_party_change_detail
+    </sql>
+
+    <select id="selectDjPartyChangeDetailList" parameterType="DjPartyChangeDetail" resultMap="DjPartyChangeDetailResult">
+        <include refid="selectDjPartyChangeDetailVo"/>
+        <where>
+            <if test="changeUuid != null  and changeUuid != ''"> and change_uuid = #{changeUuid}</if>
+            <if test="partyOrgId != null "> and party_org_id = #{partyOrgId}</if>
+            <if test="changeType != null  and changeType != ''"> and change_type = #{changeType}</if>
+            <if test="preMemberId != null "> and pre_member_id = #{preMemberId}</if>
+            <if test="curMemberId != null "> and cur_member_id = #{curMemberId}</if>
+        </where>
+        order by change_type asc
+    </select>
+
+    <select id="selectDjPartyChangeDetailById" parameterType="Long" resultMap="DjPartyChangeDetailResult">
+        <include refid="selectDjPartyChangeDetailVo"/>
+        where change_detail_id = #{changeDetailId}
+    </select>
+
+    <insert id="insertDjPartyChangeDetail" parameterType="DjPartyChangeDetail">
+        insert into dj_party_change_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="changeDetailId != null ">change_detail_id,</if>
+            <if test="changeUuid != null  and changeUuid != ''">change_uuid,</if>
+            <if test="partyOrgId != null ">party_org_id,</if>
+            <if test="changeType != null  and changeType != ''">change_type,</if>
+            <if test="preMemberId != null ">pre_member_id,</if>
+            <if test="curMemberId != null ">cur_member_id,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="changeDetailId != null ">#{changeDetailId},</if>
+            <if test="changeUuid != null  and changeUuid != ''">#{changeUuid},</if>
+            <if test="partyOrgId != null ">#{partyOrgId},</if>
+            <if test="changeType != null  and changeType != ''">#{changeType},</if>
+            <if test="preMemberId != null ">#{preMemberId},</if>
+            <if test="curMemberId != null ">#{curMemberId},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjPartyChangeDetail" parameterType="DjPartyChangeDetail">
+        update dj_party_change_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="changeUuid != null  and changeUuid != ''">change_uuid = #{changeUuid},</if>
+            <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
+            <if test="changeType != null  and changeType != ''">change_type = #{changeType},</if>
+            <if test="preMemberId != null ">pre_member_id = #{preMemberId},</if>
+            <if test="curMemberId != null ">cur_member_id = #{curMemberId},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where change_detail_id = #{changeDetailId}
+    </update>
+
+    <delete id="deleteDjPartyChangeDetailById" parameterType="Long">
+        delete from dj_party_change_detail where change_detail_id = #{changeDetailId}
+    </delete>
+
+    <delete id="deleteDjPartyChangeDetailByIds" parameterType="String">
+        delete from dj_party_change_detail where change_detail_id in
+        <foreach item="changeDetailId" collection="array" open="(" separator="," close=")">
+            #{changeDetailId}
+        </foreach>
+    </delete>
+
+</mapper>

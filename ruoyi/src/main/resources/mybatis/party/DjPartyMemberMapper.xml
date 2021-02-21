@@ -349,7 +349,7 @@
             <if test="administrativePosition != null  and administrativePosition != ''">administrative_position =
                 #{administrativePosition},
             </if>
-            <if test="partyPositionType != null  and partyPositionType != ''">party_position_type =
+            <if test="partyPositionType != null">party_position_type =
                 #{partyPositionType},
             </if>
             <if test="title != null  and title != ''">title = #{title},</if>
