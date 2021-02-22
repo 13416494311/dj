@@ -5,7 +5,7 @@
 
       <div :style="bodyStyle" >
 
-       <panel-group-archive :partyOrgId="partyOrgId"/>
+       <panel-group-archive ref="panelGroupArchive" :partyOrgId="partyOrgId"/>
 
         <el-tabs type="border-card" style="margin-bottom: 30px">
           <el-tab-pane label="支部党员墙">
@@ -87,6 +87,10 @@
         this.open = true;
         this.partyOrgId = partyOrgId;
         this.getMemberList();
+
+        this.$nextTick(()=>{
+          this.$refs.panelGroupArchive.init(partyOrgId)
+        });
 
       },
       getMemberList(){

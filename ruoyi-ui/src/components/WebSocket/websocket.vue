@@ -37,9 +37,7 @@
         });
       },
       initWebSocket(){ //初始化weosocket
-        let url = window.location.href;
-        let path = this.$route.path;
-        let ws =url.replace(path,'').replace('http','ws')
+        let ws =this.getBasePath().replace('http','ws')
         const webSocketUrl = ws+process.env.VUE_APP_BASE_API +"/webSocket/"+this.groupId+"/"+this.user.userId;
         this.websocket = new WebSocket(webSocketUrl);
         this.websocket.onmessage = this.onMessage;

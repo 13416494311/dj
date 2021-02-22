@@ -147,7 +147,7 @@
 </template>
 
 <script>
-  import {  getPartyOrgArchives } from "@/api/party/org";
+  import {getPartyOrgArchives} from "@/api/party/org";
 
   export default {
     name: 'PanelGroupArchive',
@@ -174,7 +174,6 @@
       }
     },
     created(){
-      this.init();
       this.getDicts("org_type").then(response => {
         this.orgTypeOptions = response.data;
       });
@@ -184,12 +183,21 @@
     },
     methods: {
       init(){
+        this.reset();
         getPartyOrgArchives(this.partyOrgId).then(response => {
           this.partyOrg = response.data;
           if(response.data.leaderMember != undefined){
             this.partyOrg.leaderName = response.data.leaderMember.memberName
           }
         });
+      },
+      reset(){
+        this.partyOrg = {
+          params:{
+            formalCount:0,
+            prepareCount:0
+          }
+        }
       },
       // 组织类型字典翻译
       orgTypeFormat(orgType) {
