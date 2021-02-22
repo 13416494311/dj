@@ -86,6 +86,9 @@
         console.log(JSON.stringify(item))
         this.item=item;
         this.birthdayUuid = item.birthdayUuid
+        if(this.$refs.comment){
+          this.$refs.comment.init();
+        }
         this.userId = item.partyMember.sysUser.userId
         if(item.sendTime ==undefined){
           this.item.sendTime =this.getNowFormatDate();

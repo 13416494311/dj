@@ -70,10 +70,6 @@
       this.init();
     },
     watch:{
-      // 根据名称筛选部门树
-      'businessUuid'(val) {
-        this.init();
-      },
     },
     methods: {
       init() {

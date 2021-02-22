@@ -131,7 +131,6 @@
       </el-table-column>
     </el-table>
 
-    <party-org-pic ref="partyOrgPic"/>
     <!-- 添加或修改党组织架构对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="90%" append-to-body
                @open="getHeight" :close-on-click-modal="false">
@@ -291,8 +290,10 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <party-org-pic ref="partyOrgPic"/>
     <party-member ref="partyMember" @callbackMember="setMember"/>
     <q-rcode  ref="qrcode"></q-rcode>
+    <party-org-archives ref="partyOrgArchives"/>
   </div>
 </template>
 
@@ -308,10 +309,11 @@
   import partyMember from "../../party/org/partyMemberChoose";
   import {listRegion} from "@/api/system/region";
   import QRcode from "../../../components/QRcode/index";
+  import partyOrgArchives from "./partyOrgArchives";
 
   export default {
     name: "PartyOrg",
-    components: {QRcode, Treeselect, partyOrgPic,partyOrgPost, addressMap, selectTree,partyMember},
+    components: {QRcode, Treeselect, partyOrgPic,partyOrgArchives,partyOrgPost, addressMap, selectTree,partyMember},
     data() {
       return {
         disabled: false,
@@ -568,7 +570,7 @@
       },
       /** 档案按钮操作 */
       handleArchives(row){
-
+        this.$refs.partyOrgArchives.init(row.partyOrgId);
       },
       /** 分享按钮操作 */
       handleShare(row){

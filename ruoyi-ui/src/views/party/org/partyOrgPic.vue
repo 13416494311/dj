@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-dialog :title="title" :visible.sync="open" width="90%" append-to-body
-               @open="getHeight" :close-on-click-modal="false">
+               @open="getHeight" :close-on-click-modal="false"custom-class="org-pic">
       <div class="text-center" :style="bodyStyle" >
         <vue2-org-tree ref="orgTree"
                        :data="data"
@@ -163,8 +163,12 @@
   }
 
   .org-tree-container{
-    background: url("../../../assets/image/org_bg.png") no-repeat;
-    background-size: 100% 100%;
+    background-color: transparent;
+  }
+
+  .org-pic>.el-dialog__body{
+    background: url("../../../assets/image/org_bg.png") no-repeat !important;
+    background-size: 100% 100% !important;
   }
 
 

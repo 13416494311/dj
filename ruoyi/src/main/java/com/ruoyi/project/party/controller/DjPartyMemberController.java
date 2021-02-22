@@ -89,6 +89,18 @@ public class DjPartyMemberController extends BaseController
         return getDataTable(list);
     }
 
+    @RequestMapping("/listNoPage")
+    public AjaxResult listNoPage(DjPartyMember djPartyMember)
+    {
+        if(StringUtils.isNull(djPartyMember.getDelFlag())){
+            djPartyMember.setDelFlag("0");
+        }else if("all".equals(djPartyMember.getDelFlag())){
+            djPartyMember.setDelFlag(null);
+        }
+        List<DjPartyMember> list = djPartyMemberService.selectDjPartyMemberList(djPartyMember);
+        return AjaxResult.success(list);
+    }
+
     @PostMapping("/listForApp")
     public AjaxResult listForApp(@RequestBody DjPartyMember djPartyMember)
     {

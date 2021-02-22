@@ -33,6 +33,19 @@ public class SysRegionServiceImpl implements ISysRegionService
         return sysRegionMapper.selectSysRegionById(id);
     }
 
+    @Override
+    public SysRegion selectSysRegionByRegionCode(String regionCode)
+    {
+        SysRegion sysRegion = new SysRegion();
+        sysRegion.setRegionCode(regionCode);
+        List<SysRegion> sysRegionList = sysRegionMapper.selectSysRegionList(sysRegion);
+        if(sysRegionList != null && sysRegionList.size()>0){
+            return sysRegionList.get(0);
+        }else{
+            return null;
+        }
+    }
+
     /**
      * 查询地区代码列表
      *

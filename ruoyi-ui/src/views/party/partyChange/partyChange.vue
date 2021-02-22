@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+    <el-form v-if="!see" :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
       <el-form-item label="党组织名称" prop="partyOrgId">
         <select-tree :value="queryParams.partyOrgId"
                      :options="partyOrgOptions"
@@ -15,7 +15,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row v-if="!see" :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -74,14 +74,15 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-search"
             @click="handleSee(scope.row)"
           >查看
           </el-button>
           <el-button
-            size="mini"
+            v-if="!see"
+            size="small"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
@@ -89,7 +90,8 @@
           >修改
           </el-button>
           <el-button
-            size="mini"
+            v-if="!see"
+            size="small"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
@@ -171,6 +173,14 @@
   import ChooseAuditUser from "../../audit/chooseAuditUser";
   export default {
     name: "PartyChange",
+    props: {
+      see: {
+        type: Boolean,
+        default: () => {
+          return false
+        }
+      },
+    },
     components: {ChooseAuditUser,ChangeDetail, selectTree },
     data() {
       return {
@@ -219,6 +229,7 @@
         partyOrgOptions: [],
         disabled: false,
         addFlag:false,
+        statusOptions: [],
       };
     },
     mounted() {

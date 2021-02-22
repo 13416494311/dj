@@ -60,6 +60,8 @@ public class DjPartyOrg extends TreeEntity
     @Excel(name = "区域代码")
     private String regionCode;
 
+    private String region;
+
     @Excel(name = "地址")
     private String address;
 

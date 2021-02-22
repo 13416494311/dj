@@ -9,6 +9,15 @@ export function listPartyMember(query) {
   })
 }
 
+// 查询党员信息列表
+export function listPartyMemberNoPage(query) {
+  return request({
+    url: '/party/member/listNoPage',
+    method: 'get',
+    params: query
+  })
+}
+
 //
 export function getMemberCount() {
   return request({

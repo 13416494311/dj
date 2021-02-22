@@ -3,8 +3,10 @@ package com.ruoyi.framework.task;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.domain.DjPartyMemberPoliticalBirthday;
+import com.ruoyi.project.party.domain.DjPartyOrg;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.mapper.DjPartyMemberPoliticalBirthdayMapper;
+import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
 import com.ruoyi.project.party.service.IDjPartyMemberPoliticalBirthdayService;
 import com.ruoyi.project.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class PoliticalBirthdayTask {
     @Autowired
     private DjPartyMemberMapper memberMapper;
     @Autowired
+    private DjPartyOrgMapper partyOrgMapper;
+    @Autowired
     private DjPartyMemberPoliticalBirthdayMapper djPartyMemberPoliticalBirthdayMapper;
 
     public void createPoliticalBirthday() {
@@ -37,6 +41,11 @@ public class PoliticalBirthdayTask {
             politicalBirthday.setPoliticalAge((long) DateUtils.getYearReduce(partyMember.getJoinData(),today));
             politicalBirthday.setTheme("党员"+partyMember.getMemberName()+"政治生日");
             String content = configService.selectConfigByKey("politicalBirthday.content");
+            DjPartyOrg partyOrg = partyOrgMapper.selectDjPartyOrgById(partyMember.getPartyOrgId());
+            content = content.replace("{{memberName}}",partyMember.getMemberName())
+                    .replace("{{politicalAge}}",String.valueOf(DateUtils.getYearReduce(partyMember.getJoinData(),today)))
+                    .replace("{{sendTime}}",DateUtils.dateTime(today))
+                    .replace("{{partyOrgName}}",partyOrg.getPartyOrgName());
             politicalBirthday.setContent(content);
             politicalBirthday.setCreateBy("1");
             politicalBirthday.setCreateTime(today);

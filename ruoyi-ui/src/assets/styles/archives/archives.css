@@ -1,0 +1,109 @@
+.archives_card{
+  width: 100%;
+  height: 80px;
+  border: 1px solid #c0c4cc;
+  -moz-box-shadow:1px 1px;
+  -webkit-box-shadow:1px 1px;
+  box-shadow:1px 1px;
+  display: inline-flex;
+  float: left;
+  background-color: #ffffff;
+}
+
+.archives_icon{
+  width: 80px;
+  height: 80px;
+  padding: 16px;
+}
+
+
+.icon_hall{
+  background: url("../../image/archives/hall.png") no-repeat center !important;
+  background-size: 100% 100%;
+  background-color: #a5090c !important;
+}
+.icon_member{
+  background: url("../../image/archives/member.png") no-repeat center !important;
+  background-size: 100% 100%;
+  background-color: #a5090c !important;
+}
+.icon_phone{
+  background: url("../../image/archives/phone.png") no-repeat center !important;
+  background-size: 100% 100%;
+  background-color: #a5090c !important;
+}
+.icon_flag{
+  background: url("../../image/archives/flag.png") no-repeat center !important;
+  background-size: 100% 100%;
+  background-color: #a5090c !important;
+}
+.icon_party-change{
+  background: url("../../image/archives/party-change.png") no-repeat center !important;
+  background-size: 100% 100%;
+  background-color: #a5090c !important;
+}
+.icon_revoke{
+  background: url("../../image/archives/revoke.png") no-repeat center !important;
+  background-size: 100% 100%;
+  background-color: #a5090c !important;
+}
+.icon_tree{
+  background: url("../../image/archives/tree.png") no-repeat center !important;
+  background-size: 100% 100%;
+  background-color: #a5090c !important;
+}
+.icon_medal{
+  background: url("../../image/archives/medal.png") no-repeat center !important;
+  background-size: 100% 100%;
+  background-color: #a5090c !important;
+}
+.icon_calendar{
+  background: url("../../image/archives/calendar.png") no-repeat center !important;
+  background-size: 100% 100%;
+  background-color: #a5090c !important;
+}
+.icon_category{
+  background: url("../../image/archives/category.png") no-repeat center !important;
+  background-size: 100% 100%;
+  background-color: #a5090c !important;
+}
+.icon_location{
+  background: url("../../image/archives/location.png") no-repeat center !important;
+  background-size: 100% 100%;
+  background-color: #a5090c !important;
+}
+
+
+.archives_label{
+  width: 80px;
+  height: 80px;
+  background-color: #a5090c;
+  display: table;
+}
+.archives_label> span{
+  font-size: 18px;
+  color: white;
+  letter-spacing: 3px;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+  line-height:25px;
+}
+.word-wrap{
+  padding: 0 10px;
+}
+
+.archives_content{
+  height: 80px;
+  display: table;
+  padding-left: 10px;
+}
+.archives_content> span{
+  font-size: 18px;
+  color: black;
+  letter-spacing: 3px;
+  text-align: left;
+  display: table-cell;
+  vertical-align: middle;
+  line-height:25px;
+}

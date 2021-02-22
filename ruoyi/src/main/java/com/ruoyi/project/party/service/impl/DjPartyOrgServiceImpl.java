@@ -15,9 +15,12 @@ import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.domain.PartyOrgTreeData;
 import com.ruoyi.project.party.mapper.DjPartyChangeMapper;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
+import com.ruoyi.project.system.domain.SysRegion;
 import com.ruoyi.project.system.domain.SysRole;
 import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.mapper.SysRegionMapper;
 import com.ruoyi.project.system.service.ISysDictDataService;
+import com.ruoyi.project.system.service.ISysRegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
@@ -43,7 +46,8 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
     private ISysDictDataService dictDataService;
     @Autowired
     private DjPartyChangeMapper djPartyChangeMapper;
-
+    @Autowired
+    private ISysRegionService sysRegionService;
 
     @Override
     public List<Map<String,Object>> getOrgMemberChartData(){
@@ -90,6 +94,20 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
     {
 
         DjPartyOrg djPartyOrg = djPartyOrgMapper.selectDjPartyOrgById(partyOrgId);
+        if(StringUtils.isNotEmpty(djPartyOrg.getRegionCode())){
+            String region = "";
+            String[] regionCodes = djPartyOrg.getRegionCode().split("-");
+            for(String regionCode:regionCodes){
+                SysRegion sysRegion = sysRegionService.selectSysRegionByRegionCode(regionCode);
+                region += sysRegion.getRegionName();
+            }
+            djPartyOrg.setRegion(region);
+        }
+
+        if(StringUtils.isNotNull(djPartyOrg.getLeader())){
+            djPartyOrg.setLeaderMember(partyMemberService.selectPartyMemberById(djPartyOrg.getLeader()));
+        }
+
         String[] djPartyOrgIds =djPartyOrg.getAncestors().split(",");
         String partyOrgFullName ="";
         for(String djPartyOrgId:djPartyOrgIds){

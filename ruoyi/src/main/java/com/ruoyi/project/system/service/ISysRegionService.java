@@ -21,6 +21,8 @@ public interface ISysRegionService
      */
     public SysRegion selectSysRegionById(Long id);
 
+    public SysRegion selectSysRegionByRegionCode(String regionCode);
+
     /**
      * 查询地区代码列表
      *

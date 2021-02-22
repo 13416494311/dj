@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+    <el-form v-if="!see":model="queryParams" ref="queryForm" :inline="true" label-width="100px">
       <el-form-item label="活动主题" prop="activityTheme">
         <el-input
           v-model="queryParams.activityTheme"
@@ -86,7 +86,7 @@
           >查看
           </el-button>
           <el-button
-            v-if="scope.row.status !='5' && pathType=='1'"
+            v-if="scope.row.status !='5' && pathType=='1'&&!see"
             size="small"
             type="text"
             icon="el-icon-edit"
@@ -95,7 +95,7 @@
           >活动管理
           </el-button>
           <el-button
-            v-if="scope.row.status =='5'&&(scope.row.partyMemberId == user.partyMemberId || admin)"
+            v-if="scope.row.status =='5'&&(scope.row.partyMemberId == user.partyMemberId || admin)&&!see"
             size="small"
             type="text"
             icon="el-icon-edit"
@@ -111,7 +111,7 @@
           >下载
           </el-button>
           <el-button
-            v-if="scope.row.status !='5' && pathType=='2'"
+            v-if="scope.row.status !='5' && pathType=='2'&&!see"
             size="small"
             type="text"
             icon="el-icon-message"
@@ -742,6 +742,14 @@
 
   export default {
     name: "Detailed",
+    props: {
+      see: {
+        type: Boolean,
+        default: () => {
+          return false
+        }
+      },
+    },
     components: {
       partyMember, addressMap, memberTransfer, activitySummary,
       activityResolution, activitySuggestions, activityExperience,

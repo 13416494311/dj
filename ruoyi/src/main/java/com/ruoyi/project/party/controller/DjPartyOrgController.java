@@ -156,6 +156,15 @@ public class DjPartyOrgController extends BaseController
     /**
      * 获取党组织架构详细信息
      */
+    @GetMapping(value = "/getPartyOrgArchives/{partyOrgId}")
+    public AjaxResult getPartyOrgArchives(@PathVariable("partyOrgId") Long partyOrgId)
+    {
+        return AjaxResult.success(djPartyOrgService.getPartyOrgInfo(Long.valueOf(partyOrgId)));
+    }
+
+    /**
+     * 获取党组织架构详细信息
+     */
     @GetMapping(value = "/getPartyOrgInfo/{partyOrgId}")
     public AjaxResult getPartyOrgInfo(@PathVariable("partyOrgId") Long partyOrgId)
     {

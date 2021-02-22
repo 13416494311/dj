@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+    <el-form v-if="!see":model="queryParams" ref="queryForm" :inline="true" label-width="100px">
 
       <el-form-item label="党员名称" prop="memberId">
         <el-input
@@ -25,7 +25,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row v-if="!see":gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -73,7 +73,7 @@
     <el-table :stripe="true"
               :border="true"
               v-loading="loading" :data="politicalBirthdayList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column v-if="!see" type="selection" width="55" align="center"/>
       <el-table-column label="主题" align="center" prop="theme"/>
       <el-table-column label="党员名称" align="center" prop="partyMember.memberName"/>
       <el-table-column label="组织机构名称" align="center" prop="partyOrg.partyOrgFullName"/>
@@ -96,14 +96,15 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="small"
             type="text"
-            icon="el-icon-search"
+            icon="el-icon-star-off"
             @click="handleSee(scope.row)"
-          >查看
+          >点评
           </el-button>
           <el-button
-            size="mini"
+            v-if="!see"
+            size="small"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
@@ -111,7 +112,8 @@
           >修改
           </el-button>
           <el-button
-            size="mini"
+            v-if="!see"
+            size="small"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
@@ -131,7 +133,7 @@
     />
 
     <!-- 添加或修改政治生日对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="80%" append-to-body
+    <el-dialog :title="title" :visible.sync="open" width="90%" append-to-body
                @open="getHeight" :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" :style="bodyStyle" label-width="150px">
 
@@ -251,6 +253,14 @@
 
   export default {
     name: "PoliticalBirthday",
+    props: {
+      see: {
+        type: Boolean,
+        default: () => {
+          return false
+        }
+      },
+    },
     components: {PoliticalBirthdayView, Editor,selectTree, PartyMember, },
     data() {
       return {
@@ -319,6 +329,7 @@
         partyOrgOptions: [],
         disabled: false,
         politicalBirthdayContentTemplate: undefined,
+        partyMember:{},
 
       };
     },
@@ -329,7 +340,7 @@
       this.getList();
       this.getTreeselect();
       this.getConfigKey("politicalBirthday.content").then(response => {
-        this.politicalBirthdayContentTemplate = response.msg;
+        this.politicalBirthdayContentTemplate= response.msg;
       });
     },
     methods: {
@@ -340,11 +351,10 @@
         this.form.memberId = member.memberId;
         this.form.memberName = member.memberName;
         getPartyMember(this.form.memberId).then(response => {
-          let member = response.data;
-          this.form.partyOrgId  = member.partyOrgId;
-          this.form.joinData = member.joinData;
-          this.form.theme = '党员'+member.memberName+'的政治生日'
-          this.form.content = this.politicalBirthdayContentTemplate
+          this.partyMember = response.data;
+          this.form.partyOrgId  = this.partyMember.partyOrgId;
+          this.form.joinData = this.partyMember.joinData;
+          this.form.theme = '党员'+this.partyMember.memberName+'的政治生日'
         }).then(() => {
           this.calculateAge();
         });
@@ -356,8 +366,17 @@
           let sY  = sDate.getFullYear();
           let eY  = eDate.getFullYear();
           this.form.politicalAge = eY-sY
+          this.setContent();
         }
         this.$forceUpdate();
+      },
+      setContent(){
+        if(this.form.joinData && this.form.politicalBirthday && this.partyMember  ){
+          this.form.content = this.politicalBirthdayContentTemplate.replace("{{memberName}}",this.partyMember.memberName)
+            .replace("{{politicalAge}}",this.form.politicalAge)
+            .replace("{{sendTime}}",this.parseTime(this.getNowFormatDate(), '{y}-{m}-{d}') )
+            .replace("{{partyOrgName}}",this.partyMember.djPartyOrg.partyOrgName)
+        }
       },
       openMemberChoose(){
         this.$refs.partyMember.open = true ;

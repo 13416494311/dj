@@ -245,3 +245,11 @@ export function cityTreeData(data,level){
   }
   return data;
 }
+
+export function getBasePath(){
+  let url = window.location.href;
+  let path = this.$route.path;
+  let basePath =url.replace(path,'')
+  return basePath
+}
+

@@ -66,6 +66,13 @@ export function getPartyOrgInfo(partyOrgId) {
   })
 }
 
+export function getPartyOrgArchives(partyOrgId) {
+  return request({
+    url: '/party/org/getPartyOrgArchives/' + partyOrgId,
+    method: 'get'
+  })
+}
+
 // 查询党组织架构详细
 export function getPartyOrg(partyOrgId) {
   return request({

@@ -44,7 +44,7 @@ export const constantRoutes = [
   },
   {
     path: '/orgInfo/*',
-    component: (resolve) => require(['@/views/party/org/orgInfo'], resolve),
+    component: (resolve) => require(['@/views/party/org/partyOrgInfo'], resolve),
     hidden: true
   },
   {

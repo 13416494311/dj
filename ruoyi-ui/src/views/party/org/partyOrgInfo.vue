@@ -86,7 +86,6 @@
         let partyOrgId = this.$route.path.replace('/orgInfo/','');
         getPartyOrgInfo(partyOrgId).then(response => {
           this.partyOrg = response.data;
-          console.log(response.data)
           this.createTreeData(response.data.partyPositionMemberList);
         });
       },
