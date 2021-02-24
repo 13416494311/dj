@@ -1,11 +1,15 @@
 package com.ruoyi.project.activity.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.activity.domain.DjActivityDetailed;
+import com.ruoyi.project.activity.mapper.DjActivityDetailedMapper;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
+import com.ruoyi.project.system.domain.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivityMemberMapper;
@@ -25,7 +29,8 @@ public class DjActivityMemberServiceImpl implements IDjActivityMemberService
     private DjActivityMemberMapper djActivityMemberMapper;
     @Autowired
     private IDjPartyMemberService djPartyMemberService;
-
+    @Autowired
+    private DjActivityDetailedMapper djActivityDetailedMapper;
     /**
      * 查询活动参与人
      *
@@ -107,4 +112,47 @@ public class DjActivityMemberServiceImpl implements IDjActivityMemberService
     {
         return djActivityMemberMapper.deleteDjActivityMemberById(memberId);
     }
+
+    public String signIn(String detailedUuid){
+        String result ="签到成功！";
+
+        DjActivityDetailed activityDetailed = djActivityDetailedMapper.selectDjActivityDetailedByDetailedUuid(detailedUuid);
+        SysUser sysUser = SecurityUtils.getLoginUser().getUser();
+        if(StringUtils.isNotNull(sysUser.getPartyMemberId())){
+            DjActivityMember djActivityMember = new DjActivityMember();
+            djActivityMember.setDetailedUuid(detailedUuid);
+            djActivityMember.setPartyMemberId(sysUser.getPartyMemberId());
+            List<DjActivityMember> activityMemberList  = djActivityMemberMapper.selectDjActivityMemberList(djActivityMember);
+
+            //判断是否迟到
+            String status = "2";
+            if(activityDetailed.getActivityPlanStartTime() != null &&activityDetailed.getActivityPlanStartTime().before(new Date())){
+                status="3";
+            }
+
+            if(activityMemberList!= null && activityMemberList.size()>0){
+                DjActivityMember activityMember = activityMemberList.get(0);
+                //如果没签到过
+                if(!"2".equals(activityMember.getStatus())||!"3".equals(activityMember.getStatus())){
+                    activityMember.setStatus(status);
+                    activityMember.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+                    activityMember.setUpdateTime(new Date());
+                    djActivityMemberMapper.updateDjActivityMember(activityMember);
+                }else{
+                    result = "您已签到！";
+                }
+            }else{
+                djActivityMember.setType("2");
+                djActivityMember.setStatus(status);
+                djActivityMember.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+                djActivityMember.setCreateTime(new Date());
+                djActivityMemberMapper.insertDjActivityMember(djActivityMember);
+            }
+
+        }else{
+            result = "您无对应党员信息！";
+        }
+        return result;
+    }
+
 }

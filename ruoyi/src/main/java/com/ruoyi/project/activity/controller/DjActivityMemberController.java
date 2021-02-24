@@ -1,8 +1,17 @@
 package com.ruoyi.project.activity.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import com.alibaba.fastjson.JSON;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.framework.server.WebSocketServer;
+import com.ruoyi.project.activity.domain.DjActivityDetailed;
+import com.ruoyi.project.activity.service.IDjActivityDetailedService;
+import com.ruoyi.project.system.domain.SysUser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,11 +43,72 @@ public class DjActivityMemberController extends BaseController
 {
     @Autowired
     private IDjActivityMemberService djActivityMemberService;
+    @Autowired
+    private WebSocketServer webSocketServer;
+    @Autowired
+    private IDjActivityDetailedService djActivityDetailedService;
+
+    /**
+     * 查询活动参与人列表 签到大屏
+     */
+
+    @GetMapping("/listForScreen")
+    public AjaxResult listForScreen(DjActivityMember djActivityMember)
+    {
+        Map<String , Object> map = new HashMap<String , Object>();
+        List<DjActivityMember> activityMemberList = djActivityMemberService.selectDjActivityMemberList(djActivityMember);
+        map.put("activityMemberList",activityMemberList);
+
+        final int[] memberArriveNum = {0};
+        final int[] memberNoArriveNum = { 0 };
+        activityMemberList.stream().forEach(member->{
+            switch (member.getStatus()){
+                case "1" :
+                    memberNoArriveNum[0] += 1;
+                    break;
+                case "2" :
+                    memberArriveNum[0] += 1;
+                    break;
+                case "3" :
+                    memberArriveNum[0] += 1;
+                    break;
+                case "4" :
+                    memberArriveNum[0] += 1;
+                    break;
+                case "5" :
+                    memberNoArriveNum[0] += 1;
+                    break;
+                case "6" :
+                    memberNoArriveNum[0] += 1;
+                    break;
+                default:break;
+            }
+        });
+        map.put("planCount",String.valueOf(activityMemberList.size()) );
+        map.put("arriveCount",String.valueOf(memberArriveNum[0]) );
+        map.put("noArriveCount",String.valueOf(memberNoArriveNum[0]));
+
+        return AjaxResult.success(map);
+    }
+
+
+    @GetMapping(value = "/signIn/{detailedUuid}")
+    public AjaxResult signIn(@PathVariable("detailedUuid") String detailedUuid) throws Exception {
+
+        AjaxResult result = AjaxResult.success(djActivityMemberService.signIn(detailedUuid));
+
+        ConcurrentHashMap<String, WebSocketServer> groupHashMap = webSocketServer.getWebSocketuGroup(detailedUuid);
+        if(groupHashMap!=null && groupHashMap.size() >0){
+            webSocketServer.sendMessageToGroup(detailedUuid, JSON.toJSONString(result));
+        }
+        return result;
+    }
+
+
 
     /**
      * 查询活动参与人列表
      */
-
     @GetMapping("/list")
     public TableDataInfo list(DjActivityMember djActivityMember)
     {

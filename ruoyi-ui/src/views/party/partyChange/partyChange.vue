@@ -243,13 +243,13 @@
       this.getTreeselect()
     },
     watch:{
-      'form.changeUuid'(val){
+      /*'form.changeUuid'(val){
         if(val!= undefined ){
           this.$nextTick(()=>{
-            this.$refs.changeDetail.init(val, '') ;
+            this.$refs.changeDetail.init(val, this.form.partyOrgId) ;
           })
         }
-      }
+      }*/
     },
     methods: {
       statusFormat(row, column) {
@@ -335,6 +335,9 @@
         this.disabled = false;
         this.title = "添加党组织换届";
         this.form.changeUuid = this.uuid();
+        this.$nextTick(function () {
+          this.$refs.changeDetail.init(this.form.changeUuid, '') ;
+        })
       },
       /** 修改按钮操作 */
       handleUpdate(row) {

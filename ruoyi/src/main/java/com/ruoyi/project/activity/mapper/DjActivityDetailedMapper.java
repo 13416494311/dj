@@ -26,7 +26,7 @@ public interface DjActivityDetailedMapper
      * @param activityId 活动详情ID
      * @return 活动详情
      */
-    public DjActivityDetailed selectDjActivityDetailedById(Long activityId);
+    public DjActivityDetailed selectDjActivityDetailedById(Long detailedId);
 
     /**
      * 查询活动详情

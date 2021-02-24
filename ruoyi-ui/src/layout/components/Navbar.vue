@@ -17,6 +17,20 @@
           <ruo-yi-doc id="ruoyi-doc" class="right-menu-item hover-effect" />
         </el-tooltip>-->
 
+
+        <el-tooltip content="APP下载" effect="dark" placement="bottom">
+          <app-download class="right-menu-item hover-effect" />
+        </el-tooltip>
+
+        <el-tooltip content="待办事项" effect="dark" placement="bottom">
+          <router-link to="/sysTodo/index">
+            <div id="sys-todo" class="right-menu-item hover-effect">
+              <div class="el-icon-message-solid" style="font-size: 20px;vertical-align: -0.15em;"></div>
+              <el-badge class="todo-badge" :max="99" :value="todoCount" />
+            </div>
+          </router-link>
+        </el-tooltip>
+
         <screenfull id="screenfull" class="right-menu-item hover-effect"/>
 
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
@@ -25,14 +39,7 @@
 
       </template>
 
-      <el-tooltip content="待办事项" effect="dark" placement="bottom">
-        <router-link to="/sysTodo/index">
-          <div id="sys-todo" class="right-menu-item hover-effect">
-            <div class="el-icon-message-solid" style="font-size: 20px;vertical-align: -0.15em;"></div>
-            <el-badge class="todo-badge" :max="99" :value="todoCount" />
-          </div>
-        </router-link>
-      </el-tooltip>
+
 
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
@@ -68,9 +75,10 @@
   import RuoYiDoc from '@/components/RuoYi/Doc'
   import store from "@/store";
   import { getTodoCount } from "@/api/sys/todo";
-
+  import AppDownload from "@/components/AppDownload";
   export default {
     components: {
+      AppDownload,
       Breadcrumb,
       Hamburger,
       Screenfull,

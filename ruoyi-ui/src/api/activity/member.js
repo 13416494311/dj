@@ -9,6 +9,15 @@ export function listMember(query) {
   })
 }
 
+// 查询活动参与人列表
+export function listForScreen(query) {
+  return request({
+    url: '/activity/member/listForScreen',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询活动参与人详细
 export function getMember(memberId) {
   return request({

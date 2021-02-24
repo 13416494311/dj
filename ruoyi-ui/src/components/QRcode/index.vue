@@ -5,7 +5,7 @@
                append-to-body
                :close-on-click-modal="false"
     >
-      <div id="qrcode" class="level-center"></div>
+      <div ref="qrCode" id ="qrCodeId" class="level-center"></div>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
         <el-button @click="cancel">关 闭</el-button>
       </div>
@@ -31,16 +31,19 @@
     },
     methods: {
       qrCode(qrcodeUrl) {
-        this.$nextTick(function () {
-          document.getElementById("qrcode").innerHTML = "";
-          let qrcode = new QRCode("qrcode", {
+        setTimeout(() => {
+          document.getElementById("qrCodeId").innerHTML = "";
+          let qrcode = new QRCode(this.$refs.qrCode, {
+            text: qrcodeUrl,
             width: 300,
             height: 300,
-            text: qrcodeUrl,
-            colorDark: "#333333",
-            colorLight: "#ffffff"
-          });
-        });
+            colorDark: "#000000", //二维码颜色
+            colorLight: "#ffffff", //二维码背景色
+            correctLevel: QRCode.CorrectLevel.H//容错率，L/M/H
+          })
+          qrcode.clear(); //清除二维码
+          qrcode.makeCode(qrcodeUrl); //生成另一个新的二维码
+        }, 500);
       },
       init(title,qrcodeUrl){
         this.open=true;

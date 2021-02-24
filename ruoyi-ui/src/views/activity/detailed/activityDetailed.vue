@@ -86,6 +86,24 @@
           >查看
           </el-button>
           <el-button
+            v-if="scope.row.status =='3'&&!see"
+            size="small"
+            type="text"
+            icon="el-icon-menu"
+            v-hasPermi="['activity:detailed:qrcode']"
+            @click="handleQrcode(scope.row)"
+          >签到码
+          </el-button>
+          <el-button
+            v-if="scope.row.status =='3'&&!see"
+            size="small"
+            type="text"
+            icon="el-icon-s-platform"
+            v-hasPermi="['activity:detailed:screen']"
+            @click="handleScreen(scope.row)"
+          >签到大屏
+          </el-button>
+          <el-button
             v-if="scope.row.status !='5' && pathType=='1'&&!see"
             size="small"
             type="text"
@@ -688,6 +706,7 @@
 
     <activity-supervise ref="activitySupervise"/>
     <big-file-upload ref="bigFileUpload" @callback="uploadVideoFile"/>
+    <q-rcode  ref="qrcode"></q-rcode>
   </div>
 </template>
 
@@ -739,7 +758,7 @@
   import selectTree from '../../components/selectTree';
   import ElImageViewer from 'element-ui/packages/image/src/image-viewer';
   import {addSupervise} from "@/api/activity/supervise";
-
+  import QRcode from "../../../components/QRcode/index";
   export default {
     name: "Detailed",
     props: {
@@ -751,7 +770,7 @@
       },
     },
     components: {
-      partyMember, addressMap, memberTransfer, activitySummary,
+      QRcode,partyMember, addressMap, memberTransfer, activitySummary,
       activityResolution, activitySuggestions, activityExperience,
       activitySupervise,bigFileUpload,selectTree,ElImageViewer,
     },
@@ -1422,6 +1441,12 @@
           this.$refs.activityResolution.init(this.form.detailedUuid);
 
         });
+      },
+      handleQrcode(row){
+        this.$refs.qrcode.init("活动签到二维码",this.getBasePath()+"/activity/member/signIn/"+row.detailedUuid);
+      },
+      handleScreen(row){
+        window.open('_blank').location = this.getBasePath()+"/activityScreen/"+row.detailedId;
       },
       /** 修改按钮操作 */
       handleUpdate(row) {

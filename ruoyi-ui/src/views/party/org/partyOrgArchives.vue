@@ -7,7 +7,7 @@
 
        <panel-group-archive ref="panelGroupArchive" :partyOrgId="partyOrgId"/>
 
-        <el-tabs type="border-card" style="margin-bottom: 30px">
+        <el-tabs type="border-card" style="margin-bottom: 20px">
           <el-tab-pane label="支部党员墙">
             <div class="member-pic" v-for="member in memberList" :key="member.memberId">
               <div class="member-avatar">
@@ -17,8 +17,13 @@
                   :src="member.avatar"
                   fit="fill"></el-image>
               </div>
-              <div  class="archives-position">{{partyPositionTypeFormat(member.partyPositionType)}}</div>
-              <div  class="archives-name">{{member.memberName}}</div>
+              <div  class="member-position" v-if="member.partyPositionType != null">
+                {{partyPositionTypeFormat(member.partyPositionType)}}
+              </div>
+              <div  class="member-position" v-else>
+                {{memberTypeFormat(member.memberType)}}
+              </div>
+              <div  class="member-name">{{member.memberName}}</div>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -68,6 +73,8 @@
         memberList:[],
         // 职务字典
         partyPositionTypeOptions: [],
+        // 党员类型字典
+        memberTypeOptions: [],
         partyOrgId:undefined,
       };
     },
@@ -77,6 +84,9 @@
     created() {
       this.getDicts("party_position_type").then(response => {
         this.partyPositionTypeOptions = response.data;
+      });
+      this.getDicts("party_member_type").then(response => {
+        this.memberTypeOptions = response.data;
       });
     },
     watch:{
@@ -104,8 +114,11 @@
           }
         });
       },
-      partyPositionTypeFormat(val) {
-        return this.selectDictLabel(this.partyPositionTypeOptions, val);
+      partyPositionTypeFormat(partyPositionType) {
+        return this.selectDictLabel(this.partyPositionTypeOptions, partyPositionType);
+      },
+      memberTypeFormat(memberType) {
+        return this.selectDictLabel(this.memberTypeOptions, memberType);
       },
       /** 对话框自适应高度 */
       getHeight(){
@@ -119,41 +132,9 @@
   };
 </script>
 <style type="text/css">
-  .member-pic{
-    width: 100px;
-    height: 150px;
-    float: left;
-    margin: 10px;
-    border: 1px solid #999;
-  }
-  .member-avatar{
-    width: 98px;
-    height: 98px;
-    background-image: url("../../../assets/image/dj-avatar.png");
-    background-color:rgb(165, 27, 27);
-    background-size: cover;
-  }
 
-  .archives-position{
-    padding-top: 4px;
-    width: 98px;
-    height: 25px;
-    text-align: center;
-    background-color: #cf001c ;
-    color: white ;
-    font-weight: 600;
-    letter-spacing:3px;
-  }
-  .archives-name{
-    padding-top: 5px;
-    width: 98px;
-    height: 25px;
-    text-align: center;
-    background-color: #C0C4CC;
-    color: black ;
-    letter-spacing:3px;
+  @import '../../../assets/styles/member-avatar.css';
 
-  }
   .archives>.el-dialog__body{
     background: url("../../../assets/image/archives/archives-bg.jpg") no-repeat !important;
     background-size: 100% 100% !important;
