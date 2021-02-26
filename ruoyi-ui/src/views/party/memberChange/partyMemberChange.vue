@@ -19,6 +19,7 @@
 
     <el-table :stripe="true"
               :border="true"v-loading="loading" :data="partyMemberChangeList" @selection-change="handleSelectionChange">
+      <el-table-column label="序号" align="center" type="index" />
       <el-table-column label="党员姓名" align="center" prop="memberName"/>
       <el-table-column label="党内职务" align="center" prop="partyPositionType" :formatter="partyPositionTypeFormat" />
       <el-table-column label="部门" align="center" prop="deptId" :formatter="deptIdFormat" />

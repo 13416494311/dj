@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.members.mapper.DjPartyExemplaryMapper">
+
+    <resultMap type="DjPartyExemplary" id="DjPartyExemplaryResult">
+        <result property="exemplaryId"    column="exemplary_id"    />
+        <result property="exemplaryUuid"    column="exemplary_uuid"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="partyOrgId"    column="party_org_id"    />
+        <result property="recordTime"    column="record_time"    />
+        <result property="exemplaryTheme"    column="exemplary_theme"    />
+        <result property="helpRecord"    column="help_record"    />
+        <result property="auditState"    column="audit_state"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjPartyExemplaryVo">
+        select exemplary_id, exemplary_uuid, member_id, party_org_id, record_time, exemplary_theme, help_record, audit_state, del_flag, create_by, create_time, update_by, update_time from dj_party_exemplary
+    </sql>
+
+    <sql id="selectDjPartyExemplary">
+        select e.exemplary_id, e.exemplary_uuid, e.member_id, e.party_org_id, e.record_time,
+        e.exemplary_theme, e.help_record, e.audit_state, e.del_flag, e.create_by, e.create_time,
+        e.update_by, e.update_time from dj_party_exemplary e
+    </sql>
+
+    <select id="selectDjPartyExemplaryList" parameterType="DjPartyExemplary" resultMap="DjPartyExemplaryResult">
+        <include refid="selectDjPartyExemplary"/>
+        left join dj_party_org o on o.party_org_id = e.party_org_id
+        left join dj_party_member m on m.member_id = e.member_id
+        <where>
+            <if test="exemplaryUuid != null  and exemplaryUuid != ''"> and  e.exemplary_uuid = #{exemplaryUuid}</if>
+            <if test="memberId != null "> and  e.member_id = #{memberId}</if>
+            <if test="params.memberName != null ">
+                and m.member_name like concat('%', #{params.memberName}, '%')
+            </if>
+            <if test="partyOrgId != null "> and  e.party_org_id = #{partyOrgId}</if>
+            <if test="recordTime != null "> and  e.record_time = #{recordTime}</if>
+            <if test="exemplaryTheme != null  and exemplaryTheme != ''"> and  e.exemplary_theme = #{exemplaryTheme}</if>
+            <if test="helpRecord != null  and helpRecord != ''"> and  e.help_record = #{helpRecord}</if>
+            <if test="auditState != null  and auditState != ''"> and  e.audit_state = #{auditState}</if>
+            ${dataScope}
+        </where>
+    </select>
+
+    <select id="selectDjPartyExemplaryById" parameterType="Long" resultMap="DjPartyExemplaryResult">
+        <include refid="selectDjPartyExemplaryVo"/>
+        where exemplary_id = #{exemplaryId}
+    </select>
+
+    <insert id="insertDjPartyExemplary" parameterType="DjPartyExemplary" useGeneratedKeys="true" keyProperty="exemplaryId">
+        insert into dj_party_exemplary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="exemplaryUuid != null  and exemplaryUuid != ''">exemplary_uuid,</if>
+            <if test="memberId != null ">member_id,</if>
+            <if test="partyOrgId != null ">party_org_id,</if>
+            <if test="recordTime != null ">record_time,</if>
+            <if test="exemplaryTheme != null  and exemplaryTheme != ''">exemplary_theme,</if>
+            <if test="helpRecord != null  and helpRecord != ''">help_record,</if>
+            <if test="auditState != null  and auditState != ''">audit_state,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="exemplaryUuid != null  and exemplaryUuid != ''">#{exemplaryUuid},</if>
+            <if test="memberId != null ">#{memberId},</if>
+            <if test="partyOrgId != null ">#{partyOrgId},</if>
+            <if test="recordTime != null ">#{recordTime},</if>
+            <if test="exemplaryTheme != null  and exemplaryTheme != ''">#{exemplaryTheme},</if>
+            <if test="helpRecord != null  and helpRecord != ''">#{helpRecord},</if>
+            <if test="auditState != null  and auditState != ''">#{auditState},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjPartyExemplary" parameterType="DjPartyExemplary">
+        update dj_party_exemplary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="exemplaryUuid != null  and exemplaryUuid != ''">exemplary_uuid = #{exemplaryUuid},</if>
+            <if test="memberId != null ">member_id = #{memberId},</if>
+            <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
+            <if test="recordTime != null ">record_time = #{recordTime},</if>
+            <if test="exemplaryTheme != null  and exemplaryTheme != ''">exemplary_theme = #{exemplaryTheme},</if>
+            <if test="helpRecord != null  and helpRecord != ''">help_record = #{helpRecord},</if>
+            <if test="auditState != null  and auditState != ''">audit_state = #{auditState},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where exemplary_id = #{exemplaryId}
+    </update>
+
+    <delete id="deleteDjPartyExemplaryById" parameterType="Long">
+        delete from dj_party_exemplary where exemplary_id = #{exemplaryId}
+    </delete>
+
+    <delete id="deleteDjPartyExemplaryByIds" parameterType="String">
+        delete from dj_party_exemplary where exemplary_id in
+        <foreach item="exemplaryId" collection="array" open="(" separator="," close=")">
+            #{exemplaryId}
+        </foreach>
+    </delete>
+
+</mapper>

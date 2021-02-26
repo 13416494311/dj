@@ -63,6 +63,7 @@
     <el-table v-loading="loading" :data="partyChangeList"  :stripe="true"
               :border="true" @selection-change="handleSelectionChange">
       <!--<el-table-column type="selection" width="55" align="center"/>-->
+      <el-table-column label="序号" align="center" type="index" />
       <el-table-column label="党组织名称" align="left" prop="partyOrg.partyOrgFullName" width="800"/>
       <el-table-column label="换届时间" align="center" prop="changeTime" >
         <template slot-scope="scope">
@@ -81,7 +82,7 @@
           >查看
           </el-button>
           <el-button
-            v-if="!see"
+            v-if="!see && showHandleUpdate(scope.row) && (scope.row.status =='1'|| scope.row.status =='4')"
             size="small"
             type="text"
             icon="el-icon-edit"
@@ -90,7 +91,7 @@
           >修改
           </el-button>
           <el-button
-            v-if="!see"
+            v-if="!see && showHandleUpdate(scope.row) && scope.row.status =='1'"
             size="small"
             type="text"
             icon="el-icon-delete"
@@ -171,6 +172,8 @@
   import selectTree from '../../components/selectTree';
   import ChangeDetail from "./changeDetail";
   import ChooseAuditUser from "../../audit/chooseAuditUser";
+  import {getUserProfile} from "@/api/system/user";
+
   export default {
     name: "PartyChange",
     props: {
@@ -230,12 +233,14 @@
         disabled: false,
         addFlag:false,
         statusOptions: [],
+        user: {},
       };
     },
     mounted() {
       window.addEventListener('resize', this.getHeight);
     },
     created() {
+      this.getUser();
       this.getList();
       this.getDicts("audit_state").then(response => {
         this.statusOptions = response.data;
@@ -243,15 +248,13 @@
       this.getTreeselect()
     },
     watch:{
-      /*'form.changeUuid'(val){
-        if(val!= undefined ){
-          this.$nextTick(()=>{
-            this.$refs.changeDetail.init(val, this.form.partyOrgId) ;
-          })
-        }
-      }*/
     },
     methods: {
+      getUser() {
+        getUserProfile().then(response => {
+          this.user = response.data;
+        });
+      },
       statusFormat(row, column) {
         return this.selectDictLabel(this.statusOptions, row.status);
       },
@@ -327,6 +330,13 @@
         this.ids = selection.map(item => item.changeId)
         this.single = selection.length != 1
         this.multiple = !selection.length
+      },
+      showHandleUpdate(row){
+        let showFlag = false;
+        if(this.user.partyMemberId && this.user.partyMemberId == row.memberId){
+          showFlag = true;
+        }
+        return showFlag ;
       },
       /** 新增按钮操作 */
       handleAdd() {

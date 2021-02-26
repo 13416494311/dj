@@ -28,6 +28,7 @@
     </el-row>
     <el-table :stripe="true"
               :border="true" v-loading="loading" :data="planList" @selection-change="handleSelectionChange">
+      <el-table-column label="序号" align="center" type="index" />
       <el-table-column label="活动主题" align="center" prop="activityTheme"/>
       <el-table-column label="活动类型" align="center" prop="activityType" :formatter="activityTypeFormat"/>
       <el-table-column label="召开周期" align="center" prop="conveneCycle" :formatter="conveneCycleFormat"/>

@@ -41,6 +41,7 @@
 
     <el-table :stripe="true"
               :border="true" v-loading="loading" :data="memberFlowList" @selection-change="handleSelectionChange">
+      <el-table-column label="序号" align="center" type="index" />
       <el-table-column label="姓名党员" align="center" prop="flowMember.memberName"/>
       <el-table-column label="所属组织机构" align="center" prop="flowMember.djPartyOrg.partyOrgFullName"/>
       <el-table-column label="流动类型" align="center" prop="flowType" :formatter="flowTypeFormat"/>

@@ -49,6 +49,7 @@
               v-loading="loading"
               :data="detailedList"
               :row-class-name="tableRowClassName">
+      <el-table-column label="序号" align="center" type="index" />
       <el-table-column label="活动名称" align="center" prop="djActivityPlan.activityTheme"/>
       <el-table-column label="活动类型" align="center" prop="djActivityPlan.activityType"
                        :formatter="activityTypeFormat"/>

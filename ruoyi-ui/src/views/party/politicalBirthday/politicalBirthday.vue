@@ -73,10 +73,11 @@
     <el-table :stripe="true"
               :border="true"
               v-loading="loading" :data="politicalBirthdayList" @selection-change="handleSelectionChange">
-      <el-table-column v-if="!see" type="selection" width="55" align="center"/>
+      <!--<el-table-column v-if="!see" type="selection" width="55" align="center"/>-->
+      <el-table-column label="序号" align="center" type="index" />
       <el-table-column label="主题" align="center" prop="theme"/>
       <el-table-column label="党员名称" align="center" prop="partyMember.memberName"/>
-      <el-table-column label="组织机构名称" align="center" prop="partyOrg.partyOrgFullName"/>
+      <el-table-column label="党组织名称" align="center" prop="partyOrg.partyOrgFullName"/>
       <el-table-column label="入党日期" align="center" prop="partyMember.joinData" width="150">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.partyMember.joinData, '{y}-{m}-{d}') }}</span>

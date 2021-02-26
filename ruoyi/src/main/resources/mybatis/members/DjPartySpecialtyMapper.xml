@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.members.mapper.DjPartySpecialtyMapper">
+
+    <resultMap type="DjPartySpecialty" id="DjPartySpecialtyResult">
+        <result property="specialtyId"    column="specialty_id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="partyOrgId"    column="party_org_id"    />
+        <result property="specialtyCategory"    column="specialty_category"    />
+        <result property="specialtyContent"    column="specialty_content"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjPartySpecialtyVo">
+        select specialty_id, member_id, party_org_id, specialty_category, specialty_content,
+        del_flag, create_by, create_time, update_by, update_time from dj_party_specialty
+    </sql>
+
+    <sql id="selectDjPartySpecialty">
+        select s.specialty_id, s.member_id, s.party_org_id, s.specialty_category, s.specialty_content,
+        s.del_flag, s.create_by, s.create_time, s.update_by, s.update_time from dj_party_specialty s
+    </sql>
+
+    <select id="selectDjPartySpecialtyList" parameterType="DjPartySpecialty" resultMap="DjPartySpecialtyResult">
+        <include refid="selectDjPartySpecialty"/>
+        left join dj_party_org o on o.party_org_id = s.party_org_id
+        left join dj_party_member m on m.member_id = s.member_id
+        <where>
+            <if test="memberId != null "> and s.member_id = #{memberId}</if>
+            <if test="partyOrgId != null "> and s.party_org_id = #{partyOrgId}</if>
+            <if test="params.memberName != null ">
+                and m.member_name like concat('%', #{params.memberName}, '%')
+            </if>
+            <if test="specialtyCategory != null  and specialtyCategory != ''">
+                and s.specialty_category = #{specialtyCategory}
+             </if>
+            <if test="specialtyContent != null  and specialtyContent != ''"> and s.specialty_content like concat('%', #{specialtyContent}, '%')</if>
+            ${dataScope}
+        </where>
+    </select>
+
+    <select id="selectDjPartySpecialtyById" parameterType="Long" resultMap="DjPartySpecialtyResult">
+        <include refid="selectDjPartySpecialtyVo"/>
+        where specialty_id = #{specialtyId}
+    </select>
+
+    <insert id="insertDjPartySpecialty" parameterType="DjPartySpecialty" useGeneratedKeys="true" keyProperty="specialtyId">
+        insert into dj_party_specialty
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null ">member_id,</if>
+            <if test="partyOrgId != null ">party_org_id,</if>
+            <if test="specialtyCategory != null  and specialtyCategory != ''">specialty_category,</if>
+            <if test="specialtyContent != null  and specialtyContent != ''">specialty_content,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberId != null ">#{memberId},</if>
+            <if test="partyOrgId != null ">#{partyOrgId},</if>
+            <if test="specialtyCategory != null  and specialtyCategory != ''">#{specialtyCategory},</if>
+            <if test="specialtyContent != null  and specialtyContent != ''">#{specialtyContent},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjPartySpecialty" parameterType="DjPartySpecialty">
+        update dj_party_specialty
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null ">member_id = #{memberId},</if>
+            <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
+            <if test="specialtyCategory != null  and specialtyCategory != ''">specialty_category = #{specialtyCategory},</if>
+            <if test="specialtyContent != null  and specialtyContent != ''">specialty_content = #{specialtyContent},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where specialty_id = #{specialtyId}
+    </update>
+
+    <delete id="deleteDjPartySpecialtyById" parameterType="Long">
+        delete from dj_party_specialty where specialty_id = #{specialtyId}
+    </delete>
+
+    <delete id="deleteDjPartySpecialtyByIds" parameterType="String">
+        delete from dj_party_specialty where specialty_id in
+        <foreach item="specialtyId" collection="array" open="(" separator="," close=")">
+            #{specialtyId}
+        </foreach>
+    </delete>
+
+</mapper>

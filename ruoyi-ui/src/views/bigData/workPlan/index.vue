@@ -75,7 +75,10 @@
       </el-col>-->
     </el-row>
 
-    <el-table v-loading="loading" :data="workPlanList" >
+    <el-table :stripe="true"
+              :border="true" v-loading="loading" :data="workPlanList" >
+      <!--<el-table-column type="selection" width="55" align="center" />-->
+      <el-table-column label="序号" align="center" type="index" />
       <el-table-column label="计划类型" width="200" align="center" prop="type" :formatter="typeFormat"/>
       <el-table-column label="计划内容" width="500" align="left" prop="content" /><!--:show-overflow-tooltip="true"-->
       <el-table-column label="排序" align="center" prop="orderNum"/>
