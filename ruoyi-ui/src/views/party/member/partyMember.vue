@@ -536,6 +536,22 @@
 
         <el-card shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
+            <span style="font-weight: bold;font-size: 16px">党员特长</span>
+          </div>
+
+          <specialty  ref="specialty" :see="true"/>
+        </el-card>
+
+        <el-card shadow="always" style="margin-bottom: 30px;">
+          <div slot="header" style="height: 25px">
+            <span style="font-weight: bold;font-size: 16px">先锋模范（荣誉）</span>
+          </div>
+
+          <exemplary ref="exemplary" :see="true"/>
+        </el-card>
+
+        <el-card shadow="always" style="margin-bottom: 30px;">
+          <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">生活困难情况</span>
           </div>
           <el-row>
@@ -547,48 +563,6 @@
                            placeholder="请选择生活困难">
                   <el-option
                     v-for="dict in lifeDifficultyOptions"
-                    :key="dict.dictValue"
-                    :label="dict.dictLabel"
-                    :value="dict.dictValue"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="组织认定">
-                <el-select :disabled="disabled"
-                           v-model="form.cognizance"
-                           style="width: 100%" placeholder="请选择是否组织认定">
-                  <el-option
-                    v-for="dict in cognizanceOptions"
-                    :key="dict.dictValue"
-                    :label="dict.dictLabel"
-                    :value="dict.dictValue"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="经济状况">
-                <el-select :disabled="disabled"
-                           v-model="form.economicSituation"
-                           style="width: 100%" placeholder="请选择经济状况">
-                  <el-option
-                    v-for="dict in economicSituationOptions"
-                    :key="dict.dictValue"
-                    :label="dict.dictLabel"
-                    :value="dict.dictValue"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <el-form-item label="身体健康情况">
-                <el-select :disabled="disabled" v-model="form.physicalHealth" style="width: 100%" placeholder="请选择身体健康情况">
-                  <el-option
-                    v-for="dict in physicalHealthOptions"
                     :key="dict.dictValue"
                     :label="dict.dictLabel"
                     :value="dict.dictValue"
@@ -609,6 +583,20 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
+              <el-form-item label="身体健康情况">
+                <el-select :disabled="disabled" v-model="form.physicalHealth" style="width: 100%" placeholder="请选择身体健康情况">
+                  <el-option
+                    v-for="dict in physicalHealthOptions"
+                    :key="dict.dictValue"
+                    :label="dict.dictLabel"
+                    :value="dict.dictValue"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
               <el-form-item label="享受帮扶">
                 <el-select :disabled="disabled" v-model="form.enjoyHelp" style="width: 100%" placeholder="请选择是否享受帮扶">
                   <el-option
@@ -620,8 +608,6 @@
                 </el-select>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="补助情况" prop="helpInfo">
                 <el-input :disabled="disabled" v-model="form.helpInfo" placeholder="请输入补助情况"/>
@@ -636,11 +622,45 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row>
+            <el-col :span="8">
+              <el-form-item label="组织认定">
+                <el-select :disabled="true"
+                           v-model="form.cognizance"
+                           style="width: 100%" placeholder="请选择是否组织认定">
+                  <el-option
+                    v-for="dict in cognizanceOptions"
+                    :key="dict.dictValue"
+                    :label="dict.dictLabel"
+                    :value="dict.dictValue"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="困难程度">
+                <el-select :disabled="true"
+                           v-model="form.economicSituation"
+                           style="width: 100%" placeholder="请选择困难程度">
+                  <el-option
+                    v-for="dict in economicSituationOptions"
+                    :key="dict.dictValue"
+                    :label="dict.dictLabel"
+                    :value="dict.dictValue"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+
+
+
         </el-card>
 
       </el-form>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button v-show="!disabled" type="primary" @click="chooseAuditUser">提交审批</el-button>
+        <el-button v-show="!disabled" type="primary" @click="chooseAuditUser">提 交</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -700,10 +720,12 @@
   import { getUserProfile } from "@/api/system/user";
   import ChooseAuditUser from "../../audit/chooseAuditUser";
   import { listLog, getLog, delLog, addLog, updateLog, exportLog } from "@/api/sys/log";
+  import Specialty from "../../members/specialty/specialty";
+  import Exemplary from "../../members/exemplary/exemplary";
 
   export default {
     name: "PartyMember",
-    components: {ChooseAuditUser, Treeselect,selectTree},
+    components: {Exemplary, Specialty, ChooseAuditUser, Treeselect,selectTree},
     data() {
       let checkIdentityCard = (rule, value, callback) => {
         if (!value) {
@@ -1310,9 +1332,14 @@
         this.orgOptions= this.partyOrgOptionsByEdait;
         getPartyMember(memberId).then(response => {
           this.form = response.data;
+          this.form.cognizance = this.form.memberHelp!=null?this.form.memberHelp.cognizance:undefined;
+          this.form.economicSituation = this.form.memberHelp!=null?this.form.memberHelp.economicSituation:undefined;
           this.avatarUrl=process.env.VUE_APP_BASE_API + this.form.avatar;
           this.open = true;
           this.title = "查看党员信息";
+        }).then(()=>{
+          this.$refs.specialty.init(this.form.memberId);
+          this.$refs.exemplary.init(this.form.memberId);
         });
       },
       /** 修改按钮操作 */
@@ -1323,9 +1350,14 @@
         this.orgOptions= this.partyOrgOptionsByEdait;
         getPartyMember(memberId).then(response => {
           this.form = response.data;
+          this.form.cognizance = this.form.memberHelp!=null?this.form.memberHelp.cognizance:undefined;
+          this.form.economicSituation = this.form.memberHelp!=null?this.form.memberHelp.economicSituation:undefined;
           this.avatarUrl=process.env.VUE_APP_BASE_API + this.form.avatar;
           this.open = true;
           this.title = "修改党员信息";
+        }).then(()=>{
+          this.$refs.specialty.init(this.form.memberId);
+          this.$refs.exemplary.init(this.form.memberId);
         });
       },
       chooseAuditUser(){

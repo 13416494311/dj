@@ -3,6 +3,7 @@ package com.ruoyi.project.party.domain;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.project.members.domain.DjPartyMemberHelp;
 import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysDictData;
 import com.ruoyi.project.system.domain.SysPost;
@@ -163,6 +164,8 @@ public class DjPartyMember extends BaseEntity
 
     /** 生活困难（1：是  0：否） */
     private String lifeDifficulty;
+
+    private DjPartyMemberHelp memberHelp;
 
     /** 组织认定（1：是  0：否） */
     private String cognizance;

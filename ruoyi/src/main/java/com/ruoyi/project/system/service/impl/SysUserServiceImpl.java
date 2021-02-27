@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.project.party.domain.DjPartyMember;
+import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,9 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     private IDjPartyMemberService djPartyMemberService;
+
+    @Autowired
+    private DjPartyMemberMapper djPartyMemberMapper;
 
 
     /**
@@ -335,6 +339,16 @@ public class SysUserServiceImpl implements ISysUserService
      */
     public boolean updateUserAvatar(String userName, String avatar)
     {
+
+
+        SysUser sysUser = userMapper.selectUserByUserName(userName);
+
+        if(sysUser.getPartyMemberId()!=null && sysUser.getPartyMemberId()!= 0 ){
+            DjPartyMember djPartyMember = new DjPartyMember();
+            djPartyMember.setMemberId(sysUser.getPartyMemberId());
+            djPartyMember.setAvatar(avatar);
+            djPartyMemberMapper.updateDjPartyMember(djPartyMember);
+        }
         return userMapper.updateUserAvatar(userName, avatar) > 0;
     }
 

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.members.mapper.DjPartyMemberHelpRecordMapper">
+    
+    <resultMap type="DjPartyMemberHelpRecord" id="DjPartyMemberHelpRecordResult">
+        <result property="helpRecordId"    column="help_record_id"    />
+        <result property="helpRecordUuid"    column="help_record_uuid"    />
+        <result property="helpUuid"    column="help_uuid"    />
+        <result property="helpStartTime"    column="help_start_time"    />
+        <result property="helpEndTime"    column="help_end_time"    />
+        <result property="assistance"    column="assistance"    />
+        <result property="content"    column="content"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjPartyMemberHelpRecordVo">
+        select help_record_id, help_record_uuid, help_uuid, help_start_time, help_end_time, assistance, content, del_flag, create_by, create_time, update_by, update_time from dj_party_member_help_record
+    </sql>
+
+    <select id="selectDjPartyMemberHelpRecordList" parameterType="DjPartyMemberHelpRecord" resultMap="DjPartyMemberHelpRecordResult">
+        <include refid="selectDjPartyMemberHelpRecordVo"/>
+        <where>  
+            <if test="helpRecordUuid != null  and helpRecordUuid != ''"> and help_record_uuid = #{helpRecordUuid}</if>
+            <if test="helpUuid != null  and helpUuid != ''"> and help_uuid = #{helpUuid}</if>
+            <if test="helpStartTime != null "> and help_start_time = #{helpStartTime}</if>
+            <if test="helpEndTime != null "> and help_end_time = #{helpEndTime}</if>
+            <if test="assistance != null  and assistance != ''"> and assistance = #{assistance}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+    
+    <select id="selectDjPartyMemberHelpRecordById" parameterType="Long" resultMap="DjPartyMemberHelpRecordResult">
+        <include refid="selectDjPartyMemberHelpRecordVo"/>
+        where help_record_id = #{helpRecordId}
+    </select>
+        
+    <insert id="insertDjPartyMemberHelpRecord" parameterType="DjPartyMemberHelpRecord">
+        insert into dj_party_member_help_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="helpRecordId != null ">help_record_id,</if>
+            <if test="helpRecordUuid != null  and helpRecordUuid != ''">help_record_uuid,</if>
+            <if test="helpUuid != null  and helpUuid != ''">help_uuid,</if>
+            <if test="helpStartTime != null ">help_start_time,</if>
+            <if test="helpEndTime != null ">help_end_time,</if>
+            <if test="assistance != null  and assistance != ''">assistance,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="helpRecordId != null ">#{helpRecordId},</if>
+            <if test="helpRecordUuid != null  and helpRecordUuid != ''">#{helpRecordUuid},</if>
+            <if test="helpUuid != null  and helpUuid != ''">#{helpUuid},</if>
+            <if test="helpStartTime != null ">#{helpStartTime},</if>
+            <if test="helpEndTime != null ">#{helpEndTime},</if>
+            <if test="assistance != null  and assistance != ''">#{assistance},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjPartyMemberHelpRecord" parameterType="DjPartyMemberHelpRecord">
+        update dj_party_member_help_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="helpRecordUuid != null  and helpRecordUuid != ''">help_record_uuid = #{helpRecordUuid},</if>
+            <if test="helpUuid != null  and helpUuid != ''">help_uuid = #{helpUuid},</if>
+            <if test="helpStartTime != null ">help_start_time = #{helpStartTime},</if>
+            <if test="helpEndTime != null ">help_end_time = #{helpEndTime},</if>
+            <if test="assistance != null  and assistance != ''">assistance = #{assistance},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where help_record_id = #{helpRecordId}
+    </update>
+
+    <delete id="deleteDjPartyMemberHelpRecordById" parameterType="Long">
+        delete from dj_party_member_help_record where help_record_id = #{helpRecordId}
+    </delete>
+
+    <delete id="deleteDjPartyMemberHelpRecordByIds" parameterType="String">
+        delete from dj_party_member_help_record where help_record_id in 
+        <foreach item="helpRecordId" collection="array" open="(" separator="," close=")">
+            #{helpRecordId}
+        </foreach>
+    </delete>
+    
+</mapper>

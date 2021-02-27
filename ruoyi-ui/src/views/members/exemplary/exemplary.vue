@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form v-if="!see":model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <el-form-item label="党员姓名" prop="memberName">
         <el-input
           v-model="queryParams.memberName"
@@ -33,7 +33,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row v-if="!see":gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -81,15 +81,16 @@
     <el-table v-loading="loading" :data="exemplaryList"
               :stripe="true" :border="true"  @selection-change="handleSelectionChange">
       <el-table-column label="序号" align="center" type="index"/>
-      <el-table-column label="党员姓名" align="center" prop="djPartyMember.memberName" />
-      <el-table-column label="党组织名称" align="center" prop="djPartyOrg.partyOrgFullName"  />
+      <el-table-column v-if="!see"label="党员姓名" align="center" prop="djPartyMember.memberName" />
+      <el-table-column v-if="!see"label="党组织名称" align="center" prop="djPartyOrg.partyOrgFullName"  />
       <el-table-column label="记录日期" align="center" prop="recordTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.recordTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="模范事项" align="center" prop="exemplaryTheme"/>
-      <el-table-column label="状态" align="center" prop="auditState" :formatter="auditStateFormat"/>
+      <el-table-column v-if="see" label="模范描述" align="center" prop="helpRecord"/>
+      <el-table-column v-if="!see" label="状态" align="center" prop="auditState" :formatter="auditStateFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
 
         <template slot-scope="scope">
@@ -105,7 +106,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-if="user.userId == scope.row.createBy  && (scope.row.auditState =='1'|| scope.row.auditState =='4')"
+            v-if="!see && user.userId == scope.row.createBy  && (scope.row.auditState =='1'|| scope.row.auditState =='4')"
             v-hasPermi="['members:exemplary:edit']"
           >修改
           </el-button>
@@ -114,7 +115,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-if="user.userId == scope.row.createBy  && scope.row.auditState =='1'"
+            v-if="!see && user.userId == scope.row.createBy  && scope.row.auditState =='1'"
             v-hasPermi="['members:exemplary:remove']"
           >删除
           </el-button>
@@ -179,7 +180,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="模范描述" prop="helpRecord">
-                <el-input :disabled="disabled" v-model="form.helpRecord" type="textarea" :autosize="{ minRows: 10, maxRows: 11}"
+                <el-input :disabled="disabled" v-model="form.helpRecord" type="textarea" :autosize="{ minRows: 10, maxRows: 10}"
                           placeholder="请输入内容"/>
               </el-form-item>
             </el-col>
@@ -189,55 +190,7 @@
             <el-row>
               <el-col :span="24">
                 <el-form-item  label="附件">
-                  <el-upload
-                    action="#"
-                    list-type="picture-card"
-                    :file-list="fileList"
-                    multiple
-                    :http-request="uploadFile"
-                    :class="{hide:disabled}"
-                    class="upload"
-                    accept="image/*,.doc,.docx,.xls,.xlsx,.pdf,.ppt,.zip,.txt">
-                    <i slot="default" class="el-icon-plus"></i>
-                    <div slot="file" slot-scope="{file}" style="display: inline">
-                      <div class="upload-file">
-                        <img v-if="'jpeg,jpg,gif,png,JPEG,JPG,GIF,PNG'.indexOf(file.name.split('.')[1]) != -1"
-                             class="el-upload-list__item-thumbnail"
-
-                             :src="file.url" :alt="file.name"/>
-                        <img v-else
-                             class="el-upload-list__item-thumbnail"
-                             :src="defaultFilePicUrl" :alt="file.name"/>
-                        <span class="el-upload-list__item-actions">
-                    <span v-if="'jpeg,jpg,gif,png,JPEG,JPG,GIF,PNG'.indexOf(file.name.split('.')[1]) != -1"
-                          class="el-upload-list__item-preview"
-                          @click="handlePictureCardPreview(file)">
-                       <i class="el-icon-zoom-in"></i>
-                    </span>
-                    <span
-                      class="el-upload-list__item-delete"
-                      @click="handleDownload(file)">
-                      <i class="el-icon-download"></i>
-                    </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove(file)">
-                      <i class="el-icon-delete"></i>
-                    </span>
-                  </span>
-                      </div>
-                      <div class="upload-text">
-                        <el-tooltip class="item" effect="dark" :content="setFileNameTip(file)" placement="top">
-                          <span>{{file.name}}</span>
-                        </el-tooltip>
-                      </div>
-                    </div>
-                  </el-upload>
-                  <el-image-viewer
-                    v-if="dialogVisible"
-                    :on-close="closeViewer"
-                    :url-list="srcList"/>
+                  <upload-all-file ref="uploadAllFile" :disabled="disabled"/>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -277,11 +230,21 @@
   import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
   import ChooseAuditUser from "../../audit/chooseAuditUser";
   import { listLog } from "@/api/sys/log";
+  import UploadAllFile from "../../upload/uploadAllFile";
 
   export default {
     name: "Exemplary",
     components: {
+      UploadAllFile,
       partyMember, addressMap, selectTree, ElImageViewer,ChooseAuditUser
+    },
+    props: {
+      see: {
+        type: Boolean,
+        default: () => {
+          return false
+        }
+      },
     },
     data() {
       return {
@@ -360,7 +323,6 @@
     created() {
       this.getUser();
       this.getList();
-      this.defaultFilePicUrl = require("@/assets/image/file.png");
       //组织架构树
       this.getPartyOrgTreeSelect();
       //审批状态
@@ -369,6 +331,10 @@
       });
     },
     methods: {
+      init(memberId){
+        this.queryParams.memberId = memberId
+        this.getList();
+      },
       getUser() {
         getUserProfile().then(response => {
           this.user = response.data;
@@ -443,7 +409,9 @@
         this.open = true;
         this.title = "添加先锋模范";
         this.form.exemplaryUuid = this.uuid();
-        this.getFileList();
+        this.$nextTick(function () {
+          this.$refs.uploadAllFile.init(this.form.exemplaryUuid, 'exemplary') ;
+        })
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
@@ -457,7 +425,7 @@
           this.open = true;
           this.title = "修改先锋模范";
         }).then(()=>{
-          this.getFileList();
+          this.$refs.uploadAllFile.init(this.form.exemplaryUuid, 'exemplary') ;
         });
       },
       /** 查看按钮操作 */
@@ -472,7 +440,7 @@
           this.open = true;
           this.title = "查看先锋模范";
         }).then(()=>{
-          this.getFileList();
+          this.$refs.uploadAllFile.init(this.form.exemplaryUuid, 'exemplary') ;
         });
       },
       handleSubmit(form){
@@ -489,7 +457,7 @@
             if (this.form.exemplaryId != undefined) {
               updateExemplary(this.form).then(response => {
                 if (response.code === 200) {
-                  this.msgSuccess("提交审批成功");
+                  this.msgSuccess("操作成功");
                   this.open = false;
                   this.getList();
                 } else {
@@ -499,7 +467,7 @@
             } else {
               addExemplary(this.form).then(response => {
                 if (response.code === 200) {
-                  this.msgSuccess("新增审批成功");
+                  this.msgSuccess("操作成功");
                   this.open = false;
                   this.getList();
                 } else {
@@ -561,80 +529,6 @@
       getPartyOrgTreeSelect() {
         partyOrgTreeselect().then(response => {
           this.partyOrgOptions = this.treeInitData(response.data);
-        });
-      },
-
-      uploadFile(file) {
-        const loading = this.$loading({
-          lock: true,
-          text: '上传中……',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
-        let formData = new FormData();
-        formData.append("uuid", this.form.exemplaryUuid);
-        formData.append("file", file.file);
-        formData.append("fileType", "exemplary");
-        upload(formData).then(response => {
-          if (response.code === 200) {
-            let file = {};
-            file.name = response.data.fileName;
-            file.url = process.env.VUE_APP_BASE_API + response.data.filePath;
-            file.uid = response.data.id;
-            this.fileList.push(file);
-            loading.close();
-            this.msgSuccess("上传成功！")
-          } else {
-            loading.close();
-            this.msgError(response.msg);
-          }
-        }).catch(function (err) {
-          loading.close();
-        });
-      },
-
-      setFileNameTip(file) {
-        return file.name;
-      },
-      handlePictureCardPreview(file) {
-        this.dialogVisible = true;
-        this.srcList.push(file.url)
-
-      },
-      closeViewer() {
-        this.dialogVisible = false;
-        this.srcList = [];
-      },
-      handleDownload(file) {
-        //console.log(file);
-        downLoadZip("/system/file/download/" + file.uid);
-
-      },
-      handleRemove(file) {
-        //console.log(file);
-        this.$confirm('是否确认删除该附件?', "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "info"
-        }).then(() => {
-          delFile(file.uid).then(response => {
-            this.msgSuccess(response.msg);
-            this.getFileList();
-          });
-        }).catch(function () {
-        });
-      },
-      getFileList() {
-        this.fileList = [];
-        listFile({'uuid': this.form.exemplaryUuid}).then(response => {
-          let files = response.rows;
-          for (let i = 0; i < files.length; i++) {
-            let file = {};
-            file.name = files[i].fileName;
-            file.url = process.env.VUE_APP_BASE_API + files[i].filePath;
-            file.uid = files[i].id;
-            this.fileList.push(file);
-          }
         });
       },
       //选择党员

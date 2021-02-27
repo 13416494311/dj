@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+    <el-form v-if="!see" :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
       <el-form-item label="党员姓名" prop="memberName">
         <el-input
           v-model="queryParams.memberName"
@@ -38,7 +38,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row v-if="!see" :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -88,12 +88,12 @@
               :border="true"  :stripe="true">
       <!-- <el-table-column type="selection" width="55" align="center"/>-->
       <el-table-column label="序号" align="center" type="index" />
-      <el-table-column label="党员姓名" align="center" prop="djPartyMember.memberName"/>
-      <el-table-column label="党组织名称" align="center" prop="djPartyOrg.partyOrgFullName" />
+      <el-table-column v-if="!see" label="党员姓名" align="center" prop="djPartyMember.memberName"/>
+      <el-table-column v-if="!see" label="党组织名称" align="center" prop="djPartyOrg.partyOrgFullName" />
       <el-table-column label="特长类别" align="center" prop="specialtyCategory"
                        :formatter="specialtyTypeFormat">
       </el-table-column>
-      <el-table-column label="特长描述" width="400" align="center" prop="specialtyContent"/>
+      <el-table-column label="特长描述" align="center" prop="specialtyContent"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -108,7 +108,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-if=" user.userId == scope.row.createBy "
+            v-if=" !see && user.userId == scope.row.createBy "
             v-hasPermi="['members:specialty:edit']"
           >修改
           </el-button>
@@ -117,7 +117,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-if=" user.userId == scope.row.createBy "
+            v-if=" !see && user.userId == scope.row.createBy "
             v-hasPermi="['members:specialty:remove']"
           >删除
           </el-button>
@@ -224,6 +224,14 @@
     components: {
       partyMember, selectTree
     },
+    props: {
+      see: {
+        type: Boolean,
+        default: () => {
+          return ''
+        }
+      },
+    },
     data() {
       return {
         // 遮罩层
@@ -297,6 +305,10 @@
       });
     },
     methods: {
+      init(memberId){
+        this.queryParams.memberId = memberId
+        this.getList();
+      },
       getUser() {
         getUserProfile().then(response => {
           this.user = response.data;

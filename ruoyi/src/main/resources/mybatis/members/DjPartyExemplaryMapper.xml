@@ -47,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="auditState != null  and auditState != ''"> and  e.audit_state = #{auditState}</if>
             ${dataScope}
         </where>
+        order by e.record_time desc
     </select>
 
     <select id="selectDjPartyExemplaryById" parameterType="Long" resultMap="DjPartyExemplaryResult">

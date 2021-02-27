@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.members.mapper.DjPartyMemberHelpMapper">
+    
+    <resultMap type="DjPartyMemberHelp" id="DjPartyMemberHelpResult">
+        <result property="helpId"    column="help_id"    />
+        <result property="helpUuid"    column="help_uuid"    />
+        <result property="partyMemberId"    column="party_member_id"    />
+        <result property="partyOrgId"    column="party_org_id"    />
+        <result property="cognizance"    column="cognizance"    />
+        <result property="economicSituation"    column="economic_situation"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjPartyMemberHelpVo">
+        select help_id, help_uuid, party_member_id, party_org_id, cognizance, economic_situation, status, del_flag, create_by, create_time, update_by, update_time from dj_party_member_help
+    </sql>
+
+    <select id="selectDjPartyMemberHelpList" parameterType="DjPartyMemberHelp" resultMap="DjPartyMemberHelpResult">
+        <include refid="selectDjPartyMemberHelpVo"/>
+        <where>  
+            <if test="helpUuid != null  and helpUuid != ''"> and help_uuid = #{helpUuid}</if>
+            <if test="partyMemberId != null "> and party_member_id = #{partyMemberId}</if>
+            <if test="partyOrgId != null "> and party_org_id = #{partyOrgId}</if>
+            <if test="cognizance != null  and cognizance != ''"> and cognizance = #{cognizance}</if>
+            <if test="economicSituation != null  and economicSituation != ''"> and economic_situation = #{economicSituation}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectDjPartyMemberHelpById" parameterType="Long" resultMap="DjPartyMemberHelpResult">
+        <include refid="selectDjPartyMemberHelpVo"/>
+        where help_id = #{helpId}
+    </select>
+        
+    <insert id="insertDjPartyMemberHelp" parameterType="DjPartyMemberHelp" useGeneratedKeys="true" keyProperty="helpId">
+        insert into dj_party_member_help
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="helpUuid != null  and helpUuid != ''">help_uuid,</if>
+            <if test="partyMemberId != null ">party_member_id,</if>
+            <if test="partyOrgId != null ">party_org_id,</if>
+            <if test="cognizance != null  and cognizance != ''">cognizance,</if>
+            <if test="economicSituation != null  and economicSituation != ''">economic_situation,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="helpUuid != null  and helpUuid != ''">#{helpUuid},</if>
+            <if test="partyMemberId != null ">#{partyMemberId},</if>
+            <if test="partyOrgId != null ">#{partyOrgId},</if>
+            <if test="cognizance != null  and cognizance != ''">#{cognizance},</if>
+            <if test="economicSituation != null  and economicSituation != ''">#{economicSituation},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjPartyMemberHelp" parameterType="DjPartyMemberHelp">
+        update dj_party_member_help
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="helpUuid != null  and helpUuid != ''">help_uuid = #{helpUuid},</if>
+            <if test="partyMemberId != null ">party_member_id = #{partyMemberId},</if>
+            <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
+            <if test="cognizance != null  and cognizance != ''">cognizance = #{cognizance},</if>
+            <if test="economicSituation != null  and economicSituation != ''">economic_situation = #{economicSituation},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where help_id = #{helpId}
+    </update>
+
+    <delete id="deleteDjPartyMemberHelpById" parameterType="Long">
+        delete from dj_party_member_help where help_id = #{helpId}
+    </delete>
+
+    <delete id="deleteDjPartyMemberHelpByIds" parameterType="String">
+        delete from dj_party_member_help where help_id in 
+        <foreach item="helpId" collection="array" open="(" separator="," close=")">
+            #{helpId}
+        </foreach>
+    </delete>
+    
+</mapper>

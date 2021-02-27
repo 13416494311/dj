@@ -3,11 +3,14 @@ package com.ruoyi.project.party.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.members.domain.DjPartyMemberHelp;
+import com.ruoyi.project.members.mapper.DjPartyMemberHelpMapper;
 import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
@@ -45,6 +48,8 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     private ISysPostService postService;
     @Autowired
     private SysDeptMapper sysDeptMapper;
+    @Autowired
+    private DjPartyMemberHelpMapper partyMemberHelpMapper;
 
     @Override
     public int getMemberCount(){
@@ -99,6 +104,14 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
         }
         if(member.getPolity()!=null){
             member.setPolityText(dictDataService.selectDictLabel("polity_type",member.getPolity()));
+        }
+
+        DjPartyMemberHelp partyMemberHelp = new DjPartyMemberHelp();
+        partyMemberHelp.setPartyMemberId(memberId);
+        List<DjPartyMemberHelp> memberHelpList = partyMemberHelpMapper.selectDjPartyMemberHelpList(partyMemberHelp);
+        //没有创建过帮扶数据
+        if(memberHelpList!=null && memberHelpList.size()>0){
+            member.setMemberHelp(memberHelpList.get(0));
         }
         return member;
     }
@@ -214,6 +227,16 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     @Override
     public int insertDjPartyMember(DjPartyMember djPartyMember)
     {
+        //生活困难
+        if("1".equals(djPartyMember.getLifeDifficulty())){
+            DjPartyMemberHelp memberHelp = new DjPartyMemberHelp();
+            memberHelp.setHelpUuid(UUID.randomUUID().toString());
+            memberHelp.setPartyMemberId(djPartyMember.getMemberId());
+            memberHelp.setPartyOrgId(djPartyMember.getPartyOrgId());
+            partyMemberHelpMapper.insertDjPartyMemberHelp(memberHelp);
+        }
+
+
         djPartyMember.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djPartyMember.setCreateTime(DateUtils.getNowDate());
         djPartyMemberMapper.insertDjPartyMember(djPartyMember);
@@ -274,6 +297,25 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     @Override
     public int updateDjPartyMember(DjPartyMember djPartyMember)
     {
+
+        //生活困难
+        if("Y".equals(djPartyMember.getLifeDifficulty())){
+            DjPartyMember partyMember =djPartyMemberMapper.selectDjPartyMemberById(djPartyMember.getMemberId());
+            //之前不是生活困难
+            if(!"Y".equals(partyMember.getLifeDifficulty())){
+                DjPartyMemberHelp partyMemberHelp = new DjPartyMemberHelp();
+                partyMemberHelp.setPartyMemberId(djPartyMember.getMemberId());
+                List<DjPartyMemberHelp> memberHelpList = partyMemberHelpMapper.selectDjPartyMemberHelpList(partyMemberHelp);
+                //没有创建过帮扶数据
+                if(memberHelpList==null || memberHelpList.size()==0){
+                    DjPartyMemberHelp memberHelp = new DjPartyMemberHelp();
+                    memberHelp.setHelpUuid(UUID.randomUUID().toString());
+                    memberHelp.setPartyMemberId(djPartyMember.getMemberId());
+                    memberHelp.setPartyOrgId(djPartyMember.getPartyOrgId());
+                    partyMemberHelpMapper.insertDjPartyMemberHelp(memberHelp);
+                }
+            }
+        }
 
         SysUser sysUser = userService.selectUserByPartyMemberId(djPartyMember.getMemberId());
         sysUser.setAvatar(djPartyMember.getAvatar());
