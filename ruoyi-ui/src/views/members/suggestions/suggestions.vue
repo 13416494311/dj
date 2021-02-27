@@ -269,6 +269,7 @@
         seeFlag:false,
         //组织架构
         partyOrgOptions: [],
+        type:undefined,
       };
     },
     mounted () {
@@ -330,9 +331,11 @@
         let path = this.$route.path;
         switch (path) {
           case "/party/suggestions/1" :
+            this.type = "1";
             this.queryParams.type = "1";
             break;
           case "/party/suggestions/2" :
+            this.type = "2";
             this.queryParams.type = "2";
             break;
           default:
@@ -396,6 +399,7 @@
       handleAdd() {
         this.reset();
         this.form.suggestionsUuid = this.uuid();
+        this.form.type = this.type;
         this.open = true;
         this.title = "添加";
         this.addFlag = true;

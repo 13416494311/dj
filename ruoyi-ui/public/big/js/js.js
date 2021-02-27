@@ -1,6 +1,6 @@
 ﻿
 //var basePath = "http://127.0.0.1/dev-api/bigDataShow/";
-var basePath = "http://202.96.185.154:5000/prod-api/" ;
+var basePath = "http://202.96.185.154:5000/prod-api/bigDataShow/" ;
 
 $(function () {
   //活动数
