@@ -108,6 +108,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
+            v-if=" user.userId == scope.row.createBy "
             v-hasPermi="['members:specialty:edit']"
           >修改
           </el-button>
@@ -116,6 +117,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
+            v-if=" user.userId == scope.row.createBy "
             v-hasPermi="['members:specialty:remove']"
           >删除
           </el-button>
@@ -215,7 +217,7 @@
   import selectTree from '../../components/selectTree';
   import {getPartyMember} from "@/api/party/member";
   import partyMember from "../../party/org/partyMemberChoose";
-
+  import {getUserProfile} from "@/api/system/user";
 
   export default {
     name: "Specialty",
@@ -279,13 +281,14 @@
         //特长类别
         specialtyTypeOptions: [],
         disabled: false,
+        user:{},
       };
     },
     mounted() {
       window.addEventListener('resize', this.getHeight);
     },
     created() {
-      //this.getUser();
+      this.getUser();
       this.getList();
       //组织架构树
       this.getPartyOrgTreeSelect();
@@ -294,6 +297,11 @@
       });
     },
     methods: {
+      getUser() {
+        getUserProfile().then(response => {
+          this.user = response.data;
+        });
+      },
       /** 对话框自适应高度 */
       getHeight() {
         this.bodyStyle.height = window.innerHeight - 281 + 'px';
@@ -350,6 +358,7 @@
       handleAdd() {
         this.reset();
         this.open = true;
+        this.disabled = false;
         this.title = "添加党员特长";
       },
       /** 修改按钮操作 */

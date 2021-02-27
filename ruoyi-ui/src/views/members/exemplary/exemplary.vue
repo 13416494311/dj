@@ -105,7 +105,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-if="showHandleUpdate(scope.row) && (scope.row.auditState =='1'|| scope.row.auditState =='4')"
+            v-if="user.userId == scope.row.createBy  && (scope.row.auditState =='1'|| scope.row.auditState =='4')"
             v-hasPermi="['members:exemplary:edit']"
           >修改
           </el-button>
@@ -114,7 +114,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-if="showHandleUpdate(scope.row) && scope.row.auditState =='1'"
+            v-if="user.userId == scope.row.createBy  && scope.row.auditState =='1'"
             v-hasPermi="['members:exemplary:remove']"
           >删除
           </el-button>
@@ -431,7 +431,7 @@
       },
       showHandleUpdate(row){
         let showFlag = false;
-        if(this.user.partyMemberId && this.user.partyMemberId == row.memberId){
+        if(this.user && this.user.userId == row.createBy){
           showFlag = true;
         }
         return showFlag ;

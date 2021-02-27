@@ -18,9 +18,6 @@
         </el-tooltip>-->
 
 
-        <el-tooltip content="APP下载" effect="dark" placement="bottom">
-          <app-download class="right-menu-item hover-effect" />
-        </el-tooltip>
 
         <el-tooltip content="待办事项" effect="dark" placement="bottom">
           <router-link to="/sysTodo/index">
@@ -29,6 +26,10 @@
               <el-badge class="todo-badge" :max="99" :value="todoCount" />
             </div>
           </router-link>
+        </el-tooltip>
+
+        <el-tooltip content="APP下载" effect="dark" placement="bottom">
+          <app-download class="right-menu-item hover-effect" />
         </el-tooltip>
 
         <screenfull id="screenfull" class="right-menu-item hover-effect"/>

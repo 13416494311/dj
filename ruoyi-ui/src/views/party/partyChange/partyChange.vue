@@ -82,7 +82,7 @@
           >查看
           </el-button>
           <el-button
-            v-if="!see && showHandleUpdate(scope.row) && (scope.row.status =='1'|| scope.row.status =='4')"
+            v-if="!see && user.userId == scope.row.createBy && (scope.row.status =='1'|| scope.row.status =='4')"
             size="small"
             type="text"
             icon="el-icon-edit"
@@ -91,7 +91,7 @@
           >修改
           </el-button>
           <el-button
-            v-if="!see && showHandleUpdate(scope.row) && scope.row.status =='1'"
+            v-if="!see && user.userId == scope.row.createBy  && scope.row.status =='1'"
             size="small"
             type="text"
             icon="el-icon-delete"
@@ -333,7 +333,7 @@
       },
       showHandleUpdate(row){
         let showFlag = false;
-        if(this.user.partyMemberId && this.user.partyMemberId == row.memberId){
+        if(this.user && this.user.userId == row.createBy){
           showFlag = true;
         }
         return showFlag ;
