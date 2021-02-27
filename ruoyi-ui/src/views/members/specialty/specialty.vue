@@ -228,7 +228,7 @@
       see: {
         type: Boolean,
         default: () => {
-          return ''
+          return false
         }
       },
     },
@@ -297,7 +297,6 @@
     },
     created() {
       this.getUser();
-      this.getList();
       //组织架构树
       this.getPartyOrgTreeSelect();
       this.getDicts("specialty_type").then(response => {
@@ -312,7 +311,9 @@
       getUser() {
         getUserProfile().then(response => {
           this.user = response.data;
-        });
+        }).then(()=>{
+          this.getList()
+        })
       },
       /** 对话框自适应高度 */
       getHeight() {
@@ -321,6 +322,22 @@
       /** 查询党员特长列表 */
       getList() {
         this.loading = true;
+
+        if(this.queryParams.memberId ==undefined){
+          this.queryParams.memberId = this.user.partyMemberId!=null?this.user.partyMemberId:undefined
+          let roles = this.user.roles;
+          if(roles && roles.length!=0){
+            for(let i=0;i<roles.length;i++){
+              //管理员角色 或党委
+              if(roles[i].roleId == 1 || roles[i].roleId == 5){
+                this.queryParams.memberId = undefined
+                break;
+              }
+            }
+          }
+        }
+
+
         listSpecialty(this.queryParams).then(response => {
           this.specialtyList = response.rows;
           this.total = response.total;
