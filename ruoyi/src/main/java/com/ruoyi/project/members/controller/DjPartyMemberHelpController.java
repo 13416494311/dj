@@ -1,6 +1,10 @@
 package com.ruoyi.project.members.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +26,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 党员帮扶Controller
- * 
+ *
  * @author ruoyi
  * @date 2021-02-27
  */
@@ -38,9 +42,13 @@ public class DjPartyMemberHelpController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('members:help:list')")
     @GetMapping("/list")
-    public TableDataInfo list(DjPartyMemberHelp djPartyMemberHelp)
+    @DataScope(partyOrgAlias = "o")
+    public TableDataInfo list(DjPartyMemberHelp djPartyMemberHelp,String memberName)
     {
         startPage();
+        Map<String, Object> params = new HashMap<>();
+        params.put("memberName",memberName);
+        djPartyMemberHelp.setParams(params);
         List<DjPartyMemberHelp> list = djPartyMemberHelpService.selectDjPartyMemberHelpList(djPartyMemberHelp);
         return getDataTable(list);
     }

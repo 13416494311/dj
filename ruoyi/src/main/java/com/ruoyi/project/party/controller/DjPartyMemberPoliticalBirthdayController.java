@@ -1,6 +1,8 @@
 package com.ruoyi.project.party.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -41,9 +43,12 @@ public class DjPartyMemberPoliticalBirthdayController extends BaseController
     @PreAuthorize("@ss.hasPermi('party:politicalBirthday:list')")
     @GetMapping("/list")
     @DataScope(partyOrgAlias = "o")
-    public TableDataInfo list(DjPartyMemberPoliticalBirthday djPartyMemberPoliticalBirthday)
+    public TableDataInfo list(DjPartyMemberPoliticalBirthday djPartyMemberPoliticalBirthday,String memberName)
     {
         startPage();
+        Map<String, Object> params = new HashMap<>();
+        params.put("memberName",memberName);
+        djPartyMemberPoliticalBirthday.setParams(params);
         List<DjPartyMemberPoliticalBirthday> list = djPartyMemberPoliticalBirthdayService.selectDjPartyMemberPoliticalBirthdayList(djPartyMemberPoliticalBirthday);
         return getDataTable(list);
     }

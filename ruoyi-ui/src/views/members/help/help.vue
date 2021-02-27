@@ -1,24 +1,26 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
-      <el-form-item label="党员姓名" prop="partyMemberName">
+      <el-form-item label="党员姓名" prop="memberName">
         <el-input
-          v-model="queryParams.partyMemberName"
+          v-model="queryParams.memberName"
           placeholder="请输入党员姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+
       <el-form-item label="党组织名称" prop="partyOrgId">
-        <el-input
-          v-model="queryParams.partyOrgId"
-          placeholder="请输入党组织id"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
+        <select-tree :value="queryParams.partyOrgId"
+                     style="width:100%;"
+                     :options="partyOrgOptions"
+                     vModel="partyOrgId"
+                     @selected="setVModelValue"
+                     placeholder="请选择党组织"
         />
       </el-form-item>
+
       <el-form-item label="组织认定" prop="cognizance">
         <el-select v-model="queryParams.cognizance" placeholder="请选择组织认定" clearable size="small">
           <el-option
@@ -150,10 +152,13 @@
 <script>
   import { listHelp, getHelp, delHelp, addHelp, updateHelp, exportHelp } from "@/api/members/help";
   import HelpRecord from "./helpRecord";
+  import {getUserProfile} from "@/api/system/user";
+  import {partyOrgTreeselect, getPartyOrg} from "@/api/party/org";
+  import selectTree from '../../components/selectTree';
 
   export default {
     name: "Help",
-    components: {HelpRecord},
+    components: {HelpRecord ,selectTree},
     data() {
       return {
         // 遮罩层
@@ -211,13 +216,17 @@
           paddingRight:'2%',
         },
         disabled:false,
+        //组织架构
+        partyOrgOptions: [],
       };
     },
     mounted () {
       window.addEventListener('resize', this.getHeight);
     },
     created() {
-      this.getList();
+      this.getUser();
+      //组织架构树
+      this.getPartyOrgTreeSelect();
       this.getDicts("sys_yes_no").then(response => {
         this.cognizanceOptions = response.data;
       });
@@ -226,6 +235,28 @@
       });
     },
     methods: {
+      //获取组织架构树
+      getPartyOrgTreeSelect() {
+        partyOrgTreeselect().then(response => {
+          this.partyOrgOptions = this.treeInitData(response.data);
+        });
+      },
+      //下拉树选择后设置值
+      setVModelValue(vModel, val) {
+        if (val != null) {
+          this.queryParams[vModel] = val;
+        } else {
+          this.queryParams[vModel] = undefined;
+        }
+        this.handleQuery();
+      },
+      getUser() {
+        getUserProfile().then(response => {
+          this.user = response.data;
+        }).then(()=>{
+          this.getList()
+        })
+      },
       /** 对话框自适应高度 */
       getHeight(){
         this.bodyStyle.height=window.innerHeight-281+'px';
@@ -233,6 +264,21 @@
       /** 查询党员帮扶列表 */
       getList() {
         this.loading = true;
+
+        if(this.queryParams.memberId ==undefined){
+          this.queryParams.memberId = this.user.partyMemberId!=null?this.user.partyMemberId:undefined
+          let roles = this.user.roles;
+          if(roles && roles.length!=0){
+            for(let i=0;i<roles.length;i++){
+              //管理员角色 或党委
+              if(roles[i].roleId == 1 || roles[i].roleId == 5){
+                this.queryParams.memberId = undefined
+                break;
+              }
+            }
+          }
+        }
+
         listHelp(this.queryParams).then(response => {
           this.helpList = response.rows;
           this.total = response.total;

@@ -2,9 +2,9 @@
   <div class="app-container">
     <el-form v-if="!see":model="queryParams" ref="queryForm" :inline="true" label-width="100px">
 
-      <el-form-item label="党员名称" prop="memberId">
+      <el-form-item label="党员名称" prop="memberName">
         <el-input
-          v-model="queryParams.memberId"
+          v-model="queryParams.memberName"
           placeholder="请输入党员名称"
           clearable
           size="small"

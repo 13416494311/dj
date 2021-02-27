@@ -10,7 +10,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="活动党组织" prop="partyOrgId">
+      <el-form-item label="党组织名称" prop="partyOrgId">
         <select-tree :value="queryParams.partyOrgId"
                      style="width:100%;"
                      :options="partyOrgOptions"

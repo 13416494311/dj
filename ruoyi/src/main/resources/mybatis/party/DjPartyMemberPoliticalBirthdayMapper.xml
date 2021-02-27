@@ -34,9 +34,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectDjPartyMemberPoliticalBirthdayList" parameterType="DjPartyMemberPoliticalBirthday" resultMap="DjPartyMemberPoliticalBirthdayResult">
         <include refid="selectDjPartyMemberPoliticalBirthday"/>
         left join dj_party_org o on o.party_org_id = b.party_org_id
+        left join dj_party_member m on m.member_id = b.member_id
         <where>
             <if test="birthdayUuid != null  and birthdayUuid != ''"> and b.birthday_uuid = #{birthdayUuid}</if>
             <if test="memberId != null "> and b.member_id = #{memberId}</if>
+            <if test="params.memberName != null ">
+                and m.member_name like concat('%', #{params.memberName}, '%')
+            </if>
             <if test="partyOrgId != null "> and b.party_org_id = #{partyOrgId}</if>
             <if test="politicalBirthday != null "> and b.political_birthday = #{politicalBirthday}</if>
             <if test="politicalAge != null "> and b.political_age = #{politicalAge}</if>
