@@ -1444,7 +1444,7 @@
         });
       },
       handleQrcode(row){
-        this.$refs.qrcode.init("活动签到二维码",this.getBasePath()+"/activity/member/signIn/"+row.detailedUuid);
+        this.$refs.qrcode.init("活动签到二维码",this.getBasePath()+process.env.VUE_APP_BASE_API+"/activity/member/signIn/"+row.detailedUuid);
       },
       handleScreen(row){
         window.open('_blank').location = this.getBasePath()+"/activityScreen/"+row.detailedId;
