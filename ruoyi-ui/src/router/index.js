@@ -76,6 +76,34 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/suggestions2',
+    component: Layout,
+    hidden: true,
+    redirect: '/party/suggestions/2',
+    children: [
+      {
+        path: '/party/suggestions/2',
+        component: (resolve) => require(['@/views/members/suggestions/suggestions'], resolve),
+        name: '党员心愿',
+        meta: { title: '党员心愿', icon: 'rate' }
+      }
+    ]
+  },
+  {
+    path: '/suggestions1',
+    component: Layout,
+    hidden: true,
+    redirect: '/party/suggestions/1',
+    children: [
+      {
+        path: '/party/suggestions/1',
+        component: (resolve) => require(['@/views/members/suggestions/suggestions'], resolve),
+        name: '党员建议',
+        meta: { title: '党员建议', icon: 'log' }
+      }
+    ]
+  },
+  {
     path: '/user',
     component: Layout,
     hidden: true,
