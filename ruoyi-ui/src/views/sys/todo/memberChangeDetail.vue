@@ -544,7 +544,6 @@
     border: 1px solid #e6ebf5;
 
     img {
-      width: 100%;
       height: 100%;
     }
 

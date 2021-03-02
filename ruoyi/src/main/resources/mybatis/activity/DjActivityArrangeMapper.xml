@@ -38,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partyMemberId != null "> and arrange.party_member_id = #{partyMemberId}</if>
             <if test="venue != null  and venue != ''"> and arrange.venue = #{venue}</if>
             <if test="status != null  and status != ''"> and arrange.status = #{status}</if>
+            <if test="delFlag != null  and delFlag != ''"> and arrange.del_flag = #{delFlag}</if>
         </where>
         order by create_time desc
     </select>

@@ -412,6 +412,7 @@
             <el-col :span="8">
               <el-form-item label="党员类型" prop="memberType">
                 <el-select :disabled="disabled"
+                           @change="changeMemberType"
                            v-model="form.memberType" style="width: 100%" placeholder="请选择党员类型">
                   <el-option
                     v-for="dict in memberTypeOptions"
@@ -451,7 +452,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="转为正式党员日期" prop="formalData">
+              <el-form-item label="转为正式党员日期" prop="formalData"
+                            :rules="[{required: formalDataRequire,message: `转为正式党员日期不能为空`,trigger: 'blur'}]">
                 <el-date-picker :disabled="disabled"
                                 clearable size="small" style="width: 100%"
                                 v-model="form.formalData"
@@ -684,7 +686,6 @@
     align-items: center;
     border: 1px solid #e6ebf5;
     img{
-      width:100%;
       height:100%;
     }
     div {
@@ -944,9 +945,6 @@
           joinData: [
             { required: true, message: "入党日期不能为空", trigger: "blur" },
           ],
-          formalData: [
-            { required: true, message: "转为正式党员日期不能为空", trigger: "blur" },
-          ],
           housePhone: [
             { validator: checkPhone, trigger: "blur" }
           ],
@@ -990,6 +988,7 @@
           }
         },
         user: {},
+        formalDataRequire:false,
       };
     },
     mounted() {
@@ -1321,6 +1320,7 @@
         this.disabled = false;
         this.orgOptions= this.partyOrgOptions;
         this.form.partyOrgId = Number(this.partyOrg.partyOrgId);
+        this.changeMemberType();
         this.open = true;
         this.title = "添加党员信息";
       },
@@ -1338,6 +1338,7 @@
           this.open = true;
           this.title = "查看党员信息";
         }).then(()=>{
+          this.changeMemberType();
           this.$refs.specialty.init(this.form.memberId);
           this.$refs.exemplary.init(this.form.memberId);
         });
@@ -1356,6 +1357,7 @@
           this.open = true;
           this.title = "修改党员信息";
         }).then(()=>{
+          this.changeMemberType();
           this.$refs.specialty.init(this.form.memberId);
           this.$refs.exemplary.init(this.form.memberId);
         });
@@ -1484,7 +1486,14 @@
           showFlag = true;
         }
         return showFlag ;
-      }
+      },
+      changeMemberType(){
+        if(this.form.memberType == '1'){
+          this.formalDataRequire = true
+        }else{
+          this.formalDataRequire = false
+        }
+      },
     }
   };
 </script>

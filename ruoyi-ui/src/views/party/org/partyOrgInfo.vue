@@ -39,7 +39,56 @@
     </el-row>
     <el-row style="margin-top: 20px">
       <el-col :span="24" class="level-center">
-        <TreeChart class="tree-chart" :json="treeData" />
+
+        <div class="org-info" >
+          <div class="org-info-pic" v-for="(member,index) in memberList1" :key="index">
+            <div class="org-info-avatar">
+              <el-image
+                v-if="member.avatar"
+                style="width: 100%;height: 100%"
+                :src="member.avatar"
+                fit="fill"></el-image>
+            </div>
+            <div  class="org-info-position" >
+              {{member.partyPositionTypeText}}
+            </div>
+            <div  class="org-info-name">{{member.memberName}}</div>
+          </div>
+        </div>
+
+        <div class="org-info" >
+          <div class="org-info-pic" v-for="(member,index) in memberList2" :key="index">
+            <div class="org-info-avatar">
+              <el-image
+                v-if="member.avatar"
+                style="width: 100%;height: 100%"
+                :src="member.avatar"
+                fit="fill"></el-image>
+            </div>
+            <div  class="org-info-position" >
+              {{member.partyPositionTypeText}}
+            </div>
+            <div  class="org-info-name">{{member.memberName}}</div>
+          </div>
+        </div>
+
+        <div class="org-info" >
+          <div class="org-info-pic" v-for="(member,index) in memberList3" :key="index">
+            <div class="org-info-avatar">
+              <el-image
+                v-if="member.avatar"
+                style="width: 100%;height: 100%"
+                :src="member.avatar"
+                fit="fill"></el-image>
+            </div>
+            <div  class="org-info-position" >
+              {{member.partyPositionTypeText}}
+            </div>
+            <div  class="org-info-name">{{member.memberName}}</div>
+          </div>
+        </div>
+
+
       </el-col>
     </el-row>
 
@@ -62,21 +111,21 @@
       return {
         djPng,
         defaultAvatar,
-        treeData: {},
         partyOrg:{
           params:{
             formalCount:0,
             prepareCount:0
           }
         },
-
+        memberList1:[],
+        memberList2:[],
+        memberList3:[],
       };
     },
     computed:{
 
     },
     mounted() {
-
     },
     created() {
       this.getOrgInfo();
@@ -90,70 +139,27 @@
         });
       },
       createTreeData(partyPositionMemberList){
-        let data = {
-          name: '书记',
-          image_url: defaultAvatar,
-          children: [
-            {
-              name: '副书记',
-              image_url: defaultAvatar,
-              children: [
-                {
-                  name: '组织委员',
-                  image_url: defaultAvatar
-                },
-                {
-                  name: '宣传委员',
-                  image_url: defaultAvatar
-                },
-                {
-                  name: '纪检委员',
-                  image_url: defaultAvatar
-                }
-              ]
-            }
-          ]
-        }
         for(let i in partyPositionMemberList){
-
           let member = partyPositionMemberList[i]
-
           if(member.partyPositionType =='1'){
-            data.name = member.partyPositionTypeText+":"+member.memberName;
             if(member.avatar != null){
-              data.image_url = process.env.VUE_APP_BASE_API + member.avatar
+              member.avatar = process.env.VUE_APP_BASE_API + member.avatar
             }
+            this.memberList1.push(member)
           }
-
           if(member.partyPositionType =='2'){
-            data.children[0].name = member.partyPositionTypeText+":"+member.memberName;
             if(member.avatar != null){
-              data.children[0].image_url = process.env.VUE_APP_BASE_API + member.avatar
+              member.avatar = process.env.VUE_APP_BASE_API + member.avatar
             }
+            this.memberList2.push(member)
           }
-
-          if(member.partyPositionType =='3'){
-            data.children[0].children[0].name = member.partyPositionTypeText+":"+member.memberName;
+          if(member.partyPositionType =='3'||member.partyPositionType =='4'||member.partyPositionType =='5'){
             if(member.avatar != null){
-              data.children[0].children[0].image_url = process.env.VUE_APP_BASE_API + member.avatar
+              member.avatar = process.env.VUE_APP_BASE_API + member.avatar
             }
-          }
-
-          if(member.partyPositionType =='4'){
-            data.children[0].children[1].name = member.partyPositionTypeText+":"+member.memberName;
-            if(member.avatar != null){
-              data.children[0].children[1].image_url = process.env.VUE_APP_BASE_API + member.avatar
-            }
-          }
-
-          if(member.partyPositionType =='5'){
-            data.children[0].children[2].name = member.partyPositionTypeText+":"+member.memberName;
-            if(member.avatar != null){
-              data.children[0].children[2].image_url = process.env.VUE_APP_BASE_API + member.avatar
-            }
+            this.memberList3.push(member)
           }
         }
-        this.treeData = data;
         this.$forceUpdate()
       },
 
@@ -176,14 +182,14 @@
   }
 
   .org-info-lable{
-    text-align: right;
+    text-align: left;
     vertical-align: middle;
     float: left;
     font-size: 14px;
     font-weight: 600;
     color: #000000;
     line-height: 30px;
-    padding: 0 12px 0 0;
+    padding: 0 12px 0 10px;
     box-sizing: border-box;
   }
 
@@ -196,6 +202,7 @@
     line-height: 30px;
     padding: 0 12px 0 0;
     box-sizing: border-box;
+    padding-left: -20px;
   }
 
   .tree-chart >>> td{
@@ -218,4 +225,45 @@
     font-size: 12px;
     color: #000000;
   }
+
+  .org-info{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .org-info-pic {
+    width: 3.5rem;
+    margin: 0.6rem 1.8rem;
+    border: 1px solid #C0C4CC;
+  }
+
+  .org-info-avatar {
+    width: 100%;
+    height: 3.5rem;
+    background-image: url("../../../assets/image/dj-avatar.png");
+    background-color: rgb(165, 27, 27);
+    background-size: cover;
+  }
+
+  .org-info-position {
+    padding-top: 0.2rem;
+    width: 100%;
+    height: 1rem;
+    text-align: center;
+    background-color: #cf001c;
+    color: white;
+    font-size: 0.5rem;
+    font-weight: 600;
+  }
+
+  .org-info-name {
+    padding-top: 0.2rem;
+    width: 100%;
+    height: 1rem;
+    text-align: center;
+    background-color: #C0C4CC;
+    color: black;
+    font-size: 0.5rem;
+  }
+
 </style>

@@ -231,6 +231,9 @@
           return false
         }
       },
+      partyOrgId: {
+        type: Number,
+      },
     },
     data() {
       return {
@@ -337,6 +340,9 @@
           }
         }
 
+        if(this.partyOrgId !=undefined){
+          this.queryParams.partyOrgId = this.partyOrgId;
+        }
 
         listSpecialty(this.queryParams).then(response => {
           this.specialtyList = response.rows;

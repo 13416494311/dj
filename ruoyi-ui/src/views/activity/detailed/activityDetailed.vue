@@ -769,6 +769,9 @@
           return false
         }
       },
+      partyOrgId: {
+        type: Number,
+      },
     },
     components: {
       QRcode,partyMember, addressMap, memberTransfer, activitySummary,
@@ -1285,6 +1288,9 @@
       /** 查询活动详情列表 */
       getList() {
         this.loading = true;
+        if(this.partyOrgId !=undefined){
+          this.queryParams.partyOrgId = this.partyOrgId;
+        }
         listDetailedByParam(this.queryParams).then(response => {
           this.detailedList = response.rows;
           this.total = response.total;

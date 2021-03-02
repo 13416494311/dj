@@ -501,6 +501,13 @@
             result = row.partyPositionMemberList[i].memberName
           }
         }
+        if(result ==""){
+          for(let i in row.partyPositionMemberList){
+            if(row.partyPositionMemberList[i].partyPositionType =='2'){
+              result += row.partyPositionMemberList[i].memberName+" "
+            }
+          }
+        }
         return result;
       },
       // 党组织类别字典翻译

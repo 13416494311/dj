@@ -151,7 +151,9 @@
             <if test="updateBy != null  and updateBy != ''">and update_by = #{updateBy}</if>
             <if test="updateTime != null ">and update_time = #{updateTime}</if>
         </where>
-        order by pm.party_position_type is null || pm.party_position_type='' asc,pm.party_position_type asc , CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
+        order by pm.party_position_type is null || pm.party_position_type='' asc,
+        po.party_org_id , po.party_org_id ,
+        pm.party_position_type asc , CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
 

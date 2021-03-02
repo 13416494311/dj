@@ -261,6 +261,9 @@
           return false
         }
       },
+      partyOrgId: {
+        type: Number,
+      },
     },
     components: {PoliticalBirthdayView, Editor,selectTree, PartyMember, },
     data() {
@@ -411,6 +414,11 @@
       /** 查询政治生日列表 */
       getList() {
         this.loading = true;
+
+        if(this.partyOrgId !=undefined){
+          this.queryParams.partyOrgId = this.partyOrgId;
+        }
+
         listPoliticalBirthday(this.queryParams).then(response => {
           this.politicalBirthdayList = response.rows;
           this.total = response.total;

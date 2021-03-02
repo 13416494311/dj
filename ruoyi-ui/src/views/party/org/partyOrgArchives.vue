@@ -15,7 +15,7 @@
                   v-if="member.avatar"
                   style="width: 100%;height: 100%"
                   :src="member.avatar"
-                  fit="fill"></el-image>
+                  fit="cover"></el-image>
               </div>
               <div  class="member-position" v-if="member.partyPositionType != null">
                 {{partyPositionTypeFormat(member.partyPositionType)}}
@@ -30,13 +30,13 @@
 
         <el-tabs type="border-card">
           <el-tab-pane label="历史换届">
-            <party-change :see="true"/>
+            <party-change ref="partyChange" :partyOrgId="partyOrgId" :see="true"/>
           </el-tab-pane>
           <el-tab-pane label="政治生日">
-            <political-birthday  :see="true"/>
+            <political-birthday  ref="politicalBirthday"  :partyOrgId="partyOrgId" :see="true"/>
           </el-tab-pane>
           <el-tab-pane label="组织生活">
-            <activity-detailed  :see="true"/>
+            <activity-detailed ref="activityDetailed" :partyOrgId="partyOrgId" :see="true"/>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -100,6 +100,10 @@
 
         this.$nextTick(()=>{
           this.$refs.panelGroupArchive.init(partyOrgId)
+
+          this.$refs.partyChange.getList();
+          this.$refs.politicalBirthday.getList();
+          this.$refs.activityDetailed.getList();
         });
 
       },

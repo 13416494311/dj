@@ -1,9 +1,11 @@
 package com.ruoyi.project.activity.controller;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.ruoyi.project.activity.domain.DjActivityArrange;
+import com.ruoyi.project.activity.service.IDjActivityArrangeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +36,8 @@ public class DjActivityPlanController extends BaseController
 {
     @Autowired
     private IDjActivityPlanService djActivityPlanService;
-
+    @Autowired
+    private IDjActivityArrangeService djActivityArrangeService;
     /**
      * 查询活动计划列表
      */
@@ -75,7 +78,26 @@ public class DjActivityPlanController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody DjActivityPlan djActivityPlan)
     {
-        return toAjax(djActivityPlanService.insertDjActivityPlan(djActivityPlan));
+        DjActivityArrange activityArrange = new DjActivityArrange();
+        activityArrange.setPlanUuid(djActivityPlan.getPlanUuid());
+        activityArrange.setDelFlag("0");
+        List<DjActivityArrange> activityArrangeList = djActivityArrangeService.selectDjActivityArrangeList(activityArrange);
+        AtomicReference<Boolean> haveOrgLeader = new AtomicReference<>(true);
+        final String[] result = {""};
+        activityArrangeList.stream().forEach(djActivityArrange->{
+
+            if(djActivityArrange.getDjPartyOrg().getLeader()==null || djActivityArrange.getDjPartyOrg().getLeader()==0){
+                haveOrgLeader.set(false);
+                result[0] +=  djActivityArrange.getDjPartyOrg().getPartyOrgName() +"  未设置活动负责人；";
+            }
+        });
+
+        if(!haveOrgLeader.get()){
+            return AjaxResult.error( result[0]);
+        }else{
+            return toAjax(djActivityPlanService.insertDjActivityPlan(djActivityPlan));
+        }
+
     }
 
     /**

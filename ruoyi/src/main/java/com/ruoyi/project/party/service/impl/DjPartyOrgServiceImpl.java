@@ -130,7 +130,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
 
         DjPartyMember djPartyMember = new DjPartyMember();
         djPartyMember.setPartyOrgId(partyOrgId);
-        List<DjPartyMember> djPartyMemberList = djPartyMemberMapper.selectPartyMemberList(djPartyMember);
+        List<DjPartyMember> djPartyMemberList = djPartyMemberMapper.selectDjPartyMemberList(djPartyMember);
 
         final int[]  formalCount = { 0 };
         final int[] prepareCount = { 0 };
@@ -147,6 +147,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
         params.put("prepareCount",prepareCount[0]);
         djPartyOrg.setParams(params);
 
+        djPartyMemberList = djPartyMemberMapper.selectPartyMemberList(djPartyMember);
         djPartyMemberList = djPartyMemberList.stream().filter(partyMember ->
                 StringUtils.isNotEmpty(partyMember.getPartyPositionType())).collect(Collectors.toList());
         djPartyMemberList.stream().forEach(partyMember->{

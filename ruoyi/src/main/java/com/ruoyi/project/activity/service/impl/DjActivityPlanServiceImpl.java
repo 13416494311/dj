@@ -159,6 +159,7 @@ public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
         if("2".equals(djActivityPlan.getStatus())){
             DjActivityArrange activityArrange = new DjActivityArrange();
             activityArrange.setPlanUuid(djActivityPlan.getPlanUuid());
+            activityArrange.setDelFlag("0");
             List<DjActivityArrange> arrangeList = djActivityArrangeService.selectDjActivityArrangeList(activityArrange);
             if(list!=null&&list.size()>0&&arrangeList!=null&&arrangeList.size()>0){
                 for(int j=0;j<arrangeList.size();j++){

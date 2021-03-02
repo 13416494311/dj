@@ -143,13 +143,14 @@
     white-space: nowrap;
   }
   .org-tree-node-label-inner{
-    writing-mode:tb-rl !important;
+    writing-mode:tb-rl ;
     letter-spacing:3px;
   }
 
   .bg-red {
     background-color: #f10006 !important;
     color: white !important;
+    writing-mode:rl-tb !important;
   }
   .bg-white {
     color: white !important;
@@ -160,6 +161,7 @@
     width: 98%;
     margin-left: 1%;
     overflow: auto;
+    padding-top: 100px;
   }
 
   .org-tree-container{
@@ -167,7 +169,7 @@
   }
 
   .org-pic>.el-dialog__body{
-    background: url("../../../assets/image/org_bg.png") no-repeat !important;
+    background: url("../../../assets/image/org_bg1.png") no-repeat !important;
     background-size: 100% 100% !important;
   }
 
