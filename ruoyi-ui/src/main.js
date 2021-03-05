@@ -27,7 +27,9 @@ import 'vue2-org-tree/src/styles/org-tree.less';
 import VueAMap from 'vue-amap'
 import uploader from 'vue-simple-uploader'
 import echarts from "echarts";
+import VueLazyload from 'vue-lazyload'  // 引入这个懒加载插件
 
+Vue.use(VueLazyload) // 直接使用
 Vue.use(uploader)
 Vue.use(VueAMap)
 VueAMap.initAMapApiLoader({

@@ -146,6 +146,14 @@
         </el-card>
 
         <change-detail ref="changeDetail" :disabled="disabled" />
+
+        <el-card shadow="always" style="margin-bottom: 30px;">
+          <div slot="header" style="height: 25px">
+            <span style="font-weight: bold;font-size: 16px">换届资料</span>
+          </div>
+          <upload-all-file ref="uploadAllFile" :disabled="disabled"/>
+        </el-card>
+
       </el-form>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
         <el-button v-show="!disabled" type="primary" @click="submitForm(1)">保 存</el-button>
@@ -173,7 +181,7 @@
   import ChangeDetail from "./changeDetail";
   import ChooseAuditUser from "../../audit/chooseAuditUser";
   import {getUserProfile} from "@/api/system/user";
-
+  import UploadAllFile from "../../upload/uploadAllFile";
   export default {
     name: "PartyChange",
     props: {
@@ -184,7 +192,7 @@
         }
       },
     },
-    components: {ChooseAuditUser,ChangeDetail, selectTree },
+    components: { UploadAllFile,ChooseAuditUser,ChangeDetail, selectTree },
     data() {
       return {
         // 遮罩层
@@ -347,6 +355,7 @@
         this.form.changeUuid = this.uuid();
         this.$nextTick(function () {
           this.$refs.changeDetail.init(this.form.changeUuid, '') ;
+          this.$refs.uploadAllFile.init(this.form.changeUuid, 'partyChange') ;
         })
       },
       /** 修改按钮操作 */
@@ -361,6 +370,7 @@
         }).then(()=>{
           this.$refs.changeDetail.init(this.form.changeUuid, this.form.partyOrgId) ;
           this.$refs.changeDetail.disabled = this.disabled;
+          this.$refs.uploadAllFile.init(this.form.changeUuid, 'partyChange') ;
         });
       },
       /** 查看按钮操作 */
@@ -371,10 +381,11 @@
         getPartyChange(changeId).then(response => {
           this.form = response.data;
           this.open = true;
-          this.title = "修改党组织换届";
+          this.title = "查看党组织换届";
         }).then(()=>{
           this.$refs.changeDetail.init(this.form.changeUuid, this.form.partyOrgId) ;
           this.$refs.changeDetail.disabled = this.disabled;
+          this.$refs.uploadAllFile.init(this.form.changeUuid, 'partyChange') ;
         });
       },
       handleSubmit(form){

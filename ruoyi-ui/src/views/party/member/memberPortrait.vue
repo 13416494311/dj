@@ -304,7 +304,7 @@
   .portrait-rank{
     width: 150px;
     height: 150px;
-    background: url("../../../assets/image/file.png") no-repeat center;
+    background: url("../../../assets/image/rank.png") no-repeat center;
     background-size: 200px 200px;
     float: left;
   }

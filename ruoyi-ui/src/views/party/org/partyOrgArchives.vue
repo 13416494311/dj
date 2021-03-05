@@ -11,11 +11,8 @@
           <el-tab-pane label="支部党员墙">
             <div class="member-pic" v-for="member in memberList" :key="member.memberId">
               <div class="member-avatar">
-                <el-image
-                  v-if="member.avatar"
-                  style="width: 100%;height: 100%"
-                  :src="member.avatar"
-                  fit="cover"></el-image>
+                <img v-if="member.avatar" style="width: 100%;height: 100%"
+                     v-lazy="member.avatar" fit="cover">
               </div>
               <div  class="member-position" v-if="member.partyPositionType != null">
                 {{partyPositionTypeFormat(member.partyPositionType)}}

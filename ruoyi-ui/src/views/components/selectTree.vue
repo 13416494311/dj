@@ -6,6 +6,7 @@
              :value="valueTitle"
              :clearable="clearable"
              :placeholder="placeholder"
+             @visible-change="$forceUpdate()"
              @clear="clearHandle">
     <el-option :value="valueTitle" :label="valueTitle">
       <el-tree  id="tree-option"
@@ -82,7 +83,15 @@
       initHandle(){
         this.$nextTick(()=>{
           if(this.valueId){
-            this.valueTitle = this.$refs.selectTree.getNode(this.valueId).data[this.props.label];
+
+            let parentLabel ="" ;
+            let currentNode = this.$refs.selectTree.getNode(this.valueId)
+            let parent = currentNode.parent.data
+            if(this.vModel == "deptId" && parent.id != 100 ){
+              parentLabel = parent.label + "/"
+            }
+            this.valueTitle = parentLabel + currentNode.data[this.props.label];
+
             this.$refs.selectTree.setCurrentKey(this.valueId);
             this.defaultExpandedKey = [this.valueId]
           }else{
@@ -98,8 +107,15 @@
 
       },
       // 切换选项
-      handleNodeClick(node){
-        this.valueTitle = node[this.props.label]
+      handleNodeClick(node,e){
+
+        let parentLabel ="" ;
+        let parent = e.parent.data
+        if(this.vModel == "deptId" && parent.id != 100 ){
+          parentLabel = parent.label + "/"
+        }
+        this.valueTitle = parentLabel + node[this.props.label]
+
         this.valueId = node[this.props.value]
         this.$emit('selected',this.vModel,this.valueId)
         this.defaultExpandedKey = []
@@ -107,7 +123,6 @@
         setTimeout(function() {
           that.$refs.treeSelect.blur();
         }, 50);
-
       },
       // 清除选中
       clearHandle(){
