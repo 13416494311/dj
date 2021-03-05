@@ -11,7 +11,7 @@ import com.ruoyi.framework.web.domain.BaseEntity;
 
 /**
  * 部门表 sys_dept
- * 
+ *
  * @author ruoyi
  */
 public class SysDept extends BaseEntity
@@ -29,6 +29,8 @@ public class SysDept extends BaseEntity
 
     /** 部门名称 */
     private String deptName;
+
+    private String deptFullName;
 
     /** 显示顺序 */
     private String orderNum;
@@ -50,7 +52,7 @@ public class SysDept extends BaseEntity
 
     /** 父部门名称 */
     private String parentName;
-    
+
     /** 子部门 */
     private List<SysDept> children = new ArrayList<SysDept>();
 
@@ -94,6 +96,14 @@ public class SysDept extends BaseEntity
     public void setDeptName(String deptName)
     {
         this.deptName = deptName;
+    }
+
+    public String getDeptFullName() {
+        return deptFullName;
+    }
+
+    public void setDeptFullName(String deptFullName) {
+        this.deptFullName = deptFullName;
     }
 
     @NotBlank(message = "显示顺序不能为空")

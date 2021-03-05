@@ -93,6 +93,13 @@
               <el-button
                 size="small"
                 type="text"
+                icon="el-icon-s-custom"
+                @click="handlePortrait(scope.row)"
+              >画像
+              </el-button>
+              <el-button
+                size="small"
+                type="text"
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
                 v-if="showHandleUpdate(scope.row)"
@@ -668,6 +675,7 @@
     </el-dialog>
 
     <choose-audit-user ref="chooseAuditUser"  @ok="submitForm" @del="handleDelete" @enable="handleEnable"/>
+    <member-portrait ref="memberPortrait"/>
   </div>
 </template>
 
@@ -723,10 +731,11 @@
   import { listLog, getLog, delLog, addLog, updateLog, exportLog } from "@/api/sys/log";
   import Specialty from "../../members/specialty/specialty";
   import Exemplary from "../../members/exemplary/exemplary";
+  import MemberPortrait from "./memberPortrait";
 
   export default {
     name: "PartyMember",
-    components: {Exemplary, Specialty, ChooseAuditUser, Treeselect,selectTree},
+    components: {MemberPortrait, Exemplary, Specialty, ChooseAuditUser, Treeselect,selectTree},
     data() {
       let checkIdentityCard = (rule, value, callback) => {
         if (!value) {
@@ -1190,7 +1199,7 @@
       // 部门id翻译
       deptIdFormat(row, column,value){
         if(row.sysDept!=null){
-          return row.sysDept.deptName;
+          return row.sysDept.deptFullName;
         }else{
           return "";
         }
@@ -1342,6 +1351,9 @@
           this.$refs.specialty.init(this.form.memberId);
           this.$refs.exemplary.init(this.form.memberId);
         });
+      },
+      handlePortrait(row){
+        this.$refs.memberPortrait.init(row.memberId)
       },
       /** 修改按钮操作 */
       handleUpdate(row) {

@@ -159,7 +159,7 @@
 
     <select id="selectPoliticalBirthdayPartyMemberList"  resultMap="DjPartyMemberResult">
         <include refid="selectDjPartyMemberVo1"/>
-        where month(pm.join_data) = month(NOW()) and day(pm.join_data) = day(NOW())
+        where month(pm.formal_data) = month(NOW()) and day(pm.formal_data) = day(NOW())
         order by pm.party_position_type is null || pm.party_position_type='' asc,
         pm.party_position_type asc , CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>

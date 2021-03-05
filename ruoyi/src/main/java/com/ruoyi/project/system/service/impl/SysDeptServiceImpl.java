@@ -105,7 +105,16 @@ public class SysDeptServiceImpl implements ISysDeptService
     @Override
     public SysDept selectDeptById(Long deptId)
     {
-        return deptMapper.selectDeptById(deptId);
+        SysDept sysDept = deptMapper.selectDeptById(deptId);
+        String[] deptIds =sysDept.getAncestors().split(",");
+        String deptFullName ="";
+        for(String sysDeptId:deptIds){
+            if(!"100".equals(sysDeptId) && !"0".equals(sysDeptId)){
+                deptFullName+=deptMapper.selectDeptById(Long.parseLong(sysDeptId)).getDeptName()+"/";
+            }
+        }
+        sysDept.setDeptFullName(deptFullName+sysDept.getDeptName());
+        return sysDept;
     }
 
     /**
