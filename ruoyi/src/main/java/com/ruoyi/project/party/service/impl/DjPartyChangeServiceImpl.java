@@ -62,7 +62,12 @@ public class DjPartyChangeServiceImpl implements IDjPartyChangeService
     @Override
     public DjPartyChange selectDjPartyChangeById(Long changeId)
     {
-        return djPartyChangeMapper.selectDjPartyChangeById(changeId);
+
+        DjPartyChange partyChange = djPartyChangeMapper.selectDjPartyChangeById(changeId);
+        if(partyChange.getPartyOrgId()!=null){
+            partyChange.setPartyOrg(partyOrgService.selectDjPartyOrgById(partyChange.getPartyOrgId()));
+        }
+        return partyChange;
     }
 
     /**

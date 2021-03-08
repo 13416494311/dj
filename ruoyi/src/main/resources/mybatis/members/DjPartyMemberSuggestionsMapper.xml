@@ -39,12 +39,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDjPartyMemberSuggestions"/>
         left join dj_party_org o on o.party_org_id = s.party_org_id
         left join dj_party_member m on m.member_id = s.member_id
+        left join sys_user u on m.member_id = u.party_member_id
         <where>
             <if test="suggestionsUuid != null  and suggestionsUuid != ''"> and s.suggestions_uuid = #{suggestionsUuid}</if>
             <if test="type != null  and type != ''"> and s.type = #{type}</if>
             <if test="memberId != null "> and s.member_id = #{memberId}</if>
             <if test="params.memberName != null ">
                 and m.member_name like concat('%', #{params.memberName}, '%')
+            </if>
+            <if test="params.userId != null ">
+                and (
+                  exists (select 1 from dj_sys_todo t where t.uuid = s.suggestions_uuid and t.user_id = #{params.userId} )
+                  or (u.user_id = #{params.userId} )
+                )
             </if>
             <if test="partyOrgId != null "> and s.party_org_id = #{partyOrgId}</if>
             <if test="suggestionsContent != null  and suggestionsContent != ''"> and s.suggestions_content = #{suggestionsContent}</if>
@@ -53,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="handleMemberId != null  and handleMemberId != ''"> and s.handle_member_id = #{handleMemberId}</if>
             <if test="handleTime != null "> and s.handle_time = #{handleTime}</if>
             <if test="status != null  and status != ''"> and s.status = #{status}</if>
-            ${dataScope}
+
         </where>
     </select>
 

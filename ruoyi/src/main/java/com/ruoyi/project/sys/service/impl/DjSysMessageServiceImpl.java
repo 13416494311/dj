@@ -66,7 +66,9 @@ public class DjSysMessageServiceImpl implements IDjSysMessageService
     @Override
     public int insertDjSysMessage(DjSysMessage djSysMessage)
     {
-        djSysMessage.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        if(StringUtils.isEmpty(djSysMessage.getCreateBy())){
+            djSysMessage.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        }
         djSysMessage.setCreateTime(DateUtils.getNowDate());
 
         Push.pushMessage(djSysMessage.getTitle(), djSysMessage.getContent(),

@@ -77,7 +77,7 @@
   import selectTree from '../../components/selectTree';
 
   export default {
-    name: "PartyMember",
+    name: "PartyMemberChoose",
     components: {selectTree},
     data() {
       return {

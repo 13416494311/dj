@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
+import com.ruoyi.project.system.domain.SysUser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,11 +44,14 @@ public class DjPartyMemberSuggestionsController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('members:suggestions:list')")
     @GetMapping("/list")
-    @DataScope(partyOrgAlias = "o")
     public TableDataInfo list(DjPartyMemberSuggestions djPartyMemberSuggestions,String memberName)
     {
         startPage();
         Map<String, Object> params = new HashMap<>();
+        SysUser user = SecurityUtils.getLoginUser().getUser();
+        if(!SecurityUtils.isAdmin(user.getUserId()) && !SecurityUtils.isPartyOrgAll()){
+            params.put("userId",user.getUserId());
+        }
         params.put("memberName",memberName);
         djPartyMemberSuggestions.setParams(params);
         List<DjPartyMemberSuggestions> list = djPartyMemberSuggestionsService.selectDjPartyMemberSuggestionsList(djPartyMemberSuggestions);

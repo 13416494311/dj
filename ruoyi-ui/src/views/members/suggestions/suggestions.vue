@@ -48,7 +48,8 @@
       </el-col>
     </el-row>
 
-    <el-table v-loading="loading" :data="suggestionsList" @selection-change="handleSelectionChange">
+    <el-table :stripe="true"
+              :border="true" v-loading="loading" :data="suggestionsList" @selection-change="handleSelectionChange">
       <el-table-column label="序号" align="center" type="index" />
 
       <el-table-column label="党员姓名" align="center" prop="partyMember.memberName" />
@@ -73,9 +74,9 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-if="scope.row.status !='Y'"
+            v-if="scope.row.status =='1'"
             v-hasPermi="['members:suggestions:edit']"
-          >处理</el-button>
+          >修改</el-button>
           <!--<el-button
             size="small"
             type="text"
@@ -121,7 +122,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="内容" prop="suggestionsContent">
-                <el-input v-model="form.suggestionsContent" :disabled="seeFlag || !addFlag"
+                <el-input v-model="form.suggestionsContent" :disabled="disabled"
                           type="textarea" :autosize="{ minRows: 6, maxRows: 6}"
                           placeholder="请输入内容" />
               </el-form-item>
@@ -131,7 +132,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="创建日期" prop="recordTime">
-                <el-date-picker clearable size="small" style="width: 100%" :disabled="seeFlag || !addFlag"
+                <el-date-picker clearable size="small" style="width: 100%" :disabled="disabled"
                                 v-model="form.recordTime"
                                 type="date"
                                 value-format="yyyy-MM-dd"
@@ -145,56 +146,41 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="附件" >
-                <upload-all-file  ref="uploadAllFile" :disabled="seeFlag || !addFlag" />
+                <upload-all-file  ref="uploadAllFile" :disabled="disabled" />
               </el-form-item>
             </el-col>
 
           </el-row>
         </el-card>
 
-        <el-card v-if="!addFlag" shadow="always" style="margin-bottom: 30px;">
+        <el-card v-if="disabled" shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">处理信息</span>
           </div>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="处理人" prop="handleMemberId">
-                <el-input v-model="form.handlePartyMemberName" :disabled="true"
-                          placeholder="请输入处理人" />
-              </el-form-item>
-            </el-col>
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="处理日期" prop="handleTime">
-                  <el-date-picker clearable size="small" style="width: 100%"
-                                  v-model="form.handleTime"
-                                  :disabled="seeFlag"
-                                  type="date"
-                                  value-format="yyyy-MM-dd"
-                                  placeholder="选择处理日期">
-                  </el-date-picker>
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="处理情况" prop="handleContent">
-                <el-input v-model="form.handleContent" type="textarea"
-                          :disabled="seeFlag"
-                          :autosize="{ minRows: 6, maxRows: 6}" placeholder="请输入处理情况内容" />
-              </el-form-item>
-            </el-col>
-          </el-row>
+          <el-table v-loading="loading" :data="logList">
+            <el-table-column label="名称" align="center" prop="stepName"/>
+            <el-table-column label="处理人" align="center" prop="sysUser.nickName"/>
+            <el-table-column label="处理操作" align="center" prop="operResult"/>
+            <el-table-column label="处理时间" align="center" prop="operTime" width="180">
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.operTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="处理情况" align="center" width="600" prop="operReason"/>
+          </el-table>
         </el-card>
       </el-form>
 
 
       <div slot="footer" class="dialog-footer"  :style="{textAlign:'center'}">
-        <el-button v-show="!seeFlag" type="primary" @click="submitForm">确 定</el-button>
+        <el-button v-show="!disabled"  type="primary" @click="submitForm(1)">保 存</el-button>
+        <el-button v-show="!disabled" type="primary" @click="chooseAuditUser">提 交</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <choose-audit-user ref="chooseAuditUser"  @ok="handleSubmit" />
+
   </div>
 </template>
 
@@ -204,10 +190,12 @@
   import UploadAllFile from "../../upload/uploadAllFile";
   import {partyOrgTreeselect, getPartyOrg} from "@/api/party/org";
   import selectTree from '../../components/selectTree';
+  import ChooseAuditUser from "../../audit/chooseAuditUser";
+  import {listLog} from "@/api/sys/log";
 
   export default {
     name: "Suggestions",
-    components: {UploadAllFile, selectTree},
+    components: {UploadAllFile, selectTree,ChooseAuditUser},
     data() {
       return {
         // 遮罩层
@@ -265,11 +253,12 @@
           marginLeft:'2%' ,
           paddingRight:'2%',
         },
-        addFlag:false,
+        disabled:false,
         seeFlag:false,
         //组织架构
         partyOrgOptions: [],
-        type:undefined,
+        type: undefined,
+        logList: [],
       };
     },
     mounted () {
@@ -279,11 +268,19 @@
       this.getUser();
       //组织架构树
       this.getPartyOrgTreeSelect();
-      this.getDicts("sys_yes_no").then(response => {
+      this.getDicts("suggestions_status").then(response => {
         this.statusOptions = response.data;
       });
     },
     methods: {
+      chooseAuditUser(){
+        if(this.type == "1"){
+          this.$refs.chooseAuditUser.init(12)
+        }
+        if(this.type == "2"){
+          this.$refs.chooseAuditUser.init(11)
+        }
+      },
       getUser() {
         getUserProfile().then(response => {
           this.user = response.data;
@@ -313,20 +310,6 @@
       /** 查询党员建议/心愿列表 */
       getList() {
         this.loading = true;
-
-        if(this.queryParams.memberId ==undefined){
-          this.queryParams.memberId = this.user.partyMemberId!=null?this.user.partyMemberId:undefined
-          let roles = this.user.roles;
-          if(roles && roles.length!=0){
-            for(let i=0;i<roles.length;i++){
-              //管理员角色 或党委
-              if(roles[i].roleId == 1 || roles[i].roleId == 5){
-                this.queryParams.memberId = undefined
-                break;
-              }
-            }
-          }
-        }
 
         let path = this.$route.path;
         switch (path) {
@@ -402,8 +385,7 @@
         this.form.type = this.type;
         this.open = true;
         this.title = "添加";
-        this.addFlag = true;
-        this.seeFlag = false;
+        this.disabled = false;
         this.form.partyMemberName = this.user.djPartyMember!=null?this.user.djPartyMember.memberName:undefined;
         this.form.memberId = this.user.partyMemberId!=null?this.user.partyMemberId:undefined;
         this.form.partyOrgName = this.user.djPartyMember!=null?this.user.djPartyMember.djPartyOrg.partyOrgName:undefined;
@@ -415,8 +397,7 @@
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
-        this.addFlag = false;
-        this.seeFlag = false;
+        this.disabled = false;
         const suggestionsId = row.suggestionsId || this.ids
         getSuggestions(suggestionsId).then(response => {
           this.form = response.data;
@@ -427,13 +408,13 @@
           this.form.handlePartyMemberName = this.user.djPartyMember!=null?this.user.djPartyMember.memberName:undefined;
           this.form.handleMemberId = this.user.partyMemberId!=null?this.user.partyMemberId:undefined;
         }).then(()=>{
+          this.getLogList();
           this.$refs.uploadAllFile.init(this.form.suggestionsUuid, 'suggestions') ;
         });
       },
       handleSee(row) {
         this.reset();
-        this.addFlag = false;
-        this.seeFlag = true;
+        this.disabled = true;
         const suggestionsId = row.suggestionsId || this.ids
         getSuggestions(suggestionsId).then(response => {
           this.form = response.data;
@@ -443,18 +424,30 @@
           this.form.partyOrgName = this.form.partyOrg.partyOrgName
           this.form.handlePartyMemberName = this.form.handleMember!=null?this.form.handleMember.memberName:undefined
         }).then(()=>{
+          this.getLogList();
           this.$refs.uploadAllFile.init(this.form.suggestionsUuid, 'suggestions') ;
         });
       },
+
+      getLogList() {
+        this.loading = true;
+        listLog({"uuid": this.form.suggestionsUuid}).then(response => {
+          this.logList = response.rows;
+          this.loading = false;
+        });
+      },
+
+      handleSubmit(form){
+        this.form.params = {}
+        this.form.params.auditUserId = form.auditUserId;
+        this.form.params.operReason = form.reason;
+        this.submitForm(2);
+      },
       /** 提交按钮 */
-      submitForm: function() {
+      submitForm: function (status) {
         this.$refs["form"].validate(valid => {
           if (valid) {
-            if(this.addFlag){
-              this.form.status = 'N'
-            }else{
-              this.form.status = 'Y'
-            }
+            this.form.status = status;
             if (this.form.suggestionsId != undefined) {
               updateSuggestions(this.form).then(response => {
                 if (response.code === 200) {

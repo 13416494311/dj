@@ -107,6 +107,11 @@ public class DjPartyExemplaryServiceImpl implements IDjPartyExemplaryService
         djPartyExemplary.setDelFlag("0");
         djPartyExemplary.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djPartyExemplary.setCreateTime(DateUtils.getNowDate());
+        if("2".equals(djPartyExemplary.getAuditState())){
+            createSysLogAndTodo(djPartyExemplary,
+                    Long.parseLong(djPartyExemplary.getParams().get("auditUserId").toString()),
+                    djPartyExemplary.getParams().get("operReason")==null?null:djPartyExemplary.getParams().get("operReason").toString());
+        }
         return djPartyExemplaryMapper.insertDjPartyExemplary(djPartyExemplary);
     }
 

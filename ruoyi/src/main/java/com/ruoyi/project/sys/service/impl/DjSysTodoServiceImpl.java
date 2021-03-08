@@ -88,7 +88,9 @@ public class DjSysTodoServiceImpl implements IDjSysTodoService
     @Override
     public int insertDjSysTodo(DjSysTodo djSysTodo)
     {
-        djSysTodo.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        if(StringUtils.isEmpty(djSysTodo.getCreateBy())){
+            djSysTodo.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        }
         djSysTodo.setCreateTime(DateUtils.getNowDate());
         return djSysTodoMapper.insertDjSysTodo(djSysTodo);
     }
