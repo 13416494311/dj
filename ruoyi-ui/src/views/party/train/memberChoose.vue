@@ -55,7 +55,7 @@
 
 
   export default {
-    name: "MemberTransfer",
+    name: "MemberChoose",
     data() {
       return {
         detailedUuid:undefined,
@@ -165,28 +165,11 @@
       },
       submit(){
         if(this.value.length==0){
-          this.msgInfo("请选择活动参与人！")
+          this.msgInfo("请选择参与人！")
           return;
         }
-        let formData = new FormData();
-        if(this.detailedUuid!=undefined){
-          formData.append("detailedUuid", this.detailedUuid);
-        }else{
-          formData.append("planUuid", this.planUuid);
-          formData.append("partyOrgId", this.partyOrgId);
-        }
-        formData.append("partyMemberIds", this.value.join(","));
-        formData.append("type", this.type);
-        addMemberList(formData).then(response => {
-          if (response.code === 200) {
-            this.msgSuccess("新增成功");
-            this.$emit("callback",this.value);
-            this.open = false;
-          } else {
-            this.msgError(response.msg);
-          }
-        });
-
+        this.$emit("callbackMember",this.value.join(","))
+        this.open = false;
 
       },
       // 取消按钮

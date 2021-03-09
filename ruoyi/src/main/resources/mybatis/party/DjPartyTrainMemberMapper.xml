@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.party.mapper.DjPartyTrainMemberMapper">
+    
+    <resultMap type="DjPartyTrainMember" id="DjPartyTrainMemberResult">
+        <result property="trainMemberId"    column="train_member_id"    />
+        <result property="trainUuid"    column="train_uuid"    />
+        <result property="partyOrgId"    column="party_org_id"    />
+        <result property="partyMemberId"    column="party_member_id"    />
+        <result property="score"    column="score"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjPartyTrainMemberVo">
+        select train_member_id, train_uuid, party_org_id, party_member_id, score, status, del_flag, create_by, create_time, update_by, update_time from dj_party_train_member
+    </sql>
+
+    <select id="selectDjPartyTrainMemberList" parameterType="DjPartyTrainMember" resultMap="DjPartyTrainMemberResult">
+        <include refid="selectDjPartyTrainMemberVo"/>
+        <where>  
+            <if test="trainUuid != null  and trainUuid != ''"> and train_uuid = #{trainUuid}</if>
+            <if test="partyOrgId != null "> and party_org_id = #{partyOrgId}</if>
+            <if test="partyMemberId != null "> and party_member_id = #{partyMemberId}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectDjPartyTrainMemberById" parameterType="Long" resultMap="DjPartyTrainMemberResult">
+        <include refid="selectDjPartyTrainMemberVo"/>
+        where train_member_id = #{trainMemberId}
+    </select>
+        
+    <insert id="insertDjPartyTrainMember" parameterType="DjPartyTrainMember" useGeneratedKeys="true" keyProperty="trainMemberId">
+        insert into dj_party_train_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="trainUuid != null  and trainUuid != ''">train_uuid,</if>
+            <if test="partyOrgId != null ">party_org_id,</if>
+            <if test="partyMemberId != null ">party_member_id,</if>
+            <if test="score != null ">score,</if>
+            <if test="status != null  and status != ''">status,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="trainUuid != null  and trainUuid != ''">#{trainUuid},</if>
+            <if test="partyOrgId != null ">#{partyOrgId},</if>
+            <if test="partyMemberId != null ">#{partyMemberId},</if>
+            <if test="score != null ">#{score},</if>
+            <if test="status != null  and status != ''">#{status},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjPartyTrainMember" parameterType="DjPartyTrainMember">
+        update dj_party_train_member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="trainUuid != null  and trainUuid != ''">train_uuid = #{trainUuid},</if>
+            <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
+            <if test="partyMemberId != null ">party_member_id = #{partyMemberId},</if>
+            <if test="score != null ">score = #{score},</if>
+            <if test="status != null  and status != ''">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where train_member_id = #{trainMemberId}
+    </update>
+
+    <delete id="deleteDjPartyTrainMemberById" parameterType="Long">
+        delete from dj_party_train_member where train_member_id = #{trainMemberId}
+    </delete>
+
+    <delete id="deleteDjPartyTrainMemberByIds" parameterType="String">
+        delete from dj_party_train_member where train_member_id in 
+        <foreach item="trainMemberId" collection="array" open="(" separator="," close=")">
+            #{trainMemberId}
+        </foreach>
+    </delete>
+    
+</mapper>
