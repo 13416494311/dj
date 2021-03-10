@@ -103,24 +103,24 @@
 	var player = videojs('example');
  
 	player.playlist([{
-	  name:'广东公司宣传片',//视频标题
+	  name:'广东公司第二次党代会胜利召开',//视频标题
 	  description:'Explore the depths of our planet\'s oceans.',//视频描述
 	  //duration:52,//视频总时长，单位秒(s)
 	  sources: [{//视频资源地址以及视频的MIME类型
-	    src: '广东公司宣传片.mp4',
+	    src: '广东公司第二次党代会胜利召开.mp4',
 	    type: 'video/mp4'
 	  }],
 	  //视频封面地址
-	  poster:'广东公司宣传片.png',
+	  poster:'广东公司第二次党代会胜利召开.png',
 	  //右侧视频播放列表的图片
 	  thumbnail: [
 	  	{//默认图片
-          srcset: '广东公司宣传片.jpg',
+          srcset: '广东公司第二次党代会胜利召开.jpg',
           type: 'image/jpeg',
           media: '(min-width: 400px;)'
         },
 	  	{//实际视频缩略图图片
-	  		src:'广东公司宣传片.png'
+	  		src:'广东公司第二次党代会胜利召开.png'
 	  	}
   	  ]
 	}, {
@@ -144,7 +144,28 @@
 	  		src:'喜迎中铁三局广东公司第二次党员代表大会 祝福寄语.png'
 	  	}
   	  ]
-	}]);
+	},{
+	  name:'广东公司宣传片',//视频标题
+	  description:'Explore the depths of our planet\'s oceans.',//视频描述
+	  //duration:52,//视频总时长，单位秒(s)
+	  sources: [{//视频资源地址以及视频的MIME类型
+	    src: '广东公司宣传片.mp4',
+	    type: 'video/mp4'
+	  }],
+	  //视频封面地址
+	  poster:'广东公司宣传片.png',
+	  //右侧视频播放列表的图片
+	  thumbnail: [
+	  	{//默认图片
+          srcset: '广东公司宣传片.jpg',
+          type: 'image/jpeg',
+          media: '(min-width: 400px;)'
+        },
+	  	{//实际视频缩略图图片
+	  		src:'广东公司宣传片.png'
+	  	}
+  	  ]
+	},]);
 	 
 	player.playlistUi();
 	player.playlist.autoadvance(0);

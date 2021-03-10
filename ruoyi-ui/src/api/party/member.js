@@ -51,7 +51,13 @@ export function updatePartyMember(data) {
     data: data
   })
 }
-
+export function updatePartyMemberAvatar(data) {
+  return request({
+    url: '/party/member/updateAvatar',
+    method: 'post',
+    data: data
+  })
+}
 // 删除党员信息
 export function delPartyMember(data) {
   return request({

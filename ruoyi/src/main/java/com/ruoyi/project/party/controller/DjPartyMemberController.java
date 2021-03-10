@@ -155,6 +155,16 @@ public class DjPartyMemberController extends BaseController
         return AjaxResult.success(memberChange);
     }
 
+    @Log(title = "党员信息", businessType = BusinessType.INSERT)
+    @PostMapping(value = "/updateAvatar")
+    public AjaxResult updateAvatar(@RequestBody DjPartyMember partyMember)
+    {
+        if(StringUtils.isNull(partyMember.getMemberId())){
+            return AjaxResult.error("参数错误！");
+        }
+        return AjaxResult.success(djPartyMemberService.updateAvatar(partyMember));
+    }
+
     /**
      * 修改党员信息
      */

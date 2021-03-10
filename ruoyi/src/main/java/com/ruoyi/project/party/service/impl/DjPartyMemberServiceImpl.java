@@ -335,6 +335,16 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
         return djPartyMemberMapper.updateDjPartyMember(djPartyMember);
     }
 
+    public int updateAvatar(DjPartyMember djPartyMember){
+
+        SysUser sysUser = userService.selectUserByPartyMemberId(djPartyMember.getMemberId());
+        sysUser.setAvatar(djPartyMember.getAvatar());
+        userService.updateUser(sysUser);
+
+        djPartyMember.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        djPartyMember.setUpdateTime(DateUtils.getNowDate());
+        return djPartyMemberMapper.updateDjPartyMember(djPartyMember);
+    }
     /**
      * 批量删除党员信息
      *

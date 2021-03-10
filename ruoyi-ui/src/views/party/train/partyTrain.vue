@@ -13,6 +13,8 @@
         <el-select v-model="queryParams.trainType" placeholder="请选择培训类别" clearable size="small">
           <el-option
             v-for="dict in trainTypeOptions"
+            v-show=" dict.dictValue ==6 || dict.dictValue == 7 || dict.dictValue == 8
+             || dict.dictValue == 9 || dict.dictValue == 10 || trainTypeShow  "
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
@@ -214,7 +216,7 @@
   import selectTree from '../../components/selectTree';
   import UploadAllFile from "../../upload/uploadAllFile";
   import TrainMember from "./trainMember";
-
+  import { getUserProfile } from "@/api/system/user";
 
   export default {
     name: "PartyTrain",
@@ -287,19 +289,36 @@
         // 党组织架构树选项
         partyOrgOptions: [],
         disabled:false,
+        trainTypeShow:false,
       };
     },
     mounted () {
       window.addEventListener('resize', this.getHeight);
     },
     created() {
+
       this.getList();
       this.getTreeselect()
+      this.setTrainTypeShow();
       this.getDicts("train_type").then(response => {
         this.trainTypeOptions = response.data;
       });
     },
     methods: {
+      setTrainTypeShow(){
+        getUserProfile().then(response => {
+          this.trainTypeShow = false;
+          this.user = response.data;
+          let roles = this.user.roles;
+          if(roles){
+            for(let i=0;i<roles.length;i++){
+              if(roles[i].roleId ==5 || roles[i].roleId ==1){
+                this.trainTypeShow = true;
+              }
+            }
+          }
+        });
+      },
       setEffectiveHours(){
         if(this.form.activityStartTime !=undefined && this.form.activityEndTime !=undefined ){
           this.form.effectiveHours = 8;

@@ -345,11 +345,11 @@
   }
 
   .portrait-avatar-woman{
-    width: 350px;
+    width: 250px;
     height: 580px;
     position: relative;
     top:80px;
-    background: url("../../../assets/image/woman.png") no-repeat ;
+    background: url("../../../assets/image/woman.jpg") no-repeat ;
     background-size: 100% ;
   }
 

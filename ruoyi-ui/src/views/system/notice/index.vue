@@ -342,7 +342,7 @@ export default {
         case "/office/notice/3" :
           this.noticeType = "3";
           break;
-        case "/study/notice/4" :
+        case "/education/notice/4" :
           this.noticeType = "4";
           break;
         default:

@@ -714,6 +714,7 @@
     enablePartyMember,
     addPartyMember,
     updatePartyMember,
+    updatePartyMemberAvatar,
     exportPartyMember,
     uploadAvatar,
     checkPartyMemberUnique,
@@ -1098,8 +1099,19 @@
           if (response.code === 200) {
             this.form.avatar = response.msg
             this.avatarUrl=process.env.VUE_APP_BASE_API + response.msg;
-            loading.close();
-            this.msgSuccess("上传成功！")
+            if (this.form.memberId != undefined) {
+              let formData = {}
+              formData.memberId = this.form.memberId
+              formData.avatar = this.form.avatar
+              updatePartyMemberAvatar(formData).then(response => {
+                if (response.code === 200) {
+                  loading.close();
+                  this.msgSuccess("上传成功！")
+                } else {
+                  this.msgError(response.msg);
+                }
+              });
+            }
           } else {
             loading.close();
             this.msgError(response.msg);

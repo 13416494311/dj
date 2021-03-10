@@ -66,6 +66,9 @@ public interface IDjPartyMemberService
      */
     public int updateDjPartyMember(DjPartyMember djPartyMember);
 
+
+    public int updateAvatar(DjPartyMember djPartyMember);
+
     /**
      * 批量删除党员信息
      *
