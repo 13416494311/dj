@@ -93,7 +93,7 @@ public class DjPartyTrainMemberServiceImpl implements IDjPartyTrainMemberService
     {
         djPartyTrainMember.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djPartyTrainMember.setUpdateTime(DateUtils.getNowDate());
-        if("2".equals(djPartyTrainMember.getStatus())){
+        if("2".equals(djPartyTrainMember.getStatus())||"3".equals(djPartyTrainMember.getStatus())||"4".equals(djPartyTrainMember.getStatus())){
             djPartyTrainMember.setScore(1);
         }else{
             djPartyTrainMember.setScore(0);

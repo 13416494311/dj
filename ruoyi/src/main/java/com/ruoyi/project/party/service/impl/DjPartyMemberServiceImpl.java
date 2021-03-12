@@ -1,6 +1,7 @@
 package com.ruoyi.project.party.service.impl;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.DateUtils;
@@ -161,29 +162,33 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
         // 组织生活
         Map<String,Object> activity = new HashMap<>();
         activity.put("name","组织生活");
-        DjActivityDetailed djActivityDetailed = new DjActivityDetailed();
-        djActivityDetailed.setPartyOrgId(partyMember.getPartyOrgId());
-        List<DjActivityDetailed> activityMax = activityDetailedMapper.selectDjActivityDetailedList(djActivityDetailed);
-        activity.put("max", CollectionUtils.isEmpty(activityMax)?0:activityMax.size());
-        indicator.add(activity);
-
         DjActivityMember djActivityMember = new DjActivityMember();
         djActivityMember.setPartyMemberId(memberId);
+
+        Map<String,Object> arrangeStatus = new HashMap<>();
+        arrangeStatus.put("arrangeStatus",2);
+        djActivityMember.setParams(arrangeStatus);
         List<DjActivityMember> activityMemberList = djActivityMemberMapper.selectDjActivityMemberList(djActivityMember);
+        activity.put("max", CollectionUtils.isEmpty(activityMemberList)?0:activityMemberList.size());
+        indicator.add(activity);
+
+        activityMemberList = activityMemberList.stream().filter(
+                activityMember->"2".equals(activityMember.getStatus()) ||"3".equals(activityMember.getStatus()) ||"4".equals(activityMember.getStatus()))
+                        .collect(Collectors.toList());
         value[0] = Long.valueOf(CollectionUtils.isEmpty(activityMemberList)?0:activityMemberList.size());
 
         // 学习教育
         Map<String,Object> train = new HashMap<>();
         train.put("name","学习教育");
-        DjPartyTrain partyTrain = new DjPartyTrain();
-        partyTrain.setPartyOrgId(partyMember.getPartyOrgId());
-        List<DjPartyTrain> trainMax = partyTrainMapper.selectDjPartyTrainList(partyTrain);
-        train.put("max",CollectionUtils.isEmpty(trainMax)?0:trainMax.size());
-        indicator.add(train);
-
         DjPartyTrainMember partyTrainMember = new  DjPartyTrainMember();
         partyTrainMember.setPartyMemberId(memberId);
         List<DjPartyTrainMember> partyTrainMemberList = partyTrainMemberMapper.selectDjPartyTrainMemberList(partyTrainMember);
+        train.put("max",CollectionUtils.isEmpty(partyTrainMemberList)?0:partyTrainMemberList.size());
+        indicator.add(train);
+
+        partyTrainMemberList = partyTrainMemberList.stream().filter(
+                trainMember->"2".equals(trainMember.getStatus()) ||"3".equals(trainMember.getStatus()) ||"4".equals(trainMember.getStatus()))
+                .collect(Collectors.toList());
         value[1] = Long.valueOf(CollectionUtils.isEmpty(partyTrainMemberList)?0:partyTrainMemberList.size());
 
         // 先锋模范

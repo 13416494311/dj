@@ -36,12 +36,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDjActivityMember"/>
         left join dj_party_member pm on  pm.member_id = m.party_member_id
         <where>
+            m.detailed_uuid is not  null
             <if test="planUuid != null "> and  m.plan_uuid = #{planUuid}</if>
             <if test="detailedUuid != null "> and  m.detailed_uuid = #{detailedUuid}</if>
             <if test="partyOrgId != null "> and  m.party_org_id = #{partyOrgId}</if>
             <if test="partyMemberId != null  and partyMemberId != ''"> and  m.party_member_id = #{partyMemberId}</if>
             <if test="type != null  and type != ''"> and  m.type = #{type}</if>
             <if test="status != null  and status != ''"> and  m.status = #{status}</if>
+            <if test="params.arrangeStatus != null  and params.arrangeStatus == 2 ">
+                and m.detailed_uuid is not  null
+            </if>
         </where>
         order by pm.party_position_type is null || pm.party_position_type='' asc,
         pm.party_position_type asc , CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
