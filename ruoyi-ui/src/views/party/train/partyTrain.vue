@@ -146,6 +146,7 @@
                                 type="datetime"
                                 :disabled="disabled"
                                 value-format="yyyy-MM-dd HH:mm:ss"
+                                @change="setEffectiveHours"
                                 placeholder="选择开始时间">
                 </el-date-picker>
               </el-form-item>
@@ -321,7 +322,7 @@
       },
       setEffectiveHours(){
         if(this.form.activityStartTime !=undefined && this.form.activityEndTime !=undefined ){
-          this.form.effectiveHours = 8;
+          this.form.effectiveHours = (this.getDifDate(this.form.activityStartTime,this.form.activityEndTime)/60).toFixed(1);;
         }
       },
       /** 查询部门下拉树结构 */

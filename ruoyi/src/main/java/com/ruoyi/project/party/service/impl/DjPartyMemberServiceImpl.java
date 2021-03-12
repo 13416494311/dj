@@ -1,27 +1,40 @@
 package com.ruoyi.project.party.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.activity.domain.DjActivityDetailed;
+import com.ruoyi.project.activity.domain.DjActivityMember;
+import com.ruoyi.project.activity.mapper.DjActivityDetailedMapper;
+import com.ruoyi.project.activity.mapper.DjActivityMemberMapper;
+import com.ruoyi.project.members.domain.DjPartyExemplary;
 import com.ruoyi.project.members.domain.DjPartyMemberHelp;
+import com.ruoyi.project.members.domain.DjPartySpecialty;
+import com.ruoyi.project.members.mapper.DjPartyExemplaryMapper;
 import com.ruoyi.project.members.mapper.DjPartyMemberHelpMapper;
+import com.ruoyi.project.members.mapper.DjPartySpecialtyMapper;
 import com.ruoyi.project.party.domain.DjPartyMember;
+import com.ruoyi.project.party.domain.DjPartyTrain;
+import com.ruoyi.project.party.domain.DjPartyTrainMember;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
+import com.ruoyi.project.party.mapper.DjPartyTrainMapper;
+import com.ruoyi.project.party.mapper.DjPartyTrainMemberMapper;
 import com.ruoyi.project.party.service.IDjPartyMemberService;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
+import com.ruoyi.project.system.domain.SysComment;
 import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.mapper.SysCommentMapper;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
+import com.ruoyi.project.system.mapper.SysUserMapper;
 import com.ruoyi.project.system.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 /**
  * 党员信息Service业务层处理
@@ -50,6 +63,23 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     private SysDeptMapper sysDeptMapper;
     @Autowired
     private DjPartyMemberHelpMapper partyMemberHelpMapper;
+
+    @Autowired
+    private DjActivityDetailedMapper activityDetailedMapper;
+    @Autowired
+    private DjActivityMemberMapper djActivityMemberMapper;
+    @Autowired
+    private DjPartyTrainMapper partyTrainMapper;
+    @Autowired
+    private DjPartyTrainMemberMapper partyTrainMemberMapper;
+    @Autowired
+    private DjPartyExemplaryMapper djPartyExemplaryMapper;
+    @Autowired
+    private DjPartySpecialtyMapper djPartySpecialtyMapper;
+    @Autowired
+    private SysCommentMapper sysCommentMapper;
+    @Autowired
+    private SysUserMapper userMapper;
 
     @Override
     public int getMemberCount(){
@@ -115,6 +145,88 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
         }
         return member;
     }
+
+    @Override
+    public Map<String,Object> getPartyMemberRadarData(Long memberId)
+    {
+        Map<String,Object> result = new HashMap<>();
+        DjPartyMember partyMember = djPartyMemberMapper.selectDjPartyMemberById(memberId);
+
+        List<Map<String,Object>> indicator = new ArrayList<>();
+
+        List<Map<String,Object>> data = new ArrayList<>();
+        Map<String,Object> valueMap =  new HashMap<>();
+        Long[] value = new Long[5];
+
+        // 组织生活
+        Map<String,Object> activity = new HashMap<>();
+        activity.put("name","组织生活");
+        DjActivityDetailed djActivityDetailed = new DjActivityDetailed();
+        djActivityDetailed.setPartyOrgId(partyMember.getPartyOrgId());
+        List<DjActivityDetailed> activityMax = activityDetailedMapper.selectDjActivityDetailedList(djActivityDetailed);
+        activity.put("max", CollectionUtils.isEmpty(activityMax)?0:activityMax.size());
+        indicator.add(activity);
+
+        DjActivityMember djActivityMember = new DjActivityMember();
+        djActivityMember.setPartyMemberId(memberId);
+        List<DjActivityMember> activityMemberList = djActivityMemberMapper.selectDjActivityMemberList(djActivityMember);
+        value[0] = Long.valueOf(CollectionUtils.isEmpty(activityMemberList)?0:activityMemberList.size());
+
+        // 学习教育
+        Map<String,Object> train = new HashMap<>();
+        train.put("name","学习教育");
+        DjPartyTrain partyTrain = new DjPartyTrain();
+        partyTrain.setPartyOrgId(partyMember.getPartyOrgId());
+        List<DjPartyTrain> trainMax = partyTrainMapper.selectDjPartyTrainList(partyTrain);
+        train.put("max",CollectionUtils.isEmpty(trainMax)?0:trainMax.size());
+        indicator.add(train);
+
+        DjPartyTrainMember partyTrainMember = new  DjPartyTrainMember();
+        partyTrainMember.setPartyMemberId(memberId);
+        List<DjPartyTrainMember> partyTrainMemberList = partyTrainMemberMapper.selectDjPartyTrainMemberList(partyTrainMember);
+        value[1] = Long.valueOf(CollectionUtils.isEmpty(partyTrainMemberList)?0:partyTrainMemberList.size());
+
+        // 先锋模范
+        Map<String,Object> exemplary = new HashMap<>();
+        exemplary.put("name","先锋模范");
+        exemplary.put("max",10);
+        indicator.add(exemplary);
+
+        DjPartyExemplary partyExemplary = new DjPartyExemplary();
+        partyExemplary.setMemberId(memberId);
+        List<DjPartyExemplary> exemplaryList = djPartyExemplaryMapper.selectDjPartyExemplaryList(partyExemplary);
+        value[2] = Long.valueOf(CollectionUtils.isEmpty(exemplaryList)?0:(exemplaryList.size()>10?10:exemplaryList.size()));
+
+        // 党员特长
+        Map<String,Object> specialty = new HashMap<>();
+        specialty.put("name","党员特长");
+        specialty.put("max",10);
+        indicator.add(specialty);
+
+        DjPartySpecialty partySpecialty = new DjPartySpecialty();
+        partySpecialty.setMemberId(memberId);
+        List<DjPartySpecialty> specialtyList = djPartySpecialtyMapper.selectDjPartySpecialtyList(partySpecialty);
+        value[3] = Long.valueOf(CollectionUtils.isEmpty(specialtyList)?0:(specialtyList.size()>10?10:specialtyList.size()));
+
+        // 民主评议
+        Map<String,Object> comment = new HashMap<>();
+        comment.put("name","民主评议");
+        SysUser sysUser = userMapper.selectUserByPartyMemberId(memberId);
+        SysComment sysComment = new SysComment();
+        comment.put("max",sysCommentMapper.selectSysCommentCount(sysComment));
+        indicator.add(comment);
+        sysComment.setCommentUserId(sysUser.getUserId());
+        value[4] = Long.valueOf(sysCommentMapper.selectSysCommentCount(sysComment));
+
+        valueMap.put("value",value);
+        data.add(valueMap);
+
+        result.put("indicator",indicator);
+        result.put("data",data);
+        return result;
+    }
+
+
 
     @Override
     public List<DjPartyMember> getDjPartyMemberList(DjPartyMember djPartyMember)

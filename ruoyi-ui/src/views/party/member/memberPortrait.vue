@@ -20,14 +20,14 @@
                   {{member.memberName}}
                 </el-col>
               </el-row>
-              <el-row>
+              <!--<el-row>
                 <el-col :span="8" class="base-label portrait-label">
                   手机号:
                 </el-col>
                 <el-col :span="16" class="base-content portrait-content">
                   {{member.mobile}}
                 </el-col>
-              </el-row>
+              </el-row>-->
               <el-row>
                 <el-col :span="8" class="base-label portrait-label">
                   出生日期:
@@ -92,7 +92,7 @@
                   {{ parseTime(member.workingDate, '{y}-{m}-{d}') }}
                 </el-col>
               </el-row>
-              <el-row>
+              <!--<el-row>
                 <el-col :span="8" class="base-label portrait-label">
                   电子邮件:
                 </el-col>
@@ -107,7 +107,7 @@
                 <el-col :span="16" class="base-content portrait-content">
                   {{ member.homeAddress}}
                 </el-col>
-              </el-row>
+              </el-row>-->
 
 
 
@@ -131,7 +131,7 @@
           </el-col>
           <el-col :span="8">
             <div class="portrait-center">
-              <div class="portrait-rank">
+              <!--<div class="portrait-rank">
                 <div class="portrait-rank-no">
                   <span class="rank-no" >NO.</span>
                   <span class="rank-num">67</span>
@@ -139,7 +139,7 @@
                 <div class="portrait-rank-score">
                   <span class="rank-score" >1分</span>
                 </div>
-              </div>
+              </div>-->
               <div :class="member.sex =='0' ?'portrait-avatar-man' :'portrait-avatar-woman'">
               </div>
             </div>
@@ -338,7 +338,7 @@
     width: 350px;
     height: 580px;
     position: relative;
-    top:80px;
+    top:30px;
     background: url("../../../assets/image/man.png") no-repeat ;
     background-size: 100%  ;
 
@@ -348,18 +348,18 @@
     width: 250px;
     height: 580px;
     position: relative;
-    top:80px;
+    top:30px;
     background: url("../../../assets/image/woman.jpg") no-repeat ;
     background-size: 100% ;
   }
 
   .portrait-promise{
-    min-height: 230px;
-    background-color: #DFFFDF;
-    border:1px solid #00BB00;
+    min-height: 290px;
+    background-color: #FFECEC;
+    border:1px solid #FF2D2D;
   }
   .promise-title{
-    background-color: #00BB00;
+    background-color: #FF2D2D;
   }
   .promise-content{
     padding: 20px;
@@ -391,12 +391,12 @@
 
 
   .portrait-radar{
-    min-height: 355px;
-    background-color: #FFECEC;
-    border:1px solid #FF2D2D;
+    min-height: 300px;
+    background-color: #DFFFDF;
+    border:1px solid #00BB00;
   }
   .radar-title{
-    background-color: #CE0000;
+    background-color: #00BB00;
   }
 
 </style>
@@ -404,7 +404,7 @@
 <script>
   import echarts from 'echarts'
   require('echarts/theme/macarons')
-  import { getPartyMember } from "@/api/party/member";
+  import { getPartyMember,getPartyMemberRadarData } from "@/api/party/member";
 
 
   export default {
@@ -482,12 +482,13 @@
           this.title =  "党员画像";
         }).then(()=>{
           this.$nextTick(() => {
-            this.initChart()
+            this.initChart(memberId)
           })
         });
       },
-      initChart() {
-        let indicator = [
+      initChart(memberId) {
+
+        /*let indicator = [
           { name: '组织生活', max: 85}, //max 活动次数
           { name: '学习教育', max: 100}, //max
           { name: '先锋模范', max: 10}, //max 10
@@ -498,30 +499,36 @@
           {
             value: [56, 56, 4, 8, 0.56],
           },
-        ];
+        ];*/
 
-        this.chart =  echarts.init(this.$refs.radarChart, 'macarons')
-        this.chart.setOption({
-          tooltip: {},
-          legend: {
-          },
-          radar: {
-            // shape: 'circle',
-            name: {
-              textStyle: {
-                color: '#000000',
-              }
+        getPartyMemberRadarData(memberId).then(response => {
+          let indicator  = response.data.indicator;
+          let data  = response.data.data;
+          this.chart =  echarts.init(this.$refs.radarChart, 'macarons')
+          this.chart.setOption({
+            tooltip: {},
+            legend: {
             },
-            indicator: indicator
-          },
-          series: [{
-            name: '党员统计',
-            type: 'radar',
-            // areaStyle: {normal: {}},
-            data: data,
-            animationDuration: 3000,
-          }]
-        })
+            radar: {
+              // shape: 'circle',
+              name: {
+                textStyle: {
+                  color: '#000000',
+                }
+              },
+              indicator: indicator
+            },
+            series: [{
+              name: '党员统计',
+              type: 'radar',
+              // areaStyle: {normal: {}},
+              data: data,
+              animationDuration: 3000,
+            }]
+          })
+        });
+
+
       },
       // 民族字典翻译
       nationFormat(val) {

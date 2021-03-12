@@ -5,23 +5,25 @@ import com.ruoyi.project.system.domain.SysComment;
 
 /**
  * 点评Mapper接口
- * 
+ *
  * @author ruoyi
  * @date 2021-02-19
  */
-public interface SysCommentMapper 
+public interface SysCommentMapper
 {
     /**
      * 查询点评
-     * 
+     *
      * @param id 点评ID
      * @return 点评
      */
     public SysComment selectSysCommentById(Long id);
 
+    public int selectSysCommentCount(SysComment sysComment);
+
     /**
      * 查询点评列表
-     * 
+     *
      * @param sysComment 点评
      * @return 点评集合
      */
@@ -29,7 +31,7 @@ public interface SysCommentMapper
 
     /**
      * 新增点评
-     * 
+     *
      * @param sysComment 点评
      * @return 结果
      */
@@ -37,7 +39,7 @@ public interface SysCommentMapper
 
     /**
      * 修改点评
-     * 
+     *
      * @param sysComment 点评
      * @return 结果
      */
@@ -45,7 +47,7 @@ public interface SysCommentMapper
 
     /**
      * 删除点评
-     * 
+     *
      * @param id 点评ID
      * @return 结果
      */
@@ -53,7 +55,7 @@ public interface SysCommentMapper
 
     /**
      * 批量删除点评
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */

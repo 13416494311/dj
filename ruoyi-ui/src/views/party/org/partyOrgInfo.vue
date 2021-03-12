@@ -56,6 +56,18 @@
           </div>
         </div>
 
+        <div  class="y-line-div" v-if="memberList2.length>0 || memberList3.length>0 ">
+          <div v-for="(member,index) in memberList1" :key="index" class="y-line"></div>
+        </div>
+
+        <div  class="x-line-div" v-if="memberList2.length>1 ">
+          <div v-for="(member,index) in memberList2" :key="index" :class="(index == 0 || index == memberList2.length-1) ?'x-line':'x-line-center'"  ></div>
+        </div>
+
+        <div  class="y-line-div" v-if="memberList2.length>0 ">
+          <div v-for="(member,index) in memberList2" :key="index" class="y-line"></div>
+        </div>
+
         <div class="org-info" >
           <div class="org-info-pic" v-for="(member,index) in memberList2" :key="index">
             <div class="org-info-avatar">
@@ -70,6 +82,18 @@
             </div>
             <div  class="org-info-name">{{member.memberName}}</div>
           </div>
+        </div>
+
+        <div  class="y-line-div" v-if="memberList2.length>0 && memberList3.length>0">
+          <div v-for="(member,index) in memberList2" :key="index" class="y-line"></div>
+        </div>
+
+        <div  class="x-line-div" v-if="memberList3.length>1">
+          <div v-for="(member,index) in memberList3" :key="index" :class="(index == 0 || index == memberList3.length-1) ?'x-line':'x-line-center'" ></div>
+        </div>
+
+        <div  class="y-line-div"v-if="memberList3.length>0">
+          <div v-for="(member,index) in memberList3" :key="index"  class="y-line"></div>
         </div>
 
         <div class="org-info" >
@@ -233,8 +257,7 @@
   }
   .org-info-pic {
     width: 3.5rem;
-    margin: 0.6rem 1.8rem;
-    border: 1px solid #C0C4CC;
+    margin: 0rem 1.8rem;
   }
 
   .org-info-avatar {
@@ -265,5 +288,64 @@
     color: black;
     font-size: 0.5rem;
   }
+
+
+
+  .y-line-div {
+    width: 100%;
+    height: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+  .x-line-div {
+    width: 100% ;
+    height: 1px;
+    margin-top: -1px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .y-line {
+    width: 3.5rem;
+    height: 1rem;
+    margin: 0rem 1.8rem;
+  }
+
+  .y-line:before {
+    content: "";
+    display: block;
+    height: 100%;
+    margin-left:50%;
+    border-left: 1px solid #C0C4CC;
+  }
+
+
+  .x-line {
+    width: 3.5rem;
+    height: 1px;
+  }
+  .x-line:before {
+    content: "";
+    display: block;
+    height: 100%;
+    margin-left: -1px;
+    margin-right: -1px;
+    border-top: 1px solid #C0C4CC;
+  }
+
+  .x-line-center {
+    width: 3.5rem;
+    height: 1px;
+    margin: 0rem 1.8rem;
+  }
+  .x-line-center:before {
+    content: "";
+    display: block;
+    height: 100%;
+    margin-left: -1.8rem;
+    margin-right: -1.8rem;
+    border-top: 1px solid #C0C4CC;
+  }
+
 
 </style>

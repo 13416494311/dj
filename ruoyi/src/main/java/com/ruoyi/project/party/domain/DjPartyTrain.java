@@ -56,7 +56,7 @@ public class DjPartyTrain extends BaseEntity
 
     /** 有效学时 */
     @Excel(name = "有效学时")
-    private Integer effectiveHours;
+    private Double effectiveHours;
 
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;

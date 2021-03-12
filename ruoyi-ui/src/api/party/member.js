@@ -33,6 +33,13 @@ export function getPartyMember(memberId) {
     method: 'get'
   })
 }
+// 查询党员信息详细
+export function getPartyMemberRadarData(memberId) {
+  return request({
+    url: '/party/member/getPartyMemberRadarData/' + memberId,
+    method: 'get'
+  })
+}
 
 // 新增党员信息
 export function addPartyMember(data) {

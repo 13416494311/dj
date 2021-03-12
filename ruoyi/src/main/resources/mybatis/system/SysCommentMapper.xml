@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.system.mapper.SysCommentMapper">
-    
+
     <resultMap type="SysComment" id="SysCommentResult">
         <result property="id"    column="id"    />
         <result property="businessUuid"    column="business_uuid"    />
@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectSysCommentList" parameterType="SysComment" resultMap="SysCommentResult">
         <include refid="selectSysCommentVo"/>
-        <where>  
+        <where>
             <if test="businessUuid != null  and businessUuid != ''"> and business_uuid = #{businessUuid}</if>
             <if test="commentType != null  and commentType != ''"> and comment_type = #{commentType}</if>
             <if test="parentId != null "> and parent_id = #{parentId}</if>
@@ -31,12 +31,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="content != null  and content != ''"> and content = #{content}</if>
         </where>
     </select>
-    
+
+    <select id="selectSysCommentCount" parameterType="SysComment" resultType="Integer">
+        select count(1) from sys_comment
+        <where>
+            <if test="businessUuid != null  and businessUuid != ''"> and business_uuid = #{businessUuid}</if>
+            <if test="commentType != null  and commentType != ''"> and comment_type = #{commentType}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="commentUserId != null "> and comment_user_id = #{commentUserId}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="targetUserId != null "> and target_user_id = #{targetUserId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+
     <select id="selectSysCommentById" parameterType="Long" resultMap="SysCommentResult">
         <include refid="selectSysCommentVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertSysComment" parameterType="SysComment" useGeneratedKeys="true" keyProperty="id">
         insert into sys_comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -78,10 +91,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteSysCommentByIds" parameterType="String">
-        delete from sys_comment where id in 
+        delete from sys_comment where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

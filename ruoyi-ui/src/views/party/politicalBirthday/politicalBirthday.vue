@@ -78,9 +78,9 @@
       <el-table-column label="主题" align="center" prop="theme"/>
       <el-table-column label="党员名称" align="center" prop="partyMember.memberName"/>
       <el-table-column label="党组织名称" align="center" prop="partyOrg.partyOrgFullName"/>
-      <el-table-column label="入党日期" align="center" prop="partyMember.joinData" width="150">
+      <el-table-column label="正式入党日期" align="center" prop="partyMember.formalData" width="150">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.partyMember.joinData, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.partyMember.formalData, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="政治生日日期" align="center" prop="politicalBirthday" width="150">
@@ -164,13 +164,13 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="入党日期" prop="politicalBirthday">
+            <el-form-item label="正式入党日期" prop="politicalBirthday">
               <el-date-picker clearable size="small" style="width: 100%"
                               :disabled="true"
-                              v-model="form.joinData"
+                              v-model="form.formalData"
                               type="date"
                               value-format="yyyy-MM-dd"
-                              placeholder="选择入党日期">
+                              placeholder="选择正式入党日期">
               </el-date-picker>
             </el-form-item>
           </el-col>
@@ -357,15 +357,15 @@
         getPartyMember(this.form.memberId).then(response => {
           this.partyMember = response.data;
           this.form.partyOrgId  = this.partyMember.partyOrgId;
-          this.form.joinData = this.partyMember.joinData;
+          this.form.formalData = this.partyMember.formalData;
           this.form.theme = '党员'+this.partyMember.memberName+'的政治生日'
         }).then(() => {
           this.calculateAge();
         });
       },
       calculateAge(){
-        if(this.form.joinData && this.form.politicalBirthday ){
-          let sDate = new Date(Date.parse(this.form.joinData.replace(/-/g, "/")));
+        if(this.form.formalData && this.form.politicalBirthday ){
+          let sDate = new Date(Date.parse(this.form.formalData.replace(/-/g, "/")));
           let eDate = new Date(Date.parse(this.form.politicalBirthday.replace(/-/g, "/")));
           let sY  = sDate.getFullYear();
           let eY  = eDate.getFullYear();
@@ -375,8 +375,9 @@
         this.$forceUpdate();
       },
       setContent(){
-        if(this.form.joinData && this.form.politicalBirthday && this.partyMember  ){
+        if(this.form.formalData && this.form.politicalBirthday && this.partyMember  ){
           this.form.content = this.politicalBirthdayContentTemplate.replace("{{memberName}}",this.partyMember.memberName)
+            .replace("{{formalData}}",this.parseTime(this.partyMember.formalData, '{y}-{m}-{d}') )
             .replace("{{politicalAge}}",this.form.politicalAge)
             .replace("{{sendTime}}",this.parseTime(this.getNowFormatDate(), '{y}-{m}-{d}') )
             .replace("{{partyOrgName}}",this.partyMember.djPartyOrg.partyOrgName)
@@ -438,7 +439,7 @@
           memberId: undefined,
           memberName: undefined,
           partyOrgId: undefined,
-          joinData: undefined,
+          formalData: undefined,
           politicalBirthday: undefined,
           politicalAge: undefined,
           sendTime: undefined,
@@ -482,7 +483,7 @@
         getPoliticalBirthday(birthdayId).then(response => {
           this.form = response.data;
           this.form.memberName = this.form.partyMember.memberName
-          this.form.joinData = this.form.partyMember.joinData
+          this.form.formalData = this.form.partyMember.formalData
           this.open = true;
           this.title = "修改政治生日";
         });

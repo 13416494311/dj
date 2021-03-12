@@ -8,6 +8,7 @@ import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.mapper.DjPartyMemberPoliticalBirthdayMapper;
 import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
 import com.ruoyi.project.party.service.IDjPartyMemberPoliticalBirthdayService;
+import com.ruoyi.project.party.service.IDjPartyOrgService;
 import com.ruoyi.project.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class PoliticalBirthdayTask {
     @Autowired
     private DjPartyMemberMapper memberMapper;
     @Autowired
-    private DjPartyOrgMapper partyOrgMapper;
+    private IDjPartyOrgService partyOrgService;
     @Autowired
     private DjPartyMemberPoliticalBirthdayMapper djPartyMemberPoliticalBirthdayMapper;
 
@@ -38,14 +39,15 @@ public class PoliticalBirthdayTask {
             politicalBirthday.setPartyOrgId(partyMember.getPartyOrgId());
             politicalBirthday.setPoliticalBirthday(today);
             politicalBirthday.setSendTime(today);
-            politicalBirthday.setPoliticalAge((long) DateUtils.getYearReduce(partyMember.getJoinData(),today));
+            politicalBirthday.setPoliticalAge((long) DateUtils.getYearReduce(partyMember.getFormalData(),today));
             politicalBirthday.setTheme("党员"+partyMember.getMemberName()+"政治生日");
             String content = configService.selectConfigByKey("politicalBirthday.content");
-            DjPartyOrg partyOrg = partyOrgMapper.selectDjPartyOrgById(partyMember.getPartyOrgId());
+            DjPartyOrg partyOrg = partyOrgService.selectDjPartyOrgById(partyMember.getPartyOrgId());
             content = content.replace("{{memberName}}",partyMember.getMemberName())
-                    .replace("{{politicalAge}}",String.valueOf(DateUtils.getYearReduce(partyMember.getJoinData(),today)))
+                    .replace("{{formalData}}",DateUtils.dateTime(partyMember.getFormalData()))
+                    .replace("{{politicalAge}}",String.valueOf(DateUtils.getYearReduce(partyMember.getFormalData(),today)))
                     .replace("{{sendTime}}",DateUtils.dateTime(today))
-                    .replace("{{partyOrgName}}",partyOrg.getPartyOrgName());
+                    .replace("{{partyOrgName}}",partyOrg.getPartyOrgFullName());
             politicalBirthday.setContent(content);
             politicalBirthday.setCreateBy("1");
             politicalBirthday.setCreateTime(today);

@@ -16,7 +16,11 @@
   padding: 16px;
 }
 
-
+.icon_org_name{
+  background: url("../../image/archives/org-name.png") no-repeat center !important;
+  background-size: 100% 100%;
+  background-color: #a5090c !important;
+}
 .icon_hall{
   background: url("../../image/archives/hall.png") no-repeat center !important;
   background-size: 100% 100%;

@@ -3,6 +3,18 @@
     <el-row :gutter="60" style="margin-bottom: 30px">
       <el-col :span="8">
         <div class="archives_card">
+          <div class="archives_icon icon_org_name">
+          </div>
+          <div class="archives_label" >
+            <span>党组织名称</span>
+          </div>
+          <div class="archives_content">
+            <span>{{ partyOrg.partyOrgFullName}}</span>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="archives_card">
           <div class="archives_icon icon_hall">
           </div>
           <div class="archives_label" >
@@ -15,25 +27,13 @@
       </el-col>
       <el-col :span="8">
         <div class="archives_card">
-          <div class="archives_icon icon_member">
+          <div class="archives_icon icon_category">
           </div>
           <div class="archives_label" >
-            <span>联系人</span>
+            <span>党组织类别</span>
           </div>
           <div class="archives_content">
-            <span>{{partyOrg.leaderName}}</span>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div class="archives_card">
-          <div class="archives_icon icon_phone">
-          </div>
-          <div class="archives_label" >
-            <span class="word-wrap">联系电话</span>
-          </div>
-          <div class="archives_content">
-            <span>{{partyOrg.phone}}</span>
+            <span>{{ partyOrgTypeFormat(partyOrg.partyOrgType)}}</span>
           </div>
         </div>
       </el-col>
@@ -81,13 +81,13 @@
     <el-row :gutter="60" style="margin-bottom: 30px">
       <el-col :span="8">
         <div class="archives_card">
-          <div class="archives_icon icon_tree">
+          <div class="archives_icon icon_calendar">
           </div>
           <div class="archives_label" >
-            <span class="word-wrap">党员数量</span>
+            <span class="word-wrap">考核日期</span>
           </div>
           <div class="archives_content">
-            <span>{{Number(partyOrg.params.formalCount)+Number(partyOrg.params.prepareCount)}}</span>
+            <span></span>
           </div>
         </div>
       </el-col>
@@ -105,31 +105,44 @@
       </el-col>
       <el-col :span="8">
         <div class="archives_card">
-          <div class="archives_icon icon_calendar">
+          <div class="archives_icon icon_tree">
           </div>
           <div class="archives_label" >
-            <span class="word-wrap">考核日期</span>
+            <span class="word-wrap">党员数量</span>
           </div>
           <div class="archives_content">
-            <span></span>
+            <span>{{Number(partyOrg.params.formalCount)+Number(partyOrg.params.prepareCount)}}</span>
           </div>
         </div>
       </el-col>
     </el-row>
-
     <el-row :gutter="60" style="margin-bottom: 30px">
       <el-col :span="8">
         <div class="archives_card">
-          <div class="archives_icon icon_category">
+          <div class="archives_icon icon_member">
           </div>
           <div class="archives_label" >
-            <span>党组织类别</span>
+            <span>联系人</span>
           </div>
           <div class="archives_content">
-            <span>{{ partyOrgTypeFormat(partyOrg.partyOrgType)}}</span>
+            <span>{{partyOrg.leaderName}}</span>
           </div>
         </div>
       </el-col>
+      <el-col :span="8">
+        <div class="archives_card">
+          <div class="archives_icon icon_phone">
+          </div>
+          <div class="archives_label" >
+            <span class="word-wrap">联系电话</span>
+          </div>
+          <div class="archives_content">
+            <span>{{partyOrg.phone}}</span>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="60" style="margin-bottom: 30px">
       <el-col :span="16">
         <div class="archives_card">
           <div class="archives_icon icon_location">

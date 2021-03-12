@@ -14,9 +14,13 @@ import com.ruoyi.project.sys.service.IDjSysTodoService;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.mapper.SysUserMapper;
 import com.ruoyi.project.system.service.ISysDictDataService;
+import com.ruoyi.project.system.service.ISysRoleService;
+import com.ruoyi.project.system.service.ISysUserService;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -47,6 +51,8 @@ public class PartyChangeTask {
     private IDjSysMessageService sysMessageService;
     @Autowired
     private ISysDictDataService dictDataService;
+    @Autowired
+    private ISysUserService userService;
 
     public void createPartyChangeTodo(String daysString) {
         String[] days =  daysString.split("/");
@@ -97,23 +103,35 @@ public class PartyChangeTask {
 
     private void createTodo(DjPartyOrg djPartyOrg,long day,Long lastPartyChangeId){
 
-        DjPartyMember djPartyMember = new DjPartyMember();
-        djPartyMember.setPartyOrgId(djPartyOrg.getPartyOrgId());
-        djPartyMember.setPartyPositionType("1");
-        List<DjPartyMember> partyMemberList = partyMemberMapper.selectDjPartyMemberList(djPartyMember);
-        if(partyMemberList ==null || partyMemberList.size() ==0){ //没有书记 就给副书记
-            djPartyMember.setPartyPositionType("2");
-            partyMemberList = partyMemberMapper.selectDjPartyMemberList(djPartyMember);
-            if(partyMemberList ==null || partyMemberList.size() ==0){
-                return ;
+
+        SysUser user = null;
+        if("1".equals(djPartyOrg.getOrgType())){
+            List<SysUser> userList = userService.selectUserByRoleId(13L);
+            if( !CollectionUtils.isEmpty(userList)){
+                user = userList.get(0);
+            }
+        }else{
+            DjPartyMember djPartyMember = new DjPartyMember();
+            djPartyMember.setPartyOrgId(djPartyOrg.getPartyOrgId());
+            djPartyMember.setPartyPositionType("1");
+            List<DjPartyMember> partyMemberList = partyMemberMapper.selectDjPartyMemberList(djPartyMember);
+            if(partyMemberList ==null || partyMemberList.size() ==0){ //没有书记 就给副书记
+                djPartyMember.setPartyPositionType("2");
+                partyMemberList = partyMemberMapper.selectDjPartyMemberList(djPartyMember);
+                if(partyMemberList ==null || partyMemberList.size() ==0){
+                    return ;
+                }else{
+                    djPartyMember =   partyMemberList.get(0);
+                }
             }else{
                 djPartyMember =   partyMemberList.get(0);
             }
-        }else{
-            djPartyMember =   partyMemberList.get(0);
-        }
 
-        SysUser user = userMapper.selectUserByPartyMemberId(djPartyMember.getMemberId());
+            user = userMapper.selectUserByPartyMemberId(djPartyMember.getMemberId());
+        }
+        if(user == null ){
+            return ;
+        }
         DjSysTodo sysTodo = new DjSysTodo();
         sysTodo.setUuid(djPartyOrg.getPartyOrgUuid());
         sysTodo.setType("9"); //换届提醒

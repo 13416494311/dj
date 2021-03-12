@@ -12,12 +12,17 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.config.RuoYiConfig;
-import com.ruoyi.project.party.domain.DjPartyMember;
-import com.ruoyi.project.party.domain.DjPartyMemberChange;
-import com.ruoyi.project.party.domain.DjPartyOrg;
-import com.ruoyi.project.party.service.IDjPartyMemberChangeService;
-import com.ruoyi.project.party.service.IDjPartyMemberService;
-import com.ruoyi.project.party.service.IDjPartyOrgService;
+import com.ruoyi.project.activity.domain.DjActivityDetailed;
+import com.ruoyi.project.activity.domain.DjActivityMember;
+import com.ruoyi.project.activity.mapper.DjActivityDetailedMapper;
+import com.ruoyi.project.activity.service.IDjActivityDetailedService;
+import com.ruoyi.project.activity.service.IDjActivityMemberService;
+import com.ruoyi.project.members.domain.DjPartyExemplary;
+import com.ruoyi.project.members.domain.DjPartySpecialty;
+import com.ruoyi.project.members.service.IDjPartyExemplaryService;
+import com.ruoyi.project.members.service.IDjPartySpecialtyService;
+import com.ruoyi.project.party.domain.*;
+import com.ruoyi.project.party.service.*;
 import com.ruoyi.project.sys.domain.DjSysLog;
 import com.ruoyi.project.sys.domain.DjSysMessage;
 import com.ruoyi.project.sys.domain.DjSysTodo;
@@ -30,6 +35,7 @@ import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
@@ -64,8 +70,6 @@ public class DjPartyMemberController extends BaseController
     private ISysDictDataService dictDataService;
     @Autowired
     private IDjPartyOrgService djPartyOrgService;
-
-
 
     @GetMapping("/getMemberCount")
     public AjaxResult getMemberCount()
@@ -132,6 +136,16 @@ public class DjPartyMemberController extends BaseController
     public AjaxResult getInfo(@PathVariable("memberId") Long memberId)
     {
         return AjaxResult.success(djPartyMemberService.selectDjPartyMemberById(memberId));
+    }
+
+    /**
+     * 获取党员雷达信息详细信息
+     */
+    @GetMapping(value = "/getPartyMemberRadarData/{memberId}")
+    public AjaxResult getPartyMemberRadarData(@PathVariable("memberId") Long memberId)
+    {
+
+        return AjaxResult.success(djPartyMemberService.getPartyMemberRadarData(memberId));
     }
 
     /**

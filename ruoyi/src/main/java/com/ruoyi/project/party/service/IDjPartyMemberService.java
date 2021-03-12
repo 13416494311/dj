@@ -30,6 +30,8 @@ public interface IDjPartyMemberService
      */
     public DjPartyMember selectDjPartyMemberById(Long memberId);
 
+    public Map<String,Object> getPartyMemberRadarData(Long memberId);
+
     public List<DjPartyMember> getDjPartyMemberList(DjPartyMember djPartyMember);
 
     /**
