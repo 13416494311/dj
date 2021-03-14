@@ -36,7 +36,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDjActivityMember"/>
         left join dj_party_member pm on  pm.member_id = m.party_member_id
         <where>
-            m.detailed_uuid is not  null
             <if test="planUuid != null "> and  m.plan_uuid = #{planUuid}</if>
             <if test="detailedUuid != null "> and  m.detailed_uuid = #{detailedUuid}</if>
             <if test="partyOrgId != null "> and  m.party_org_id = #{partyOrgId}</if>

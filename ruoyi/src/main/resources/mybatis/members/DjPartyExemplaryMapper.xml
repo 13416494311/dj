@@ -34,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDjPartyExemplary"/>
         left join dj_party_org o on o.party_org_id = e.party_org_id
         left join dj_party_member m on m.member_id = e.member_id
+        left join  sys_user u on u.party_member_id = e.member_id
         <where>
             <if test="exemplaryUuid != null  and exemplaryUuid != ''"> and  e.exemplary_uuid = #{exemplaryUuid}</if>
             <if test="memberId != null "> and  e.member_id = #{memberId}</if>

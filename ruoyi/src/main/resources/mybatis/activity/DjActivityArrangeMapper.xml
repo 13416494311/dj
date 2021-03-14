@@ -46,6 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectArrangeListByParam" parameterType="DjActivityParams" resultMap="DjActivityArrangeResult">
         <include refid="selectDjActivityArrange"/>
         left join dj_activity_plan plan on arrange.plan_uuid = plan.plan_uuid
+        left join sys_user u on u.user_id = plan.create_by
         <where>
             plan.status ='2'
             <if test="activityTheme != null  and activityTheme != ''">

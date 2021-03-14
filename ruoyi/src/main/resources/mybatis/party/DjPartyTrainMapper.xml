@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.party.mapper.DjPartyTrainMapper">
-    
+
     <resultMap type="DjPartyTrain" id="DjPartyTrainResult">
         <result property="trainId"    column="train_id"    />
         <result property="trainUuid"    column="train_uuid"    />
@@ -25,25 +25,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select train_id, train_uuid, party_org_id, train_type, activity_theme, activity_content, activity_start_time, activity_end_time, effective_hours, del_flag, create_by, create_time, update_by, update_time from dj_party_train
     </sql>
 
+    <sql id="selectDjPartyTrain">
+        select t.train_id, t.train_uuid, t.party_org_id, t.train_type, t.activity_theme,
+        t.activity_content, t.activity_start_time, t.activity_end_time, t.effective_hours, t.del_flag,
+        t.create_by, t.create_time, t.update_by, t.update_time
+        from dj_party_train t
+    </sql>
+
     <select id="selectDjPartyTrainList" parameterType="DjPartyTrain" resultMap="DjPartyTrainResult">
-        <include refid="selectDjPartyTrainVo"/>
-        <where>  
-            <if test="trainUuid != null  and trainUuid != ''"> and train_uuid = #{trainUuid}</if>
-            <if test="partyOrgId != null "> and party_org_id = #{partyOrgId}</if>
-            <if test="trainType != null  and trainType != ''"> and train_type = #{trainType}</if>
-            <if test="activityTheme != null  and activityTheme != ''"> and activity_theme = #{activityTheme}</if>
-            <if test="activityContent != null  and activityContent != ''"> and activity_content = #{activityContent}</if>
-            <if test="activityStartTime != null "> and activity_start_time = #{activityStartTime}</if>
-            <if test="activityEndTime != null "> and activity_end_time = #{activityEndTime}</if>
-            <if test="effectiveHours != null "> and effective_hours = #{effectiveHours}</if>
+        <include refid="selectDjPartyTrain"/>
+
+        <where>
+            exists ( select 1  from dj_party_member m
+                 left join sys_user u on m.member_id = u.party_member_id where m.party_org_id = t.party_org_id  ${dataScope} )
+            <if test="trainUuid != null  and trainUuid != ''"> and t.train_uuid = #{trainUuid}</if>
+            <if test="partyOrgId != null "> and t.party_org_id = #{partyOrgId}</if>
+            <if test="trainType != null  and trainType != ''"> and t.train_type = #{trainType}</if>
+            <if test="activityTheme != null  and activityTheme != ''"> and t.activity_theme = #{activityTheme}</if>
+            <if test="activityContent != null  and activityContent != ''"> and t.activity_content = #{activityContent}</if>
+            <if test="activityStartTime != null "> and t.activity_start_time = #{activityStartTime}</if>
+            <if test="activityEndTime != null "> and t.activity_end_time = #{activityEndTime}</if>
+            <if test="effectiveHours != null "> and t.effective_hours = #{effectiveHours}</if>
         </where>
+        order by t.create_time desc
     </select>
-    
+
     <select id="selectDjPartyTrainById" parameterType="Long" resultMap="DjPartyTrainResult">
         <include refid="selectDjPartyTrainVo"/>
         where train_id = #{trainId}
     </select>
-        
+
     <insert id="insertDjPartyTrain" parameterType="DjPartyTrain" useGeneratedKeys="true" keyProperty="trainId">
         insert into dj_party_train
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -103,10 +114,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDjPartyTrainByIds" parameterType="String">
-        delete from dj_party_train where train_id in 
+        delete from dj_party_train where train_id in
         <foreach item="trainId" collection="array" open="(" separator="," close=")">
             #{trainId}
         </foreach>
     </delete>
-    
+
 </mapper>

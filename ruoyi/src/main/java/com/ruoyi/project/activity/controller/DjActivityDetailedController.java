@@ -101,7 +101,7 @@ public class DjActivityDetailedController extends BaseController
      * 查询活动详情列表
      */
     @GetMapping("/listByParam")
-    @DataScope(partyOrgAlias = "detailed")
+    @DataScope(partyOrgAlias = "detailed", userAlias = "u")
     public TableDataInfo list(DjActivityParams params)
     {
         startPage();

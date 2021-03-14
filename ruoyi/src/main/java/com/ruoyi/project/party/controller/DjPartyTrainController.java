@@ -1,6 +1,8 @@
 package com.ruoyi.project.party.controller;
 
 import java.util.List;
+
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +24,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 党组织培训Controller
- * 
+ *
  * @author ruoyi
  * @date 2021-03-09
  */
@@ -38,6 +40,7 @@ public class DjPartyTrainController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('party:train:list')")
     @GetMapping("/list")
+    @DataScope( partyOrgAlias = "m", userAlias = "u" )
     public TableDataInfo list(DjPartyTrain djPartyTrain)
     {
         startPage();

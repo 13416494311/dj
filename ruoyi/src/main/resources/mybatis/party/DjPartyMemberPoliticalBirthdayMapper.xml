@@ -47,7 +47,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sendTime != null "> and b.send_time = #{sendTime}</if>
             <if test="theme != null  and theme != ''"> and b.theme = #{theme}</if>
             <if test="content != null  and content != ''"> and b.content = #{content}</if>
-            ${dataScope}
         </where>
     </select>
 

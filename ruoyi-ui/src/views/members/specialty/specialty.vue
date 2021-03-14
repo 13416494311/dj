@@ -326,24 +326,6 @@
       getList() {
         this.loading = true;
 
-        if(this.queryParams.memberId ==undefined){
-          this.queryParams.memberId = this.user.partyMemberId!=null?this.user.partyMemberId:undefined
-          let roles = this.user.roles;
-          if(roles && roles.length!=0){
-            for(let i=0;i<roles.length;i++){
-              //管理员角色 或党委
-              if(roles[i].roleId == 1 || roles[i].roleId == 5){
-                this.queryParams.memberId = undefined
-                break;
-              }
-            }
-          }
-        }
-
-        if(this.partyOrgId !=undefined){
-          this.queryParams.partyOrgId = this.partyOrgId;
-        }
-
         listSpecialty(this.queryParams).then(response => {
           this.specialtyList = response.rows;
           this.total = response.total;

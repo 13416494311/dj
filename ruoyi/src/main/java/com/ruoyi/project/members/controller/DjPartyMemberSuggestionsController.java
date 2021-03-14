@@ -44,6 +44,7 @@ public class DjPartyMemberSuggestionsController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('members:suggestions:list')")
     @GetMapping("/list")
+    @DataScope(partyOrgAlias = "o")
     public TableDataInfo list(DjPartyMemberSuggestions djPartyMemberSuggestions,String memberName)
     {
         startPage();

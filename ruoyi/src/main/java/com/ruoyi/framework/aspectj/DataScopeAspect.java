@@ -146,7 +146,7 @@ public class DataScopeAspect
             }
             else if (DATA_SCOPE_PARTY_ORG.equals(dataScope))
             {
-                if(StringUtils.isNotNull(user.getDjPartyMember())&&StringUtils.isNotNull(user.getDjPartyMember().getDjPartyOrg())){
+                if(StringUtils.isNotNull(user.getDjPartyMember())&&StringUtils.isNotNull(user.getDjPartyMember().getDjPartyOrg())&&StringUtils.isNotBlank(userAlias)){
                     sqlString.append(StringUtils.format(" OR {}.party_org_id = {} ", partyOrgAlias,
                             user.getDjPartyMember().getDjPartyOrg().getPartyOrgId()));
                 }

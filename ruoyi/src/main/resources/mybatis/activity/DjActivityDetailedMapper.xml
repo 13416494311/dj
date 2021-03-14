@@ -100,6 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join dj_activity_arrange arrange
         on arrange.plan_uuid = detailed.plan_uuid  and arrange.party_org_id = detailed.party_org_id
         left join dj_activity_plan plan on arrange.plan_uuid = plan.plan_uuid
+        left join sys_user u on u.user_id = plan.create_by
         <where>
             arrange.status ='2' and arrange.del_flag = '0'
             <if test="activityTheme != null  and activityTheme != ''">

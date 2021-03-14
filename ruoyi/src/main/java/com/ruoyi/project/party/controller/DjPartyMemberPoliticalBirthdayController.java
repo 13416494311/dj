@@ -42,7 +42,6 @@ public class DjPartyMemberPoliticalBirthdayController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('party:politicalBirthday:list')")
     @GetMapping("/list")
-    @DataScope(partyOrgAlias = "o")
     public TableDataInfo list(DjPartyMemberPoliticalBirthday djPartyMemberPoliticalBirthday,String memberName)
     {
         startPage();

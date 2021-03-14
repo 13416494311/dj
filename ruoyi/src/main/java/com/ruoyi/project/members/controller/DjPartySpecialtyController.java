@@ -42,7 +42,7 @@ public class DjPartySpecialtyController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('members:specialty:list')")
     @GetMapping("/list")
-    @DataScope(partyOrgAlias = "o")
+    @DataScope(partyOrgAlias = "o", userAlias = "u")
     public TableDataInfo list(DjPartySpecialty djPartySpecialty,String memberName)
     {
         startPage();

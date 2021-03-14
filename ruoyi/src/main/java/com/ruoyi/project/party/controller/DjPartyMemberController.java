@@ -11,6 +11,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.framework.config.RuoYiConfig;
 import com.ruoyi.project.activity.domain.DjActivityDetailed;
 import com.ruoyi.project.activity.domain.DjActivityMember;
@@ -81,6 +82,7 @@ public class DjPartyMemberController extends BaseController
      * 查询党员信息列表
      */
     @RequestMapping("/list")
+    @DataScope( partyOrgAlias = "pm"  ,userAlias = "u")
     public TableDataInfo list(DjPartyMember djPartyMember)
     {
         startPage();

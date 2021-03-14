@@ -38,7 +38,6 @@ public class DjPartyTrainMemberController extends BaseController
     /**
      * 查询参与培训党员列表
      */
-    @PreAuthorize("@ss.hasPermi('party:trainMember:list')")
     @GetMapping("/list")
     public TableDataInfo list(DjPartyTrainMember djPartyTrainMember)
     {

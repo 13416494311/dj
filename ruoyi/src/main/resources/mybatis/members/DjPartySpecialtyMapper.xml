@@ -31,6 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDjPartySpecialty"/>
         left join dj_party_org o on o.party_org_id = s.party_org_id
         left join dj_party_member m on m.member_id = s.member_id
+        left join  sys_user u on u.party_member_id = s.member_id
         <where>
             <if test="memberId != null "> and s.member_id = #{memberId}</if>
             <if test="partyOrgId != null "> and s.party_org_id = #{partyOrgId}</if>

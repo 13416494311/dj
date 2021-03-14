@@ -60,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="handleMemberId != null  and handleMemberId != ''"> and s.handle_member_id = #{handleMemberId}</if>
             <if test="handleTime != null "> and s.handle_time = #{handleTime}</if>
             <if test="status != null  and status != ''"> and s.status = #{status}</if>
-
+            ${dataScope}
         </where>
     </select>
 

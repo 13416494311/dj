@@ -166,71 +166,74 @@
 
     <select id="selectPartyMemberList" parameterType="DjPartyMember" resultMap="DjPartyMemberResult">
         <include refid="selectDjPartyMemberVo1"/>
+        left join  sys_user u on u.party_member_id = pm.member_id
         <where>
-            <if test="delFlag != null ">and del_flag = #{delFlag}</if>
-            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="delFlag != null ">and pm.del_flag = #{delFlag}</if>
+            <if test="memberId != null ">and pm.member_id = #{memberId}</if>
             <if test="partyOrgId != null ">
                 AND pm.party_org_id = #{partyOrgId}
             </if>
-            <if test="workNo != null  and workNo != ''">and work_no = #{workNo}</if>
-            <if test="avatar != null  and avatar != ''">and avatar = #{avatar}</if>
-            <if test="memberName != null  and memberName != ''">and member_name like concat('%', #{memberName}, '%')
+            <if test="workNo != null  and workNo != ''">and pm.work_no = #{workNo}</if>
+            <if test="avatar != null  and avatar != ''">and pm.avatar = #{avatar}</if>
+            <if test="memberName != null  and memberName != ''">and pm.member_name like concat('%', #{memberName}, '%')
             </if>
-            <if test="sex != null  and sex != ''">and sex = #{sex}</if>
-            <if test="mobile != null  and mobile != ''">and mobile = #{mobile}</if>
-            <if test="identityCard != null  and identityCard != ''">and identity_card = #{identityCard}</if>
-            <if test="birthday != null ">and birthday = #{birthday}</if>
-            <if test="companyName != null  and companyName != ''">and company_name like concat('%', #{companyName},
+            <if test="sex != null  and sex != ''">and pm.sex = #{sex}</if>
+            <if test="mobile != null  and mobile != ''">and pm.mobile = #{mobile}</if>
+            <if test="identityCard != null  and identityCard != ''">and pm.identity_card = #{identityCard}</if>
+            <if test="birthday != null ">and pm.birthday = #{birthday}</if>
+            <if test="companyName != null  and companyName != ''">and pm.company_name like concat('%', #{companyName},
                 '%')
             </if>
-            <if test="deptId != null ">and dept_id = #{deptId}</if>
-            <if test="administrativePosition != null  and administrativePosition != ''">and administrative_position =
+            <if test="deptId != null ">and pm.dept_id = #{deptId}</if>
+            <if test="administrativePosition != null  and administrativePosition != ''">and pm.administrative_position =
                 #{administrativePosition}
             </if>
-            <if test="partyPositionType != null  and partyPositionType != ''">and party_position_type =
+            <if test="partyPositionType != null  and partyPositionType != ''">and pm.party_position_type =
                 #{partyPositionType}
             </if>
-            <if test="title != null  and title != ''">and title = #{title}</if>
-            <if test="postId != null  and postId != ''">and post_id = #{postId}</if>
-            <if test="workingDate != null ">and working_date = #{workingDate}</if>
-            <if test="nation != null  and nation != ''">and nation = #{nation}</if>
-            <if test="polity != null  and polity != ''">and polity = #{polity}</if>
-            <if test="workIdentity != null  and workIdentity != ''">and work_identity = #{workIdentity}</if>
-            <if test="education != null  and education != ''">and education = #{education}</if>
-            <if test="academicDegree != null  and academicDegree != ''">and academic_degree = #{academicDegree}</if>
-            <if test="nativePlace != null  and nativePlace != ''">and native_place = #{nativePlace}</if>
-            <if test="homeAddress != null  and homeAddress != ''">and home_address = #{homeAddress}</if>
-            <if test="housePhone != null  and housePhone != ''">and house_phone = #{housePhone}</if>
-            <if test="email != null  and email != ''">and email = #{email}</if>
-            <if test="qq != null  and qq != ''">and qq = #{qq}</if>
-            <if test="wechat != null  and wechat != ''">and wechat = #{wechat}</if>
-            <if test="remark != null  and remark != ''">and remark = #{remark}</if>
-            <if test="memberType != null  and memberType != ''">and member_type = #{memberType}</if>
-            <if test="memberStatus != null  and memberStatus != ''">and member_status = #{memberStatus}</if>
-            <if test="joinBranchData != null ">and join_branch_data = #{joinBranchData}</if>
-            <if test="joinData != null ">and join_data = #{joinData}</if>
-            <if test="formalData != null ">and formal_data = #{formalData}</if>
-            <if test="floatingType != null  and floatingType != ''">and floating_type = #{floatingType}</if>
-            <if test="memberGroup != null  and memberGroup != ''">and member_group = #{memberGroup}</if>
-            <if test="prePartyOrgId != null  and prePartyOrgId != ''">and pre_party_org_id = #{prePartyOrgId}</if>
-            <if test="lifeDifficulty != null  and lifeDifficulty != ''">and life_difficulty = #{lifeDifficulty}</if>
-            <if test="cognizance != null  and cognizance != ''">and cognizance = #{cognizance}</if>
-            <if test="economicSituation != null  and economicSituation != ''">and economic_situation =
+            <if test="title != null  and title != ''">and pm.title = #{title}</if>
+            <if test="postId != null  and postId != ''">and pm.post_id = #{postId}</if>
+            <if test="workingDate != null ">and pm.working_date = #{workingDate}</if>
+            <if test="nation != null  and nation != ''">and pm.nation = #{nation}</if>
+            <if test="polity != null  and polity != ''">and pm.polity = #{polity}</if>
+            <if test="workIdentity != null  and workIdentity != ''">and pm.work_identity = #{workIdentity}</if>
+            <if test="education != null  and education != ''">and pm.education = #{education}</if>
+            <if test="academicDegree != null  and academicDegree != ''">and pm.academic_degree = #{academicDegree}</if>
+            <if test="nativePlace != null  and nativePlace != ''">and pm.native_place = #{nativePlace}</if>
+            <if test="homeAddress != null  and homeAddress != ''">and pm.home_address = #{homeAddress}</if>
+            <if test="housePhone != null  and housePhone != ''">and pm.house_phone = #{housePhone}</if>
+            <if test="email != null  and email != ''">and pm.email = #{email}</if>
+            <if test="qq != null  and qq != ''">and pm.qq = #{qq}</if>
+            <if test="wechat != null  and wechat != ''">and pm.wechat = #{wechat}</if>
+            <if test="remark != null  and remark != ''">and pm.remark = #{remark}</if>
+            <if test="memberType != null  and memberType != ''">and pm.member_type = #{memberType}</if>
+            <if test="memberStatus != null  and memberStatus != ''">and pm.member_status = #{memberStatus}</if>
+            <if test="joinBranchData != null ">and pm.join_branch_data = #{joinBranchData}</if>
+            <if test="joinData != null ">and pm.join_data = #{joinData}</if>
+            <if test="formalData != null ">and pm.formal_data = #{formalData}</if>
+            <if test="floatingType != null  and floatingType != ''">and pm.floating_type = #{floatingType}</if>
+            <if test="memberGroup != null  and memberGroup != ''">and pm.member_group = #{memberGroup}</if>
+            <if test="prePartyOrgId != null  and prePartyOrgId != ''">and pm.pre_party_org_id = #{prePartyOrgId}</if>
+            <if test="lifeDifficulty != null  and lifeDifficulty != ''">and pm.life_difficulty = #{lifeDifficulty}</if>
+            <if test="cognizance != null  and cognizance != ''">and pm.cognizance = #{cognizance}</if>
+            <if test="economicSituation != null  and economicSituation != ''">and pm.economic_situation =
                 #{economicSituation}
             </if>
-            <if test="physicalHealth != null  and physicalHealth != ''">and physical_health = #{physicalHealth}</if>
-            <if test="lifeDifficultyType != null  and lifeDifficultyType != ''">and life_difficulty_type =
+            <if test="physicalHealth != null  and physicalHealth != ''">and pm.physical_health = #{physicalHealth}</if>
+            <if test="lifeDifficultyType != null  and lifeDifficultyType != ''">and pm.life_difficulty_type =
                 #{lifeDifficultyType}
             </if>
-            <if test="enjoyHelp != null  and enjoyHelp != ''">and enjoy_help = #{enjoyHelp}</if>
-            <if test="helpInfo != null  and helpInfo != ''">and help_info = #{helpInfo}</if>
-            <if test="detail != null  and detail != ''">and detail = #{detail}</if>
-            <if test="createBy != null  and createBy != ''">and create_by = #{createBy}</if>
-            <if test="createTime != null ">and create_time = #{createTime}</if>
-            <if test="updateBy != null  and updateBy != ''">and update_by = #{updateBy}</if>
-            <if test="updateTime != null ">and update_time = #{updateTime}</if>
-            order by pm.party_position_type is null || pm.party_position_type='' asc, pm.party_position_type asc , CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
+            <if test="enjoyHelp != null  and enjoyHelp != ''">and pm.pm.enjoy_help = #{enjoyHelp}</if>
+            <if test="helpInfo != null  and helpInfo != ''">and pm.help_info = #{helpInfo}</if>
+            <if test="detail != null  and detail != ''">and pm.detail = #{detail}</if>
+            <if test="createBy != null  and createBy != ''">and pm.create_by = #{createBy}</if>
+            <if test="createTime != null ">and pm.create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''">and pm.update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and pm.update_time = #{updateTime}</if>
+            ${dataScope}
         </where>
+        order by pm.party_position_type is null || pm.party_position_type='' asc,
+        pm.party_position_type asc , CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
     <select id="selectDjPartyMemberById" parameterType="Long" resultMap="DjPartyMemberResult">

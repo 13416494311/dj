@@ -42,7 +42,7 @@ public class DjActivityPlanController extends BaseController
      * 查询活动计划列表
      */
     @GetMapping("/list")
-    @DataScope(partyOrgAlias = "o")
+    @DataScope(partyOrgAlias = "o", userAlias = "u")
     public TableDataInfo list(DjActivityPlan djActivityPlan)
     {
         startPage();

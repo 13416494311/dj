@@ -37,7 +37,7 @@ public class DjActivityArrangeController extends BaseController
      * 查询活动安排列表
      */
     @GetMapping("/listByParam")
-    @DataScope(partyOrgAlias = "arrange")
+    @DataScope(partyOrgAlias = "arrange", userAlias = "u")
     public TableDataInfo listByParam(DjActivityParams params)
     {
         startPage();
