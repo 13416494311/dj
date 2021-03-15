@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.party.mapper.DjPartyTrainMemberMapper">
-    
+
     <resultMap type="DjPartyTrainMember" id="DjPartyTrainMemberResult">
         <result property="trainMemberId"    column="train_member_id"    />
         <result property="trainUuid"    column="train_uuid"    />
@@ -22,9 +22,52 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select train_member_id, train_uuid, party_org_id, party_member_id, score, status, del_flag, create_by, create_time, update_by, update_time from dj_party_train_member
     </sql>
 
+
+
+    <select id="getTrainRankInfo" parameterType="DjPartyMember" resultMap="DjPartyTrainMemberResult">
+        select * from (SELECT
+        @curRank := IF ( @prevRank = A.score, @curRank, @incRank ) AS rank,
+        @incRank := @incRank + 1 as temp_rank,
+        @prevRank := A.score as total ,A.*
+        FROM (
+        SELECT
+        pm.member_id AS party_member_id,
+        SUM( IF ( tm.score IS NOT NULL, tm.score, 0 ) ) AS score
+        FROM dj_party_member pm
+        LEFT JOIN dj_party_org po ON pm.party_org_id = po.party_org_id
+        LEFT JOIN dj_party_train_member tm ON pm.member_id = tm.party_member_id
+        LEFT JOIN dj_party_train t ON tm.train_uuid = t.train_uuid
+        <where>
+            <if test="partyOrgId != null ">
+                AND (
+                pm.party_org_id = #{partyOrgId}
+                OR pm.party_org_id IN (
+                SELECT t.party_org_id FROM dj_party_org t WHERE FIND_IN_SET (#{partyOrgId},ancestors)
+                )
+                )
+            </if>
+            <if test="params.rankType != null and  '2'.toString == params.rankType ">
+                and  YEAR (t.activity_start_time ) = DATE_FORMAT(NOW(), '%Y')
+            </if>
+        </where>
+        GROUP BY pm.member_id
+        ORDER BY
+        tm.score DESC,
+        pm.party_position_type IS NULL || pm.party_position_type = '' ASC,
+        po.party_org_id,
+        po.party_org_id,
+        pm.party_position_type ASC,
+        CONVERT (pm.member_name USING gbk) COLLATE gbk_chinese_ci ASC
+        ) A,(SELECT @curRank := 0, @prevRank := NULL, @incRank := 1)B ) temp
+        <where>
+            <if test="memberId != null "> and temp.party_member_id = #{memberId}</if>
+        </where>
+
+    </select>
+
     <select id="selectDjPartyTrainMemberList" parameterType="DjPartyTrainMember" resultMap="DjPartyTrainMemberResult">
         <include refid="selectDjPartyTrainMemberVo"/>
-        <where>  
+        <where>
             <if test="trainUuid != null  and trainUuid != ''"> and train_uuid = #{trainUuid}</if>
             <if test="partyOrgId != null "> and party_org_id = #{partyOrgId}</if>
             <if test="partyMemberId != null "> and party_member_id = #{partyMemberId}</if>
@@ -32,12 +75,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>
-    
+
+
     <select id="selectDjPartyTrainMemberById" parameterType="Long" resultMap="DjPartyTrainMemberResult">
         <include refid="selectDjPartyTrainMemberVo"/>
         where train_member_id = #{trainMemberId}
     </select>
-        
+
     <insert id="insertDjPartyTrainMember" parameterType="DjPartyTrainMember" useGeneratedKeys="true" keyProperty="trainMemberId">
         insert into dj_party_train_member
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -51,7 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null ">create_time,</if>
             <if test="updateBy != null  and updateBy != ''">update_by,</if>
             <if test="updateTime != null ">update_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="trainUuid != null  and trainUuid != ''">#{trainUuid},</if>
             <if test="partyOrgId != null ">#{partyOrgId},</if>
@@ -63,7 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null ">#{createTime},</if>
             <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
             <if test="updateTime != null ">#{updateTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateDjPartyTrainMember" parameterType="DjPartyTrainMember">
@@ -88,10 +132,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDjPartyTrainMemberByIds" parameterType="String">
-        delete from dj_party_train_member where train_member_id in 
+        delete from dj_party_train_member where train_member_id in
         <foreach item="trainMemberId" collection="array" open="(" separator="," close=")">
             #{trainMemberId}
         </foreach>
     </delete>
-    
+
 </mapper>

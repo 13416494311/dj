@@ -48,6 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="theme != null  and theme != ''"> and b.theme = #{theme}</if>
             <if test="content != null  and content != ''"> and b.content = #{content}</if>
         </where>
+        order by  b.send_time desc
     </select>
 
     <select id="selectDjPartyMemberPoliticalBirthdayById" parameterType="Long" resultMap="DjPartyMemberPoliticalBirthdayResult">

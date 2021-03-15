@@ -35,6 +35,17 @@ public class DjPartyTrainMemberController extends BaseController
     @Autowired
     private IDjPartyTrainMemberService djPartyTrainMemberService;
 
+
+    /**
+     * 查询参与培训党员列表
+     */
+    @GetMapping("/getTrainRankInfo/{rankType}")
+    public AjaxResult getTrainRankInfo(@PathVariable("rankType") String rankType)
+    {
+
+        return AjaxResult.success(djPartyTrainMemberService.getTrainRankInfo(rankType));
+    }
+
     /**
      * 查询参与培训党员列表
      */
@@ -126,7 +137,7 @@ public class DjPartyTrainMemberController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('party:trainMember:remove')")
     @Log(title = "参与培训党员", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{trainMemberIds}")
+    @DeleteMapping("/{trainMemberIds}")
     public AjaxResult remove(@PathVariable Long[] trainMemberIds)
     {
         return toAjax(djPartyTrainMemberService.deleteDjPartyTrainMemberByIds(trainMemberIds));

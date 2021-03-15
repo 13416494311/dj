@@ -40,6 +40,8 @@ public class DjPartyTrainMember extends BaseEntity
     @Excel(name = "积分")
     private Integer score;
 
+    private Integer rank;
+
     /** 参与党员状态 */
     @Excel(name = "参与党员状态")
     private String status;

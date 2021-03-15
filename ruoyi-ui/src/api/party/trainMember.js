@@ -1,6 +1,14 @@
 import request from '@/utils/request'
 
 // 查询参与培训党员列表
+export function getTrainRankInfo(rankType) {
+  return request({
+    url: '/party/trainMember/getTrainRankInfo/'+rankType,
+    method: 'get',
+  })
+}
+
+// 查询参与培训党员列表
 export function listTrainMember(query) {
   return request({
     url: '/party/trainMember/list',

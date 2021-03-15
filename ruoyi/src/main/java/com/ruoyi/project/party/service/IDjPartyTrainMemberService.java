@@ -1,19 +1,23 @@
 package com.ruoyi.project.party.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.project.party.domain.DjPartyTrainMember;
 
 /**
  * 参与培训党员Service接口
- * 
+ *
  * @author ruoyi
  * @date 2021-03-09
  */
-public interface IDjPartyTrainMemberService 
+public interface IDjPartyTrainMemberService
 {
+    public Map<String,Object> getTrainRankInfo(String rankType);
+
     /**
      * 查询参与培训党员
-     * 
+     *
      * @param trainMemberId 参与培训党员ID
      * @return 参与培训党员
      */
@@ -21,7 +25,7 @@ public interface IDjPartyTrainMemberService
 
     /**
      * 查询参与培训党员列表
-     * 
+     *
      * @param djPartyTrainMember 参与培训党员
      * @return 参与培训党员集合
      */
@@ -29,7 +33,7 @@ public interface IDjPartyTrainMemberService
 
     /**
      * 新增参与培训党员
-     * 
+     *
      * @param djPartyTrainMember 参与培训党员
      * @return 结果
      */
@@ -37,7 +41,7 @@ public interface IDjPartyTrainMemberService
 
     /**
      * 修改参与培训党员
-     * 
+     *
      * @param djPartyTrainMember 参与培训党员
      * @return 结果
      */
@@ -45,7 +49,7 @@ public interface IDjPartyTrainMemberService
 
     /**
      * 批量删除参与培训党员
-     * 
+     *
      * @param trainMemberIds 需要删除的参与培训党员ID
      * @return 结果
      */
@@ -53,7 +57,7 @@ public interface IDjPartyTrainMemberService
 
     /**
      * 删除参与培训党员信息
-     * 
+     *
      * @param trainMemberId 参与培训党员ID
      * @return 结果
      */

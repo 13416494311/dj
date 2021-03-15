@@ -6,7 +6,7 @@ var minSecs=60*1000;
 var startWorkBefNoon = 9;
 var endWorkBefNoon = 12;
 var startWorkAftNoon = 13;
-var endWorkAftNoon = 17;
+var endWorkAftNoon = 18;
 
 
 //精确到分

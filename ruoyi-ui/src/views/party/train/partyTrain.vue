@@ -47,6 +47,15 @@
           v-hasPermi="['party:train:add']"
         >新增</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-medal"
+          size="mini"
+          @click="handleRank"
+
+        >积分排名</el-button>
+      </el-col>
     </el-row>
 
     <el-table v-loading="loading" :stripe="true"
@@ -208,6 +217,8 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <train-rank ref="trainRank" />
   </div>
 </template>
 
@@ -218,10 +229,11 @@
   import UploadAllFile from "../../upload/uploadAllFile";
   import TrainMember from "./trainMember";
   import { getUserProfile } from "@/api/system/user";
+  import TrainRank from "./trainRank";
 
   export default {
     name: "PartyTrain",
-    components: {TrainMember, UploadAllFile, selectTree },
+    components: {TrainRank, TrainMember, UploadAllFile, selectTree },
     data() {
       return {
         // 遮罩层
@@ -404,6 +416,10 @@
         this.ids = selection.map(item => item.trainId)
         this.single = selection.length!=1
         this.multiple = !selection.length
+      },
+      /**积分排名*/
+      handleRank(){
+        this.$refs.trainRank.init() ;
       },
       /** 新增按钮操作 */
       handleAdd() {
