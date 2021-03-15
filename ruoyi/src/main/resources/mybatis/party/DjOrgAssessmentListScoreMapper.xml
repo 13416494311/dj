@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.party.mapper.DjOrgAssessmentListScoreMapper">
+    
+    <resultMap type="DjOrgAssessmentListScore" id="DjOrgAssessmentListScoreResult">
+        <result property="id"    column="id"    />
+        <result property="assessmentUuid"    column="assessment_uuid"    />
+        <result property="item"    column="item"    />
+        <result property="content"    column="content"    />
+        <result property="quota"    column="quota"    />
+        <result property="score"    column="score"    />
+        <result property="criteria"    column="criteria"    />
+        <result property="selfScore"    column="self_score"    />
+        <result property="assessorScore"    column="assessor_score"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjOrgAssessmentListScoreVo">
+        select id, assessment_uuid, item, content, quota, score, criteria, self_score, assessor_score, order_num, del_flag, create_by, create_time, update_by, update_time from dj_org_assessment_list_score
+    </sql>
+
+    <select id="selectDjOrgAssessmentListScoreList" parameterType="DjOrgAssessmentListScore" resultMap="DjOrgAssessmentListScoreResult">
+        <include refid="selectDjOrgAssessmentListScoreVo"/>
+        <where>  
+            <if test="assessmentUuid != null  and assessmentUuid != ''"> and assessment_uuid = #{assessmentUuid}</if>
+            <if test="item != null  and item != ''"> and item = #{item}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="quota != null  and quota != ''"> and quota = #{quota}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="criteria != null  and criteria != ''"> and criteria = #{criteria}</if>
+            <if test="selfScore != null "> and self_score = #{selfScore}</if>
+            <if test="assessorScore != null "> and assessor_score = #{assessorScore}</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
+        </where>
+        order by assessment_uuid desc, order_num
+    </select>
+    
+    <select id="selectDjOrgAssessmentListScoreById" parameterType="Long" resultMap="DjOrgAssessmentListScoreResult">
+        <include refid="selectDjOrgAssessmentListScoreVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDjOrgAssessmentListScore" parameterType="DjOrgAssessmentListScore" useGeneratedKeys="true" keyProperty="id">
+        insert into dj_org_assessment_list_score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="assessmentUuid != null  and assessmentUuid != ''">assessment_uuid,</if>
+            <if test="item != null  and item != ''">item,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="quota != null  and quota != ''">quota,</if>
+            <if test="score != null ">score,</if>
+            <if test="criteria != null  and criteria != ''">criteria,</if>
+            <if test="selfScore != null ">self_score,</if>
+            <if test="assessorScore != null ">assessor_score,</if>
+            <if test="orderNum != null ">order_num,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="assessmentUuid != null  and assessmentUuid != ''">#{assessmentUuid},</if>
+            <if test="item != null  and item != ''">#{item},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="quota != null  and quota != ''">#{quota},</if>
+            <if test="score != null ">#{score},</if>
+            <if test="criteria != null  and criteria != ''">#{criteria},</if>
+            <if test="selfScore != null ">#{selfScore},</if>
+            <if test="assessorScore != null ">#{assessorScore},</if>
+            <if test="orderNum != null ">#{orderNum},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjOrgAssessmentListScore" parameterType="DjOrgAssessmentListScore">
+        update dj_org_assessment_list_score
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assessmentUuid != null  and assessmentUuid != ''">assessment_uuid = #{assessmentUuid},</if>
+            <if test="item != null  and item != ''">item = #{item},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="quota != null  and quota != ''">quota = #{quota},</if>
+            <if test="score != null ">score = #{score},</if>
+            <if test="criteria != null  and criteria != ''">criteria = #{criteria},</if>
+            <if test="selfScore != null ">self_score = #{selfScore},</if>
+            <if test="assessorScore != null ">assessor_score = #{assessorScore},</if>
+            <if test="orderNum != null ">order_num = #{orderNum},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDjOrgAssessmentListScoreById" parameterType="Long">
+        delete from dj_org_assessment_list_score where id = #{id}
+    </delete>
+
+    <delete id="deleteDjOrgAssessmentListScoreByIds" parameterType="String">
+        delete from dj_org_assessment_list_score where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
