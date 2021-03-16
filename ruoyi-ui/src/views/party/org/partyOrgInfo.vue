@@ -45,7 +45,7 @@
             <div class="org-info-avatar">
               <el-image
                 v-if="member.avatar"
-                style="width: 100%;height: 100%"
+                style="background-size: 100%"
                 :src="member.avatar"
                 fit="fill"></el-image>
             </div>
@@ -194,6 +194,7 @@
 <style scoped>
   .org-info-bg {
     height: 100%;
+    overflow-y: auto;
     width: 100%;
     background: url("../../../assets/image/orgInfo-bg.jpg") no-repeat;
     background-size: 100% 100%;
@@ -262,10 +263,10 @@
 
   .org-info-avatar {
     width: 100%;
-    height: 3.5rem;
-    background-image: url("../../../assets/image/dj-avatar.png");
+    height: 4.9rem;
+    background: url("../../../assets/image/dj-avatar.png") no-repeat ;
     background-color: rgb(165, 27, 27);
-    background-size: cover;
+    background-size: 100% 100%;
   }
 
   .org-info-position {

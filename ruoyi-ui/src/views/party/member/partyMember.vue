@@ -121,7 +121,6 @@
                 type="text"
                 icon="el-icon-delete"
                 @click="chooseAuditUser1(scope.row,'enable')"
-                v-if="showHandleUpdate(scope.row)"
                 v-show="scope.row.delFlag ==1"
                 v-hasPermi="['party:member:remove']"
               >启用

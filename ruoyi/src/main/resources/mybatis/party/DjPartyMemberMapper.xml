@@ -153,7 +153,7 @@
         </where>
         order by pm.party_position_type is null || pm.party_position_type='' asc,
         po.party_org_id , po.party_org_id ,
-        pm.party_position_type asc , CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
+        pm.party_position_type asc ,pm.order_num asc, CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
 

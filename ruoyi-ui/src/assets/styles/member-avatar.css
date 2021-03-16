@@ -1,7 +1,6 @@
 
 .member-pic {
   width: 100px;
-  height: 150px;
   float: left;
   margin: 10px;
   border: 1px solid #999;
@@ -9,10 +8,10 @@
 
 .member-avatar {
   width: 98px;
-  height: 98px;
-  background-image: url("../image/dj-avatar.png");
+  height: 138px;
+  background: url("../image/dj-avatar.png") no-repeat ;
   background-color: rgb(165, 27, 27);
-  background-size: cover;
+  background-size: 100% 100%;
 }
 
 .member-position {

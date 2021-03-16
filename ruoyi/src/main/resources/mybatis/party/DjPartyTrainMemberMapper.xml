@@ -33,9 +33,9 @@
         SELECT
         pm.member_id AS party_member_id,
         SUM( IF ( tm.score IS NOT NULL, tm.score, 0 ) ) AS score
-        FROM dj_party_member pm
+        FROM dj_party_train_member tm
+        LEFT JOIN dj_party_member pm ON pm.member_id = tm.party_member_id
         LEFT JOIN dj_party_org po ON pm.party_org_id = po.party_org_id
-        LEFT JOIN dj_party_train_member tm ON pm.member_id = tm.party_member_id
         LEFT JOIN dj_party_train t ON tm.train_uuid = t.train_uuid
         <where>
             <if test="partyOrgId != null ">
