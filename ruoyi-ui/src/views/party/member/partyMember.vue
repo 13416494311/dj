@@ -688,7 +688,7 @@
   }
 
   .avatar {
-    width: 120px;
+    width: 90px;
     height: 120px;
     align-items: center;
     border: 1px solid #e6ebf5;
@@ -698,8 +698,9 @@
     div {
       width:100%;
       height:100%;
-      background-image: url("../../../assets/image/avatar.png");
-      background-size: cover;
+      background: url("../../../assets/image/dj-avatar.png") no-repeat ;
+      background-size: 100% 100%;
+      background-color: rgb(165, 27, 27);
     }
   }
 
