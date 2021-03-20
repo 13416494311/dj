@@ -111,7 +111,7 @@ public class DjPartyTrainMemberServiceImpl implements IDjPartyTrainMemberService
         List<DjPartyTrainMember> partyTrainMemberList = djPartyTrainMemberMapper.getTrainRankInfo(djPartyMember);
         if(!CollectionUtils.isEmpty(partyTrainMemberList)){
             DjPartyTrainMember partyTrainMember = partyTrainMemberList.get(0);
-            return partyTrainMember.getRank()!=null?partyTrainMember.getRank():0 ;
+            return partyTrainMember.getRankNum()!=null?partyTrainMember.getRankNum():0 ;
         }else{
             return 0 ;
         }
@@ -126,7 +126,7 @@ public class DjPartyTrainMemberServiceImpl implements IDjPartyTrainMemberService
         List<DjPartyTrainMember> partyTrainMemberList = djPartyTrainMemberMapper.getTrainRankInfo(djPartyMember);
         if(!CollectionUtils.isEmpty(partyTrainMemberList)){
             DjPartyTrainMember partyTrainMember = partyTrainMemberList.get(0);
-            return partyTrainMember.getRank()!=null?partyTrainMember.getRank():0 ;
+            return partyTrainMember.getRankNum()!=null?partyTrainMember.getRankNum():0 ;
         }else{
             return 0 ;
         }

@@ -52,7 +52,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
   .remind-content{
     padding: 20px;
     text-indent:2em;

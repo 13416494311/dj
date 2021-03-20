@@ -316,6 +316,37 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
                 });
                 break;
             case "3":
+                activityMemberList.stream().forEach(member -> {
+                    SysUser user = userService.selectUserByPartyMemberId(member.getPartyMemberId());
+                    if (StringUtils.isNotNull(user)) {
+                        DjSysTodo sysTodo = new DjSysTodo();
+                        sysTodo.setUuid(detailed.getDetailedUuid());
+                        sysTodo.setType("12"); //通知
+                        sysTodo.setTitle(activityPlan.getActivityTheme());
+                        sysTodo.setUrlName("ActivityMessage");
+                        sysTodo.setUrlPath("todo/activityMessage");
+                        sysTodo.setUserId(user.getUserId());
+                        sysTodo.setStatus("2");
+                        Map<String, String> map = new HashMap<String, String>();
+                        map.put("detailedUuid", detailed.getDetailedUuid());
+                        map.put("partyMemberId", member.getPartyMemberId().toString());
+                        sysTodo.setUrlParams(JSON.toJSONString(map));
+                        djSysTodoService.insertDjSysTodo(sysTodo);
+
+                        DjSysMessage sysMessage = new DjSysMessage();
+                        sysMessage.setMessageUuid(sysTodo.getUuid());
+                        sysMessage.setTitle(dictDataService.selectDictLabel("sys_todo_type",sysTodo.getType()));
+                        sysMessage.setContent("请您"+DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,detailed.getActivityPlanStartTime())+"至"
+                                +DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS,detailed.getActivityPlanEndTime())
+                                +"准时前往"+detailed.getVenue()+"参加“"+activityPlan.getActivityTheme()+"”党员活动！");
+                        sysMessage.setType(2);
+                        sysMessage.setPlatform(0);
+                        sysMessage.setGroupName("");
+                        sysMessage.setStatus("0");
+                        sysMessage.setUserIds(sysTodo.getUserId().toString());
+                        sysMessageService.insertDjSysMessage(sysMessage);
+                    }
+                });
                 break;
             case "4":
                 djSysTodoService.cancelDjSysTodoBatch(detailed.getDetailedUuid());

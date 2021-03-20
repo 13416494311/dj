@@ -102,10 +102,10 @@
 
             <el-table-column label="序号" align="center" type="rank"  width="80">
               <template slot-scope="scope">
-                <span v-if="scope.row.rank ==1" class="rank-index" style="color: gold">{{scope.row.rank}}st </span>
-                <span v-else-if="scope.row.rank ==2" class="rank-index" style="color: silver">{{scope.row.rank}}nd  </span>
-                <span v-else-if="scope.row.rank ==3"class="rank-index"  style="color: rgb(186,110,64)">{{scope.row.rank}}rd  </span>
-                <span v-else class="rank-index"  style="color: red">{{scope.row.rank}}th </span>
+                <span v-if="scope.row.rankNum ==1" class="rank-index" style="color: gold">{{scope.row.rankNum}}st </span>
+                <span v-else-if="scope.row.rankNum ==2" class="rank-index" style="color: silver">{{scope.row.rankNum}}nd  </span>
+                <span v-else-if="scope.row.rankNum ==3"class="rank-index"  style="color: rgb(186,110,64)">{{scope.row.rankNum}}rd  </span>
+                <span v-else class="rank-index" >{{scope.row.rankNum}}th </span>
               </template>
             </el-table-column>
             <el-table-column label="党员姓名" align="center"  prop="partyMember.memberName"/>

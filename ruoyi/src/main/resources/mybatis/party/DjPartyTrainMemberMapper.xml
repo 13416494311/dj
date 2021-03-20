@@ -10,6 +10,7 @@
         <result property="partyOrgId"    column="party_org_id"    />
         <result property="partyMemberId"    column="party_member_id"    />
         <result property="score"    column="score"    />
+        <result property="rankNum"    column="rank_num"    />
         <result property="status"    column="status"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
@@ -26,7 +27,7 @@
 
     <select id="getTrainRankInfo" parameterType="DjPartyMember" resultMap="DjPartyTrainMemberResult">
         select * from (SELECT
-        @curRank := IF ( @prevRank = A.score, @curRank, @incRank ) AS rank,
+        @curRank := IF ( @prevRank = A.score, @curRank, @incRank ) AS rank_num ,
         @incRank := @incRank + 1 as temp_rank,
         @prevRank := A.score as total ,A.*
         FROM (
@@ -52,7 +53,7 @@
         </where>
         GROUP BY pm.member_id
         ORDER BY
-        tm.score DESC,
+        score DESC,
         pm.party_position_type IS NULL || pm.party_position_type = '' ASC,
         po.party_org_id,
         po.party_org_id,
