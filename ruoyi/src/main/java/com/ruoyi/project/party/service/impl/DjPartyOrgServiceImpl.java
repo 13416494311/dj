@@ -130,6 +130,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
 
         DjPartyMember djPartyMember = new DjPartyMember();
         djPartyMember.setPartyOrgId(partyOrgId);
+        djPartyMember.setDelFlag("0");
         List<DjPartyMember> djPartyMemberList = djPartyMemberMapper.selectDjPartyMemberList(djPartyMember);
 
         final int[]  formalCount = { 0 };
