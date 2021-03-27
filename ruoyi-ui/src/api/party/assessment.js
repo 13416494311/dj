@@ -16,6 +16,13 @@ export function getAssessment(id) {
     method: 'get'
   })
 }
+// 查询党组织考核详细
+export function getAssessmentByUuid(id) {
+  return request({
+    url: '/party/assessment/getAssessmentByUuid' + id,
+    method: 'get'
+  })
+}
 
 // 新增党组织考核
 export function addAssessment(data) {

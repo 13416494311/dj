@@ -46,11 +46,11 @@ public class DjOrgAssessmentListScore extends BaseEntity
 
     /** 自评分数 */
     @Excel(name = "自评分数")
-    private Integer selfScore;
+    private Double selfScore;
 
     /** 党委评分 */
     @Excel(name = "党委评分")
-    private Integer assessorScore;
+    private Double assessorScore;
 
     /** 排序 */
     @Excel(name = "排序")

@@ -36,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDjOrgAssessmentyearVo"/>
         where id = #{id}
     </select>
+
         
     <insert id="insertDjOrgAssessmentyear" parameterType="DjOrgAssessmentyear" useGeneratedKeys="true" keyProperty="id">
         insert into dj_org_assessmentyear

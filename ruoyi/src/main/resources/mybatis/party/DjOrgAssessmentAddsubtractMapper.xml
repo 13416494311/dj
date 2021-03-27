@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.party.mapper.DjOrgAssessmentAddsubtractMapper">
+    
+    <resultMap type="DjOrgAssessmentAddsubtract" id="DjOrgAssessmentAddsubtractResult">
+        <result property="addsubtractId"    column="addSubtract_id"    />
+        <result property="addsubtractUuid"    column="addSubtract_uuid"    />
+        <result property="assessmentUuid"    column="assessment_uuid"    />
+        <result property="partyOrgId"    column="party_org_id"    />
+        <result property="addsubtractType"    column="addSubtract_Type"    />
+        <result property="addsubtractYear"    column="addSubtract_year"    />
+        <result property="addsubtractTheme"    column="addSubtract_theme"    />
+        <result property="addsubtractContent"    column="addSubtract_content"    />
+        <result property="addsubtractScore"    column="addSubtract_Score"    />
+        <result property="completionEffects"    column="completion_effects"    />
+        <result property="adverseEffects"    column="adverse_effects"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjOrgAssessmentAddsubtractVo">
+        select addSubtract_id, addSubtract_uuid, assessment_uuid, party_org_id, addSubtract_Type, addSubtract_year, addSubtract_theme, addSubtract_content, addSubtract_Score, completion_effects, adverse_effects, del_flag, create_by, create_time, update_by, update_time from dj_org_assessment_addsubtract
+    </sql>
+
+    <select id="selectDjOrgAssessmentAddsubtractList" parameterType="DjOrgAssessmentAddsubtract" resultMap="DjOrgAssessmentAddsubtractResult">
+        <include refid="selectDjOrgAssessmentAddsubtractVo"/>
+        <where>  
+            <if test="addsubtractUuid != null  and addsubtractUuid != ''"> and addSubtract_uuid = #{addsubtractUuid}</if>
+            <if test="assessmentUuid != null  and assessmentUuid != ''"> and assessment_uuid = #{assessmentUuid}</if>
+            <if test="partyOrgId != null "> and party_org_id = #{partyOrgId}</if>
+            <if test="addsubtractType != null  and addsubtractType != ''"> and addSubtract_Type = #{addsubtractType}</if>
+            <if test="addsubtractYear != null  and addsubtractYear != ''"> and addSubtract_year = #{addsubtractYear}</if>
+            <if test="addsubtractTheme != null  and addsubtractTheme != ''"> and addSubtract_theme = #{addsubtractTheme}</if>
+            <if test="addsubtractContent != null  and addsubtractContent != ''"> and addSubtract_content = #{addsubtractContent}</if>
+            <if test="addsubtractScore != null "> and addSubtract_Score = #{addsubtractScore}</if>
+            <if test="completionEffects != null  and completionEffects != ''"> and completion_effects = #{completionEffects}</if>
+            <if test="adverseEffects != null  and adverseEffects != ''"> and adverse_effects = #{adverseEffects}</if>
+        </where>
+    </select>
+
+    <select id="selectDjOrgAssessmentAddsubtractById" parameterType="Long" resultMap="DjOrgAssessmentAddsubtractResult">
+        <include refid="selectDjOrgAssessmentAddsubtractVo"/>
+        where addSubtract_id = #{addsubtractId}
+    </select>
+
+        
+    <insert id="insertDjOrgAssessmentAddsubtract" parameterType="DjOrgAssessmentAddsubtract" useGeneratedKeys="true" keyProperty="addsubtractId">
+        insert into dj_org_assessment_addsubtract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="addsubtractUuid != null  and addsubtractUuid != ''">addSubtract_uuid,</if>
+            <if test="assessmentUuid != null  and assessmentUuid != ''">assessment_uuid,</if>
+            <if test="partyOrgId != null ">party_org_id,</if>
+            <if test="addsubtractType != null  and addsubtractType != ''">addSubtract_Type,</if>
+            <if test="addsubtractYear != null  and addsubtractYear != ''">addSubtract_year,</if>
+            <if test="addsubtractTheme != null  and addsubtractTheme != ''">addSubtract_theme,</if>
+            <if test="addsubtractContent != null  and addsubtractContent != ''">addSubtract_content,</if>
+            <if test="addsubtractScore != null ">addSubtract_Score,</if>
+            <if test="completionEffects != null  and completionEffects != ''">completion_effects,</if>
+            <if test="adverseEffects != null  and adverseEffects != ''">adverse_effects,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="addsubtractUuid != null  and addsubtractUuid != ''">#{addsubtractUuid},</if>
+            <if test="assessmentUuid != null  and assessmentUuid != ''">#{assessmentUuid},</if>
+            <if test="partyOrgId != null ">#{partyOrgId},</if>
+            <if test="addsubtractType != null  and addsubtractType != ''">#{addsubtractType},</if>
+            <if test="addsubtractYear != null  and addsubtractYear != ''">#{addsubtractYear},</if>
+            <if test="addsubtractTheme != null  and addsubtractTheme != ''">#{addsubtractTheme},</if>
+            <if test="addsubtractContent != null  and addsubtractContent != ''">#{addsubtractContent},</if>
+            <if test="addsubtractScore != null ">#{addsubtractScore},</if>
+            <if test="completionEffects != null  and completionEffects != ''">#{completionEffects},</if>
+            <if test="adverseEffects != null  and adverseEffects != ''">#{adverseEffects},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjOrgAssessmentAddsubtract" parameterType="DjOrgAssessmentAddsubtract">
+        update dj_org_assessment_addsubtract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="addsubtractUuid != null  and addsubtractUuid != ''">addSubtract_uuid = #{addsubtractUuid},</if>
+            <if test="assessmentUuid != null  and assessmentUuid != ''">assessment_uuid = #{assessmentUuid},</if>
+            <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
+            <if test="addsubtractType != null  and addsubtractType != ''">addSubtract_Type = #{addsubtractType},</if>
+            <if test="addsubtractYear != null  and addsubtractYear != ''">addSubtract_year = #{addsubtractYear},</if>
+            <if test="addsubtractTheme != null  and addsubtractTheme != ''">addSubtract_theme = #{addsubtractTheme},</if>
+            <if test="addsubtractContent != null  and addsubtractContent != ''">addSubtract_content = #{addsubtractContent},</if>
+            <if test="addsubtractScore != null ">addSubtract_Score = #{addsubtractScore},</if>
+            <if test="completionEffects != null  and completionEffects != ''">completion_effects = #{completionEffects},</if>
+            <if test="adverseEffects != null  and adverseEffects != ''">adverse_effects = #{adverseEffects},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where addSubtract_id = #{addsubtractId}
+    </update>
+
+    <delete id="deleteDjOrgAssessmentAddsubtractById" parameterType="Long">
+        delete from dj_org_assessment_addsubtract where addSubtract_id = #{addsubtractId}
+    </delete>
+
+    <delete id="deleteDjOrgAssessmentAddsubtractByIds" parameterType="String">
+        delete from dj_org_assessment_addsubtract where addSubtract_id in 
+        <foreach item="addsubtractId" collection="array" open="(" separator="," close=")">
+            #{addsubtractId}
+        </foreach>
+    </delete>
+    
+</mapper>

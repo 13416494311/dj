@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.party.mapper.DjOrgAssessmentAssessorMapper">
+
+    <resultMap type="DjOrgAssessmentAssessor" id="DjOrgAssessmentAssessorResult">
+        <result property="id" column="id"/>
+        <result property="assessmentUuid" column="assessment_uuid"/>
+        <result property="assessorId" column="assessor_id"/>
+        <result property="partyOrgId" column="party_org_id"/>
+        <result property="assessorType" column="assessor_type"/>
+        <result property="evaluationContent1" column="evaluation_content_1"/>
+        <result property="evaluationContent2" column="evaluation_content_2"/>
+        <result property="evaluationContent3" column="evaluation_content_3"/>
+        <result property="evaluationContent4" column="evaluation_content_4"/>
+        <result property="evaluationContent5" column="evaluation_content_5"/>
+        <result property="comprehensiveScore" column="comprehensive_score"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectDjOrgAssessmentAssessorVo">
+        select id, assessment_uuid, assessor_id, party_org_id, assessor_type, evaluation_content_1, evaluation_content_2, evaluation_content_3, evaluation_content_4, evaluation_content_5, 
+comprehensive_score, del_flag, create_by, create_time, update_by, update_time from dj_org_assessment_assessor
+    </sql>
+
+    <select id="selectDjOrgAssessmentAssessorList" parameterType="DjOrgAssessmentAssessor"
+            resultMap="DjOrgAssessmentAssessorResult">
+        <include refid="selectDjOrgAssessmentAssessorVo"/>
+        <where>
+            <if test="assessmentUuid != null  and assessmentUuid != ''">and assessment_uuid = #{assessmentUuid}</if>
+            <if test="assessorId != null ">and assessor_id = #{assessorId}</if>
+            <if test="partyOrgId != null ">and party_org_id = #{partyOrgId}</if>
+            <if test="assessorType != null  and assessorType != ''">and assessor_type = #{assessorType}</if>
+            <if test="evaluationContent1 != null  and evaluationContent1 != ''">and evaluation_content_1 = #{evaluationContent1} </if>
+            <if test="evaluationContent2 != null  and evaluationContent2 != ''">and evaluation_content_2 = #{evaluationContent2}</if>
+            <if test="evaluationContent3 != null  and evaluationContent3 != ''">and evaluation_content_3 = #{evaluationContent3}</if>
+            <if test="evaluationContent4 != null  and evaluationContent4 != ''">and evaluation_content_4 = #{evaluationContent4}</if>
+            <if test="evaluationContent5 != null  and evaluationContent5 != ''">and evaluation_content_5 = #{evaluationContent5}</if>
+            <if test="comprehensiveScore != null ">and comprehensive_score = #{comprehensiveScore}</if>
+        </where>
+    </select>
+
+    <select id="selectDjOrgAssessmentAssessorById" parameterType="Long" resultMap="DjOrgAssessmentAssessorResult">
+        <include refid="selectDjOrgAssessmentAssessorVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDjOrgAssessmentAssessor" parameterType="DjOrgAssessmentAssessor" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into dj_org_assessment_assessor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="assessmentUuid != null  and assessmentUuid != ''">assessment_uuid,</if>
+            <if test="assessorId != null ">assessor_id,</if>
+            <if test="partyOrgId != null ">party_org_id,</if>
+            <if test="assessorType != null  and assessorType != ''">assessor_type,</if>
+            <if test="evaluationContent1 != null  and evaluationContent1 != ''">evaluation_content_1,</if>
+            <if test="evaluationContent2 != null  and evaluationContent2 != ''">evaluation_content_2,</if>
+            <if test="evaluationContent3 != null  and evaluationContent3 != ''">evaluation_content_3,</if>
+            <if test="evaluationContent4 != null  and evaluationContent4 != ''">evaluation_content_4,</if>
+            <if test="evaluationContent5 != null  and evaluationContent5 != ''">evaluation_content_5,</if>
+            <if test="comprehensiveScore != null ">comprehensive_score,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="assessmentUuid != null  and assessmentUuid != ''">#{assessmentUuid},</if>
+            <if test="assessorId != null ">#{assessorId},</if>
+            <if test="partyOrgId != null ">#{partyOrgId},</if>
+            <if test="assessorType != null  and assessorType != ''">#{assessorType},</if>
+            <if test="evaluationContent1 != null  and evaluationContent1 != ''">#{evaluationContent1},</if>
+            <if test="evaluationContent2 != null  and evaluationContent2 != ''">#{evaluationContent2},</if>
+            <if test="evaluationContent3 != null  and evaluationContent3 != ''">#{evaluationContent3},</if>
+            <if test="evaluationContent4 != null  and evaluationContent4 != ''">#{evaluationContent4},</if>
+            <if test="evaluationContent5 != null  and evaluationContent5 != ''">#{evaluationContent5},</if>
+            <if test="comprehensiveScore != null ">#{comprehensiveScore},
+            </if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDjOrgAssessmentAssessor" parameterType="DjOrgAssessmentAssessor">
+        update dj_org_assessment_assessor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assessmentUuid != null  and assessmentUuid != ''">assessment_uuid = #{assessmentUuid},</if>
+            <if test="assessorId != null ">assessor_id = #{assessorId},</if>
+            <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
+            <if test="assessorType != null  and assessorType != ''">assessor_type = #{assessorType},</if>
+            <if test="evaluationContent1 != null  and evaluationContent1 != ''">evaluation_content_1 =
+                #{evaluationContent1},
+            </if>
+            <if test="evaluationContent2 != null  and evaluationContent2 != ''">evaluation_content_2 =
+                #{evaluationContent2},
+            </if>
+            <if test="evaluationContent3 != null  and evaluationContent3 != ''">evaluation_content_3 =
+                #{evaluationContent3},
+            </if>
+            <if test="evaluationContent4 != null  and evaluationContent4 != ''">evaluation_content_4 =
+                #{evaluationContent4},
+            </if>
+            <if test="evaluationContent5 != null  and evaluationContent5 != ''">evaluation_content_5 =
+                #{evaluationContent5},
+            </if>
+            <if test="comprehensiveScore != null ">
+                comprehensive_score = #{comprehensiveScore},
+            </if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDjOrgAssessmentAssessorById" parameterType="Long">
+        delete from dj_org_assessment_assessor where id = #{id}
+    </delete>
+
+    <delete id="deleteDjOrgAssessmentAssessorByIds" parameterType="String">
+        delete from dj_org_assessment_assessor where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

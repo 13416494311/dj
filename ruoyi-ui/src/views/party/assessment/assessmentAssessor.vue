@@ -129,26 +129,26 @@
       <!--      <el-table-column label="排名" align="center" prop="assessment_rank"/>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-<!--          <el-button-->
-<!--            v-if="scope.row.orgAssessmentStatus =='2'"-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-edit"-->
-<!--            @click="handleUpdate(scope.row)"-->
-<!--            v-hasPermi="['party:assessment:editAssessor']"-->
-<!--          >党委评审-->
-<!--          </el-button>-->
           <el-button
-            v-if="scope.row.orgAssessmentStatus =='1'"
+            v-if="scope.row.orgAssessmentStatus =='2'"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['party:assessment:edit']"
-          >自评
+          >党委评审
           </el-button>
+          <!--          <el-button-->
+          <!--            v-if="scope.row.orgAssessmentStatus =='1'"-->
+          <!--            size="mini"-->
+          <!--            type="text"-->
+          <!--            icon="el-icon-edit"-->
+          <!--            @click="handleUpdate(scope.row)"-->
+          <!--            v-hasPermi="['party:assessment:edit']"-->
+          <!--          >自评-->
+          <!--          </el-button>-->
           <el-button
-            v-if="scope.row.orgAssessmentStatus !='1'"
+            v-if="scope.row.orgAssessmentStatus !='2'"
             size="mini"
             type="text"
             icon="el-icon-search"
@@ -156,14 +156,14 @@
             v-hasPermi="['party:assessment:edit']"
           >查看
           </el-button>
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-delete"-->
-<!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['party:assessment:remove']"-->
-<!--          >删除-->
-<!--          </el-button>-->
+          <!--          <el-button-->
+          <!--            size="mini"-->
+          <!--            type="text"-->
+          <!--            icon="el-icon-delete"-->
+          <!--            @click="handleDelete(scope.row)"-->
+          <!--            v-hasPermi="['party:assessment:remove']"-->
+          <!--          >删除-->
+          <!--          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -177,7 +177,7 @@
     />
 
     <!-- 添加或修改党组织考核对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="100%" append-to-body
+    <el-dialog :title="title" :visible.sync="open" width="90%" append-to-body
                @open="getHeight" :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" :style="bodyStyle" label-width="100px">
         <!--        <el-form-item label="考核uuid" prop="assessmentUuid">-->
@@ -215,11 +215,11 @@
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">党支部自评</span>
           </div>
-          <el-table height="500" show-summary :stripe="true" :border="true" v-loading="loading"
+          <el-table height="600" show-summary :stripe="true" :border="true" v-loading="loading"
                     key="assessmentScoreList"
                     :data="assessmentScoreList" @selection-change="handleSelectionChange"
                     :header-cell-style="{'text-align':'center'}">
-            <el-table-column type="selection" width="55" align="center"/>
+            <el-table-column type="selection" width="30" align="center"/>
             <!--      <el-table-column label="id" align="center" prop="id"/>-->
             <!--      <el-table-column label="assessment_uuid" align="center" prop="assessmentUuid"/>-->
             <el-table-column label="序号" align="center" type="index"/>
@@ -228,21 +228,16 @@
             <el-table-column label="考核指标" align="left" prop="quota"/>
             <el-table-column label="分值" width="50" align="center" prop="score"/>
             <el-table-column label="评分标准" align="left" prop="criteria"/>
-            <el-table-column label="自评分数" width="155  " align="center" prop="selfScore">
+            <el-table-column label="自评分数" width="55" align="center" prop="selfScore"/>
+            <el-table-column label="党委评分" width="155" align="center" prop="assessorScore">
               <template slot-scope="scope">
-                <el-input-number v-if="1" v-model="scope.row.selfScore" size="small" controls-position="right"
+                <el-input-number v-if ="1" v-model="scope.row.assessorScore" size="small" controls-position="right"
                                  :precision="1" :step="0.5" :min="0" :max=scope.row.score></el-input-number>
-                <span v-else>{{scope.row.selfScore}}</span>
+                <span v-else>{{scope.row.assessorScore}}</span>
               </template>
             </el-table-column>
-            <!--        <el-table-column label="党委评分" width="80" align="center" prop="assessorScore">-->
-            <!--          <template slot-scope="scope">-->
-            <!--            <el-input v-if="1" v-model="scope.row.assessorScore"></el-input>-->
-            <!--            <span v-else>{{scope.row.assessorScore}}</span>-->
-            <!--          </template>-->
-            <!--        </el-table-column>-->
-            <!--        <el-table-column label="排序" align="center" prop="orderNum"/>-->
-            <el-table-column label="操作" width="100" align="center" class-name="small-padding fixed-width">
+<!--            <el-table-column label="排序" align="center" prop="orderNum"/>-->
+            <el-table-column label="操作" width="70" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -267,7 +262,7 @@
 
         <el-card shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
-            <span style="font-weight: bold;font-size: 16px">活动资料</span>
+            <span style="font-weight: bold;font-size: 16px">评审资料</span>
           </div>
           <el-upload
             action="#"
@@ -323,15 +318,15 @@
           <el-image-viewer
             v-if="dialogVisible"
             :on-close="closeViewer"
-            :url-list="srcList" />
+            :url-list="srcList"/>
 
         </el-card>
       </el-form>
 
 
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button v-if="this.form.orgAssessmentStatus=='1'" type="primary" @click="submitForAssessor">提交党委审核</el-button>
-        <el-button v-if="this.form.orgAssessmentStatus=='1'" type="primary" @click="allSave">保 存</el-button>
+        <el-button v-if="this.form.orgAssessmentStatus=='2'" type="primary" @click="submitForAssessor">提交审核</el-button>
+        <el-button v-if="this.form.orgAssessmentStatus=='2'" type="primary" @click="allSave">保 存</el-button>
         <el-button @click="cancel">关 闭</el-button>
       </div>
     </el-dialog>
@@ -411,8 +406,8 @@
         bodyStyle: {
           overflowY: 'auto',
           height: '',
-          marginLeft: '10%',
-          paddingRight: '10%',
+          marginLeft: '5%',
+          paddingRight: '5%',
         },
         //组织架构
         partyOrgOptions: [],
@@ -492,7 +487,7 @@
           assessment_year: undefined,
           assessmentName: undefined,
           assessmentResult: undefined,
-          orgAssessmentStatus:undefined,
+          orgAssessmentStatus: undefined,
           assessment_rank: undefined,
           delFlag: undefined,
           createBy: undefined,
@@ -574,8 +569,8 @@
 
       },
       /** 提交党委评分 */
-      submitForAssessor(){
-        this.form.orgAssessmentStatus="2";
+      submitForAssessor() {
+        this.form.orgAssessmentStatus = "3";
         if (this.form.id != undefined) {
           updateAssessment(this.form).then(response => {
             if (response.code === 200) {
@@ -588,7 +583,6 @@
             }
           });
         }
-        this.msgSuccess(this.form.orgAssessmentStatus);
       },
       /** 提交按钮 */
       submitForm: function () {
@@ -722,7 +716,7 @@
       },
       closeViewer() {
         this.dialogVisible = false;
-        this.srcList=[];
+        this.srcList = [];
       },
       handleDownload(file) {
         //console.log(file);

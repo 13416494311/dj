@@ -36,6 +36,17 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
     {
         return djOrgAssessmentMapper.selectDjOrgAssessmentById(id);
     }
+    /**
+     * 查询党组织考核
+     *
+     * @param uuid 党组织考核ID
+     * @return 党组织考核
+     */
+    @Override
+    public DjOrgAssessment selectDjOrgAssessmentByUuid(String uuid)
+    {
+        return djOrgAssessmentMapper.selectDjOrgAssessmentByUuid(uuid);
+    }
 
     /**
      * 查询党组织考核列表

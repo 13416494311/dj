@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.project.party.domain.DjOrgAssessmentList;
 import com.ruoyi.project.party.domain.DjOrgAssessmentListScore;
 import com.ruoyi.project.party.domain.DjOrgAssessmentyear;
@@ -54,6 +55,7 @@ public class DjOrgAssessmentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('party:assessment:list')")
     @GetMapping("/list")
+    @DataScope(partyOrgAlias = "o")
     public TableDataInfo list(DjOrgAssessment djOrgAssessment)
     {
         startPage();
@@ -124,7 +126,7 @@ public class DjOrgAssessmentController extends BaseController
                 djOrgAssessmentListScore.setScore(djOrgAssessmentListOne.getScore());
                 djOrgAssessmentListScore.setCriteria(djOrgAssessmentListOne.getCriteria());
                 djOrgAssessmentListScore.setOrderNum(djOrgAssessmentListOne.getOrderNum());
-                djOrgAssessmentListScore.setSelfScore(0);
+                djOrgAssessmentListScore.setSelfScore(0.0);
                 djOrgAssessmentListScore.setDelFlag("0");
                 djOrgAssessmentListScore.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
                 djOrgAssessmentListScore.setCreateTime(DateUtils.getNowDate());

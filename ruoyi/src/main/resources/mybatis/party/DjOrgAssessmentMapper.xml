@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDjOrgAssessmentVo">
-        select id, assessment_uuid, assessmentYear_uuid, party_org_id, assessment_year, assessment_name, assessment_result, org_assessment_status, assessment_rank, del_flag, create_by, create_time, update_by, update_time from dj_org_assessment
+        select id, assessment_uuid, assessmentYear_uuid, party_org_id, assessment_year, assessment_name, assessment_result, org_assessment_status, assessment_rank, del_flag, create_by, create_time, update_by, update_time from dj_org_assessment o
     </sql>
 
     <select id="selectDjOrgAssessmentList" parameterType="DjOrgAssessment" resultMap="DjOrgAssessmentResult">
@@ -36,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessmentResult != null  and assessmentResult != ''"> and assessment_result = #{assessmentResult}</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''"> and org_assessment_status = #{orgAssessmentStatus}</if>
             <if test="assessment_rank != null "> and assessment_rank = #{assessment_rank}</if>
+            ${dataScope}
         </where>
         order by assessment_year,party_org_id
     </select>
@@ -44,7 +45,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDjOrgAssessmentVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectDjOrgAssessmentByUuid" parameterType="String" resultMap="DjOrgAssessmentResult">
+        <include refid="selectDjOrgAssessmentVo"/>
+        where assessment_uuid = #{assessmentUuid}
+    </select>
+
     <insert id="insertDjOrgAssessment" parameterType="DjOrgAssessment" useGeneratedKeys="true" keyProperty="id">
         insert into dj_org_assessment
         <trim prefix="(" suffix=")" suffixOverrides=",">

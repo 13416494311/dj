@@ -18,6 +18,13 @@ public interface DjOrgAssessmentMapper
      * @return 党组织考核
      */
     public DjOrgAssessment selectDjOrgAssessmentById(Long id);
+    /**
+     * 查询党组织考核
+     *
+     * @param uuid 党组织考核uuid
+     * @return 党组织考核
+     */
+    public DjOrgAssessment selectDjOrgAssessmentByUuid(String uuid);
 
     /**
      * 查询党组织考核列表
