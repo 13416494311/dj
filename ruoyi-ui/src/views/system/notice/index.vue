@@ -345,6 +345,18 @@ export default {
         case "/study/notice/4" :
           this.noticeType = "4";
           break;
+        case "/honest/notice/5" :
+          this.noticeType = "5";
+          break;
+        case "/honest/notice/6" :
+          this.noticeType = "6";
+          break;
+        case "/honest/notice/7" :
+          this.noticeType = "7";
+          break;
+        case "/honest/notice/8" :
+          this.noticeType = "8";
+          break;
         default:
           break;
       }
