@@ -80,7 +80,7 @@
           <el-table-column label="部门" align="center" prop="deptId" :formatter="deptIdFormat" />
           <el-table-column label="党组织" align="center" prop="partyOrgId" :formatter="partyOrgIdFormat" />
           <el-table-column label="党员类型" align="center" prop="memberType" :formatter="memberTypeFormat"/>
-          <!--<el-table-column label="党员状态" align="center" prop="memberStatus" :formatter="memberStatusFormat"/>-->
+          <!--<el-table-column label="在岗状态" align="center" prop="memberStatus" :formatter="memberStatusFormat"/>-->
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button
@@ -430,10 +430,10 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="党员状态" prop="memberStatus">
+              <el-form-item label="在岗状态" prop="memberStatus">
                 <el-select :disabled="disabled"
                            v-model="form.memberStatus"
-                           style="width: 100%" placeholder="请选择党员状态">
+                           style="width: 100%" placeholder="请选择在岗状态">
                   <el-option
                     v-for="dict in memberStatusOptions"
                     :key="dict.dictValue"
@@ -487,6 +487,7 @@
             <el-col :span="8">
               <el-form-item label="党内职务" prop="partyPositionType">
                 <el-select :disabled="disabled"
+                           clearable
                            v-model="form.partyPositionType"
                            style="width: 100%" placeholder="请选择党内职务">
                   <el-option
@@ -867,7 +868,7 @@
         academicDegreeOptions: [],
         // 党员类型字典
         memberTypeOptions: [],
-        // 党员状态字典
+        // 在岗状态字典
         memberStatusOptions: [],
         // 流动党员字典
         floatingTypeOptions: [],
@@ -973,7 +974,7 @@
             { required: true, message: "党员类型不能为空", trigger: "blur" }
           ],
           memberStatus: [
-            { required: true, message: "党员状态不能为空", trigger: "blur" }
+            { required: true, message: "在岗状态不能为空", trigger: "blur" }
           ],
 
         },
@@ -1224,7 +1225,7 @@
       memberTypeFormat(row, column) {
         return this.selectDictLabel(this.memberTypeOptions, row.memberType);
       },
-      // 党员状态字典翻译
+      // 在岗状态字典翻译
       memberStatusFormat(row, column) {
         return this.selectDictLabel(this.memberStatusOptions, row.memberStatus);
       },

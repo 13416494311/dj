@@ -243,7 +243,7 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
     @Override
     public int updateDjActivityDetailed(DjActivityDetailed djActivityDetailed) {
         //如果更换负责人 待办跟着一起切换
-        if(StringUtils.isNotNull(djActivityDetailed.getPartyMemberId())){
+        /*if(StringUtils.isNotNull(djActivityDetailed.getPartyMemberId())){
             DjSysTodo sysTodo = new DjSysTodo();
             sysTodo.setUuid(djActivityDetailed.getDetailedUuid());
             List<DjSysTodo> sysTodoList = djSysTodoService.selectDjSysTodoList(sysTodo);
@@ -253,7 +253,7 @@ public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService
                 djSysTodo.setUserId(user.getUserId());
                 djSysTodoService.updateDjSysTodo(djSysTodo);
             });
-        }
+        }*/
 
         //归档时 修改待办为已办
         if("5".equals(djActivityDetailed.getStatus())){

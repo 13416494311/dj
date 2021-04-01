@@ -107,7 +107,7 @@
         academicDegreeOptions: [],
         // 党员类型字典
         memberTypeOptions: [],
-        // 党员状态字典
+        // 在岗状态字典
         memberStatusOptions: [],
         // 流动党员字典
         floatingTypeOptions: [],
@@ -272,7 +272,7 @@
             {required: true, message: "党员类型不能为空", trigger: "blur"}
           ],
           memberStatus: [
-            {required: true, message: "党员状态不能为空", trigger: "blur"}
+            {required: true, message: "在岗状态不能为空", trigger: "blur"}
           ],
           joinBranchData: [
             {required: true, message: "加入党支部日期不能为空", trigger: "blur"}
@@ -457,7 +457,7 @@
       memberTypeFormat(row, column) {
         return this.selectDictLabel(this.memberTypeOptions, row.memberType);
       },
-      // 党员状态字典翻译
+      // 在岗状态字典翻译
       memberStatusFormat(row, column) {
         return this.selectDictLabel(this.memberStatusOptions, row.memberStatus);
       },

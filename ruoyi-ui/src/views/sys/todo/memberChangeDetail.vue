@@ -287,10 +287,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="党员状态" prop="memberStatus">
+            <el-form-item label="在岗状态" prop="memberStatus">
               <el-select :disabled="disabled"
                          v-model="form.memberStatus"
-                         style="width: 100%" placeholder="请选择党员状态">
+                         style="width: 100%" placeholder="请选择在岗状态">
                 <el-option
                   v-for="dict in memberStatusOptions"
                   :key="dict.dictValue"
@@ -914,7 +914,7 @@
         academicDegreeOptions: [],
         // 党员类型字典
         memberTypeOptions: [],
-        // 党员状态字典
+        // 在岗状态字典
         memberStatusOptions: [],
         // 流动党员字典
         floatingTypeOptions: [],
@@ -1009,7 +1009,7 @@
             {validator: checkPartyMember, trigger: "blur"}
           ],
           memberStatus: [
-            {required: true, message: "党员状态不能为空", trigger: "blur"},
+            {required: true, message: "在岗状态不能为空", trigger: "blur"},
             {validator: checkPartyMember, trigger: "blur"}
           ],
           housePhone: [

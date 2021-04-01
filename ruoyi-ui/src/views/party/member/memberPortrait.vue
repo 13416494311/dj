@@ -436,7 +436,7 @@
         administrativePositionOptions: [],
         // 党员类型字典
         memberTypeOptions: [],
-        // 党员状态字典
+        // 在岗状态字典
         memberStatusOptions: [],
         // 党内职务字典
         partyPositionTypeOptions: [],
@@ -554,7 +554,7 @@
       memberTypeFormat(val) {
         return this.selectDictLabel(this.memberTypeOptions, val);
       },
-      // 党员状态字典翻译
+      // 在岗状态字典翻译
       memberStatusFormat(val) {
         return this.selectDictLabel(this.memberStatusOptions, val);
       },

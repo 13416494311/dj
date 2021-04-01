@@ -69,6 +69,8 @@ public interface IDjPartyMemberService
     public int updateDjPartyMember(DjPartyMember djPartyMember);
 
 
+    public int updatePartyPositionType(DjPartyMember djPartyMember);
+
     public int updateAvatar(DjPartyMember djPartyMember);
 
     /**

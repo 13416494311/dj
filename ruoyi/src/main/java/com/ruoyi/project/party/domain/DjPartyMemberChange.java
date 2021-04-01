@@ -152,8 +152,8 @@ public class DjPartyMemberChange extends BaseEntity
     @Excel(name = "党员类型")
     private String memberType;
 
-    /** 党员状态 */
-    @Excel(name = "党员状态")
+    /** 在岗状态 */
+    @Excel(name = "在岗状态")
     private String memberStatus;
 
     /** 加入党支部日期 */

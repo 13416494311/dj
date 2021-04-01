@@ -174,7 +174,7 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
 
         activityMemberList = activityMemberList.stream().filter(
                 activityMember->"2".equals(activityMember.getStatus()) ||"3".equals(activityMember.getStatus()) ||"4".equals(activityMember.getStatus()))
-                        .collect(Collectors.toList());
+                .collect(Collectors.toList());
         value[0] = Long.valueOf(CollectionUtils.isEmpty(activityMemberList)?0:activityMemberList.size());
 
         // 学习教育
@@ -452,6 +452,13 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
         return djPartyMemberMapper.updateDjPartyMember(djPartyMember);
     }
 
+
+    @Override
+    public int updatePartyPositionType(DjPartyMember djPartyMember){
+        return djPartyMemberMapper. updatePartyPositionType(djPartyMember);
+    }
+
+    @Override
     public int updateAvatar(DjPartyMember djPartyMember){
 
         SysUser sysUser = userService.selectUserByPartyMemberId(djPartyMember.getMemberId());

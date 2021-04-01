@@ -187,6 +187,11 @@ public class DjPartyMemberChangeController extends BaseController
                 partyMember.setUpdateBy(null);
                 partyMember.setUpdateTime(null);
                 djPartyMemberService.updateDjPartyMember(partyMember);
+
+                if(memberChange.getPartyPositionType()==null){
+                    djPartyMemberService.updatePartyPositionType(partyMember);
+                }
+
                 break;
             case "del" :
                 partyMember.setMemberId(memberChange.getPartyMemberId());
@@ -206,7 +211,7 @@ public class DjPartyMemberChangeController extends BaseController
      * 删除党员变更表
      */
     @Log(title = "党员变更表", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{memberIds}")
+    @DeleteMapping("/{memberIds}")
     public AjaxResult remove(@PathVariable Long[] memberIds)
     {
         return toAjax(djPartyMemberChangeService.deleteDjPartyMemberChangeByIds(memberIds));

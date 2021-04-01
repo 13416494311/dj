@@ -42,8 +42,8 @@ public class DjPartyTrainMember extends BaseEntity
 
     private Integer rankNum;
 
-    /** 参与党员状态 */
-    @Excel(name = "参与党员状态")
+    /** 参与在岗状态 */
+    @Excel(name = "参与在岗状态")
     private String status;
 
     /** 删除标志（0代表存在 2代表删除） */
