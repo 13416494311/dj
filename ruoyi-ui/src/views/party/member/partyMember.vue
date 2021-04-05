@@ -1343,6 +1343,10 @@
         this.orgOptions= this.partyOrgOptions;
         this.form.partyOrgId = Number(this.partyOrg.partyOrgId);
         this.changeMemberType();
+        this.$nextTick(()=>{
+          this.$refs.specialty.init("0");
+          this.$refs.exemplary.init("0");
+        })
         this.open = true;
         this.title = "添加党员信息";
       },

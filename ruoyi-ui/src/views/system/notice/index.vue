@@ -32,6 +32,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
+          v-if="show()"
           v-hasPermi="['system:notice:add']"
         >新增</el-button>
       </el-col>
@@ -42,6 +43,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
+          v-if="show()"
           v-hasPermi="['system:notice:edit']"
         >修改</el-button>
       </el-col>
@@ -52,6 +54,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
+          v-if="show()"
           v-hasPermi="['system:notice:remove']"
         >删除</el-button>
       </el-col>
@@ -95,6 +98,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
+            v-if="show()"
             v-hasPermi="['system:notice:edit']"
           >修改</el-button>
           <el-button
@@ -108,6 +112,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
+            v-if="show()"
             v-hasPermi="['system:notice:remove']"
           >删除</el-button>
         </template>
@@ -253,7 +258,7 @@ import {listFile, upload, delFile} from "@/api/system/file";
 import {downLoadZip} from "@/utils/zipdownload";
 import PreView from './preView';
 import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
-
+import { getUserProfile } from "@/api/system/user";
 
 export default {
   name: "Notice",
@@ -314,6 +319,7 @@ export default {
       srcList:[],
       noticeUuid:undefined,
       noticeType:undefined,
+      user: {},
     };
   },
   created() {
@@ -328,8 +334,14 @@ export default {
     window.addEventListener('resize', this.getHeight);
     this.getHeight()
     this.getNoticeTypeByPath()
+    this.getUser();
   },
   methods: {
+    getUser() {
+      getUserProfile().then(response => {
+        this.user = response.data;
+      });
+    },
     getNoticeTypeByPath(){
       let path = this.$route.path;
       switch (path) {
@@ -490,6 +502,20 @@ export default {
       this.ids = selection.map(item => item.noticeId)
       this.single = selection.length!=1
       this.multiple = !selection.length
+    },
+    show(){
+      let showFlag = true;
+      let roles = this.user.roles;
+      if(roles && roles.length!=0){
+        for(let i=0;i<roles.length;i++){
+          //纪委副书记角色
+          if(roles[i].roleId == 14 && "1,2,3,4".indexOf(this.noticeType)!=-1){
+            showFlag = false;
+            break;
+          }
+        }
+      }
+      return showFlag ;
     },
     /** 新增按钮操作 */
     handleAdd() {

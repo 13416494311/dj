@@ -191,6 +191,9 @@
           return false
         }
       },
+      partyOrgId: {
+        type: Number,
+      },
     },
     components: { UploadAllFile,ChooseAuditUser,ChangeDetail, selectTree },
     data() {
@@ -298,6 +301,11 @@
       /** 查询党组织换届列表 */
       getList() {
         this.loading = true;
+
+        if(this.partyOrgId !=undefined){
+          this.queryParams.partyOrgId = this.partyOrgId;
+        }
+
         listPartyChange(this.queryParams).then(response => {
           this.partyChangeList = response.rows;
           this.total = response.total;
