@@ -6,6 +6,7 @@
 
     <resultMap type="DjPartyMember" id="DjPartyMemberResult">
         <result property="memberId" column="member_id"/>
+        <result property="partyMemberUuid" column="party_member_uuid"/>
         <result property="partyOrgId" column="party_org_id"/>
         <result property="workNo" column="work_no"/>
         <result property="avatar" column="avatar"/>
@@ -57,7 +58,7 @@
     </resultMap>
 
     <sql id="selectDjPartyMemberVo">
-        select member_id, party_org_id, work_no, avatar, member_name, sex, mobile, identity_card,
+        select member_id, party_member_uuid, party_org_id, work_no, avatar, member_name, sex, mobile, identity_card,
         birthday, company_name, dept_id, administrative_position,party_position_type,
         title, post_id, working_date,
          nation, polity, work_identity, education, academic_degree, native_place, home_address,
@@ -69,7 +70,7 @@
     </sql>
 
     <sql id="selectDjPartyMemberVo1">
-        select pm.member_id, pm.party_org_id, pm.work_no, pm.avatar, pm.member_name, pm.sex, pm.mobile,
+        select pm.member_id, pm.party_member_uuid, pm.party_org_id, pm.work_no, pm.avatar, pm.member_name, pm.sex, pm.mobile,
         pm.identity_card, pm.birthday, pm.company_name, pm.dept_id, pm.administrative_position,
         pm.party_position_type , pm.title,
         pm.post_id, pm.working_date,pm.nation, polity, pm.work_identity, pm.education, pm.academic_degree,
@@ -87,6 +88,7 @@
         <where>
             <if test="delFlag != null ">and pm.del_flag = #{delFlag}</if>
             <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="partyMemberUuid != null ">and party_member_uuid = #{partyMemberUuid}</if>
             <if test="partyOrgId != null ">
                 AND (
                 pm.party_org_id = #{partyOrgId}
@@ -170,6 +172,7 @@
         <where>
             <if test="delFlag != null ">and pm.del_flag = #{delFlag}</if>
             <if test="memberId != null ">and pm.member_id = #{memberId}</if>
+            <if test="partyMemberUuid != null ">and pm.party_member_uuid = #{partyMemberUuid}</if>
             <if test="partyOrgId != null ">
                 AND pm.party_org_id = #{partyOrgId}
             </if>
@@ -244,6 +247,7 @@
     <insert id="insertDjPartyMember" parameterType="DjPartyMember" useGeneratedKeys="true" keyProperty="memberId">
         insert into dj_party_member
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="partyMemberUuid != null ">party_member_uuid,</if>
             <if test="partyOrgId != null ">party_org_id,</if>
             <if test="workNo != null  and workNo != ''">work_no,</if>
             <if test="avatar != null  and avatar != ''">avatar,</if>
@@ -294,6 +298,7 @@
             <if test="updateTime != null ">update_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="partyMemberUuid != null ">#{partyMemberUuid},</if>
             <if test="partyOrgId != null ">#{partyOrgId},</if>
             <if test="workNo != null  and workNo != ''">#{workNo},</if>
             <if test="avatar != null  and avatar != ''">#{avatar},</if>
@@ -348,6 +353,7 @@
     <update id="updateDjPartyMember" parameterType="DjPartyMember">
         update dj_party_member
         <trim prefix="SET" suffixOverrides=",">
+            <if test="partyMemberUuid != null ">party_member_uuid = #{partyMemberUuid},</if>
             <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
             <if test="workNo != null  and workNo != ''">work_no = #{workNo},</if>
             <if test="avatar != null  and avatar != ''">avatar = #{avatar},</if>

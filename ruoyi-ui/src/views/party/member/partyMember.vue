@@ -394,6 +394,9 @@
           </el-row>
         </el-card>
 
+        <member-education  ref="memberEducation"  :disabled ="disabled"/>
+
+
         <el-card shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">党员信息</span>
@@ -734,10 +737,11 @@
   import Specialty from "../../members/specialty/specialty";
   import Exemplary from "../../members/exemplary/exemplary";
   import MemberPortrait from "./memberPortrait";
+  import MemberEducation from "../memberEducation/memberEducation";
 
   export default {
     name: "PartyMember",
-    components: {MemberPortrait, Exemplary, Specialty, ChooseAuditUser, Treeselect,selectTree},
+    components: {MemberEducation, MemberPortrait, Exemplary, Specialty, ChooseAuditUser, Treeselect,selectTree},
     data() {
       let checkIdentityCard = (rule, value, callback) => {
         if (!value) {
@@ -1270,6 +1274,7 @@
       reset() {
         this.form = {
           memberId: undefined,
+          partyMemberUuid: undefined,
           partyOrgId: undefined,
           workNo: undefined,
           avatar: undefined,
@@ -1342,10 +1347,12 @@
         this.disabled = false;
         this.orgOptions= this.partyOrgOptions;
         this.form.partyOrgId = Number(this.partyOrg.partyOrgId);
+        this.form.partyMemberUuid = this.uuid()
         this.changeMemberType();
         this.$nextTick(()=>{
           this.$refs.specialty.init("0");
           this.$refs.exemplary.init("0");
+          this.$refs.memberEducation.init(this.form.partyMemberUuid);
         })
         this.open = true;
         this.title = "添加党员信息";
@@ -1358,6 +1365,7 @@
         this.orgOptions= this.partyOrgOptionsByEdait;
         getPartyMember(memberId).then(response => {
           this.form = response.data;
+          this.form.partyMemberUuid = this.form.partyMemberUuid==undefined?this.uuid():this.form.partyMemberUuid;
           this.form.cognizance = this.form.memberHelp!=null?this.form.memberHelp.cognizance:undefined;
           this.form.economicSituation = this.form.memberHelp!=null?this.form.memberHelp.economicSituation:undefined;
           this.avatarUrl=process.env.VUE_APP_BASE_API + this.form.avatar;
@@ -1367,6 +1375,7 @@
           this.changeMemberType();
           this.$refs.specialty.init(this.form.memberId);
           this.$refs.exemplary.init(this.form.memberId);
+          this.$refs.memberEducation.init(this.form.partyMemberUuid);
         });
       },
       handlePortrait(row){
@@ -1380,6 +1389,7 @@
         this.orgOptions= this.partyOrgOptionsByEdait;
         getPartyMember(memberId).then(response => {
           this.form = response.data;
+          this.form.partyMemberUuid = this.form.partyMemberUuid==undefined?this.uuid():this.form.partyMemberUuid;
           this.form.cognizance = this.form.memberHelp!=null?this.form.memberHelp.cognizance:undefined;
           this.form.economicSituation = this.form.memberHelp!=null?this.form.memberHelp.economicSituation:undefined;
           this.avatarUrl=process.env.VUE_APP_BASE_API + this.form.avatar;
@@ -1389,6 +1399,7 @@
           this.changeMemberType();
           this.$refs.specialty.init(this.form.memberId);
           this.$refs.exemplary.init(this.form.memberId);
+          this.$refs.memberEducation.init(this.form.partyMemberUuid);
         });
       },
       chooseAuditUser(){

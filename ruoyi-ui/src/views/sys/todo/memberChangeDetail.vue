@@ -252,6 +252,9 @@
           </el-col>
         </el-row>
       </el-card>
+
+      <member-education  ref="memberEducation"  :disabled ="true"/>
+
       <el-card shadow="always" style="margin-bottom: 30px;">
         <div slot="header" style="height: 25px">
           <span style="font-weight: bold;font-size: 16px">党员信息</span>
@@ -578,11 +581,12 @@
   import {listLog} from "@/api/sys/log";
   import {listTodo, getTodo, delTodo, addTodo, updateTodo, exportTodo} from "@/api/sys/todo";
   import auditResult from "../../audit/auditResult";
+  import MemberEducation from "../../party/memberEducation/memberEducation";
 
 
   export default {
     name: "PartyMemberChange",
-    components: {Treeselect, selectTree, auditResult},
+    components: {MemberEducation, Treeselect, selectTree, auditResult},
     data() {
       let checkPartyMember = (rule, value, callback) => {
         let field = rule.field;
@@ -1253,6 +1257,7 @@
             this.avatarUrl = process.env.VUE_APP_BASE_API + this.form.avatar;
             this.getLogList();
           }).then(() => {
+            this.$refs.memberEducation.init(this.form.partyMemberUuid);
             if (this.form.changeType == "edit") {
               getPartyMember(this.form.partyMemberId).then(response => {
                 this.partyMember = response.data;

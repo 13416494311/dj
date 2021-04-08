@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.party.mapper.DjPartyMemberEducationMapper">
+
+    <resultMap type="DjPartyMemberEducation" id="DjPartyMemberEducationResult">
+        <result property="educationId"    column="education_id"    />
+        <result property="educationUuid"    column="education_uuid"    />
+        <result property="educationType"    column="education_type"    />
+        <result property="school"    column="school"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="major"    column="major"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjPartyMemberEducationVo">
+        select education_id, education_uuid, education_type, school,
+        start_date, end_date, major, create_by, create_time, update_by, update_time from dj_party_member_education
+    </sql>
+
+    <select id="selectDjPartyMemberEducationList" parameterType="DjPartyMemberEducation" resultMap="DjPartyMemberEducationResult">
+        <include refid="selectDjPartyMemberEducationVo"/>
+        <where>
+            <if test="educationUuid != null  and educationUuid != ''"> and education_uuid = #{educationUuid}</if>
+            <if test="educationType != null  and educationType != ''"> and education_type = #{educationType}</if>
+            <if test="school != null  and school != ''"> and school like concat('%', #{school}, '%')</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="major != null  and major != ''"> and major = #{major}</if>
+        </where>
+        order by start_date asc
+    </select>
+
+    <select id="selectDjPartyMemberEducationById" parameterType="Long" resultMap="DjPartyMemberEducationResult">
+        <include refid="selectDjPartyMemberEducationVo"/>
+        where education_id = #{educationId}
+    </select>
+
+    <insert id="insertDjPartyMemberEducation" parameterType="DjPartyMemberEducation">
+        insert into dj_party_member_education
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="educationId != null ">education_id,</if>
+            <if test="educationUuid != null  and educationUuid != ''">education_uuid,</if>
+            <if test="educationType != null  and educationType != ''">education_type,</if>
+            <if test="school != null  and school != ''">school,</if>
+            <if test="startDate != null ">start_date,</if>
+            <if test="endDate != null ">end_date,</if>
+            <if test="major != null  and major != ''">major,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="educationId != null ">#{educationId},</if>
+            <if test="educationUuid != null  and educationUuid != ''">#{educationUuid},</if>
+            <if test="educationType != null  and educationType != ''">#{educationType},</if>
+            <if test="school != null  and school != ''">#{school},</if>
+            <if test="startDate != null ">#{startDate},</if>
+            <if test="endDate != null ">#{endDate},</if>
+            <if test="major != null  and major != ''">#{major},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjPartyMemberEducation" parameterType="DjPartyMemberEducation">
+        update dj_party_member_education
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="educationUuid != null  and educationUuid != ''">education_uuid = #{educationUuid},</if>
+            <if test="educationType != null  and educationType != ''">education_type = #{educationType},</if>
+            <if test="school != null  and school != ''">school = #{school},</if>
+            <if test="startDate != null ">start_date = #{startDate},</if>
+            <if test="endDate != null ">end_date = #{endDate},</if>
+            <if test="major != null  and major != ''">major = #{major},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where education_id = #{educationId}
+    </update>
+
+    <delete id="deleteDjPartyMemberEducationById" parameterType="Long">
+        delete from dj_party_member_education where education_id = #{educationId}
+    </delete>
+
+    <delete id="deleteDjPartyMemberEducationByIds" parameterType="String">
+        delete from dj_party_member_education where education_id in
+        <foreach item="educationId" collection="array" open="(" separator="," close=")">
+            #{educationId}
+        </foreach>
+    </delete>
+
+</mapper>

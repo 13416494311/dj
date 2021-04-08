@@ -9,6 +9,7 @@
         <result property="memberUuid" column="member_uuid"/>
         <result property="changeType" column="change_type"/>
         <result property="partyMemberId" column="party_member_id"/>
+        <result property="partyMemberUuid" column="party_member_uuid"/>
         <result property="auditState" column="audit_state"/>
         <result property="partyOrgId" column="party_org_id"/>
         <result property="workNo" column="work_no"/>
@@ -61,7 +62,7 @@
     </resultMap>
 
     <sql id="selectDjPartyMemberChangeVo">
-        select member_id, member_uuid, change_type, party_member_id, audit_state, party_org_id,
+        select member_id, member_uuid, change_type, party_member_id,  party_member_uuid,audit_state, party_org_id,
         work_no, avatar, member_name, sex, mobile, identity_card, birthday, company_name,
         dept_id, administrative_position,party_position_type , title, post_id, working_date, nation, polity,
         work_identity, education, academic_degree, native_place, home_address, house_phone,
@@ -78,6 +79,7 @@
             <if test="memberUuid != null  and memberUuid != ''">and member_uuid = #{memberUuid}</if>
             <if test="changeType != null  and changeType != ''">and change_type = #{changeType}</if>
             <if test="partyMemberId != null ">and party_member_id = #{partyMemberId}</if>
+            <if test="partyMemberUuid != null ">and party_member_uuid = #{partyMemberUuid}</if>
             <if test="auditState != null  and auditState != ''">and audit_state = #{auditState}</if>
             <if test="partyOrgId != null ">and party_org_id = #{partyOrgId}</if>
             <if test="workNo != null  and workNo != ''">and work_no = #{workNo}</if>
@@ -153,6 +155,7 @@
             <if test="memberUuid != null  and memberUuid != ''">member_uuid,</if>
             <if test="changeType != null  and changeType != ''">change_type,</if>
             <if test="partyMemberId != null ">party_member_id,</if>
+            <if test="partyMemberUuid != null ">party_member_uuid,</if>
             <if test="auditState != null  and auditState != ''">audit_state,</if>
             <if test="partyOrgId != null ">party_org_id,</if>
             <if test="workNo != null  and workNo != ''">work_no,</if>
@@ -207,6 +210,7 @@
             <if test="memberUuid != null  and memberUuid != ''">#{memberUuid},</if>
             <if test="changeType != null  and changeType != ''">#{changeType},</if>
             <if test="partyMemberId != null ">#{partyMemberId},</if>
+            <if test="partyMemberUuid != null ">#{partyMemberUuid},</if>
             <if test="auditState != null  and auditState != ''">#{auditState},</if>
             <if test="partyOrgId != null ">#{partyOrgId},</if>
             <if test="workNo != null  and workNo != ''">#{workNo},</if>
@@ -265,6 +269,7 @@
             <if test="memberUuid != null  and memberUuid != ''">member_uuid = #{memberUuid},</if>
             <if test="changeType != null  and changeType != ''">change_type = #{changeType},</if>
             <if test="partyMemberId != null ">party_member_id = #{partyMemberId},</if>
+            <if test="partyMemberUuid != null ">party_member_uuid = #{partyMemberUuid},</if>
             <if test="auditState != null  and auditState != ''">audit_state = #{auditState},</if>
             <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
             <if test="workNo != null  and workNo != ''">work_no = #{workNo},</if>

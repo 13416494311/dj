@@ -35,6 +35,8 @@ public class DjPartyMemberChange extends BaseEntity
     @Excel(name = "关联党组织成员id")
     private Long partyMemberId;
 
+    private String partyMemberUuid;
+
     /** 审批状态 */
     @Excel(name = "审批状态")
     private String auditState;

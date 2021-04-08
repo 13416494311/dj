@@ -178,6 +178,7 @@ public class DjPartyMemberChangeController extends BaseController
                 djPartyMemberService.insertDjPartyMember(partyMember);
                 memberChange.setPartyMemberId(partyMember.getMemberId());
                 djPartyMemberChangeService.updateDjPartyMemberChange(memberChange);
+                //todo  删除入党积极分子
                 break;
             case "edit" :
                 BeanUtils.copyBeanProp(partyMember,memberChange);
