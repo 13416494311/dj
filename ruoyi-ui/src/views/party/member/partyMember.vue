@@ -61,7 +61,7 @@
             >新增
             </el-button>
           </el-col>
-          <!--<el-col :span="1.5">
+          <el-col :span="1.5">
             <el-button
               type="warning"
               icon="el-icon-download"
@@ -70,7 +70,7 @@
               v-hasPermi="['party:member:export']"
             >导出
             </el-button>
-          </el-col>-->
+          </el-col>
         </el-row>
         <el-table :stripe="true"
                   :border="true" v-loading="loading" :data="partyMemberList" @selection-change="handleSelectionChange">
@@ -1489,7 +1489,7 @@
       /** 导出按钮操作 */
       handleExport() {
         const queryParams = this.queryParams;
-        this.$confirm('是否确认导出所有党员信息数据项?', "警告", {
+        this.$confirm('是否确认导出所选党组织所有党员信息数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"

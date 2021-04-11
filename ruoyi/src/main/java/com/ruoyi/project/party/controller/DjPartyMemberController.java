@@ -11,6 +11,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.poi.ExcelTemplateUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.framework.config.RuoYiConfig;
 import com.ruoyi.project.activity.domain.DjActivityDetailed;
@@ -71,6 +72,8 @@ public class DjPartyMemberController extends BaseController
     private ISysDictDataService dictDataService;
     @Autowired
     private IDjPartyOrgService djPartyOrgService;
+    @Autowired
+    private IDjPartyMemberEducationService djPartyMemberEducationService;
 
     @GetMapping("/getMemberCount")
     public AjaxResult getMemberCount()
@@ -124,11 +127,83 @@ public class DjPartyMemberController extends BaseController
      */
     @Log(title = "党员信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
+    @DataScope( partyOrgAlias = "pm"  ,userAlias = "u")
     public AjaxResult export(DjPartyMember djPartyMember)
     {
+
+        djPartyMember.setPageSize(null);
+        djPartyMember.setPageNum(null);
+        if(StringUtils.isNull(djPartyMember.getDelFlag())){
+            djPartyMember.setDelFlag("0");
+        }else if("all".equals(djPartyMember.getDelFlag())){
+            djPartyMember.setDelFlag(null);
+        }
         List<DjPartyMember> list = djPartyMemberService.selectDjPartyMemberList(djPartyMember);
-        ExcelUtil<DjPartyMember> util = new ExcelUtil<DjPartyMember>(DjPartyMember.class);
-        return util.exportExcel(list, "partyMember");
+
+
+        String fileName="广东公司党员名单花名册.xls";
+        String excelTemplate="partyMember.xls";
+
+        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> cls = new HashMap<>();
+        data.put("cls", cls);
+        cls.put("exportDate",DateUtils.parseDateToStr("yyyy年MM月",new Date()));
+
+        List<Map<String,Object>> member = new ArrayList<Map<String,Object>>();
+        List<Map<String,Object>> member1 = new ArrayList<Map<String,Object>>();
+
+        list.stream().forEach(partyMember->{
+            Map<String,Object> map = new HashMap<String,Object>();
+            map.put("memberName",partyMember.getMemberName()==null?"":partyMember.getMemberName());
+            map.put("sex",partyMember.getSex()==null?"":dictDataService.selectDictLabel("sys_user_sex",partyMember.getSex()));
+            map.put("nation",partyMember.getNation()==null?"":dictDataService.selectDictLabel("nation_type",partyMember.getNation()));
+            map.put("birthday",partyMember.getBirthday()==null?"":DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,partyMember.getBirthday()));
+            map.put("age",partyMember.getBirthday()==null?"":DateUtils.getYearReduce(partyMember.getBirthday(),new Date()));
+            map.put("workingDate",partyMember.getWorkingDate()==null?"":DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,partyMember.getWorkingDate()));
+
+            if(StringUtils.isNotEmpty(partyMember.getPartyMemberUuid())){
+                DjPartyMemberEducation djPartyMemberEducation = new DjPartyMemberEducation();
+                djPartyMemberEducation.setEducationUuid(partyMember.getPartyMemberUuid());
+                List<DjPartyMemberEducation> educationList = djPartyMemberEducationService.selectDjPartyMemberEducationList(djPartyMemberEducation);
+                final String[] educationType = {""};
+                final String[] school = {""};
+                educationList.stream().forEach(education->{
+                    educationType[0] +=education.getEducationType()==null?"\n":
+                            dictDataService.selectDictLabel("education_type1",education.getEducationType()) + "\n";
+                    school[0] +=education.getSchool()==null?" \n":education.getSchool() + "\n";
+                });
+                map.put("educationType",educationType[0]);
+                map.put("school",school[0]);
+            }else{
+                map.put("educationType","");
+                map.put("school","");
+            }
+
+            map.put("joinData",partyMember.getJoinData()==null?"":DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,partyMember.getJoinData()));
+            map.put("formalData",partyMember.getFormalData()==null?"":DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,partyMember.getFormalData()));
+            map.put("deptName",partyMember.getSysDept()==null?"":partyMember.getSysDept().getDeptName());
+            map.put("administrativePosition",partyMember.getAdministrativePosition()==null?"":
+                    dictDataService.selectDictLabel("administrative_position_type",partyMember.getAdministrativePosition()));
+            map.put("title",partyMember.getTitle()==null?"":partyMember.getTitle());
+            map.put("identityCard",partyMember.getIdentityCard()==null?"":partyMember.getIdentityCard());
+            map.put("companyName",partyMember.getCompanyName()==null?"":partyMember.getCompanyName());
+
+            if("1".equals(partyMember.getMemberStatus())){
+                map.put("memberStatus",partyMember.getMemberStatus()==null?"":
+                        dictDataService.selectDictLabel("party_member_status",partyMember.getMemberStatus()));
+                member.add(map);
+            }else{
+                map.put("memberStatus",partyMember.getMemberStatus()==null?"":
+                        dictDataService.selectDictLabel("party_member_status",partyMember.getMemberStatus()));
+                member1.add(map);
+            }
+        });
+
+
+        cls.put("member",member);
+        cls.put("member1",member1);
+        ExcelTemplateUtil.process(data,excelTemplate,fileName);
+        return  AjaxResult.success(fileName);
     }
 
     /**
