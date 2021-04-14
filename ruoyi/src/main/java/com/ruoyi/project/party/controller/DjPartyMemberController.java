@@ -140,9 +140,15 @@ public class DjPartyMemberController extends BaseController
         }
         List<DjPartyMember> list = djPartyMemberService.selectDjPartyMemberList(djPartyMember);
 
-
-        String fileName="广东公司党员名单花名册.xls";
-        String excelTemplate="partyMember.xls";
+        String fileName = "";
+        String excelTemplate ="";
+        if("3".equals(djPartyMember.getMemberType())){
+            fileName="入党积极分子名单.xlsx";
+            excelTemplate="partyPreMember.xlsx";
+        }else{
+            fileName="广东公司党员名单花名册.xls";
+            excelTemplate="partyMember.xls";
+        }
 
         Map<String, Object> data = new HashMap<>();
         Map<String, Object> cls = new HashMap<>();
@@ -174,6 +180,20 @@ public class DjPartyMemberController extends BaseController
                 });
                 map.put("educationType",educationType[0]);
                 map.put("school",school[0]);
+
+
+                if(!CollectionUtils.isEmpty(educationList)){
+                    DjPartyMemberEducation education = educationList.get(educationList.size()-1);
+                    map.put("highestEducationType",education.getEducationType()==null?"":
+                            dictDataService.selectDictLabel("education_type1",education.getEducationType()));
+                }
+                djPartyMemberEducation.setFullTimeType("Y");
+                educationList  = djPartyMemberEducationService.selectDjPartyMemberEducationList(djPartyMemberEducation);
+                if(!CollectionUtils.isEmpty(educationList)){
+                    DjPartyMemberEducation education = educationList.get(educationList.size()-1);
+                    map.put("firstEducationType",education.getEducationType()==null?"":
+                            dictDataService.selectDictLabel("education_type1",education.getEducationType()));
+                }
             }else{
                 map.put("educationType","");
                 map.put("school","");
@@ -186,7 +206,8 @@ public class DjPartyMemberController extends BaseController
                     dictDataService.selectDictLabel("administrative_position_type",partyMember.getAdministrativePosition()));
             map.put("title",partyMember.getTitle()==null?"":partyMember.getTitle());
             map.put("identityCard",partyMember.getIdentityCard()==null?"":partyMember.getIdentityCard());
-            map.put("companyName",partyMember.getCompanyName()==null?"":partyMember.getCompanyName());
+            map.put("partyOrgFullName",partyMember.getDjPartyOrg()==null?"": partyMember.getDjPartyOrg().getPartyOrgFullName());
+            map.put("createTime",partyMember.getCreateTime()==null?"":DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,partyMember.getCreateTime()));
 
             if("1".equals(partyMember.getMemberStatus())){
                 map.put("memberStatus",partyMember.getMemberStatus()==null?"":
@@ -203,8 +224,10 @@ public class DjPartyMemberController extends BaseController
         cls.put("member",member);
         cls.put("member1",member1);
         ExcelTemplateUtil.process(data,excelTemplate,fileName);
+
         return  AjaxResult.success(fileName);
     }
+
 
     /**
      * 获取党员信息详细信息
@@ -246,6 +269,16 @@ public class DjPartyMemberController extends BaseController
         return AjaxResult.success(memberChange);
     }
 
+    /**
+     * 新增党员信息
+     */
+    @Log(title = "党员信息", businessType = BusinessType.INSERT)
+    @PostMapping(value = "add")
+    public AjaxResult add1(@RequestBody DjPartyMember djPartyMember)
+    {
+        return AjaxResult.success(djPartyMemberService.insertDjPartyMember(djPartyMember));
+    }
+
     @Log(title = "党员信息", businessType = BusinessType.INSERT)
     @PostMapping(value = "/updateAvatar")
     public AjaxResult updateAvatar(@RequestBody DjPartyMember partyMember)
@@ -278,6 +311,16 @@ public class DjPartyMemberController extends BaseController
 
 
         return AjaxResult.success(memberChange);
+    }
+
+    /**
+     * 修改党员信息
+     */
+    @Log(title = "党员信息", businessType = BusinessType.UPDATE)
+    @PutMapping(value = "/update")
+    public AjaxResult update(@RequestBody DjPartyMember djPartyMember)
+    {
+        return AjaxResult.success(djPartyMemberService.updateDjPartyMember(djPartyMember));
     }
 
 

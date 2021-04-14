@@ -99,6 +99,10 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
         return partyMember;
     }
 
+    public DjPartyMember selectPartyMemberByUuid(String memberUuid){
+        return djPartyMemberMapper.selectPartyMemberByUuid(memberUuid);
+    }
+
     /**
      * 查询党员信息
      *
@@ -345,7 +349,7 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     public int insertDjPartyMember(DjPartyMember djPartyMember)
     {
         //生活困难
-        if("1".equals(djPartyMember.getLifeDifficulty())){
+        if("1".equals(djPartyMember.getLifeDifficulty()) && !"3".equals(djPartyMember.getMemberType()) ){
             DjPartyMemberHelp memberHelp = new DjPartyMemberHelp();
             memberHelp.setHelpUuid(UUID.randomUUID().toString());
             memberHelp.setPartyMemberId(djPartyMember.getMemberId());
@@ -416,7 +420,7 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
     {
 
         //生活困难
-        if("Y".equals(djPartyMember.getLifeDifficulty())){
+        if("Y".equals(djPartyMember.getLifeDifficulty()) && !"3".equals(djPartyMember.getMemberType())){
             DjPartyMember partyMember =djPartyMemberMapper.selectDjPartyMemberById(djPartyMember.getMemberId());
             //之前不是生活困难
             if(!"Y".equals(partyMember.getLifeDifficulty())){

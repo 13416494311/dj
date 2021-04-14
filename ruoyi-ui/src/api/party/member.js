@@ -49,6 +49,14 @@ export function addPartyMember(data) {
     data: data
   })
 }
+// 新增党员信息
+export function addPartyMember1(data) {
+  return request({
+    url: '/party/member/add',
+    method: 'post',
+    data: data
+  })
+}
 
 // 修改党员信息
 export function updatePartyMember(data) {
@@ -58,6 +66,15 @@ export function updatePartyMember(data) {
     data: data
   })
 }
+// 修改党员信息
+export function updatePartyMember1(data) {
+  return request({
+    url: '/party/member/update',
+    method: 'put',
+    data: data
+  })
+}
+
 export function updatePartyMemberAvatar(data) {
   return request({
     url: '/party/member/updateAvatar',

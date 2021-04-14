@@ -22,6 +22,8 @@ public interface IDjPartyMemberService
      * @return 党员信息
      */
     public DjPartyMember selectPartyMemberById(Long memberId);
+
+    public DjPartyMember selectPartyMemberByUuid(String memberUuid);
     /**
      * 查询党员信息
      *

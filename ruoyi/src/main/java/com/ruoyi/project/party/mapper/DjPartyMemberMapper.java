@@ -25,6 +25,7 @@ public interface DjPartyMemberMapper
      */
     public DjPartyMember selectDjPartyMemberById(Long memberId);
 
+    public DjPartyMember selectPartyMemberByUuid(String memberUuid);
     /**
      * 查询党员信息列表
      *

@@ -166,33 +166,32 @@ public class DjPartyMemberChangeController extends BaseController
 
     private void changePartyMember(DjPartyMemberChange memberChange){
         DjPartyMember partyMember = new DjPartyMember();
+        BeanUtils.copyBeanProp(partyMember,memberChange);
+        partyMember.setCreateBy(null);
+        partyMember.setCreateTime(null);
+        partyMember.setUpdateBy(null);
+        partyMember.setUpdateTime(null);
+
         switch (memberChange.getChangeType()){
             case "add" :
-                partyMember = new DjPartyMember();
-                BeanUtils.copyBeanProp(partyMember,memberChange);
-                partyMember.setMemberId(null);
-                partyMember.setCreateBy(null);
-                partyMember.setCreateTime(null);
-                partyMember.setUpdateBy(null);
-                partyMember.setUpdateTime(null);
-                djPartyMemberService.insertDjPartyMember(partyMember);
-                memberChange.setPartyMemberId(partyMember.getMemberId());
-                djPartyMemberChangeService.updateDjPartyMemberChange(memberChange);
-                //todo  删除入党积极分子
+                if("3".equals(partyMember.getMemberType())){
+                    DjPartyMember member = djPartyMemberService.selectPartyMemberByUuid(memberChange.getPartyMemberUuid());
+                    partyMember.setMemberId(member.getMemberId());
+                    partyMember.setMemberType("5");
+                    djPartyMemberService.updateDjPartyMember(partyMember);
+                }else{
+                    partyMember.setMemberId(null);
+                    djPartyMemberService.insertDjPartyMember(partyMember);
+                    memberChange.setPartyMemberId(partyMember.getMemberId());
+                    djPartyMemberChangeService.updateDjPartyMemberChange(memberChange);
+                }
                 break;
             case "edit" :
-                BeanUtils.copyBeanProp(partyMember,memberChange);
                 partyMember.setMemberId(memberChange.getPartyMemberId());
-                partyMember.setCreateBy(null);
-                partyMember.setCreateTime(null);
-                partyMember.setUpdateBy(null);
-                partyMember.setUpdateTime(null);
                 djPartyMemberService.updateDjPartyMember(partyMember);
-
                 if(memberChange.getPartyPositionType()==null){
                     djPartyMemberService.updatePartyPositionType(partyMember);
                 }
-
                 break;
             case "del" :
                 partyMember.setMemberId(memberChange.getPartyMemberId());

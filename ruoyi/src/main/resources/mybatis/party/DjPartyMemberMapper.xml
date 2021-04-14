@@ -129,6 +129,7 @@
             <if test="wechat != null  and wechat != ''">and wechat = #{wechat}</if>
             <if test="remark != null  and remark != ''">and remark = #{remark}</if>
             <if test="memberType != null  and memberType != ''">and member_type = #{memberType}</if>
+            <if test="memberType == null  or memberType == ''">and  pm.member_type != '3'</if>
             <if test="memberStatus != null  and memberStatus != ''">and member_status = #{memberStatus}</if>
             <if test="joinBranchData != null ">and join_branch_data = #{joinBranchData}</if>
             <if test="joinData != null ">and join_data = #{joinData}</if>
@@ -210,6 +211,7 @@
             <if test="wechat != null  and wechat != ''">and pm.wechat = #{wechat}</if>
             <if test="remark != null  and remark != ''">and pm.remark = #{remark}</if>
             <if test="memberType != null  and memberType != ''">and pm.member_type = #{memberType}</if>
+            <if test="memberType == null  or memberType == ''">and  pm.member_type != '3'</if>
             <if test="memberStatus != null  and memberStatus != ''">and pm.member_status = #{memberStatus}</if>
             <if test="joinBranchData != null ">and pm.join_branch_data = #{joinBranchData}</if>
             <if test="joinData != null ">and pm.join_data = #{joinData}</if>
@@ -243,6 +245,11 @@
     <select id="selectDjPartyMemberById" parameterType="Long" resultMap="DjPartyMemberResult">
         <include refid="selectDjPartyMemberVo"/>
         where member_id = #{memberId}
+    </select>
+
+    <select id="selectPartyMemberByUuid" parameterType="String" resultMap="DjPartyMemberResult">
+        <include refid="selectDjPartyMemberVo"/>
+        where party_member_uuid = #{memberUuid}
     </select>
 
     <insert id="insertDjPartyMember" parameterType="DjPartyMember" useGeneratedKeys="true" keyProperty="memberId">
@@ -451,7 +458,7 @@
 
     <select id="getMemberCount" resultType="Integer">
 	    select count(1) from dj_party_member
-		where del_flag = '0' and party_org_id != 52
+		where del_flag = '0' and party_org_id != 52 and member_type != '3'
 	</select>
 
     <select id="echarts_31" resultType="java.util.HashMap">
@@ -464,7 +471,7 @@
         end) as name,
         count(1) as value
         from (select member_name ,(CONVERT(DATE_FORMAT(NOW(), '%Y'), SIGNED) -CONVERT(SUBSTRING(identity_card,7,4), SIGNED)) as age
-        from dj_party_member WHERE del_flag = '0' and party_org_id != 52 ) a
+        from dj_party_member WHERE del_flag = '0' and party_org_id != 52 and member_type != '3' ) a
         group by name
         order by name asc
     </select>
@@ -475,6 +482,7 @@
        FROM dj_party_member
        WHERE del_flag = '0'
 	        AND party_org_id != 52
+	        AND member_type != '3'
        GROUP BY name
        order by INSTR('男,女',name)
     </select>
@@ -487,7 +495,7 @@
         when education in('30','31','32','33','34','35','36','37','38','39','40') then "高中以下"
         else '' end) as name,
         count(1) as value
-		from dj_party_member where  del_flag = '0' and party_org_id !='52'
+		from dj_party_member where  del_flag = '0' and party_org_id !='52'and member_type != '3'
 		group by name
 		order by INSTR('本科以上,本科学历,大专中专,高中以下',name)
     </select>
