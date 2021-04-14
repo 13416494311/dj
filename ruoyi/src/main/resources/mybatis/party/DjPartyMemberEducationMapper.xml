@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="startDate"    column="start_date"    />
         <result property="endDate"    column="end_date"    />
         <result property="major"    column="major"    />
+        <result property="fullTimeType"    column="full_time_type"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -20,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <sql id="selectDjPartyMemberEducationVo">
         select education_id, education_uuid, education_type, school,
-        start_date, end_date, major, create_by, create_time, update_by, update_time from dj_party_member_education
+        start_date, end_date, major,full_time_type, create_by, create_time, update_by, update_time from dj_party_member_education
     </sql>
 
     <select id="selectDjPartyMemberEducationList" parameterType="DjPartyMemberEducation" resultMap="DjPartyMemberEducationResult">
@@ -32,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="startDate != null "> and start_date = #{startDate}</if>
             <if test="endDate != null "> and end_date = #{endDate}</if>
             <if test="major != null  and major != ''"> and major = #{major}</if>
+            <if test="fullTimeType != null  and fullTimeType != ''"> and full_time_type = #{fullTimeType}</if>
         </where>
         order by start_date asc
     </select>
@@ -51,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="startDate != null ">start_date,</if>
             <if test="endDate != null ">end_date,</if>
             <if test="major != null  and major != ''">major,</if>
+            <if test="fullTimeType != null  and fullTimeType != ''">full_time_type,</if>
             <if test="createBy != null  and createBy != ''">create_by,</if>
             <if test="createTime != null ">create_time,</if>
             <if test="updateBy != null  and updateBy != ''">update_by,</if>
@@ -64,6 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="startDate != null ">#{startDate},</if>
             <if test="endDate != null ">#{endDate},</if>
             <if test="major != null  and major != ''">#{major},</if>
+            <if test="fullTimeType != null  and fullTimeType != ''">#{fullTimeType},</if>
             <if test="createBy != null  and createBy != ''">#{createBy},</if>
             <if test="createTime != null ">#{createTime},</if>
             <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
@@ -80,6 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="startDate != null ">start_date = #{startDate},</if>
             <if test="endDate != null ">end_date = #{endDate},</if>
             <if test="major != null  and major != ''">major = #{major},</if>
+            <if test="fullTimeType != null  and fullTimeType != ''">full_time_type = #{fullTimeType},</if>
             <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
             <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>

@@ -31,6 +31,7 @@
           </template>
         </el-table-column>
         <el-table-column label="专业" align="center" prop="major"/>
+        <el-table-column label="全日制" align="center" prop="fullTimeType" :formatter="fullTimeTypeFormat"/>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
@@ -70,7 +71,7 @@
       <el-form ref="form" :model="form" :rules="rules" :style="bodyStyle" label-width="150px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="学历">
+            <el-form-item label="学历"  prop="educationType">
               <el-select :disabled="disabled1" v-model="form.educationType"
                          style="width: 100%" placeholder="请选择学历">
                 <el-option
@@ -117,6 +118,22 @@
           <el-col :span="12">
             <el-form-item label="专业" prop="major">
               <el-input  :disabled="disabled1" v-model="form.major" placeholder="请输入专业"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="全日制" prop="fullTimeType">
+              <el-switch
+                :disabled="disabled1"
+                v-model="form.fullTimeType"
+                style="display: block"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                active-value="N"
+                active-text="否"
+                inactive-value="Y"
+                inactive-text="是">
+              </el-switch>
+
             </el-form-item>
           </el-col>
         </el-row>
@@ -171,6 +188,8 @@
         open: false,
         // 学历字典
         educationTypeOptions: [],
+        // 全日制字典
+        fullTimeTypeOptions: [],
         // 查询参数
         queryParams: {
           educationUuid: undefined,
@@ -217,6 +236,9 @@
       this.getDicts("education_type1").then(response => {
         this.educationTypeOptions = response.data;
       });
+      this.getDicts("sys_yes_no").then(response => {
+        this.fullTimeTypeOptions = response.data;
+      });
     },
     methods: {
       init(educationUuid){
@@ -241,6 +263,10 @@
       educationTypeFormat(row, column) {
         return this.selectDictLabel(this.educationTypeOptions, row.educationType);
       },
+      // 全日制字典翻译
+      fullTimeTypeFormat(row, column) {
+        return this.selectDictLabel(this.fullTimeTypeOptions, row.fullTimeType);
+      },
       // 取消按钮
       cancel() {
         this.open = false;
@@ -256,6 +282,7 @@
           startDate: undefined,
           endDate: undefined,
           major: undefined,
+          fullTimeType: "Y",
           createBy: undefined,
           createTime: undefined,
           updateBy: undefined,

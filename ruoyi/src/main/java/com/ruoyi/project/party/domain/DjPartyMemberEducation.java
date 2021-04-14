@@ -48,5 +48,9 @@ public class DjPartyMemberEducation extends BaseEntity
     @Excel(name = "专业")
     private String major;
 
+    /** 全日制 */
+    @Excel(name = "全日制")
+    private String fullTimeType;
+
 
 }
