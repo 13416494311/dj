@@ -114,6 +114,7 @@
           partyOrgId:undefined,
           partyOrgName:undefined,
         },
+        memberType:undefined,
 
       };
     },

@@ -493,6 +493,7 @@
       openMemberChoose() {
         this.$refs.partyMember.open = true;
         this.$refs.partyMember.title = "选择党员";
+        this.$refs.partyMember.queryParams.memberType ="all";
       },
     }
   };

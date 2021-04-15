@@ -128,8 +128,8 @@
             <if test="qq != null  and qq != ''">and qq = #{qq}</if>
             <if test="wechat != null  and wechat != ''">and wechat = #{wechat}</if>
             <if test="remark != null  and remark != ''">and remark = #{remark}</if>
-            <if test="memberType != null  and memberType != ''">and member_type = #{memberType}</if>
             <if test="memberType == null  or memberType == ''">and  pm.member_type != '3'</if>
+            <if test="memberType != null  and memberType != '' and memberType != 'all'">and pm.member_type = #{memberType}</if>
             <if test="memberStatus != null  and memberStatus != ''">and member_status = #{memberStatus}</if>
             <if test="joinBranchData != null ">and join_branch_data = #{joinBranchData}</if>
             <if test="joinData != null ">and join_data = #{joinData}</if>
@@ -210,8 +210,8 @@
             <if test="qq != null  and qq != ''">and pm.qq = #{qq}</if>
             <if test="wechat != null  and wechat != ''">and pm.wechat = #{wechat}</if>
             <if test="remark != null  and remark != ''">and pm.remark = #{remark}</if>
-            <if test="memberType != null  and memberType != ''">and pm.member_type = #{memberType}</if>
             <if test="memberType == null  or memberType == ''">and  pm.member_type != '3'</if>
+            <if test="memberType != null  and memberType != '' and memberType != 'all'">and pm.member_type = #{memberType}</if>
             <if test="memberStatus != null  and memberStatus != ''">and pm.member_status = #{memberStatus}</if>
             <if test="joinBranchData != null ">and pm.join_branch_data = #{joinBranchData}</if>
             <if test="joinData != null ">and pm.join_data = #{joinData}</if>
@@ -238,7 +238,7 @@
             ${dataScope}
         </where>
         order by pm.party_position_type is null || pm.party_position_type='' asc,
-        po.party_org_id , po.party_org_id ,
+        pm.party_org_id ,
         pm.party_position_type asc ,pm.order_num asc, CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 

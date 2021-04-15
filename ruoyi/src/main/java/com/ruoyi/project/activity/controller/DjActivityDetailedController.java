@@ -218,9 +218,7 @@ public class DjActivityDetailedController extends BaseController
     @GetMapping("/exportArchives")
     public void exportArchives(HttpServletRequest request, HttpServletResponse response, String detailedId) throws IOException
     {
-
-
-
+        Long start = System.currentTimeMillis();
         Map<String, List<File>> map = new HashMap<>();
 
         Map<String, Object> dataMap = new HashMap<>();
@@ -388,9 +386,9 @@ public class DjActivityDetailedController extends BaseController
 
         }
 
+        Long end = System.currentTimeMillis();
 
-
-
+        logger.info("============活动资料导出耗时：{}ms",end-start);
     }
 
 

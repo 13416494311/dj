@@ -20,22 +20,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDjPartyMemberEducationVo">
-        select education_id, education_uuid, education_type, school,
-        start_date, end_date, major,full_time_type, create_by, create_time, update_by, update_time from dj_party_member_education
+        select pme.education_id, pme.education_uuid, pme.education_type, pme.school,
+        pme.start_date, pme.end_date, pme.major,pme.full_time_type, pme.create_by, pme.create_time,
+        pme.update_by, pme.update_time from dj_party_member_education pme
     </sql>
 
     <select id="selectDjPartyMemberEducationList" parameterType="DjPartyMemberEducation" resultMap="DjPartyMemberEducationResult">
         <include refid="selectDjPartyMemberEducationVo"/>
+        left join sys_dict_data sdd on sdd.dict_type ='education_type1' and sdd.dict_value =  pme.education_type
         <where>
-            <if test="educationUuid != null  and educationUuid != ''"> and education_uuid = #{educationUuid}</if>
-            <if test="educationType != null  and educationType != ''"> and education_type = #{educationType}</if>
-            <if test="school != null  and school != ''"> and school like concat('%', #{school}, '%')</if>
-            <if test="startDate != null "> and start_date = #{startDate}</if>
-            <if test="endDate != null "> and end_date = #{endDate}</if>
-            <if test="major != null  and major != ''"> and major = #{major}</if>
-            <if test="fullTimeType != null  and fullTimeType != ''"> and full_time_type = #{fullTimeType}</if>
+            <if test="educationUuid != null  and educationUuid != ''"> and pme.education_uuid = #{educationUuid}</if>
+            <if test="educationType != null  and educationType != ''"> and pme.education_type = #{educationType}</if>
+            <if test="school != null  and school != ''"> and pme.school like concat('%', #{school}, '%')</if>
+            <if test="startDate != null "> and pme.start_date = #{startDate}</if>
+            <if test="endDate != null "> and pme.end_date = #{endDate}</if>
+            <if test="major != null  and major != ''"> and pme.major = #{major}</if>
+            <if test="fullTimeType != null  and fullTimeType != ''"> and pme.full_time_type = #{fullTimeType}</if>
         </where>
-        order by start_date asc
+        order by sdd.dict_sort asc
     </select>
 
     <select id="selectDjPartyMemberEducationById" parameterType="Long" resultMap="DjPartyMemberEducationResult">

@@ -54,6 +54,7 @@ public class ZipPackUtil {
         CheckedOutputStream checkedOutputStream = new CheckedOutputStream(f, new Adler32());
         // 用于将数据压缩成Zip文件格式
         ZipOutputStream zos = new ZipOutputStream(checkedOutputStream);
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(zos);
 
         fileListMap.keySet().forEach(key -> {
             String dir = "";
@@ -79,13 +80,14 @@ public class ZipPackUtil {
                 fileListMap.get(key).stream().forEach(file -> {
                     try {
                         zos.putNextEntry(new ZipEntry(finalDir  + file.getName()));
-                        InputStream inputStream = new FileInputStream(file);
+
+                        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
                         int bytesRead = 0;
                         // 向压缩文件中输出数据
-                        while ((bytesRead = inputStream.read()) != -1) {
-                            zos.write(bytesRead);
+                        while ((bytesRead = bufferedInputStream.read()) != -1) {
+                            bufferedOutputStream.write(bytesRead);
                         }
-                        inputStream.close();
+                        bufferedInputStream.close();
                         zos.closeEntry();
                         //文件删除
                         if(file.exists()){

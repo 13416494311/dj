@@ -173,7 +173,15 @@ public class DjPartyMemberController extends BaseController
                 List<DjPartyMemberEducation> educationList = djPartyMemberEducationService.selectDjPartyMemberEducationList(djPartyMemberEducation);
                 final String[] educationType = {""};
                 final String[] school = {""};
+
+                List<String> firstEducationType = new ArrayList<>();
                 educationList.stream().forEach(education->{
+                    map.put("highestEducationType",education.getEducationType()==null?"":
+                            dictDataService.selectDictLabel("education_type1",education.getEducationType()));
+                    if("3".equals(education.getEducationType()) || "4".equals(education.getEducationType())
+                            ||"5".equals(education.getEducationType())){
+                        firstEducationType.add(education.getEducationType());
+                    }
                     educationType[0] +=education.getEducationType()==null?"\n":
                             dictDataService.selectDictLabel("education_type1",education.getEducationType()) + "\n";
                     school[0] +=education.getSchool()==null?" \n":education.getSchool() + "\n";
@@ -181,19 +189,13 @@ public class DjPartyMemberController extends BaseController
                 map.put("educationType",educationType[0]);
                 map.put("school",school[0]);
 
+                if(!CollectionUtils.isEmpty(firstEducationType)){
+                    map.put("firstEducationType",firstEducationType.get(0)==null?"":
+                            dictDataService.selectDictLabel("education_type1",firstEducationType.get(0)));
+                }else{
+                    map.put("firstEducationType","");
+                }
 
-                if(!CollectionUtils.isEmpty(educationList)){
-                    DjPartyMemberEducation education = educationList.get(educationList.size()-1);
-                    map.put("highestEducationType",education.getEducationType()==null?"":
-                            dictDataService.selectDictLabel("education_type1",education.getEducationType()));
-                }
-                djPartyMemberEducation.setFullTimeType("Y");
-                educationList  = djPartyMemberEducationService.selectDjPartyMemberEducationList(djPartyMemberEducation);
-                if(!CollectionUtils.isEmpty(educationList)){
-                    DjPartyMemberEducation education = educationList.get(educationList.size()-1);
-                    map.put("firstEducationType",education.getEducationType()==null?"":
-                            dictDataService.selectDictLabel("education_type1",education.getEducationType()));
-                }
             }else{
                 map.put("educationType","");
                 map.put("school","");

@@ -416,7 +416,7 @@ export default {
           { required: true, message: "用户密码不能为空", trigger: "blur" }
         ],
         email: [
-          { required: true, message: "邮箱地址不能为空", trigger: "blur" },
+          { required: false, message: "邮箱地址不能为空", trigger: "blur" },
           {
             type: "email",
             message: "'请输入正确的邮箱地址",
@@ -424,7 +424,7 @@ export default {
           }
         ],
         phonenumber: [
-          { required: true, message: "手机号码不能为空", trigger: "blur" },
+          { required: false, message: "手机号码不能为空", trigger: "blur" },
           {
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             message: "请输入正确的手机号码",
