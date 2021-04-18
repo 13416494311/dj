@@ -76,6 +76,20 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/notice8',
+    component: Layout,
+    hidden: true,
+    redirect: '/honest/notice/8',
+    children: [
+      {
+        path: '/honest/notice/8',
+        component: (resolve) => require(['@/views/system/notice/index'], resolve),
+        name: '党风监督哨',
+        meta: { title: '党风监督哨', icon: 'rule' }
+      }
+    ]
+  },
+  {
     path: '/suggestions2',
     component: Layout,
     hidden: true,
