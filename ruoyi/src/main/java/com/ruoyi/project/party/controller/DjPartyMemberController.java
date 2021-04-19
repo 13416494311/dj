@@ -1,52 +1,49 @@
 package com.ruoyi.project.party.controller;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
+import com.ruoyi.common.utils.file.FileDownloadUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.poi.ExcelTemplateUtil;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
+import com.ruoyi.framework.aspectj.lang.annotation.Log;
+import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import com.ruoyi.framework.config.RuoYiConfig;
-import com.ruoyi.project.activity.domain.DjActivityDetailed;
-import com.ruoyi.project.activity.domain.DjActivityMember;
-import com.ruoyi.project.activity.mapper.DjActivityDetailedMapper;
-import com.ruoyi.project.activity.service.IDjActivityDetailedService;
-import com.ruoyi.project.activity.service.IDjActivityMemberService;
-import com.ruoyi.project.members.domain.DjPartyExemplary;
-import com.ruoyi.project.members.domain.DjPartySpecialty;
-import com.ruoyi.project.members.service.IDjPartyExemplaryService;
-import com.ruoyi.project.members.service.IDjPartySpecialtyService;
-import com.ruoyi.project.party.domain.*;
-import com.ruoyi.project.party.service.*;
+import com.ruoyi.framework.web.controller.BaseController;
+import com.ruoyi.framework.web.domain.AjaxResult;
+import com.ruoyi.framework.web.page.TableDataInfo;
+import com.ruoyi.project.party.domain.DjPartyMember;
+import com.ruoyi.project.party.domain.DjPartyMemberChange;
+import com.ruoyi.project.party.domain.DjPartyMemberEducation;
+import com.ruoyi.project.party.domain.DjPartyOrg;
+import com.ruoyi.project.party.service.IDjPartyMemberChangeService;
+import com.ruoyi.project.party.service.IDjPartyMemberEducationService;
+import com.ruoyi.project.party.service.IDjPartyMemberService;
+import com.ruoyi.project.party.service.IDjPartyOrgService;
 import com.ruoyi.project.sys.domain.DjSysLog;
 import com.ruoyi.project.sys.domain.DjSysMessage;
 import com.ruoyi.project.sys.domain.DjSysTodo;
 import com.ruoyi.project.sys.service.IDjSysLogService;
 import com.ruoyi.project.sys.service.IDjSysMessageService;
 import com.ruoyi.project.sys.service.IDjSysTodoService;
-import com.ruoyi.project.system.domain.SysUser;
-import com.ruoyi.project.system.service.ISysConfigService;
 import com.ruoyi.project.system.service.ISysDictDataService;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import com.ruoyi.framework.aspectj.lang.annotation.Log;
-import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
-import com.ruoyi.framework.web.controller.BaseController;
-import com.ruoyi.framework.web.domain.AjaxResult;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.framework.web.page.TableDataInfo;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 党员信息Controller
@@ -128,25 +125,23 @@ public class DjPartyMemberController extends BaseController
     @Log(title = "党员信息", businessType = BusinessType.EXPORT)
     @GetMapping("/export")
     @DataScope( partyOrgAlias = "pm"  ,userAlias = "u")
-    public AjaxResult export(DjPartyMember djPartyMember)
+    public void export(HttpServletRequest request, HttpServletResponse response, String memberType , String partyOrgId)
     {
+        Long start = System.currentTimeMillis();
 
-        djPartyMember.setPageSize(null);
-        djPartyMember.setPageNum(null);
-        if(StringUtils.isNull(djPartyMember.getDelFlag())){
-            djPartyMember.setDelFlag("0");
-        }else if("all".equals(djPartyMember.getDelFlag())){
-            djPartyMember.setDelFlag(null);
-        }
+        DjPartyMember djPartyMember = new DjPartyMember();
+        djPartyMember.setMemberType(memberType);
+        djPartyMember.setPartyOrgId(Long.valueOf(partyOrgId));
         List<DjPartyMember> list = djPartyMemberService.selectDjPartyMemberList(djPartyMember);
+
 
         String fileName = "";
         String excelTemplate ="";
         if("3".equals(djPartyMember.getMemberType())){
-            fileName="入党积极分子名单.xlsx";
+            fileName ="入党积极分子名单.xlsx";
             excelTemplate="partyPreMember.xlsx";
         }else{
-            fileName="广东公司党员名单花名册.xls";
+            fileName ="广东公司党员名单花名册.xls";
             excelTemplate="partyMember.xls";
         }
 
@@ -222,12 +217,25 @@ public class DjPartyMemberController extends BaseController
             }
         });
 
-
         cls.put("member",member);
         cls.put("member1",member1);
-        ExcelTemplateUtil.process(data,excelTemplate,fileName);
 
-        return  AjaxResult.success(fileName);
+
+        ServletOutputStream outputStream = null;
+        try {
+            ExcelTemplateUtil.setResponseHeader(response,fileName);
+            outputStream = response.getOutputStream();
+            ExcelTemplateUtil.process(data,excelTemplate,outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Long end = System.currentTimeMillis();
+
+        logger.info("============党员信息导出耗时：{}ms",end-start);
     }
 
 
@@ -393,7 +401,7 @@ public class DjPartyMemberController extends BaseController
      * 删除党员信息
      */
     @Log(title = "党员信息", businessType = BusinessType.DELETE)
-	@PostMapping("/del")
+    @PostMapping("/del")
     public AjaxResult remove(@RequestBody Map<String,Object> params)
     {
         DjPartyMember djPartyMember = djPartyMemberService.selectDjPartyMemberById(Long.parseLong(params.get("memberId").toString()));

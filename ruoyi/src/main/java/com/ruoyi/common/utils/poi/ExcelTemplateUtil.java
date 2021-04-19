@@ -15,6 +15,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.system.ApplicationHome;
+import org.springframework.core.io.ClassPathResource;
 
 
 import javax.servlet.http.HttpServletResponse;
@@ -34,28 +38,28 @@ import java.util.regex.Pattern;
  * @date: 2019/4/29
  */
 public class ExcelTemplateUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(ExcelTemplateUtil.class);
     /**
      * 根据模板生成 excel 文件
      * @param data 数据
      * @param templatePath 模板文件路径
-     * @param fileName 生成 excel 输出流，可保存成文件或返回到前端等
+     * @param os 生成 excel 输出流，可保存成文件或返回到前端等
      */
-    public static void process(Object data, String templatePath, String fileName) {
+    public static void process(Object data, String templatePath, OutputStream os) {
 
         if (data == null || StringUtil.isEmpty(templatePath)) {
             return;
         }
-        OutputStream os = null;
-
         try {
-            os = new FileOutputStream(ExcelUtil.getAbsoluteFile(fileName));
 
-            String excelTemplatePath = ExcelTemplateUtil.class.getClassLoader().
-                    getResource("excelTemplate").getPath();
-            templatePath = excelTemplatePath+ File.separator + templatePath;
+
+            ClassPathResource classPathResource = new ClassPathResource("excelTemplate/"+templatePath);
+            InputStream inputStream =classPathResource.getInputStream();
+
 
             if(templatePath.substring(templatePath.lastIndexOf(".")+1).equals("xls")){
-                HSSFWorkbook workbook=new HSSFWorkbook(new FileInputStream(new File(templatePath)));
+                HSSFWorkbook workbook=new HSSFWorkbook(inputStream);
                 HSSFSheet sheet;
                 for (int i = 0; i < workbook.getNumberOfSheets(); i++) {//获取每个Sheet表
                     sheet=workbook.getSheetAt(i);
@@ -63,7 +67,7 @@ public class ExcelTemplateUtil {
                 }
                 workbook.write(os);
             }else if(templatePath.substring(templatePath.lastIndexOf(".")+1).equals("xlsx")){
-                XSSFWorkbook workbook =new XSSFWorkbook(new FileInputStream(new File(templatePath)));
+                XSSFWorkbook workbook =new XSSFWorkbook(inputStream);
                 XSSFSheet sheet;
                 for (int i = 0; i < workbook.getNumberOfSheets(); i++) {//获取每个Sheet表
                     sheet=workbook.getSheetAt(i);
