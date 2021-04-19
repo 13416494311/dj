@@ -739,9 +739,9 @@
   import { listLog, getLog, delLog, addLog, updateLog, exportLog } from "@/api/sys/log";
   import Specialty from "../../members/specialty/specialty";
   import Exemplary from "../../members/exemplary/exemplary";
-
   import MemberEducation from "../memberEducation/memberEducation";
   import MemberPortrait from "../member/memberPortrait";
+  import {downLoadZip} from "@/utils/zipdownload";
 
   export default {
     name: "PartyMember",
@@ -1513,16 +1513,13 @@
       },
       /** 导出按钮操作 */
       handleExport() {
-        const queryParams = this.queryParams;
+        let that = this;
         this.$confirm('是否确认导出所选党组织所有入党积极分子信息数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function () {
-          return exportPartyMember(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function () {
+          downLoadZip("/party/member/export?memberType=3&partyOrgId="+ that.queryParams.partyOrgId);
         });
       },
       getUser() {

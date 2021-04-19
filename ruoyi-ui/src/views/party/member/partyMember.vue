@@ -738,6 +738,7 @@
   import Exemplary from "../../members/exemplary/exemplary";
   import MemberPortrait from "./memberPortrait";
   import MemberEducation from "../memberEducation/memberEducation";
+  import {downLoadZip} from "@/utils/zipdownload";
 
   export default {
     name: "PartyMember",
@@ -1488,16 +1489,14 @@
       },
       /** 导出按钮操作 */
       handleExport() {
-        const queryParams = this.queryParams;
+        let that = this;
         this.$confirm('是否确认导出所选党组织所有党员信息数据项?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
         }).then(function () {
-          return exportPartyMember(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function () {
+          console.log(that.queryParams)
+          downLoadZip("/party/member/export?partyOrgId="+ that.queryParams.partyOrgId);
         });
       },
       getUser() {
