@@ -55,6 +55,7 @@
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
+        <result property="orderNum" column="order_num"/>
     </resultMap>
 
     <sql id="selectDjPartyMemberVo">
@@ -65,7 +66,7 @@
          house_phone, email, qq, wechat, remark, member_type, member_status, join_branch_data,
          join_data, formal_data, floating_type, member_group, pre_party_org_id, life_difficulty, cognizance,
          economic_situation, physical_health, life_difficulty_type, enjoy_help, help_info, detail,
-         del_flag, create_by, create_time, update_by, update_time
+         del_flag, create_by, create_time, update_by, update_time, order_num
          from dj_party_member
     </sql>
 
@@ -78,7 +79,7 @@
         pm.member_type, pm.member_status,pm.join_branch_data,pm.join_data, pm.formal_data, pm.floating_type,
         pm.member_group,pm.pre_party_org_id, pm.life_difficulty, pm.cognizance, pm.economic_situation, pm.physical_health,
         pm.life_difficulty_type, pm.enjoy_help, pm.help_info, pm.detail,pm.del_flag, pm.create_by,
-        pm.create_time, pm.update_by, pm.update_time
+        pm.create_time, pm.update_by, pm.update_time, pm.order_num
         from dj_party_member pm
     </sql>
 
@@ -154,9 +155,12 @@
             <if test="updateBy != null  and updateBy != ''">and update_by = #{updateBy}</if>
             <if test="updateTime != null ">and update_time = #{updateTime}</if>
         </where>
-        order by pm.party_position_type is null || pm.party_position_type='' asc,
-        po.party_org_id , po.party_org_id ,
-        pm.party_position_type asc ,pm.order_num asc, CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
+        order by pm.party_org_id ,
+        pm.order_num is null || pm.order_num=''|| pm.order_num != 0 asc,
+        pm.order_num asc,
+        pm.party_position_type is null || pm.party_position_type='' asc,
+        pm.party_position_type asc ,
+        CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
 
@@ -237,9 +241,12 @@
             <if test="updateTime != null ">and pm.update_time = #{updateTime}</if>
             ${dataScope}
         </where>
-        order by pm.party_position_type is null || pm.party_position_type='' asc,
-        pm.party_org_id ,
-        pm.party_position_type asc ,pm.order_num asc, CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
+        order by pm.party_org_id ,
+        pm.order_num is null || pm.order_num='' asc,
+        pm.order_num asc,
+        pm.party_position_type is null || pm.party_position_type='' asc,
+        pm.party_position_type asc ,
+        CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
     <select id="selectDjPartyMemberById" parameterType="Long" resultMap="DjPartyMemberResult">
@@ -418,10 +425,19 @@
             <if test="createTime != null ">create_time = #{createTime},</if>
             <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
             <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="orderNum != null ">order_num = #{orderNum},</if>
         </trim>
         where member_id = #{memberId}
     </update>
 
+    <update id="orderPartyMember" parameterType="DjPartyMember">
+        update dj_party_member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNum != null and orderNum != 0">order_num = #{orderNum},</if>
+            <if test="orderNum == null or orderNum == 0">order_num = null,</if>
+        </trim>
+        where member_id = #{memberId}
+    </update>
 
     <update id="updatePartyPositionType" parameterType="DjPartyMember">
         update dj_party_member

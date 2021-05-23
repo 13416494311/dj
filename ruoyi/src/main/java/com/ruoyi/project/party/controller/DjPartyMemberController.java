@@ -198,12 +198,14 @@ public class DjPartyMemberController extends BaseController
 
             map.put("joinData",partyMember.getJoinData()==null?"":DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,partyMember.getJoinData()));
             map.put("formalData",partyMember.getFormalData()==null?"":DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,partyMember.getFormalData()));
+            map.put("memberType",partyMember.getMemberType()==null?"":("1".equals(partyMember.getMemberType())?"正式":"预备"));
             map.put("deptName",partyMember.getSysDept()==null?"":partyMember.getSysDept().getDeptName());
             map.put("administrativePosition",partyMember.getAdministrativePosition()==null?"":
                     dictDataService.selectDictLabel("administrative_position_type",partyMember.getAdministrativePosition()));
             map.put("title",partyMember.getTitle()==null?"":partyMember.getTitle());
             map.put("identityCard",partyMember.getIdentityCard()==null?"":partyMember.getIdentityCard());
-            map.put("partyOrgFullName",partyMember.getDjPartyOrg()==null?"": partyMember.getDjPartyOrg().getPartyOrgFullName());
+            map.put("partyOrgFullName",partyMember.getDjPartyOrg()==null?"":
+                    partyMember.getDjPartyOrg().getPartyOrgFullName().substring(partyMember.getDjPartyOrg().getPartyOrgFullName().indexOf("/")+1));
             map.put("createTime",partyMember.getCreateTime()==null?"":DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,partyMember.getCreateTime()));
 
             if("1".equals(partyMember.getMemberStatus())){
@@ -331,6 +333,16 @@ public class DjPartyMemberController extends BaseController
     public AjaxResult update(@RequestBody DjPartyMember djPartyMember)
     {
         return AjaxResult.success(djPartyMemberService.updateDjPartyMember(djPartyMember));
+    }
+
+    /**
+     * 排序党员信息
+     */
+    @Log(title = "排序党员信息", businessType = BusinessType.UPDATE)
+    @PutMapping(value = "/order")
+    public AjaxResult order(@RequestBody DjPartyMember djPartyMember)
+    {
+        return AjaxResult.success(djPartyMemberService.orderPartyMember(djPartyMember));
     }
 
 

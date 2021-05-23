@@ -70,6 +70,13 @@ public interface IDjPartyMemberService
      */
     public int updateDjPartyMember(DjPartyMember djPartyMember);
 
+    /**
+     * 排序党员信息
+     *
+     * @param djPartyMember 党员信息
+     * @return 结果
+     */
+    public int orderPartyMember(DjPartyMember djPartyMember);
 
     public int updatePartyPositionType(DjPartyMember djPartyMember);
 

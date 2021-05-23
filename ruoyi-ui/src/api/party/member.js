@@ -75,6 +75,15 @@ export function updatePartyMember1(data) {
   })
 }
 
+// 排序党员信息
+export function orderPartyMember(data) {
+  return request({
+    url: '/party/member/order',
+    method: 'put',
+    data: data
+  })
+}
+
 export function updatePartyMemberAvatar(data) {
   return request({
     url: '/party/member/updateAvatar',
