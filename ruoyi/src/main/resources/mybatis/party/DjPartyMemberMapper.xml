@@ -155,9 +155,10 @@
             <if test="updateBy != null  and updateBy != ''">and update_by = #{updateBy}</if>
             <if test="updateTime != null ">and update_time = #{updateTime}</if>
         </where>
-        order by pm.party_org_id ,
-        pm.order_num is null || pm.order_num=''|| pm.order_num != 0 asc,
+        order by
+        pm.order_num is null || pm.order_num='' asc,
         pm.order_num asc,
+        pm.party_org_id ,
         pm.party_position_type is null || pm.party_position_type='' asc,
         pm.party_position_type asc ,
         CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
@@ -241,9 +242,10 @@
             <if test="updateTime != null ">and pm.update_time = #{updateTime}</if>
             ${dataScope}
         </where>
-        order by pm.party_org_id ,
+        order by
         pm.order_num is null || pm.order_num='' asc,
         pm.order_num asc,
+        pm.party_org_id ,
         pm.party_position_type is null || pm.party_position_type='' asc,
         pm.party_position_type asc ,
         CONVERT( pm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
