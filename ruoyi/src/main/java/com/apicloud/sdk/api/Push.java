@@ -41,7 +41,7 @@ public class Push {
 	 * @param userIds 推送用户id, 多个用户用英文逗号分隔，eg. user1,user2
 	 * @return
 	 */
-	public static JSONObject pushMessage(String title,String content,int type,int platform,String groupName,String userIds){
+	public static void pushMessage(String title,String content,int type,int platform,String groupName,String userIds){
 
 		//设置参数
 		params.clear();
@@ -56,6 +56,9 @@ public class Push {
         headers.put("X-APICloud-AppKey", HttpUtils.encrypt(appId,appKey,"SHA-1"));
 		String url = domain+"/api/push/message";
 		headers.put("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-		return HttpUtils.doPost(url, headers, params, "");
+        new Thread(()->{
+            HttpUtils.doPost(url, headers, params, "");
+        }).start();
+
 	}
 }
