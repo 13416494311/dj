@@ -53,6 +53,7 @@ public interface DjPartyMemberMapper
      */
     public int updateDjPartyMember(DjPartyMember djPartyMember);
 
+    public int orderPartyMember(DjPartyMember djPartyMember);
 
     public int updatePartyPositionType(DjPartyMember djPartyMember);
     /**

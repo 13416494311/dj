@@ -195,4 +195,6 @@ public class DjPartyMember extends BaseEntity
 
     private SysUser sysUser;
 
+    private Integer orderNum;
+
 }

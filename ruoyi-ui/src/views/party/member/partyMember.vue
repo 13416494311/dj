@@ -81,6 +81,19 @@
           <el-table-column label="党组织" align="center" prop="partyOrgId" :formatter="partyOrgIdFormat" />
           <el-table-column label="党员类型" align="center" prop="memberType" :formatter="memberTypeFormat"/>
           <!--<el-table-column label="在岗状态" align="center" prop="memberStatus" :formatter="memberStatusFormat"/>-->
+          <el-table-column label="排序" align="center"  width="180" v-hasPermi="['party:member:order']">
+            <template slot-scope="scope">
+              <el-input-number style="width: 100px" v-model="scope.row.orderNum" size="small" controls-position="right"
+                               :precision="0" :step="1" :min="0" ></el-input-number>
+              <el-button
+                style="width: 50px"
+                size="small"
+                type="text"
+                @click="handleOrder(scope.row)"
+              >保存
+              </el-button>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button
@@ -719,6 +732,7 @@
     addPartyMember,
     updatePartyMember,
     updatePartyMemberAvatar,
+    orderPartyMember,
     exportPartyMember,
     uploadAvatar,
     checkPartyMemberUnique,
@@ -1172,7 +1186,13 @@
         this.loading = true;
         this.queryParams.delFlag = "all";
         listPartyMember(this.queryParams).then(response => {
-          this.partyMemberList = response.rows;
+          let partyMemberList = response.rows;
+          for(var i = 0; i < partyMemberList.length; i++) {
+            if(partyMemberList[i].orderNum == null ){
+              delete partyMemberList[i].orderNum
+            }
+          }
+          this.partyMemberList = partyMemberList;
           this.total = response.total;
           this.loading = false;
         });
@@ -1229,6 +1249,10 @@
       // 党员类型字典翻译
       memberTypeFormat(row, column) {
         return this.selectDictLabel(this.memberTypeOptions, row.memberType);
+      },
+      orderNumFormat(row, column,value) {
+
+        console.log(value)
       },
       // 在岗状态字典翻译
       memberStatusFormat(row, column) {
@@ -1381,6 +1405,20 @@
       },
       handlePortrait(row){
         this.$refs.memberPortrait.init(row.memberId)
+      },
+      handleOrder(row){
+        let partyMember ={} ;
+        partyMember.memberId = row.memberId;
+        partyMember.orderNum = row.orderNum;
+        orderPartyMember(partyMember).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("排序成功");
+            this.getList();
+          } else {
+            this.msgError(response.msg);
+          }
+        });
+
       },
       /** 修改按钮操作 */
       handleUpdate(row) {

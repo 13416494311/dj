@@ -456,6 +456,11 @@ public class DjPartyMemberServiceImpl implements IDjPartyMemberService
         return djPartyMemberMapper.updateDjPartyMember(djPartyMember);
     }
 
+    @Override
+    public int orderPartyMember(DjPartyMember djPartyMember) {
+        return djPartyMemberMapper.orderPartyMember(djPartyMember);
+    }
+
 
     @Override
     public int updatePartyPositionType(DjPartyMember djPartyMember){

@@ -20,7 +20,7 @@
         <el-table-column label="序号" align="center" type="index" />
         <el-table-column label="学历" align="center" prop="educationType" :formatter="educationTypeFormat"/>
         <el-table-column label="学校" align="center" prop="school"/>
-        <el-table-column label="入学时间" align="center" prop="startDate" width="180">
+        <!--<el-table-column label="入学时间" align="center" prop="startDate" width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d}') }}</span>
           </template>
@@ -31,7 +31,7 @@
           </template>
         </el-table-column>
         <el-table-column label="专业" align="center" prop="major"/>
-        <el-table-column label="全日制" align="center" prop="fullTimeType" :formatter="fullTimeTypeFormat"/>
+        <el-table-column label="全日制" align="center" prop="fullTimeType" :formatter="fullTimeTypeFormat"/>-->
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
@@ -91,7 +91,7 @@
         </el-row>
 
 
-        <el-row>
+        <!--<el-row>
           <el-col :span="12">
             <el-form-item label="入学时间" prop="startDate">
               <el-date-picker :disabled="disabled1" clearable size="small" style="width: 100%"
@@ -136,7 +136,7 @@
 
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row>-->
 
       </el-form>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
