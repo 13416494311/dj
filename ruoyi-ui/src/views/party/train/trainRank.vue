@@ -277,7 +277,6 @@
       // 取消按钮
       cancel() {
         this.open = false;
-        this.reset();
       },
       chooseRankType(rankType){
         this.rankType = rankType;

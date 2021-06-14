@@ -78,7 +78,12 @@
           <el-table-column label="姓名" align="center" prop="memberName"/>
           <el-table-column label="部门" align="center" prop="deptId" :formatter="deptIdFormat" />
           <el-table-column label="党组织" align="center" prop="partyOrgId" :formatter="partyOrgIdFormat" />
-          <el-table-column label="党员类型" align="center" prop="memberType" :formatter="memberTypeFormat"/>
+          <el-table-column label="成为入党积极分子日期" align="center" prop="preMemberData" width="180">
+            <template slot-scope="scope">
+              <span>{{ parseTime(scope.row.preMemberData, '{y}-{m}-{d}') }}</span>
+            </template>
+          </el-table-column>
+          <!--<el-table-column label="党员类型" align="center" prop="memberType" :formatter="memberTypeFormat"/>-->
           <!--<el-table-column label="在岗状态" align="center" prop="memberStatus" :formatter="memberStatusFormat"/>-->
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
@@ -398,7 +403,7 @@
 
         <el-card shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
-            <span style="font-weight: bold;font-size: 16px">党员信息</span>
+            <span style="font-weight: bold;font-size: 16px">入党积极分子信息</span>
           </div>
           <el-row>
             <el-col :span="8">
@@ -418,7 +423,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="党员类型" prop="memberType">
+              <el-form-item label="类型" prop="memberType">
                 <el-select :disabled="true"
                            @change="changeMemberType"
                            v-model="form.memberType" style="width: 100%" placeholder="请选择党员类型">
@@ -446,7 +451,23 @@
               </el-form-item>
             </el-col>
           </el-row>
+
           <el-row>
+            <el-col :span="8">
+              <el-form-item label="成为入党积极分子日期" prop="preMemberData">
+                <el-date-picker :disabled="disabled"
+                                clearable size="small" style="width: 100%"
+                                v-model="form.preMemberData"
+                                type="date"
+                                value-format="yyyy-MM-dd"
+                                :picker-options="afterTimeOption"
+                                placeholder="选择成为入党积极分子日期">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row v-if="false">
             <el-col :span="8">
               <el-form-item label="加入党日期" prop="joinData">
                 <el-date-picker :disabled="disabled"
@@ -485,7 +506,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row v-if="false">
             <el-col :span="8">
               <el-form-item label="党内职务" prop="partyPositionType">
                 <el-select :disabled="disabled"
@@ -527,7 +548,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row v-if="false">
             <el-col :span="8">
               <el-form-item label="党员分组">
                 <el-select :disabled="disabled"
@@ -545,7 +566,7 @@
           </el-row>
         </el-card>
 
-        <el-card shadow="always" style="margin-bottom: 30px;">
+        <el-card v-show="false" shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">党员特长</span>
           </div>
@@ -553,7 +574,7 @@
           <specialty  ref="specialty" :see="true"/>
         </el-card>
 
-        <el-card shadow="always" style="margin-bottom: 30px;">
+        <el-card v-show="false" shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">先锋模范（荣誉）</span>
           </div>
@@ -561,7 +582,7 @@
           <exemplary ref="exemplary" :see="true"/>
         </el-card>
 
-        <el-card shadow="always" style="margin-bottom: 30px;">
+        <el-card v-show="false" shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
             <span style="font-weight: bold;font-size: 16px">生活困难情况</span>
           </div>
@@ -964,6 +985,9 @@
           /*joinData: [
             { required: true, message: "入党日期不能为空", trigger: "blur" },
           ],*/
+          preMemberData: [
+            { required: true, message: "成为入党积极分子日期不能为空", trigger: "blur" },
+          ],
           housePhone: [
             { validator: checkPhone, trigger: "blur" }
           ],
@@ -1310,6 +1334,7 @@
           memberStatus: undefined,
           joinBranchData: undefined,
           joinData: undefined,
+          preMemberData: undefined,
           formalData: undefined,
           floatingType: undefined,
           memberGroup: undefined,

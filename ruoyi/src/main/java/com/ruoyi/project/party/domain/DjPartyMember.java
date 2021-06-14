@@ -151,6 +151,10 @@ public class DjPartyMember extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date joinData;
 
+    /** 成为入党积极分子日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date preMemberData;
+
     /** 转为正式党员日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date formalData;

@@ -38,7 +38,7 @@ public class DjPartyTrainMember extends BaseEntity
 
     /** 积分 */
     @Excel(name = "积分")
-    private Integer score;
+    private Double score;
 
     private Integer rankNum;
 

@@ -585,6 +585,7 @@
                 <el-select :disabled="disabled"
                            v-model="form.lifeDifficulty"
                            style="width: 100%"
+                           @change="lifeDifficultyChange"
                            placeholder="请选择生活困难">
                   <el-option
                     v-for="dict in lifeDifficultyOptions"
@@ -597,7 +598,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="生活困难类型">
-                <el-select :disabled="disabled" v-model="form.lifeDifficultyType" style="width: 100%" placeholder="请选择生活困难类型">
+                <el-select :disabled="!lifeDifficulty" v-model="form.lifeDifficultyType" style="width: 100%" placeholder="请选择生活困难类型">
                   <el-option
                     v-for="dict in lifeDifficultyTypeOptions"
                     :key="dict.dictValue"
@@ -609,7 +610,7 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="身体健康情况">
-                <el-select :disabled="disabled" v-model="form.physicalHealth" style="width: 100%" placeholder="请选择身体健康情况">
+                <el-select :disabled="!lifeDifficulty" v-model="form.physicalHealth" style="width: 100%" placeholder="请选择身体健康情况">
                   <el-option
                     v-for="dict in physicalHealthOptions"
                     :key="dict.dictValue"
@@ -623,7 +624,7 @@
           <el-row>
             <el-col :span="8">
               <el-form-item label="享受帮扶">
-                <el-select :disabled="disabled" v-model="form.enjoyHelp" style="width: 100%" placeholder="请选择是否享受帮扶">
+                <el-select :disabled="!lifeDifficulty" v-model="form.enjoyHelp" style="width: 100%" placeholder="请选择是否享受帮扶">
                   <el-option
                     v-for="dict in enjoyHelpOptions"
                     :key="dict.dictValue"
@@ -635,14 +636,14 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="补助情况" prop="helpInfo">
-                <el-input :disabled="disabled" v-model="form.helpInfo" placeholder="请输入补助情况"/>
+                <el-input :disabled="!lifeDifficulty" v-model="form.helpInfo" placeholder="请输入补助情况"/>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="24">
               <el-form-item label="具体情况描述" prop="detail">
-                <el-input :disabled="disabled" v-model="form.detail" type="textarea"
+                <el-input :disabled="!lifeDifficulty" v-model="form.detail" type="textarea"
                           :autosize="{ minRows: 4, maxRows: 4}" placeholder="请输入具体情况描述"/>
               </el-form-item>
             </el-col>
@@ -677,10 +678,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-
-
-
-
         </el-card>
 
       </el-form>
@@ -895,6 +892,7 @@
         memberGroupOptions: [],
         // 生活困难字典
         lifeDifficultyOptions: [],
+        lifeDifficulty:false,
         // 组织认定字典
         cognizanceOptions: [],
         // 经济状况字典
@@ -1374,6 +1372,7 @@
         this.form.partyOrgId = Number(this.partyOrg.partyOrgId);
         this.form.partyMemberUuid = this.uuid()
         this.changeMemberType();
+        this.lifeDifficultyChange();
         this.$nextTick(()=>{
           this.$refs.specialty.init("0");
           this.$refs.exemplary.init("0");
@@ -1398,6 +1397,7 @@
           this.title = "查看党员信息";
         }).then(()=>{
           this.changeMemberType();
+          this.lifeDifficultyChange();
           this.$refs.specialty.init(this.form.memberId);
           this.$refs.exemplary.init(this.form.memberId);
           this.$refs.memberEducation.init(this.form.partyMemberUuid);
@@ -1436,6 +1436,7 @@
           this.title = "修改党员信息";
         }).then(()=>{
           this.changeMemberType();
+          this.lifeDifficultyChange();
           this.$refs.specialty.init(this.form.memberId);
           this.$refs.exemplary.init(this.form.memberId);
           this.$refs.memberEducation.init(this.form.partyMemberUuid);
@@ -1569,6 +1570,13 @@
           this.formalDataRequire = true
         }else{
           this.formalDataRequire = false
+        }
+      },
+      lifeDifficultyChange(){
+        if(this.form.lifeDifficulty == 'Y'){
+          this.lifeDifficulty = true
+        }else{
+          this.lifeDifficulty = false
         }
       },
     }

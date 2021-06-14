@@ -270,6 +270,7 @@ public class DjPartyMemberController extends BaseController
         //党员变更表
         DjPartyMemberChange memberChange = JSON.parseObject(JSON.toJSONString(params), DjPartyMemberChange.class);
         memberChange.setMemberUuid(UUID.randomUUID().toString());
+        memberChange.setPartyMemberId(memberChange.getMemberId());
         memberChange.setChangeType("add");
         memberChange.setAuditState("2");
         djPartyMemberChangeService.insertDjPartyMemberChange(memberChange);

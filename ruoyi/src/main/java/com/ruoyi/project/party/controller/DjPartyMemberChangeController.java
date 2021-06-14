@@ -178,6 +178,7 @@ public class DjPartyMemberChangeController extends BaseController
                     DjPartyMember member = djPartyMemberService.selectPartyMemberByUuid(memberChange.getPartyMemberUuid());
                     partyMember.setMemberId(member.getMemberId());
                     partyMember.setMemberType("5");
+                    partyMember.setPolity("2");
                     djPartyMemberService.updateDjPartyMember(partyMember);
                 }else{
                     partyMember.setMemberId(null);
