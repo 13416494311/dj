@@ -168,6 +168,10 @@ public class DjPartyMemberChange extends BaseEntity
     @Excel(name = "加入党日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date joinData;
 
+    /** 成为入党积极分子日期 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date preMemberData;
+
     /** 转为正式党员日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "转为正式党员日期", width = 30, dateFormat = "yyyy-MM-dd")

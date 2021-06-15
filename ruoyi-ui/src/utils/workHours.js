@@ -39,7 +39,7 @@ export function getDifDate(date1,date2){
     dateNH=dateN.getHours();
     dateNM=dateN.getMinutes();
     validTime=dateN-dateF;
-    if(dateN.getDay()==0||dateN.getDay()==6){//结束时间是周末
+    /*if(dateN.getDay()==0||dateN.getDay()==6){//结束时间是周末
       time=dateNH*hourSecs+dateNM*minSecs;
       dateN.setTime(dateN.getTime()-time-6*hourSecs-minSecs);
       totalTime+=minSecs;
@@ -51,7 +51,7 @@ export function getDifDate(date1,date2){
     if(dateF.getDay()==0||dateF.getDay()==6){//开始时间是周末
       dateF.setTime(dateF.getTime()+time+startWorkBefNoon*hourSecs);
       continue;
-    }
+    }*/
 
     if(Math.abs(dateF.getDate()-dateN.getDate())>=1){//跨天
 

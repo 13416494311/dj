@@ -42,6 +42,7 @@
         <result property="memberStatus" column="member_status"/>
         <result property="joinBranchData" column="join_branch_data"/>
         <result property="joinData" column="join_data"/>
+        <result property="preMemberData" column="pre_member_data"/>
         <result property="formalData" column="formal_data"/>
         <result property="floatingType" column="floating_type"/>
         <result property="memberGroup" column="member_group"/>
@@ -66,7 +67,7 @@
         work_no, avatar, member_name, sex, mobile, identity_card, birthday, company_name,
         dept_id, administrative_position,party_position_type , title, post_id, working_date, nation, polity,
         work_identity, education, academic_degree, native_place, home_address, house_phone,
-        email, qq, wechat, remark, member_type, member_status, join_branch_data, join_data,
+        email, qq, wechat, remark, member_type, member_status, join_branch_data, join_data,pre_member_data,
         formal_data, floating_type, member_group, pre_party_org_id, life_difficulty, cognizance, economic_situation,
         physical_health, life_difficulty_type, enjoy_help, help_info, detail, del_flag, create_by,
         create_time, update_by, update_time from dj_party_member_change
@@ -118,6 +119,7 @@
             <if test="memberStatus != null  and memberStatus != ''">and member_status = #{memberStatus}</if>
             <if test="joinBranchData != null ">and join_branch_data = #{joinBranchData}</if>
             <if test="joinData != null ">and join_data = #{joinData}</if>
+            <if test="preMemberData != null ">and pre_member_data = #{preMemberData}</if>
             <if test="formalData != null ">and formal_data = #{formalData}</if>
             <if test="floatingType != null  and floatingType != ''">and floating_type = #{floatingType}</if>
             <if test="memberGroup != null  and memberGroup != ''">and member_group = #{memberGroup}</if>
@@ -188,6 +190,7 @@
             <if test="memberStatus != null  and memberStatus != ''">member_status,</if>
             <if test="joinBranchData != null ">join_branch_data,</if>
             <if test="joinData != null ">join_data,</if>
+            <if test="preMemberData != null ">pre_member_data,</if>
             <if test="formalData != null ">formal_data,</if>
             <if test="floatingType != null  and floatingType != ''">floating_type,</if>
             <if test="memberGroup != null  and memberGroup != ''">member_group ,</if>
@@ -243,6 +246,7 @@
             <if test="memberStatus != null  and memberStatus != ''">#{memberStatus},</if>
             <if test="joinBranchData != null ">#{joinBranchData},</if>
             <if test="joinData != null ">#{joinData},</if>
+            <if test="preMemberData != null ">#{preMemberData},</if>
             <if test="formalData != null ">#{formalData},</if>
             <if test="floatingType != null  and floatingType != ''">#{floatingType},</if>
             <if test="memberGroup != null  and memberGroup != ''">#{memberGroup},</if>
@@ -306,6 +310,7 @@
             <if test="memberStatus != null  and memberStatus != ''">member_status = #{memberStatus},</if>
             <if test="joinBranchData != null ">join_branch_data = #{joinBranchData},</if>
             <if test="joinData != null ">join_data = #{joinData},</if>
+            <if test="preMemberData != null ">pre_member_data = #{preMemberData},</if>
             <if test="formalData != null ">formal_data = #{formalData},</if>
             <if test="floatingType != null  and floatingType != ''">floating_type = #{floatingType},</if>
             <if test="memberGroup != null  and memberGroup != ''">member_group = #{memberGroup},</if>

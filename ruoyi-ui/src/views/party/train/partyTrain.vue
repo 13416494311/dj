@@ -62,20 +62,20 @@
               :border="true" :data="trainList" @selection-change="handleSelectionChange">
       <el-table-column label="序号" align="center" type="index" />
       <el-table-column label="党组织名称" align="center" prop="partyOrg.partyOrgFullName" />
-      <el-table-column label="培训类别" align="center" prop="trainType" :formatter="trainTypeFormat" />
+      <el-table-column label="培训类别" align="center" prop="trainType"  width="120" :formatter="trainTypeFormat" />
       <el-table-column label="活动名称" align="center" prop="activityTheme" />
-      <el-table-column label="活动内容" align="center" prop="activityContent" />
-      <el-table-column label="开始时间" align="center" prop="activityStartTime" width="180">
+      <el-table-column label="活动内容" align="center"  width="400"  prop="activityContent" />
+      <el-table-column label="开始时间" align="center" prop="activityStartTime" width="140">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.activityStartTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="结束时间" align="center" prop="activityEndTime" width="180">
+      <el-table-column label="结束时间" align="center" prop="activityEndTime" width="140">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.activityEndTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="有效学时" align="center" prop="effectiveHours" />
+      <el-table-column label="有效学时" align="center" prop="effectiveHours" width="80"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

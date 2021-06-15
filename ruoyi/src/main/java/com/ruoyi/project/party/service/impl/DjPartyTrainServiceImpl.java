@@ -4,6 +4,7 @@ import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.party.domain.DjPartyOrg;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +54,9 @@ public class DjPartyTrainServiceImpl implements IDjPartyTrainService
         List<DjPartyTrain> partyTrainList = djPartyTrainMapper.selectDjPartyTrainList(djPartyTrain);
         partyTrainList.stream().forEach(partyTrain->{
             if (StringUtils.isNotNull(partyTrain.getPartyOrgId())) {
-                partyTrain.setPartyOrg(partyOrgService.selectDjPartyOrgById(partyTrain.getPartyOrgId()));
+                DjPartyOrg partyOrg = partyOrgService.selectDjPartyOrgById(partyTrain.getPartyOrgId());
+                partyOrg.setPartyOrgFullName(partyOrg.getPartyOrgFullName().substring(partyOrg.getPartyOrgFullName().indexOf("/")+1));
+                partyTrain.setPartyOrg(partyOrg);
             }
         });
         return partyTrainList;

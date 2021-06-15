@@ -10,7 +10,9 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.party.domain.DjPartyMember;
+import com.ruoyi.project.party.domain.DjPartyTrain;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
+import com.ruoyi.project.party.mapper.DjPartyTrainMapper;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.impl.SysUserServiceImpl;
@@ -37,6 +39,8 @@ public class DjPartyTrainMemberServiceImpl implements IDjPartyTrainMemberService
     private IDjPartyOrgService partyOrgService;
     @Autowired
     private DjPartyMemberMapper partyMemberMapper;
+    @Autowired
+    private DjPartyTrainMapper djPartyTrainMapper;
 
 
 
@@ -133,7 +137,7 @@ public class DjPartyTrainMemberServiceImpl implements IDjPartyTrainMemberService
     }
 
 
-    private int getInfoScore(Long partyMemberId,String rankType){
+    private double getInfoScore(Long partyMemberId,String rankType){
         DjPartyMember djPartyMember = new DjPartyMember();
         djPartyMember.setMemberId(partyMemberId);
         Map<String,Object> params = new HashMap<>();
@@ -148,7 +152,7 @@ public class DjPartyTrainMemberServiceImpl implements IDjPartyTrainMemberService
         }
     }
 
-    private int getTotalScore(Long partyMemberId){
+    private double getTotalScore(Long partyMemberId){
         DjPartyMember djPartyMember = new DjPartyMember();
         djPartyMember.setMemberId(partyMemberId);
         List<DjPartyTrainMember> partyTrainMemberList = djPartyTrainMemberMapper.getTrainRankInfo(djPartyMember);
@@ -222,12 +226,15 @@ public class DjPartyTrainMemberServiceImpl implements IDjPartyTrainMemberService
     @Override
     public int updateDjPartyTrainMember(DjPartyTrainMember djPartyTrainMember)
     {
+        DjPartyTrainMember partyTrainMember = djPartyTrainMemberMapper.selectDjPartyTrainMemberById(djPartyTrainMember.getTrainMemberId());
+        DjPartyTrain partyTrain =  djPartyTrainMapper.selectDjPartyTrainByUuid(partyTrainMember.getTrainUuid());
+
         djPartyTrainMember.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djPartyTrainMember.setUpdateTime(DateUtils.getNowDate());
         if("2".equals(djPartyTrainMember.getStatus())||"3".equals(djPartyTrainMember.getStatus())||"4".equals(djPartyTrainMember.getStatus())){
-            djPartyTrainMember.setScore(1);
+            djPartyTrainMember.setScore(partyTrain.getEffectiveHours());
         }else{
-            djPartyTrainMember.setScore(0);
+            djPartyTrainMember.setScore((double) 0);
         }
         return djPartyTrainMemberMapper.updateDjPartyTrainMember(djPartyTrainMember);
     }

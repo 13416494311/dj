@@ -55,6 +55,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where train_id = #{trainId}
     </select>
 
+    <select id="selectDjPartyTrainByUuid" parameterType="String" resultMap="DjPartyTrainResult">
+        <include refid="selectDjPartyTrainVo"/>
+        where train_uuid = #{trainUuid}
+    </select>
+
     <insert id="insertDjPartyTrain" parameterType="DjPartyTrain" useGeneratedKeys="true" keyProperty="trainId">
         insert into dj_party_train
         <trim prefix="(" suffix=")" suffixOverrides=",">

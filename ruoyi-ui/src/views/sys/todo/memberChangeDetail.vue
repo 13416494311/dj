@@ -304,7 +304,23 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+
+        <el-row v-show="form.memberType == 3">
+          <el-col :span="8">
+            <el-form-item label="成为入党积极分子日期" prop="preMemberData">
+              <el-date-picker :disabled="disabled"
+                              clearable size="small" style="width: 100%"
+                              v-model="form.preMemberData"
+                              type="date"
+                              value-format="yyyy-MM-dd"
+                              :picker-options="afterTimeOption"
+                              placeholder="选择成为入党积极分子日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row v-show="form.memberType != 3">
           <el-col :span="8">
             <el-form-item label="加入党日期" prop="joinData">
               <el-date-picker :disabled="disabled"
@@ -342,7 +358,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-show="form.memberType != 3">
           <el-col :span="8">
             <el-form-item label="党内职务" prop="partyPositionType">
               <el-select :disabled="disabled"
@@ -383,7 +399,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-show="form.memberType != 3">
           <el-col :span="8">
             <el-form-item label="党员分组" prop="memberGroup">
               <el-select :disabled="disabled"
@@ -399,8 +415,9 @@
             </el-form-item>
           </el-col>
         </el-row>
+
       </el-card>
-      <el-card shadow="always" style="margin-bottom: 30px;">
+      <el-card v-show="form.memberType != 3" shadow="always" style="margin-bottom: 30px;">
         <div slot="header" style="height: 25px">
           <span style="font-weight: bold;font-size: 16px">生活困难情况</span>
         </div>
@@ -773,6 +790,19 @@
                 callback("变更前：无");
               }
               break;
+            case "preMemberData" :
+              let preMemberData ='';
+              if(this.partyMember[field]){
+                preMemberData=this.partyMember[field].substring(0,10);
+                if(preMemberData==value){
+                  callback();
+                }else{
+                  callback(new Error("变更前："+preMemberData));
+                }
+              }else{
+                callback("变更前：无");
+              }
+              break;
             case "formalData" :
               let formalData ='';
               if(this.partyMember[field]){
@@ -974,6 +1004,7 @@
           memberStatus: undefined,
           joinBranchData: undefined,
           joinData: undefined,
+          preMemberData: undefined,
           formalData: undefined,
           floatingType: undefined,
           memberGroup: undefined,
@@ -1100,6 +1131,10 @@
           ],
           joinData: [
             { required: true, message: "入党日期不能为空", trigger: "blur" },
+            {validator: checkPartyMember, trigger: "blur"}
+          ],
+          preMemberData: [
+            { required: true, message: "成为入党积极分子日期不能为空", trigger: "blur" },
             {validator: checkPartyMember, trigger: "blur"}
           ],
           formalData: [
