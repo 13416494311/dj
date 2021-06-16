@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.party.mapper.DjPartyMemberDueMapper">
+
+    <resultMap type="DjPartyMemberDue" id="DjPartyMemberDueResult">
+        <result property="dueMemberId"    column="due_member_id"    />
+        <result property="dueOrgId"    column="due_org_id"    />
+        <result property="partyMemberId"    column="party_member_id"    />
+        <result property="month"    column="month"    />
+        <result property="salary"    column="salary"    />
+        <result property="ratio"    column="ratio"    />
+        <result property="due"    column="due"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectDjPartyMemberDueVo">
+        select due_member_id, due_org_id, party_member_id, month, salary, ratio, due, del_flag, create_by, create_time, update_by, update_time from dj_party_member_due
+    </sql>
+
+    <select id="selectDjPartyMemberDueList" parameterType="DjPartyMemberDue" resultMap="DjPartyMemberDueResult">
+        <include refid="selectDjPartyMemberDueVo"/>
+        <where>
+            <if test="dueOrgId != null "> and due_org_id = #{dueOrgId}</if>
+            <if test="partyMemberId != null "> and party_member_id = #{partyMemberId}</if>
+            <if test="month != null "> and month = #{month}</if>
+            <if test="salary != null "> and salary = #{salary}</if>
+            <if test="ratio != null  and ratio != ''"> and ratio = #{ratio}</if>
+            <if test="due != null "> and due = #{due}</if>
+        </where>
+        order by month asc
+    </select>
+
+    <select id="selectDjPartyMemberDueById" parameterType="Long" resultMap="DjPartyMemberDueResult">
+        <include refid="selectDjPartyMemberDueVo"/>
+        where due_member_id = #{dueMemberId}
+    </select>
+
+    <insert id="insertDjPartyMemberDue" parameterType="DjPartyMemberDue" useGeneratedKeys="true" keyProperty="dueMemberId">
+        insert into dj_party_member_due
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dueOrgId != null ">due_org_id,</if>
+            <if test="partyMemberId != null ">party_member_id,</if>
+            <if test="month != null ">month,</if>
+            <if test="salary != null ">salary,</if>
+            <if test="ratio != null  and ratio != ''">ratio,</if>
+            <if test="due != null ">due,</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dueOrgId != null ">#{dueOrgId},</if>
+            <if test="partyMemberId != null ">#{partyMemberId},</if>
+            <if test="month != null ">#{month},</if>
+            <if test="salary != null ">#{salary},</if>
+            <if test="ratio != null  and ratio != ''">#{ratio},</if>
+            <if test="due != null ">#{due},</if>
+            <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDjPartyMemberDue" parameterType="DjPartyMemberDue">
+        update dj_party_member_due
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dueOrgId != null ">due_org_id = #{dueOrgId},</if>
+            <if test="partyMemberId != null ">party_member_id = #{partyMemberId},</if>
+            <if test="month != null ">month = #{month},</if>
+            <if test="salary != null ">salary = #{salary},</if>
+            <if test="ratio != null  and ratio != ''">ratio = #{ratio},</if>
+            <if test="due != null ">due = #{due},</if>
+            <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where due_member_id = #{dueMemberId}
+    </update>
+
+    <delete id="deleteDjPartyMemberDueById" parameterType="Long">
+        delete from dj_party_member_due where due_member_id = #{dueMemberId}
+    </delete>
+
+    <delete id="deleteDjPartyMemberDueByIds" parameterType="String">
+        delete from dj_party_member_due where due_member_id in
+        <foreach item="dueMemberId" collection="array" open="(" separator="," close=")">
+            #{dueMemberId}
+        </foreach>
+    </delete>
+
+</mapper>
