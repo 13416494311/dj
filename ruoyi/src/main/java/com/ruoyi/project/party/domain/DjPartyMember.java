@@ -1,6 +1,7 @@
 package com.ruoyi.project.party.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.project.members.domain.DjPartyMemberHelp;
@@ -200,5 +201,7 @@ public class DjPartyMember extends BaseEntity
     private SysUser sysUser;
 
     private Integer orderNum;
+
+    private List<DjPartyMemberDue> memberDueList;
 
 }
