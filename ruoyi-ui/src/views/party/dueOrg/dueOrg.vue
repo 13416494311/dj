@@ -70,11 +70,13 @@
                @open="getHeight"  :close-on-click-modal="false">
 
       <div :style="bodyStyle">
-        <due-card :disabled="disabled" :dueOrgId="dueOrgId" ></due-card>
+        <due-card ref="dueCard" :disabled="disabled" :dueOrgId="dueOrgId" @ok="cancel" ></due-card>
       </div>
 
 
       <div slot="footer" class="dialog-footer"  :style="{textAlign:'center'}">
+        <el-button v-if="!disabled" type="primary" @click="submitDue(1)">保 存</el-button>
+        <el-button v-if="!disabled" type="primary" @click="submitDue(2)">提 交</el-button>
         <el-button @click="cancel">关 闭</el-button>
       </div>
     </el-dialog>
@@ -159,6 +161,9 @@
       });
     },
     methods: {
+      submitDue(statue){
+        this.$refs.dueCard.submit(statue);
+      },
       // 年度字典翻译
       yearFormat(row, column) {
         return row.duePlan.year + "年";

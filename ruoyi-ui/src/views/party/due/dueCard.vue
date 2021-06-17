@@ -8,16 +8,33 @@
     </div>
     <el-table :stripe="true"
               :border="true"
+              :summary-method="getTotal"
+              :show-summary="showSum"
               v-loading="loading" :data="dueList" @selection-change="handleSelectionChange">
       <el-table-column label="序号" align="center" type="index"/>
       <el-table-column label="党员" align="center" prop="memberName"/>
       <el-table-column v-for="(item,index) in monthHead" :key="index" :label="item.label" align="center">
-        <el-table-column v-for="(item,index) in item.tableHead" :key="index" :label="item.label" :property="item.property"
-                         align="center">
-          <template slot-scope="scope">{{scope.row[scope.column.property]}}</template>
+        <el-table-column label="工资" align="center" width="180">
+          <template slot-scope="scope">
+            <el-input-number style="width:150px"
+                             v-model="scope.row.memberDueList[index]['salary']"
+                             size="small"
+                             @change="((val)=>{changeSalary(val, scope.row,index)})"
+                             controls-position="right"
+                             :precision="2" :step="1" :min="0" ></el-input-number>
+          </template>
         </el-table-column>
+
+        <el-table-column label="比列" align="center">
+          <template slot-scope="scope">{{scope.row.memberDueList[index]['ratio']}}</template>
+        </el-table-column>
+
+        <el-table-column label="党费" align="center">
+          <template slot-scope="scope">{{scope.row.memberDueList[index]['due']}}</template>
+        </el-table-column>
+
       </el-table-column>
-      <el-table-column label="合计" align="center"/>
+      <el-table-column label="合计" align="center" prop="total" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -26,15 +43,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['party:due:edit']"
-          >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['party:due:remove']"
-          >删除
+          >保存
           </el-button>
         </template>
       </el-table-column>
@@ -76,7 +85,7 @@
 </template>
 
 <script>
-  import {listDueMember,addDue, delDue, exportDue, getDue, listDue, updateDue} from "@/api/party/due";
+  import {listDueMember,addDue, delDue, exportDue, getDue, listDue, updateDue,updateMemberDue} from "@/api/party/due";
   import { pageDueOrg,listDueOrg, getDueOrg, delDueOrg, addDueOrg, updateDueOrg, exportDueOrg } from "@/api/party/dueOrg";
 
   export default {
@@ -151,62 +160,11 @@
           paddingRight: '20%',
         },
 
-        monthHead: [
-          {
-            label: '1月',
-            tableHead: [
-              {
-                label: '工资',
-                property: 'salary'
-              },
-              {
-                label: '比列',
-                property: 'ratio'
-              },
-              {
-                label: '党费',
-                property: 'due'
-              },
-            ]
-          },
-          {
-            label: '2月',
-            tableHead: [
-              {
-                label: '工资',
-                property: 'salary'
-              },
-              {
-                label: '比列',
-                property: 'ratio'
-              },
-              {
-                label: '党费',
-                property: 'due'
-              },
-            ]
-          },
-          {
-            label: '3月',
-            tableHead: [
-              {
-                label: '工资',
-                property: 'salary'
-              },
-              {
-                label: '比列',
-                property: 'ratio'
-              },
-              {
-                label: '党费',
-                property: 'due'
-              },
-            ]
-          },
-        ],
+        monthHead: [],
         dueOrg:{},
         duePlanTitle:"",
         dueOrgName:"",
+        showSum:true,
       };
     },
     mounted() {
@@ -221,6 +179,77 @@
       }
     },
     methods: {
+      refreshTotal(){
+        this.showSum=false;
+        this.$nextTick().then( ()=> {
+            this.showSum=true;
+        })
+      },
+      getTotal(param) {
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 1) {
+            sums[index] = '合计';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (column.property === 'total') {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+            if(sums[index]&&sums[index]!=0){
+              sums[index] = sums[index].toFixed(2)+' 元';
+            }else{
+              sums[index] = '';
+            }
+          }
+        });
+        return sums;
+      },
+      setMemberTotal(row){
+        let total=0;
+        for(var i in row.memberDueList){
+          if(row.memberDueList[i].due){
+            total = total+Number(row.memberDueList[i].due);
+          }
+        }
+        row.total= total
+        this.refreshTotal();
+        if(total== 0){
+          return ""
+        }else{
+          return total;
+        }
+      },
+      changeSalary(val,row,index){
+        row.memberDueList[index]['salary'] = val
+        switch (true) {
+          case val<= 3000 :
+            row.memberDueList[index]['ratio'] = "0.5%";
+            row.memberDueList[index]['due'] = (val*0.005).toFixed(0)
+            break;
+          case val > 3000 && val<= 5000:
+            row.memberDueList[index]['ratio'] = "1%";
+            row.memberDueList[index]['due'] = (val*0.01).toFixed(0)
+            break;
+          case val > 5000 && val<= 10000:
+            row.memberDueList[index]['ratio'] = "1.5%";
+            row.memberDueList[index]['due'] = (val*0.015).toFixed(0)
+            break;
+          case val > 10000 :
+            row.memberDueList[index]['ratio'] = "2%";
+            row.memberDueList[index]['due'] = (val*0.02).toFixed(0)
+            break;
+        }
+        this.setMemberTotal(row)
+
+      },
       /** 对话框自适应高度 */
       getHeight() {
         this.bodyStyle.height = window.innerHeight - 281 + 'px';
@@ -233,11 +262,41 @@
           this.duePlanTitle = response.data.duePlan.title;
           let partyOrgFullName = response.data.partyOrg.partyOrgFullName;
           this.dueOrgName = partyOrgFullName.substring(partyOrgFullName.indexOf("/")+1);
+          this.createMonthHead(response.data.duePlan.quarter);
           listDueMember(this.queryParams).then(response => {
             this.dueList = response.data;
+            for(var i in this.dueList){
+              let member = this.dueList[i];
+              let total=0
+              for(var j in member.memberDueList){
+                let memberDue = member.memberDueList[j];
+                if(memberDue.salary==null){
+                  memberDue.salary = undefined
+                }
+                total += Number(memberDue.due)
+              }
+              if( total != 0){
+                member.total = total
+              }
+            }
             this.loading = false;
           });
         });
+      },
+
+      //创建月份表头
+      createMonthHead(quarter){
+        this.monthHead =[
+          {
+            label: (Number(quarter)-1)*3+1 +'月',
+          },
+          {
+            label: (Number(quarter)-1)*3+2 +'月',
+          },
+          {
+            label: (Number(quarter)-1)*3+3 +'月',
+          },
+        ];
       },
       // 取消按钮
       cancel() {
@@ -286,13 +345,26 @@
       },
       /** 修改按钮操作 */
       handleUpdate(row) {
-        this.reset();
-        const dueMemberId = row.dueMemberId || this.ids
-        getDue(dueMemberId).then(response => {
-          this.form = response.data;
-          this.open = true;
-          this.title = "修改党员党费";
-        });
+        let params = [];
+        params.push(row)
+        updateMemberDue(params).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("保存成功");
+          }
+        })
+      },
+      submit(status){
+        updateMemberDue(this.dueList).then(response => {
+          if (response.code === 200) {
+            let params = {}
+            params.dueOrgId = this.dueOrgId
+            params.status = status;
+            updateDueOrg(params).then(response => {
+              this.msgSuccess("操作成功");
+              this.$emit("ok");
+            })
+          }
+        })
       },
       /** 提交按钮 */
       submitForm: function () {

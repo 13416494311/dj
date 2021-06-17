@@ -44,6 +44,16 @@ export function updateDue(data) {
   })
 }
 
+// 修改党员党费
+export function updateMemberDue(data) {
+  return request({
+    url: '/party/due/updateMemberDue',
+    method: 'post',
+    data: data
+  })
+}
+
+
 // 删除党员党费
 export function delDue(dueMemberId) {
   return request({
