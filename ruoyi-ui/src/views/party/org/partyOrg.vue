@@ -595,7 +595,7 @@
         getPartyOrg(row.partyOrgId).then(response => {
           this.form = response.data;
           if(response.data.leaderMember != undefined){
-            this.form.leaderName = response.data.leaderMember.memberName
+            this.form.leaderName = response.data.leaderMember
           }
           if(response.data.regionCode != undefined){
             this.form.regionCode = response.data.regionCode.split("-");
@@ -616,7 +616,7 @@
         getPartyOrg(row.partyOrgId).then(response => {
           this.form = response.data;
           if(response.data.leaderMember != undefined){
-            this.form.leaderName = response.data.leaderMember.memberName
+            this.form.leaderName = response.data.leaderMember
           }
           if(response.data.regionCode != undefined){
             this.form.regionCode = response.data.regionCode.split("-");

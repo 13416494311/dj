@@ -200,7 +200,7 @@
         getPartyOrgArchives(this.partyOrgId).then(response => {
           this.partyOrg = response.data;
           if(response.data.leaderMember != undefined){
-            this.partyOrg.leaderName = response.data.leaderMember.memberName
+            this.partyOrg.leaderName = response.data.leaderMember
           }
         });
       },

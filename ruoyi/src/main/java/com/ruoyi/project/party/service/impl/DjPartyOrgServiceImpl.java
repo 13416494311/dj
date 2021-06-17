@@ -86,7 +86,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
         }
         djPartyOrg.setPartyOrgFullName(partyOrgFullName+djPartyOrg.getPartyOrgName());
         if(StringUtils.isNotNull(djPartyOrg.getLeader())){
-            djPartyOrg.setLeaderMember(partyMemberService.selectPartyMemberById(djPartyOrg.getLeader()));
+            djPartyOrg.setLeaderMember(partyMemberService.selectPartyMemberById(djPartyOrg.getLeader()).getMemberName());
         }
         return djPartyOrg;
     }
@@ -107,7 +107,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
         }
 
         if(StringUtils.isNotNull(djPartyOrg.getLeader())){
-            djPartyOrg.setLeaderMember(partyMemberService.selectPartyMemberById(djPartyOrg.getLeader()));
+            djPartyOrg.setLeaderMember(partyMemberService.selectPartyMemberById(djPartyOrg.getLeader()).getMemberName());
         }
 
         String[] djPartyOrgIds =djPartyOrg.getAncestors().split(",");
@@ -464,7 +464,7 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
         }
         djPartyOrg.setPartyOrgFullName(partyOrgFullName+djPartyOrg.getPartyOrgName());
         if(StringUtils.isNotNull(djPartyOrg.getLeader())){
-            djPartyOrg.setLeaderMember(partyMemberService.selectPartyMemberById(djPartyOrg.getLeader()));
+            djPartyOrg.setLeaderMember(partyMemberService.selectPartyMemberById(djPartyOrg.getLeader()).getMemberName());
         }
         return djPartyOrg;
     }

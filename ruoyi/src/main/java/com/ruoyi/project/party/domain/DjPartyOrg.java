@@ -49,8 +49,7 @@ public class DjPartyOrg extends TreeEntity
     @Excel(name = "负责人")
     private Long leader;
 
-    @JsonBackReference
-    private DjPartyMember leaderMember;
+    private String leaderMember;
 
     /** 联系电话 */
     @Excel(name = "联系电话")
