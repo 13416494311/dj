@@ -27,7 +27,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.members.mapper.DjPartyMemberSuggestionsMapper;
 import com.ruoyi.project.members.domain.DjPartyMemberSuggestions;
 import com.ruoyi.project.members.service.IDjPartyMemberSuggestionsService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党员建议Service业务层处理
  *
@@ -35,6 +36,7 @@ import com.ruoyi.project.members.service.IDjPartyMemberSuggestionsService;
  * @date 2021-02-27
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyMemberSuggestionsServiceImpl implements IDjPartyMemberSuggestionsService
 {
     @Autowired

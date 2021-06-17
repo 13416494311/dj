@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.system.mapper.SysCommentMapper;
 import com.ruoyi.project.system.domain.SysComment;
 import com.ruoyi.project.system.service.ISysCommentService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 点评Service业务层处理
  *
@@ -21,6 +22,7 @@ import com.ruoyi.project.system.service.ISysCommentService;
  * @date 2021-02-19
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class SysCommentServiceImpl implements ISysCommentService
 {
     @Autowired

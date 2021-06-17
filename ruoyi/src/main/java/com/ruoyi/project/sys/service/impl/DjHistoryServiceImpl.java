@@ -7,22 +7,24 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.sys.mapper.DjHistoryMapper;
 import com.ruoyi.project.sys.domain.DjHistory;
 import com.ruoyi.project.sys.service.IDjHistoryService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党史Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2020-10-27
  */
 @Service
-public class DjHistoryServiceImpl implements IDjHistoryService 
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+public class DjHistoryServiceImpl implements IDjHistoryService
 {
     @Autowired
     private DjHistoryMapper djHistoryMapper;
 
     /**
      * 查询党史
-     * 
+     *
      * @param historyId 党史ID
      * @return 党史
      */
@@ -34,7 +36,7 @@ public class DjHistoryServiceImpl implements IDjHistoryService
 
     /**
      * 查询党史列表
-     * 
+     *
      * @param djHistory 党史
      * @return 党史
      */
@@ -46,7 +48,7 @@ public class DjHistoryServiceImpl implements IDjHistoryService
 
     /**
      * 新增党史
-     * 
+     *
      * @param djHistory 党史
      * @return 结果
      */
@@ -59,7 +61,7 @@ public class DjHistoryServiceImpl implements IDjHistoryService
 
     /**
      * 修改党史
-     * 
+     *
      * @param djHistory 党史
      * @return 结果
      */
@@ -72,7 +74,7 @@ public class DjHistoryServiceImpl implements IDjHistoryService
 
     /**
      * 批量删除党史
-     * 
+     *
      * @param historyIds 需要删除的党史ID
      * @return 结果
      */
@@ -84,7 +86,7 @@ public class DjHistoryServiceImpl implements IDjHistoryService
 
     /**
      * 删除党史信息
-     * 
+     *
      * @param historyId 党史ID
      * @return 结果
      */

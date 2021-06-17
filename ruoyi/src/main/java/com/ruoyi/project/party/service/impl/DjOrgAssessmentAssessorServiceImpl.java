@@ -12,15 +12,17 @@ import com.ruoyi.project.party.service.IDjOrgAssessmentAssessorService;
 import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党组织述职评议Service业务层处理
- * 
+ *
  * @author admin
  * @date 2021-03-23
  */
 @Service
-public class DjOrgAssessmentAssessorServiceImpl implements IDjOrgAssessmentAssessorService 
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+public class DjOrgAssessmentAssessorServiceImpl implements IDjOrgAssessmentAssessorService
 {
     @Autowired
     private DjOrgAssessmentAssessorMapper djOrgAssessmentAssessorMapper;
@@ -31,7 +33,7 @@ public class DjOrgAssessmentAssessorServiceImpl implements IDjOrgAssessmentAsses
 
     /**
      * 查询党组织述职评议
-     * 
+     *
      * @param id 党组织述职评议ID
      * @return 党组织述职评议
      */
@@ -43,7 +45,7 @@ public class DjOrgAssessmentAssessorServiceImpl implements IDjOrgAssessmentAsses
 
     /**
      * 查询党组织述职评议列表
-     * 
+     *
      * @param djOrgAssessmentAssessor 党组织述职评议
      * @return 党组织述职评议
      */
@@ -68,7 +70,7 @@ public class DjOrgAssessmentAssessorServiceImpl implements IDjOrgAssessmentAsses
 
     /**
      * 新增党组织述职评议
-     * 
+     *
      * @param djOrgAssessmentAssessor 党组织述职评议
      * @return 结果
      */
@@ -81,7 +83,7 @@ public class DjOrgAssessmentAssessorServiceImpl implements IDjOrgAssessmentAsses
 
     /**
      * 修改党组织述职评议
-     * 
+     *
      * @param djOrgAssessmentAssessor 党组织述职评议
      * @return 结果
      */
@@ -94,7 +96,7 @@ public class DjOrgAssessmentAssessorServiceImpl implements IDjOrgAssessmentAsses
 
     /**
      * 批量删除党组织述职评议
-     * 
+     *
      * @param ids 需要删除的党组织述职评议ID
      * @return 结果
      */
@@ -106,7 +108,7 @@ public class DjOrgAssessmentAssessorServiceImpl implements IDjOrgAssessmentAsses
 
     /**
      * 删除党组织述职评议信息
-     * 
+     *
      * @param id 党组织述职评议ID
      * @return 结果
      */

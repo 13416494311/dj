@@ -36,7 +36,8 @@ import com.ruoyi.project.system.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党员信息Service业务层处理
  *
@@ -44,6 +45,7 @@ import org.springframework.util.CollectionUtils;
  * @date 2020-08-06
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyMemberServiceImpl implements IDjPartyMemberService
 {
     @Autowired

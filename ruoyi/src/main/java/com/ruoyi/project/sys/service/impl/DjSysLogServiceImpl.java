@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.sys.mapper.DjSysLogMapper;
 import com.ruoyi.project.sys.domain.DjSysLog;
 import com.ruoyi.project.sys.service.IDjSysLogService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 操作日志Service业务层处理
  *
@@ -16,6 +17,7 @@ import com.ruoyi.project.sys.service.IDjSysLogService;
  * @date 2020-09-18
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjSysLogServiceImpl implements IDjSysLogService
 {
     @Autowired

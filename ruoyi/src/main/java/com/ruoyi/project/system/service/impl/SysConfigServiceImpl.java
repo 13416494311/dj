@@ -8,13 +8,15 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.project.system.domain.SysConfig;
 import com.ruoyi.project.system.mapper.SysConfigMapper;
 import com.ruoyi.project.system.service.ISysConfigService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 参数配置 服务层实现
- * 
+ *
  * @author ruoyi
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class SysConfigServiceImpl implements ISysConfigService
 {
     @Autowired
@@ -22,7 +24,7 @@ public class SysConfigServiceImpl implements ISysConfigService
 
     /**
      * 查询参数配置信息
-     * 
+     *
      * @param configId 参数配置ID
      * @return 参数配置信息
      */
@@ -36,7 +38,7 @@ public class SysConfigServiceImpl implements ISysConfigService
 
     /**
      * 根据键名查询参数配置信息
-     * 
+     *
      * @param configKey 参数key
      * @return 参数键值
      */
@@ -51,7 +53,7 @@ public class SysConfigServiceImpl implements ISysConfigService
 
     /**
      * 查询参数配置列表
-     * 
+     *
      * @param config 参数配置信息
      * @return 参数配置集合
      */
@@ -63,7 +65,7 @@ public class SysConfigServiceImpl implements ISysConfigService
 
     /**
      * 新增参数配置
-     * 
+     *
      * @param config 参数配置信息
      * @return 结果
      */
@@ -75,7 +77,7 @@ public class SysConfigServiceImpl implements ISysConfigService
 
     /**
      * 修改参数配置
-     * 
+     *
      * @param config 参数配置信息
      * @return 结果
      */
@@ -87,7 +89,7 @@ public class SysConfigServiceImpl implements ISysConfigService
 
     /**
      * 删除参数配置信息
-     * 
+     *
      * @param configId 参数ID
      * @return 结果
      */
@@ -99,7 +101,7 @@ public class SysConfigServiceImpl implements ISysConfigService
 
     /**
      * 批量删除参数信息
-     * 
+     *
      * @param configIds 需要删除的参数ID
      * @return 结果
      */
@@ -111,7 +113,7 @@ public class SysConfigServiceImpl implements ISysConfigService
 
     /**
      * 校验参数键名是否唯一
-     * 
+     *
      * @param config 参数配置信息
      * @return 结果
      */

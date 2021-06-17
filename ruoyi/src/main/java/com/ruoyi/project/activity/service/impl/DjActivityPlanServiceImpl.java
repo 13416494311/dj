@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivityPlanMapper;
 import com.ruoyi.project.activity.domain.DjActivityPlan;
 import com.ruoyi.project.activity.service.IDjActivityPlanService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 活动计划Service业务层处理
@@ -33,6 +35,7 @@ import com.ruoyi.project.activity.service.IDjActivityPlanService;
  * @date 2020-08-10
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjActivityPlanServiceImpl implements IDjActivityPlanService {
     @Autowired
     private DjActivityPlanMapper djActivityPlanMapper;

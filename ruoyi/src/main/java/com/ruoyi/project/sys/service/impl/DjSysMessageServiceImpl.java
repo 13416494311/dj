@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.sys.mapper.DjSysMessageMapper;
 import com.ruoyi.project.sys.domain.DjSysMessage;
 import com.ruoyi.project.sys.service.IDjSysMessageService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * APP消息Service业务层处理
  *
@@ -20,6 +21,7 @@ import com.ruoyi.project.sys.service.IDjSysMessageService;
  * @date 2020-10-03
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjSysMessageServiceImpl implements IDjSysMessageService
 {
     @Autowired

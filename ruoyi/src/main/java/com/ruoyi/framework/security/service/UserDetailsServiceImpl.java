@@ -13,6 +13,8 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.project.system.domain.SysUser;
 import com.ruoyi.project.system.service.ISysUserService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 用户验证处理
@@ -20,6 +22,7 @@ import com.ruoyi.project.system.service.ISysUserService;
  * @author ruoyi
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class UserDetailsServiceImpl implements UserDetailsService
 {
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);

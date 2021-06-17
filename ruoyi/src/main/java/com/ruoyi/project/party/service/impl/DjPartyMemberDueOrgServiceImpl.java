@@ -1,15 +1,17 @@
 package com.ruoyi.project.party.service.impl;
 
-import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.project.party.domain.DjPartyMemberDuePlan;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.party.domain.DjPartyMemberDueOrg;
+import com.ruoyi.project.party.mapper.DjPartyMemberDueOrgMapper;
 import com.ruoyi.project.party.mapper.DjPartyMemberDuePlanMapper;
+import com.ruoyi.project.party.service.IDjPartyMemberDueOrgService;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.project.party.mapper.DjPartyMemberDueOrgMapper;
-import com.ruoyi.project.party.domain.DjPartyMemberDueOrg;
-import com.ruoyi.project.party.service.IDjPartyMemberDueOrgService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 /**
  * 党组织党费Service业务层处理
@@ -18,6 +20,7 @@ import com.ruoyi.project.party.service.IDjPartyMemberDueOrgService;
  * @date 2021-06-15
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyMemberDueOrgServiceImpl implements IDjPartyMemberDueOrgService
 {
     @Autowired
@@ -26,7 +29,6 @@ public class DjPartyMemberDueOrgServiceImpl implements IDjPartyMemberDueOrgServi
     private IDjPartyOrgService djPartyOrgService;
     @Autowired
     private DjPartyMemberDuePlanMapper djPartyMemberDuePlanMapper;
-
     /**
      * 查询党组织党费
      *
@@ -71,8 +73,10 @@ public class DjPartyMemberDueOrgServiceImpl implements IDjPartyMemberDueOrgServi
     @Override
     public int insertDjPartyMemberDueOrg(DjPartyMemberDueOrg djPartyMemberDueOrg)
     {
+
+        djPartyMemberDueOrg.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djPartyMemberDueOrg.setCreateTime(DateUtils.getNowDate());
-        return djPartyMemberDueOrgMapper.insertDjPartyMemberDueOrg(djPartyMemberDueOrg);
+        return  djPartyMemberDueOrgMapper.insertDjPartyMemberDueOrg(djPartyMemberDueOrg);
     }
 
     /**
@@ -84,6 +88,7 @@ public class DjPartyMemberDueOrgServiceImpl implements IDjPartyMemberDueOrgServi
     @Override
     public int updateDjPartyMemberDueOrg(DjPartyMemberDueOrg djPartyMemberDueOrg)
     {
+        djPartyMemberDueOrg.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djPartyMemberDueOrg.setUpdateTime(DateUtils.getNowDate());
         return djPartyMemberDueOrgMapper.updateDjPartyMemberDueOrg(djPartyMemberDueOrg);
     }

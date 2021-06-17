@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjPartyMemberFlowMapper;
 import com.ruoyi.project.party.domain.DjPartyMemberFlow;
 import com.ruoyi.project.party.service.IDjPartyMemberFlowService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党员流动Service业务层处理
  *
@@ -17,6 +18,7 @@ import com.ruoyi.project.party.service.IDjPartyMemberFlowService;
  * @date 2020-09-21
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyMemberFlowServiceImpl implements IDjPartyMemberFlowService
 {
     @Autowired

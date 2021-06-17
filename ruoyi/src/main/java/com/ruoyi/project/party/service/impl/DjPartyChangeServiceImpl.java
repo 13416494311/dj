@@ -26,7 +26,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党组织换届Service业务层处理
  *
@@ -34,6 +35,7 @@ import java.util.Map;
  * @date 2021-02-18
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyChangeServiceImpl implements IDjPartyChangeService
 {
     @Autowired

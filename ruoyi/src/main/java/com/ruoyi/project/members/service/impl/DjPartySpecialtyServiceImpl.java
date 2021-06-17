@@ -13,7 +13,8 @@ import com.ruoyi.project.members.mapper.DjPartySpecialtyMapper;
 import com.ruoyi.project.members.domain.DjPartySpecialty;
 import com.ruoyi.project.members.service.IDjPartySpecialtyService;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党员特长Service业务层处理
  *
@@ -21,6 +22,7 @@ import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
  * @date 2021-02-19
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartySpecialtyServiceImpl implements IDjPartySpecialtyService
 {
     @Autowired

@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjPartyOrgPostMapper;
 import com.ruoyi.project.party.domain.DjPartyOrgPost;
 import com.ruoyi.project.party.service.IDjPartyOrgPostService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党组织职务Service业务层处理
  *
@@ -18,6 +19,7 @@ import com.ruoyi.project.party.service.IDjPartyOrgPostService;
  * @date 2020-08-08
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyOrgPostServiceImpl implements IDjPartyOrgPostService
 {
     @Autowired

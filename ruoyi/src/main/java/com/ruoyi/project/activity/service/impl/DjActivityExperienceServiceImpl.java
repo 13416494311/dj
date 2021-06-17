@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivityExperienceMapper;
 import com.ruoyi.project.activity.domain.DjActivityExperience;
 import com.ruoyi.project.activity.service.IDjActivityExperienceService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 心得体会Service业务层处理
@@ -20,6 +22,7 @@ import com.ruoyi.project.activity.service.IDjActivityExperienceService;
  * @date 2020-08-23
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjActivityExperienceServiceImpl implements IDjActivityExperienceService
 {
     @Autowired

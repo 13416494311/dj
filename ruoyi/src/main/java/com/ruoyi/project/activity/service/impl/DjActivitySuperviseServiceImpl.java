@@ -24,7 +24,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivitySuperviseMapper;
 import com.ruoyi.project.activity.domain.DjActivitySupervise;
 import com.ruoyi.project.activity.service.IDjActivitySuperviseService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 活动督办Service业务层处理
  *
@@ -32,6 +33,7 @@ import com.ruoyi.project.activity.service.IDjActivitySuperviseService;
  * @date 2020-08-23
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjActivitySuperviseServiceImpl implements IDjActivitySuperviseService
 {
     @Autowired

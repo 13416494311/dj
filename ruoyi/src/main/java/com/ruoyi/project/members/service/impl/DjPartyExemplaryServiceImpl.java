@@ -26,7 +26,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.members.mapper.DjPartyExemplaryMapper;
 import com.ruoyi.project.members.domain.DjPartyExemplary;
 import com.ruoyi.project.members.service.IDjPartyExemplaryService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 先锋模范Service业务层处理
  *
@@ -34,6 +35,7 @@ import com.ruoyi.project.members.service.IDjPartyExemplaryService;
  * @date 2021-02-26
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyExemplaryServiceImpl implements IDjPartyExemplaryService
 {
     @Autowired

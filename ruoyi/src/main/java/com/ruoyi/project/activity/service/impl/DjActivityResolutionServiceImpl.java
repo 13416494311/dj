@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivityResolutionMapper;
 import com.ruoyi.project.activity.domain.DjActivityResolution;
 import com.ruoyi.project.activity.service.IDjActivityResolutionService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 活动决议Service业务层处理
@@ -16,6 +18,7 @@ import com.ruoyi.project.activity.service.IDjActivityResolutionService;
  * @date 2020-08-22
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjActivityResolutionServiceImpl implements IDjActivityResolutionService
 {
     @Autowired

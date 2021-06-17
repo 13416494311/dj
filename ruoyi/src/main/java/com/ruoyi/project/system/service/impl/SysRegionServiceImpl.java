@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 地区代码Service业务层处理
  *
@@ -16,6 +17,7 @@ import java.util.List;
  * @date 2020-06-07
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class SysRegionServiceImpl implements ISysRegionService
 {
     @Autowired

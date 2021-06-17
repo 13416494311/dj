@@ -5,18 +5,20 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.security.LoginUser;
 import com.ruoyi.project.monitor.domain.SysUserOnline;
 import com.ruoyi.project.system.service.ISysUserOnlineService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 在线用户 服务层处理
- * 
+ *
  * @author ruoyi
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class SysUserOnlineServiceImpl implements ISysUserOnlineService
 {
     /**
      * 通过登录地址查询信息
-     * 
+     *
      * @param ipaddr 登录地址
      * @param user 用户信息
      * @return 在线用户信息
@@ -33,7 +35,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
 
     /**
      * 通过用户名称查询信息
-     * 
+     *
      * @param userName 用户名称
      * @param user 用户信息
      * @return 在线用户信息
@@ -50,7 +52,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
 
     /**
      * 通过登录地址/用户名称查询信息
-     * 
+     *
      * @param ipaddr 登录地址
      * @param userName 用户名称
      * @param user 用户信息
@@ -68,7 +70,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
 
     /**
      * 设置在线用户信息
-     * 
+     *
      * @param user 用户信息
      * @return 在线用户
      */

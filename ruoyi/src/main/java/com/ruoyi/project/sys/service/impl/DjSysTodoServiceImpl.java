@@ -6,6 +6,7 @@ import com.apicloud.sdk.api.Push;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.system.mapper.SysUserMapper;
 import com.ruoyi.project.system.service.ISysDictDataService;
 import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.sys.mapper.DjSysTodoMapper;
 import com.ruoyi.project.sys.domain.DjSysTodo;
 import com.ruoyi.project.sys.service.IDjSysTodoService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 待办Service业务层处理
  *
@@ -21,6 +23,7 @@ import com.ruoyi.project.sys.service.IDjSysTodoService;
  * @date 2020-08-22
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjSysTodoServiceImpl implements IDjSysTodoService
 {
     @Autowired

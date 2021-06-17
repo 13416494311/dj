@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.system.mapper.SysFileMapper;
 import com.ruoyi.project.system.domain.SysFile;
 import com.ruoyi.project.system.service.ISysFileService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 附件Service业务层处理
  *
@@ -16,6 +17,7 @@ import com.ruoyi.project.system.service.ISysFileService;
  * @date 2020-08-11
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class SysFileServiceImpl implements ISysFileService
 {
     @Autowired

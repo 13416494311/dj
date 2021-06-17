@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.bigData.mapper.DjBigWorkPlanMapper;
 import com.ruoyi.project.bigData.domain.DjBigWorkPlan;
 import com.ruoyi.project.bigData.service.IDjBigWorkPlanService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党建工作计划Service业务层处理
  *
@@ -16,6 +17,7 @@ import com.ruoyi.project.bigData.service.IDjBigWorkPlanService;
  * @date 2021-01-31
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjBigWorkPlanServiceImpl implements IDjBigWorkPlanService
 {
     @Autowired

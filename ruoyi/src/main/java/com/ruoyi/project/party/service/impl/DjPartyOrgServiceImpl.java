@@ -26,7 +26,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjPartyOrgMapper;
 import com.ruoyi.project.party.domain.DjPartyOrg;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党组织架构Service业务层处理
  *
@@ -34,6 +35,7 @@ import com.ruoyi.project.party.service.IDjPartyOrgService;
  * @date 2020-08-03
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyOrgServiceImpl implements IDjPartyOrgService
 {
     @Autowired

@@ -128,7 +128,7 @@ public class DjPartyMemberDueOrgController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('party:dueOrg:remove')")
     @Log(title = "党组织党费", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{dueOrgIds}")
+    @DeleteMapping("/{dueOrgIds}")
     public AjaxResult remove(@PathVariable Long[] dueOrgIds)
     {
         return toAjax(djPartyMemberDueOrgService.deleteDjPartyMemberDueOrgByIds(dueOrgIds));

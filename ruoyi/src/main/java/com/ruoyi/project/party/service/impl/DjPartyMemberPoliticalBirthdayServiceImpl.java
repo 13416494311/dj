@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjPartyMemberPoliticalBirthdayMapper;
 import com.ruoyi.project.party.domain.DjPartyMemberPoliticalBirthday;
 import com.ruoyi.project.party.service.IDjPartyMemberPoliticalBirthdayService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 政治生日Service业务层处理
  *
@@ -21,6 +22,7 @@ import com.ruoyi.project.party.service.IDjPartyMemberPoliticalBirthdayService;
  * @date 2021-02-21
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyMemberPoliticalBirthdayServiceImpl implements IDjPartyMemberPoliticalBirthdayService
 {
     @Autowired

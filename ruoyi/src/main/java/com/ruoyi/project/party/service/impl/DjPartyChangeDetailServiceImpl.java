@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjPartyChangeDetailMapper;
 import com.ruoyi.project.party.domain.DjPartyChangeDetail;
 import com.ruoyi.project.party.service.IDjPartyChangeDetailService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 换届职位详情Service业务层处理
  *
@@ -16,6 +17,7 @@ import com.ruoyi.project.party.service.IDjPartyChangeDetailService;
  * @date 2021-02-18
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyChangeDetailServiceImpl implements IDjPartyChangeDetailService
 {
     @Autowired

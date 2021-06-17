@@ -111,11 +111,27 @@ public class DjPartyMemberDueController extends BaseController
     }
 
     /**
+     * 修改党员党费
+     */
+    @PreAuthorize("@ss.hasPermi('party:due:edit')")
+    @Log(title = "党员党费", businessType = BusinessType.UPDATE)
+    @PostMapping("/updateMemberDue")
+    public AjaxResult updateMemberDue(@RequestBody List<DjPartyMember> partyMemberList)
+    {
+        partyMemberList.stream().forEach(partyMember->{
+            partyMember.getMemberDueList().stream().forEach(djPartyMemberDue->{
+                djPartyMemberDueService.updateDjPartyMemberDue(djPartyMemberDue);
+            });
+        });
+        return AjaxResult.success();
+    }
+
+    /**
      * 删除党员党费
      */
     @PreAuthorize("@ss.hasPermi('party:due:remove')")
     @Log(title = "党员党费", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{dueMemberIds}")
+    @DeleteMapping("/{dueMemberIds}")
     public AjaxResult remove(@PathVariable Long[] dueMemberIds)
     {
         return toAjax(djPartyMemberDueService.deleteDjPartyMemberDueByIds(dueMemberIds));

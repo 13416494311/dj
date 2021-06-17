@@ -3,7 +3,9 @@ package com.ruoyi.project.party.domain;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import com.ruoyi.framework.aspectj.lang.annotation.Excel;
 import com.ruoyi.framework.web.domain.TreeEntity;
@@ -47,6 +49,7 @@ public class DjPartyOrg extends TreeEntity
     @Excel(name = "负责人")
     private Long leader;
 
+    @JsonBackReference
     private DjPartyMember leaderMember;
 
     /** 联系电话 */

@@ -14,13 +14,15 @@ import com.ruoyi.framework.web.domain.TreeSelect;
 import com.ruoyi.project.system.domain.SysDept;
 import com.ruoyi.project.system.mapper.SysDeptMapper;
 import com.ruoyi.project.system.service.ISysDeptService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 部门管理 服务实现
  *
  * @author ruoyi
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class SysDeptServiceImpl implements ISysDeptService
 {
     @Autowired

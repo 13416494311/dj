@@ -7,22 +7,24 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.members.mapper.DjPartyMemberHelpRecordMapper;
 import com.ruoyi.project.members.domain.DjPartyMemberHelpRecord;
 import com.ruoyi.project.members.service.IDjPartyMemberHelpRecordService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 帮扶记录Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2021-02-27
  */
 @Service
-public class DjPartyMemberHelpRecordServiceImpl implements IDjPartyMemberHelpRecordService 
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+public class DjPartyMemberHelpRecordServiceImpl implements IDjPartyMemberHelpRecordService
 {
     @Autowired
     private DjPartyMemberHelpRecordMapper djPartyMemberHelpRecordMapper;
 
     /**
      * 查询帮扶记录
-     * 
+     *
      * @param helpRecordId 帮扶记录ID
      * @return 帮扶记录
      */
@@ -34,7 +36,7 @@ public class DjPartyMemberHelpRecordServiceImpl implements IDjPartyMemberHelpRec
 
     /**
      * 查询帮扶记录列表
-     * 
+     *
      * @param djPartyMemberHelpRecord 帮扶记录
      * @return 帮扶记录
      */
@@ -46,7 +48,7 @@ public class DjPartyMemberHelpRecordServiceImpl implements IDjPartyMemberHelpRec
 
     /**
      * 新增帮扶记录
-     * 
+     *
      * @param djPartyMemberHelpRecord 帮扶记录
      * @return 结果
      */
@@ -59,7 +61,7 @@ public class DjPartyMemberHelpRecordServiceImpl implements IDjPartyMemberHelpRec
 
     /**
      * 修改帮扶记录
-     * 
+     *
      * @param djPartyMemberHelpRecord 帮扶记录
      * @return 结果
      */
@@ -72,7 +74,7 @@ public class DjPartyMemberHelpRecordServiceImpl implements IDjPartyMemberHelpRec
 
     /**
      * 批量删除帮扶记录
-     * 
+     *
      * @param helpRecordIds 需要删除的帮扶记录ID
      * @return 结果
      */
@@ -84,7 +86,7 @@ public class DjPartyMemberHelpRecordServiceImpl implements IDjPartyMemberHelpRec
 
     /**
      * 删除帮扶记录信息
-     * 
+     *
      * @param helpRecordId 帮扶记录ID
      * @return 结果
      */

@@ -6,21 +6,23 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.project.tool.gen.domain.GenTableColumn;
 import com.ruoyi.project.tool.gen.mapper.GenTableColumnMapper;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 业务字段 服务层实现
- * 
+ *
  * @author ruoyi
  */
 @Service
-public class GenTableColumnServiceImpl implements IGenTableColumnService 
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+public class GenTableColumnServiceImpl implements IGenTableColumnService
 {
 	@Autowired
 	private GenTableColumnMapper genTableColumnMapper;
 
 	/**
      * 查询业务字段列表
-     * 
+     *
      * @param genTableColumn 业务字段编号
      * @return 业务字段集合
      */
@@ -29,10 +31,10 @@ public class GenTableColumnServiceImpl implements IGenTableColumnService
 	{
 	    return genTableColumnMapper.selectGenTableColumnListByTableId(tableId);
 	}
-	
+
     /**
      * 新增业务字段
-     * 
+     *
      * @param genTableColumn 业务字段信息
      * @return 结果
      */
@@ -41,10 +43,10 @@ public class GenTableColumnServiceImpl implements IGenTableColumnService
 	{
 	    return genTableColumnMapper.insertGenTableColumn(genTableColumn);
 	}
-	
+
 	/**
      * 修改业务字段
-     * 
+     *
      * @param genTableColumn 业务字段信息
      * @return 结果
      */
@@ -56,7 +58,7 @@ public class GenTableColumnServiceImpl implements IGenTableColumnService
 
 	/**
      * 删除业务字段对象
-     * 
+     *
      * @param ids 需要删除的数据ID
      * @return 结果
      */

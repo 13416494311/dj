@@ -10,15 +10,17 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjOrgAssessmentMapper;
 import com.ruoyi.project.party.domain.DjOrgAssessment;
 import com.ruoyi.project.party.service.IDjOrgAssessmentService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党组织考核Service业务层处理
- * 
+ *
  * @author admin
  * @date 2021-03-10
  */
 @Service
-public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService 
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
 {
     @Autowired
     private DjOrgAssessmentMapper djOrgAssessmentMapper;
@@ -27,7 +29,7 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
 
     /**
      * 查询党组织考核
-     * 
+     *
      * @param id 党组织考核ID
      * @return 党组织考核
      */
@@ -50,7 +52,7 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
 
     /**
      * 查询党组织考核列表
-     * 
+     *
      * @param djOrgAssessment 党组织考核
      * @return 党组织考核
      */
@@ -69,7 +71,7 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
 
     /**
      * 新增党组织考核
-     * 
+     *
      * @param djOrgAssessment 党组织考核
      * @return 结果
      */
@@ -84,7 +86,7 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
 
     /**
      * 修改党组织考核
-     * 
+     *
      * @param djOrgAssessment 党组织考核
      * @return 结果
      */
@@ -98,7 +100,7 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
 
     /**
      * 批量删除党组织考核
-     * 
+     *
      * @param ids 需要删除的党组织考核ID
      * @return 结果
      */
@@ -110,7 +112,7 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
 
     /**
      * 删除党组织考核信息
-     * 
+     *
      * @param id 党组织考核ID
      * @return 结果
      */

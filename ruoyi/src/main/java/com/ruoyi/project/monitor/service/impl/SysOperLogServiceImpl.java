@@ -6,13 +6,15 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.monitor.domain.SysOperLog;
 import com.ruoyi.project.monitor.mapper.SysOperLogMapper;
 import com.ruoyi.project.monitor.service.ISysOperLogService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 操作日志 服务层处理
- * 
+ *
  * @author ruoyi
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class SysOperLogServiceImpl implements ISysOperLogService
 {
     @Autowired
@@ -20,7 +22,7 @@ public class SysOperLogServiceImpl implements ISysOperLogService
 
     /**
      * 新增操作日志
-     * 
+     *
      * @param operLog 操作日志对象
      */
     @Override
@@ -31,7 +33,7 @@ public class SysOperLogServiceImpl implements ISysOperLogService
 
     /**
      * 查询系统操作日志集合
-     * 
+     *
      * @param operLog 操作日志对象
      * @return 操作日志集合
      */
@@ -43,7 +45,7 @@ public class SysOperLogServiceImpl implements ISysOperLogService
 
     /**
      * 批量删除系统操作日志
-     * 
+     *
      * @param operIds 需要删除的操作日志ID
      * @return 结果
      */
@@ -54,7 +56,7 @@ public class SysOperLogServiceImpl implements ISysOperLogService
 
     /**
      * 查询操作日志详细
-     * 
+     *
      * @param operId 操作ID
      * @return 操作日志对象
      */

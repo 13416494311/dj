@@ -8,22 +8,24 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjOrgAssessmentListScoreMapper;
 import com.ruoyi.project.party.domain.DjOrgAssessmentListScore;
 import com.ruoyi.project.party.service.IDjOrgAssessmentListScoreService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 考核评价评分Service业务层处理
- * 
+ *
  * @author admin
  * @date 2021-03-12
  */
 @Service
-public class DjOrgAssessmentListScoreServiceImpl implements IDjOrgAssessmentListScoreService 
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+public class DjOrgAssessmentListScoreServiceImpl implements IDjOrgAssessmentListScoreService
 {
     @Autowired
     private DjOrgAssessmentListScoreMapper djOrgAssessmentListScoreMapper;
 
     /**
      * 查询考核评价评分
-     * 
+     *
      * @param id 考核评价评分ID
      * @return 考核评价评分
      */
@@ -35,7 +37,7 @@ public class DjOrgAssessmentListScoreServiceImpl implements IDjOrgAssessmentList
 
     /**
      * 查询考核评价评分列表
-     * 
+     *
      * @param djOrgAssessmentListScore 考核评价评分
      * @return 考核评价评分
      */
@@ -47,7 +49,7 @@ public class DjOrgAssessmentListScoreServiceImpl implements IDjOrgAssessmentList
 
     /**
      * 新增考核评价评分
-     * 
+     *
      * @param djOrgAssessmentListScore 考核评价评分
      * @return 结果
      */
@@ -62,7 +64,7 @@ public class DjOrgAssessmentListScoreServiceImpl implements IDjOrgAssessmentList
 
     /**
      * 修改考核评价评分
-     * 
+     *
      * @param djOrgAssessmentListScore 考核评价评分
      * @return 结果
      */
@@ -76,7 +78,7 @@ public class DjOrgAssessmentListScoreServiceImpl implements IDjOrgAssessmentList
 
     /**
      * 批量删除考核评价评分
-     * 
+     *
      * @param ids 需要删除的考核评价评分ID
      * @return 结果
      */
@@ -88,7 +90,7 @@ public class DjOrgAssessmentListScoreServiceImpl implements IDjOrgAssessmentList
 
     /**
      * 删除考核评价评分信息
-     * 
+     *
      * @param id 考核评价评分ID
      * @return 结果
      */

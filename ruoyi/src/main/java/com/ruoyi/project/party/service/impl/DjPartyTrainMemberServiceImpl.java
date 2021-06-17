@@ -23,7 +23,8 @@ import com.ruoyi.project.party.mapper.DjPartyTrainMemberMapper;
 import com.ruoyi.project.party.domain.DjPartyTrainMember;
 import com.ruoyi.project.party.service.IDjPartyTrainMemberService;
 import org.springframework.util.CollectionUtils;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 参与培训党员Service业务层处理
  *
@@ -31,6 +32,7 @@ import org.springframework.util.CollectionUtils;
  * @date 2021-03-09
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyTrainMemberServiceImpl implements IDjPartyTrainMemberService
 {
     @Autowired

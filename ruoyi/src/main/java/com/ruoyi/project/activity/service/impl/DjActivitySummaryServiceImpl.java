@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivitySummaryMapper;
 import com.ruoyi.project.activity.domain.DjActivitySummary;
 import com.ruoyi.project.activity.service.IDjActivitySummaryService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 活动纪要Service业务层处理
  *
@@ -16,6 +17,7 @@ import com.ruoyi.project.activity.service.IDjActivitySummaryService;
  * @date 2020-08-22
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjActivitySummaryServiceImpl implements IDjActivitySummaryService
 {
     @Autowired

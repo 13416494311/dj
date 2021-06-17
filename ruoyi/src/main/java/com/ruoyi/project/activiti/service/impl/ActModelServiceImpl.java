@@ -3,13 +3,7 @@ package com.ruoyi.project.activiti.service.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import com.ruoyi.common.constant.HttpStatus;
-import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.framework.web.domain.AjaxResult;
-import com.ruoyi.framework.web.page.PageDomain;
-import com.ruoyi.framework.web.page.TableDataInfo;
-import com.ruoyi.framework.web.page.TableSupport;
 import com.ruoyi.project.activiti.domain.ModelEntityDto;
 import com.ruoyi.project.activiti.service.ActModelService;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
@@ -30,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 
@@ -37,6 +33,7 @@ import static org.activiti.editor.constants.ModelDataJsonConstants.MODEL_ID;
 import static org.activiti.editor.constants.ModelDataJsonConstants.MODEL_NAME;
 
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class ActModelServiceImpl implements ActModelService
 {
 	protected static final Logger LOGGER = LoggerFactory.getLogger(ModelEditorJsonRestResource.class);

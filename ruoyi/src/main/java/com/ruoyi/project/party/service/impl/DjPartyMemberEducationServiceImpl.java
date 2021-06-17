@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjPartyMemberEducationMapper;
 import com.ruoyi.project.party.domain.DjPartyMemberEducation;
 import com.ruoyi.project.party.service.IDjPartyMemberEducationService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 教育经历Service业务层处理
  *
@@ -16,6 +17,7 @@ import com.ruoyi.project.party.service.IDjPartyMemberEducationService;
  * @date 2021-04-07
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyMemberEducationServiceImpl implements IDjPartyMemberEducationService
 {
     @Autowired

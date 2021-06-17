@@ -1,17 +1,20 @@
 package com.ruoyi.project.party.service.impl;
 
-import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.party.domain.DjPartyMember;
+import com.ruoyi.project.party.domain.DjPartyMemberDue;
 import com.ruoyi.project.party.domain.DjPartyMemberDueOrg;
+import com.ruoyi.project.party.mapper.DjPartyMemberDueMapper;
 import com.ruoyi.project.party.mapper.DjPartyMemberDueOrgMapper;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
+import com.ruoyi.project.party.service.IDjPartyMemberDueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.project.party.mapper.DjPartyMemberDueMapper;
-import com.ruoyi.project.party.domain.DjPartyMemberDue;
-import com.ruoyi.project.party.service.IDjPartyMemberDueService;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 党员党费Service业务层处理
@@ -20,6 +23,7 @@ import com.ruoyi.project.party.service.IDjPartyMemberDueService;
  * @date 2021-06-15
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyMemberDueServiceImpl implements IDjPartyMemberDueService
 {
     @Autowired
@@ -29,6 +33,7 @@ public class DjPartyMemberDueServiceImpl implements IDjPartyMemberDueService
     @Autowired
     private DjPartyMemberDueOrgMapper djPartyMemberDueOrgMapper;
 
+    @Override
     public List<DjPartyMember> selectDueMemberList(DjPartyMemberDue djPartyMemberDue){
         DjPartyMemberDueOrg dueOrg = djPartyMemberDueOrgMapper.selectDjPartyMemberDueOrgById(djPartyMemberDue.getDueOrgId());
 

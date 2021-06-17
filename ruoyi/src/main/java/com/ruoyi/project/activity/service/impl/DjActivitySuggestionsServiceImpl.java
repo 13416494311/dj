@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivitySuggestionsMapper;
 import com.ruoyi.project.activity.domain.DjActivitySuggestions;
 import com.ruoyi.project.activity.service.IDjActivitySuggestionsService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 建言献策Service业务层处理
  *
@@ -20,6 +21,7 @@ import com.ruoyi.project.activity.service.IDjActivitySuggestionsService;
  * @date 2020-08-22
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjActivitySuggestionsServiceImpl implements IDjActivitySuggestionsService
 {
     @Autowired

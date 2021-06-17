@@ -26,6 +26,8 @@ import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.activity.mapper.DjActivityDetailedMapper;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 活动详情Service业务层处理
@@ -34,6 +36,7 @@ import com.ruoyi.project.activity.mapper.DjActivityDetailedMapper;
  * @date 2020-08-16
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjActivityDetailedServiceImpl implements IDjActivityDetailedService {
     @Autowired
     private DjActivityDetailedMapper djActivityDetailedMapper;

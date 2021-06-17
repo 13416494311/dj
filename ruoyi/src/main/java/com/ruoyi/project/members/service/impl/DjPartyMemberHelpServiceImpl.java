@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.members.mapper.DjPartyMemberHelpMapper;
 import com.ruoyi.project.members.domain.DjPartyMemberHelp;
 import com.ruoyi.project.members.service.IDjPartyMemberHelpService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党员帮扶Service业务层处理
  *
@@ -18,6 +19,7 @@ import com.ruoyi.project.members.service.IDjPartyMemberHelpService;
  * @date 2021-02-27
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class DjPartyMemberHelpServiceImpl implements IDjPartyMemberHelpService
 {
     @Autowired

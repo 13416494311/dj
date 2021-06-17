@@ -11,13 +11,15 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.system.domain.SysNotice;
 import com.ruoyi.project.system.mapper.SysNoticeMapper;
 import com.ruoyi.project.system.service.ISysNoticeService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 公告 服务层实现
  *
  * @author ruoyi
  */
 @Service
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
 public class SysNoticeServiceImpl implements ISysNoticeService
 {
     @Autowired

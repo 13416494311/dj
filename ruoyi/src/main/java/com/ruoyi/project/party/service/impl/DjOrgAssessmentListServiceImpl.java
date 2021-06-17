@@ -8,22 +8,24 @@ import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjOrgAssessmentListMapper;
 import com.ruoyi.project.party.domain.DjOrgAssessmentList;
 import com.ruoyi.project.party.service.IDjOrgAssessmentListService;
-
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 /**
  * 党组织考核评价清单Service业务层处理
- * 
+ *
  * @author admin
  * @date 2021-03-08
  */
 @Service
-public class DjOrgAssessmentListServiceImpl implements IDjOrgAssessmentListService 
+@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+public class DjOrgAssessmentListServiceImpl implements IDjOrgAssessmentListService
 {
     @Autowired
     private DjOrgAssessmentListMapper djOrgAssessmentListMapper;
 
     /**
      * 查询党组织考核评价清单
-     * 
+     *
      * @param listId 党组织考核评价清单ID
      * @return 党组织考核评价清单
      */
@@ -35,7 +37,7 @@ public class DjOrgAssessmentListServiceImpl implements IDjOrgAssessmentListServi
 
     /**
      * 查询党组织考核评价清单列表
-     * 
+     *
      * @param djOrgAssessmentList 党组织考核评价清单
      * @return 党组织考核评价清单
      */
@@ -47,7 +49,7 @@ public class DjOrgAssessmentListServiceImpl implements IDjOrgAssessmentListServi
 
     /**
      * 新增党组织考核评价清单
-     * 
+     *
      * @param djOrgAssessmentList 党组织考核评价清单
      * @return 结果
      */
@@ -62,7 +64,7 @@ public class DjOrgAssessmentListServiceImpl implements IDjOrgAssessmentListServi
 
     /**
      * 修改党组织考核评价清单
-     * 
+     *
      * @param djOrgAssessmentList 党组织考核评价清单
      * @return 结果
      */
@@ -76,7 +78,7 @@ public class DjOrgAssessmentListServiceImpl implements IDjOrgAssessmentListServi
 
     /**
      * 批量删除党组织考核评价清单
-     * 
+     *
      * @param listIds 需要删除的党组织考核评价清单ID
      * @return 结果
      */
@@ -88,7 +90,7 @@ public class DjOrgAssessmentListServiceImpl implements IDjOrgAssessmentListServi
 
     /**
      * 删除党组织考核评价清单信息
-     * 
+     *
      * @param listId 党组织考核评价清单ID
      * @return 结果
      */
