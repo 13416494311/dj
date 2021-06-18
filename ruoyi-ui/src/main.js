@@ -20,7 +20,7 @@ import { getDicts } from "@/api/system/dict/data";
 import { getConfigKey } from "@/api/system/config";
 import { parseTime, resetForm, addDateRange, selectDictLabel,
   download, handleTree,treeInitData,getDateYearSub,getNowFormatDate,getTreeNode,
-  uuid,cityTreeData,getBasePath } from "@/utils/ruoyi";
+  uuid,cityTreeData,getBasePath,getDaysBetween } from "@/utils/ruoyi";
 import { getDifDate } from "@/utils/workHours";
 import Pagination from "@/components/Pagination";
 import Vue2OrgTree from 'vue2-org-tree';
@@ -57,6 +57,7 @@ Vue.prototype.$echarts = echarts;
 Vue.prototype.cityTreeData = cityTreeData
 Vue.prototype.getBasePath = getBasePath
 Vue.prototype.getDifDate = getDifDate
+Vue.prototype.getDaysBetween = getDaysBetween
 
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });
