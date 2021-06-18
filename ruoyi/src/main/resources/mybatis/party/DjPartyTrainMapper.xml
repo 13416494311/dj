@@ -36,8 +36,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectDjPartyTrain"/>
 
         <where>
-            exists ( select 1  from dj_party_member m
-                 left join sys_user u on m.member_id = u.party_member_id where m.party_org_id = t.party_org_id  ${dataScope} )
+            exists ( select 1  from dj_party_org o
+                 left join dj_party_member m on o.party_org_id = m.party_org_id
+                 left join sys_user u on m.member_id = u.party_member_id where o.party_org_id = t.party_org_id  ${dataScope} )
             <if test="trainUuid != null  and trainUuid != ''"> and t.train_uuid = #{trainUuid}</if>
             <if test="partyOrgId != null "> and t.party_org_id = #{partyOrgId}</if>
             <if test="trainType != null  and trainType != ''"> and t.train_type = #{trainType}</if>
@@ -46,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="activityStartTime != null "> and t.activity_start_time = #{activityStartTime}</if>
             <if test="activityEndTime != null "> and t.activity_end_time = #{activityEndTime}</if>
             <if test="effectiveHours != null "> and t.effective_hours = #{effectiveHours}</if>
+
         </where>
         order by t.create_time desc
     </select>
