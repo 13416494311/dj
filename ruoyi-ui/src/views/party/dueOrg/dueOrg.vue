@@ -49,6 +49,14 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-search"
+            @click="handleSee(scope.row)"
+            v-hasPermi="['party:dueOrg:edit']"
+          >查看</el-button>
+          <el-button
+            v-if="scope.row.status != 2"
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['party:dueOrg:edit']"
@@ -247,9 +255,17 @@
       /** 修改按钮操作 */
       handleUpdate(row) {
         this.reset();
+        this.disabled = false;
         this.dueOrgId = row.dueOrgId
         this.open = true;
         this.title = "党组织党费填报";
+      },
+      handleSee(row) {
+        this.reset();
+        this.disabled = true;
+        this.dueOrgId = row.dueOrgId
+        this.open = true;
+        this.title = "党组织党费查看";
       },
       /** 提交按钮 */
       submitForm: function() {

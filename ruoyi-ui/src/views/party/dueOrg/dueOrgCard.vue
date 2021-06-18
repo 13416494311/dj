@@ -26,7 +26,7 @@
               size="mini"
               type="text"
               icon="el-icon-search"
-              @click="handleDelete(scope.row)"
+              @click="handleSee(scope.row)"
             >查看
             </el-button>
             <el-button
@@ -42,7 +42,24 @@
         </el-table-column>
       </el-table>
     </el-card>
+
     <org-transfer  ref="orgTransfer" @chooseOrgs="chooseOrgs" ></org-transfer>
+
+    <!-- 添加或修改党组织党费对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="90%" append-to-body
+               @open="getHeight"  :close-on-click-modal="false">
+
+      <div :style="bodyStyle">
+        <due-card ref="dueCard" :disabled="disabled1" :dueOrgId="dueOrgId" @ok="cancel" ></due-card>
+      </div>
+
+
+      <div slot="footer" class="dialog-footer"  :style="{textAlign:'center'}">
+        <el-button v-if="!disabled" type="primary" @click="submitDue(1)">保 存</el-button>
+        <el-button v-if="!disabled" type="primary" @click="submitDue(2)">提 交</el-button>
+        <el-button @click="cancel">关 闭</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -50,10 +67,11 @@
 <script>
   import {listDueOrg, getDueOrg, delDueOrg, addDueOrgList,addDueOrg, updateDueOrg, exportDueOrg} from "@/api/party/dueOrg";
   import OrgTransfer from "../../../components/OrgTransfer/OrgTransfer";
+  import DueCard from "../due/dueCard";
 
   export default {
     name: "DueOrgCard",
-    components: {OrgTransfer},
+    components: {DueCard, OrgTransfer},
     props: {
       disabled: {
         type: Boolean,
@@ -106,11 +124,13 @@
         bodyStyle: {
           overflowY: 'auto',
           height: '',
-          marginLeft: '20%',
-          paddingRight: '20%',
+          marginLeft: '2%',
+          paddingRight: '2%',
         },
         // 是否提交字典
         statusOptions:[],
+        disabled1: false,
+        dueOrgId:'',
       };
     },
     mounted() {
@@ -239,6 +259,13 @@
             }
           }
         });
+      },
+      handleSee(row) {
+        this.reset();
+        this.disabled1 = true;
+        this.dueOrgId = row.dueOrgId
+        this.open = true;
+        this.title = "党组织党费查看";
       },
       /** 删除按钮操作 */
       handleDelete(row) {
