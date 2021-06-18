@@ -35,6 +35,16 @@ export function updatePartyChange(data) {
   })
 }
 
+
+// 提醒党组织换届
+export function remindPartyChange(data) {
+  return request({
+    url: '/party/partyChange/remind',
+    method: 'post',
+    data: data
+  })
+}
+
 // 删除党组织换届
 export function delPartyChange(changeId) {
   return request({

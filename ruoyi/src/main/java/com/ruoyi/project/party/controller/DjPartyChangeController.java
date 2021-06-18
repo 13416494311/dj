@@ -3,6 +3,7 @@ package com.ruoyi.project.party.controller;
 import java.util.List;
 
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
+import com.ruoyi.project.party.domain.DjPartyOrg;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -102,5 +103,16 @@ public class DjPartyChangeController extends BaseController
     public AjaxResult remove(@PathVariable Long[] changeIds)
     {
         return toAjax(djPartyChangeService.deleteDjPartyChangeByIds(changeIds));
+    }
+
+
+    /**
+     * 换届提醒
+     */
+    @PreAuthorize("@ss.hasPermi('party:partyChange:remind')")
+    @PostMapping("/remind")
+    public AjaxResult remind(@RequestBody DjPartyOrg djPartyOrg)
+    {
+        return AjaxResult.success(djPartyChangeService.remindDjPartyChange(djPartyOrg));
     }
 }

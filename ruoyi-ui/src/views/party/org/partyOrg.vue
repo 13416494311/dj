@@ -98,7 +98,7 @@
             type="text"
             icon="el-icon-share"
             @click="handleShare(scope.row)"
-            v-hasPermi="['party:org:share']"
+            handle
           >分享
           </el-button>
           <el-button

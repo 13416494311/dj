@@ -79,4 +79,12 @@ public class DjPartyOrg extends TreeEntity
     private String delFlag;
 
     private List<DjPartyMember> partyPositionMemberList;
+
+    /** 上次换届时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date preChangeTime;
+
+    /** 下次换届时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date nextChangeTime;
 }

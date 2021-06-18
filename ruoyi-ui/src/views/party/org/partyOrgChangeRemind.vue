@@ -63,8 +63,9 @@
           <el-button
             size="small"
             type="text"
-            icon="el-icon-search"
-            @click="handleSee(scope.row)"
+            icon="el-icon-bell"
+            @click="handleRemind(scope.row)"
+            v-hasPermi="['party:partyChange:remind']"
           >提醒
           </el-button>
         </template>
@@ -78,6 +79,8 @@
     updatePartyOrg, exportPartyOrg,partyOrgTreeselect} from "@/api/party/org";
   import Treeselect from "@riophae/vue-treeselect";
   import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+  import { remindPartyChange } from "@/api/party/partyChange";
+
 
   export default {
     name: "PartyOrgChnageRemind",
@@ -132,7 +135,12 @@
       leftDaysFormat(row, column){
         if(row.nextChangeTime){
           let days = this.getDaysBetween(this.getNowFormatDate(),row.nextChangeTime);
-          return days.toFixed(0) + ' 天';
+          if(days == 0){
+            return '已到期';
+          }else{
+            return days.toFixed(0) + ' 天';
+          }
+
         }else{
           return '';
         }
@@ -185,24 +193,13 @@
       },
 
       /** 查看按钮操作 */
-      handleSee(row) {
-        this.reset();
-        this.mapOpen = false;
-        this.disabled = true;
-        this.getTreeselect();
-        if (row != undefined) {
-          this.form.parentId = row.partyOrgId;
-        }
-        getPartyOrg(row.partyOrgId).then(response => {
-          this.form = response.data;
-          if(response.data.leaderMember != undefined){
-            this.form.leaderName = response.data.leaderMember
+      handleRemind(row) {
+        remindPartyChange(row).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess(response.msg);
+          } else {
+            this.msgError(response.msg);
           }
-          if(response.data.regionCode != undefined){
-            this.form.regionCode = response.data.regionCode.split("-");
-          }
-          this.open = true;
-          this.title = "查看党组织架构";
         });
       },
       /**行颜色*/

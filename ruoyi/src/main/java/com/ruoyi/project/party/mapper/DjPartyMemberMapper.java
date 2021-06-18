@@ -27,13 +27,19 @@ public interface DjPartyMemberMapper
 
     public DjPartyMember selectPartyMemberByUuid(String memberUuid);
     /**
-     * 查询党员信息列表
+     * 查询党组织下所有党员信息（包含子级党组织）列表
      *
      * @param djPartyMember 党员信息
      * @return 党员信息集合
      */
     public List<DjPartyMember> selectDjPartyMemberList(DjPartyMember djPartyMember);
 
+    /**
+     * 查询党组织下所有党员信息（不包含子级党组织）列表
+     *
+     * @param djPartyMember 党员信息
+     * @return 党员信息集合
+     */
     public List<DjPartyMember> selectPartyMemberList(DjPartyMember djPartyMember);
 
     public List<DjPartyMember> selectPoliticalBirthdayPartyMemberList();

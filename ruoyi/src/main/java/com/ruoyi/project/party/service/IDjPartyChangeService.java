@@ -2,6 +2,7 @@ package com.ruoyi.project.party.service;
 
 import java.util.List;
 import com.ruoyi.project.party.domain.DjPartyChange;
+import com.ruoyi.project.party.domain.DjPartyOrg;
 
 /**
  * 党组织换届Service接口
@@ -58,4 +59,12 @@ public interface IDjPartyChangeService
      * @return 结果
      */
     public int deleteDjPartyChangeById(Long changeId);
+
+    /**
+     * 提醒党组织换届
+     *
+     * @param djPartyOrg 党组织信息
+     * @return 结果
+     */
+    public String remindDjPartyChange(DjPartyOrg djPartyOrg);
 }

@@ -1,6 +1,10 @@
 package com.ruoyi.project.party.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.project.party.domain.DjPartyMember;
@@ -10,6 +14,13 @@ import com.ruoyi.project.party.mapper.DjPartyMemberDueMapper;
 import com.ruoyi.project.party.mapper.DjPartyMemberDueOrgMapper;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.service.IDjPartyMemberDueService;
+import com.ruoyi.project.sys.domain.DjSysMessage;
+import com.ruoyi.project.sys.domain.DjSysTodo;
+import com.ruoyi.project.sys.service.IDjSysMessageService;
+import com.ruoyi.project.sys.service.IDjSysTodoService;
+import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.mapper.SysUserMapper;
+import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjPartyMemberDuePlanMapper;
@@ -36,6 +47,14 @@ public class DjPartyMemberDuePlanServiceImpl implements IDjPartyMemberDuePlanSer
     private DjPartyMemberMapper djPartyMemberMapper;
     @Autowired
     private IDjPartyMemberDueService djPartyMemberDueService;
+    @Autowired
+    private SysUserMapper userMapper;
+    @Autowired
+    private IDjSysTodoService djSysTodoService;
+    @Autowired
+    private IDjSysMessageService sysMessageService;
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     /**
      * 查询党费计划
@@ -111,8 +130,60 @@ public class DjPartyMemberDuePlanServiceImpl implements IDjPartyMemberDuePlanSer
                         djPartyMemberDueService.insertDjPartyMemberDue(memberDue);
                     }
                 });
+
+                createSysLogAndTodo(djPartyMemberDuePlan,dueOrg);
+
             });
         }
+    }
+
+    private void createSysLogAndTodo(DjPartyMemberDuePlan djPartyMemberDuePlan,DjPartyMemberDueOrg djPartyMemberDueOrg){
+        DjPartyMember djPartyMember = new DjPartyMember();
+        djPartyMember.setPartyOrgId(djPartyMemberDueOrg.getPartyOrgId());
+        djPartyMember.setPartyPositionType("1");
+        List<DjPartyMember> partyMemberList = djPartyMemberMapper.selectPartyMemberList(djPartyMember);
+        if(partyMemberList ==null || partyMemberList.size() ==0){ //没有书记 就给副书记
+            djPartyMember.setPartyPositionType("2");
+            partyMemberList = djPartyMemberMapper.selectPartyMemberList(djPartyMember);
+            if(partyMemberList ==null || partyMemberList.size() ==0){
+                return ;
+            }else{
+                djPartyMember =   partyMemberList.get(0);
+            }
+        }else{
+            djPartyMember =   partyMemberList.get(0);
+        }
+
+        SysUser user = userMapper.selectUserByPartyMemberId(djPartyMember.getMemberId());
+
+        if(user == null ){
+            return ;
+        }
+        DjSysTodo sysTodo = new DjSysTodo();
+        //sysTodo.setUuid(djPartyOrg.getPartyOrgUuid());
+        sysTodo.setType("13"); //党费填报
+        sysTodo.setTitle(djPartyMemberDuePlan.getTitle());
+        sysTodo.setUrlName("PartyMemberDue");
+        sysTodo.setUrlPath("todo/partyMemberDue");
+        sysTodo.setUserId(user.getUserId());
+        sysTodo.setStatus("0");
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("dueOrgId", String.valueOf(djPartyMemberDueOrg.getDueOrgId()));
+        sysTodo.setUrlParams(JSON.toJSONString(map));
+        sysTodo.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        djSysTodoService.insertDjSysTodo(sysTodo);
+
+        DjSysMessage sysMessage = new DjSysMessage();
+        sysMessage.setMessageUuid(sysTodo.getUuid());
+        sysMessage.setTitle(dictDataService.selectDictLabel("sys_todo_type",sysTodo.getType()));
+        sysMessage.setContent("您收到一条"+sysMessage.getTitle()+"，内容如下："+sysTodo.getTitle());
+        sysMessage.setType(2);
+        sysMessage.setPlatform(0);
+        sysMessage.setGroupName("");
+        sysMessage.setStatus("0");
+        sysMessage.setUserIds(sysTodo.getUserId().toString());
+        sysMessage.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        sysMessageService.insertDjSysMessage(sysMessage);
     }
 
     /**

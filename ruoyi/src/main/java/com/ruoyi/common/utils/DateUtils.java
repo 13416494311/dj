@@ -155,6 +155,18 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
     }
 
     /**
+     * @param smallDate
+     * @param bigDate
+     * @desc 获取两个日期之间的天数
+     */
+    public static int getDaysBetween(Date startDate, Date endDate)   {
+        // 相差的日期
+        long days = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24);
+        return Integer.parseInt(String.valueOf(days));
+    }
+
+
+    /**
      * 计算年份差
      * @param fromDate
      * @param toDate

@@ -114,10 +114,10 @@ public class PartyChangeTask {
             DjPartyMember djPartyMember = new DjPartyMember();
             djPartyMember.setPartyOrgId(djPartyOrg.getPartyOrgId());
             djPartyMember.setPartyPositionType("1");
-            List<DjPartyMember> partyMemberList = partyMemberMapper.selectDjPartyMemberList(djPartyMember);
+            List<DjPartyMember> partyMemberList = partyMemberMapper.selectPartyMemberList(djPartyMember);
             if(partyMemberList ==null || partyMemberList.size() ==0){ //没有书记 就给副书记
                 djPartyMember.setPartyPositionType("2");
-                partyMemberList = partyMemberMapper.selectDjPartyMemberList(djPartyMember);
+                partyMemberList = partyMemberMapper.selectPartyMemberList(djPartyMember);
                 if(partyMemberList ==null || partyMemberList.size() ==0){
                     return ;
                 }else{

@@ -185,10 +185,24 @@ public class DjPartyOrgServiceImpl implements IDjPartyOrgService
             org.setPartyPositionMemberList(
                     djPartyMemberList.stream().filter(partyMember ->StringUtils.isNotEmpty(partyMember.getPartyPositionType())).collect(Collectors.toList())
             );
+
+            /**  上次/下次换届时间 **/
+            DjPartyChange partyChange = new DjPartyChange();
+            partyChange.setPartyOrgId(org.getPartyOrgId());
+            List<DjPartyChange> partyChangeList = djPartyChangeMapper.selectDjPartyChangeList(partyChange);
+            if(partyChangeList!= null && partyChangeList.size()>0){
+                org.setPreChangeTime(partyChangeList.get(0).getChangeTime());
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(org.getPreChangeTime());
+                if("1".equals(org.getOrgType())){
+                    cal.add(Calendar.YEAR, 5);
+                    org.setNextChangeTime(cal.getTime());
+                }else {
+                    cal.add(Calendar.YEAR, 3);
+                    org.setNextChangeTime(cal.getTime());
+                }
+            }
         });
-
-
-
 
         return list;
     }
