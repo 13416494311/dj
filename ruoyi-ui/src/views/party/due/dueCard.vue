@@ -174,7 +174,9 @@
       window.addEventListener('resize', this.getHeight);
     },
     created() {
-      this.getList();
+      if(this.dueOrgId){
+        this.getList();
+      }
     },
     watch: {
       'dueOrgId'(val) {
@@ -378,7 +380,6 @@
         }
         this.$nextTick(()=>{
           this.$refs["form"].validate((valid ,object)=> {
-            console.log(object);
             if (valid) {
               updateMemberDue(this.dueList).then(response => {
                 if (response.code === 200) {

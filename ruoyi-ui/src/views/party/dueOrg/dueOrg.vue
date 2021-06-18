@@ -43,6 +43,7 @@
       <el-table-column label="年度" align="center" prop="duePlan.year" :formatter="yearFormat"/>
       <el-table-column label="季度" align="center" prop="duePlan.quarter" :formatter="quarterFormat"/>
       <el-table-column label="党组织" align="center" prop="partyOrg" :formatter="partyOrgFormat"/>
+      <el-table-column label="备注" align="center" prop="duePlan.remark"/>
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
