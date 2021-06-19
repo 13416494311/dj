@@ -2,6 +2,7 @@ package com.ruoyi.project.party.controller;
 
 import java.util.List;
 
+import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.project.party.domain.DjPartyMember;
 import com.ruoyi.project.party.domain.DjPartyMemberDueOrg;
 import com.ruoyi.project.party.mapper.DjPartyMemberDueOrgMapper;
@@ -57,8 +58,9 @@ public class DjPartyMemberDueController extends BaseController
      * 查询党员党费列表
      */
     @PreAuthorize("@ss.hasPermi('party:due:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(DjPartyMemberDue djPartyMemberDue)
+    @PostMapping("/list")
+    @DataScope(partyOrgAlias = "dpm", userAlias = "su")
+    public TableDataInfo list(@RequestBody DjPartyMemberDue djPartyMemberDue)
     {
         startPage();
         List<DjPartyMemberDue> list = djPartyMemberDueService.selectDjPartyMemberDueList(djPartyMemberDue);

@@ -20,25 +20,50 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDjPartyMemberDueVo">
-        select due_member_id, due_org_id, party_member_id, month, salary, ratio, due, del_flag, create_by, create_time, update_by, update_time from dj_party_member_due
+        select dpmd.due_member_id, dpmd.due_org_id, dpmd.party_member_id, dpmd.month, dpmd.salary, dpmd.ratio, dpmd.due,
+               dpmd.del_flag, dpmd.create_by, dpmd.create_time, dpmd.update_by, dpmd.update_time
+        from dj_party_member_due dpmd
     </sql>
 
     <select id="selectDjPartyMemberDueList" parameterType="DjPartyMemberDue" resultMap="DjPartyMemberDueResult">
         <include refid="selectDjPartyMemberDueVo"/>
+        left join dj_party_member_due_org dpmdo on dpmdo.due_org_id = dpmd.due_org_id
+        left join dj_party_member_due_plan dpmdp on dpmdo.due_plan_uuid = dpmdp.due_plan_uuid
+        left join dj_party_member dpm on dpm.member_id = dpmd.party_member_id
+        left join sys_user su on dpm.member_id = su.party_member_id
         <where>
-            <if test="dueOrgId != null "> and due_org_id = #{dueOrgId}</if>
-            <if test="partyMemberId != null "> and party_member_id = #{partyMemberId}</if>
-            <if test="month != null "> and month = #{month}</if>
-            <if test="salary != null "> and salary = #{salary}</if>
-            <if test="ratio != null  and ratio != ''"> and ratio = #{ratio}</if>
-            <if test="due != null "> and due = #{due}</if>
+            <if test="partyMember!=null and partyMember.memberName != null and partyMember.memberName != '' ">
+                and dpm.member_name like  concat('%', #{partyMember.memberName}, '%')
+             </if>
+            <if test="partyOrg!=null and partyOrg.partyOrgId != null  ">
+                and  dpmdo.party_org_id = #{partyOrg.partyOrgId}
+            </if>
+            <if test="duePlan!=null and duePlan.year != null  ">
+                and  dpmdp.year = #{duePlan.year}
+            </if>
+            <if test="dueOrg!=null and dueOrg.status != null  ">
+                and  dpmdo.status = #{dueOrg.status}
+            </if>
+            <if test="dueOrgId != null "> and dpmd.due_org_id = #{dueOrgId}</if>
+            <if test="partyMemberId != null "> and dpmd.party_member_id = #{partyMemberId}</if>
+            <if test="month != null "> and dpmd.month = #{month}</if>
+            <if test="salary != null "> and dpmd.salary = #{salary}</if>
+            <if test="ratio != null  and ratio != ''"> and dpmd.ratio = #{ratio}</if>
+            <if test="due != null "> and dpmd.due = #{due}</if>
+            ${dataScope}
         </where>
-        order by month asc
+        order by dpmdp.year desc ,dpmd.month desc,
+        dpm.order_num is null || dpm.order_num='' asc,
+        dpm.order_num asc,
+        dpm.party_org_id ,
+        dpm.party_position_type is null || dpm.party_position_type='' asc,
+        dpm.party_position_type asc ,
+        CONVERT( dpm.member_name USING gbk ) COLLATE gbk_chinese_ci ASC
     </select>
 
     <select id="selectDjPartyMemberDueById" parameterType="Long" resultMap="DjPartyMemberDueResult">
         <include refid="selectDjPartyMemberDueVo"/>
-        where due_member_id = #{dueMemberId}
+        where dpmd.due_member_id = #{dueMemberId}
     </select>
 
     <insert id="insertDjPartyMemberDue" parameterType="DjPartyMemberDue" useGeneratedKeys="true" keyProperty="dueMemberId">

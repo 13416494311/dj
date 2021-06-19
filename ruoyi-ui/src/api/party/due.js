@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 // 查询党员党费列表
-export function listDue(query) {
+export function listDue(data) {
   return request({
     url: '/party/due/list',
-    method: 'get',
-    params: query
+    method: 'post',
+    data: data
   })
 }
 

@@ -7,8 +7,10 @@ import com.ruoyi.project.party.domain.DjPartyMemberDue;
 import com.ruoyi.project.party.domain.DjPartyMemberDueOrg;
 import com.ruoyi.project.party.mapper.DjPartyMemberDueMapper;
 import com.ruoyi.project.party.mapper.DjPartyMemberDueOrgMapper;
+import com.ruoyi.project.party.mapper.DjPartyMemberDuePlanMapper;
 import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.service.IDjPartyMemberDueService;
+import com.ruoyi.project.party.service.IDjPartyOrgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -32,6 +34,10 @@ public class DjPartyMemberDueServiceImpl implements IDjPartyMemberDueService
     private DjPartyMemberMapper djPartyMemberMapper;
     @Autowired
     private DjPartyMemberDueOrgMapper djPartyMemberDueOrgMapper;
+    @Autowired
+    private DjPartyMemberDuePlanMapper djPartyMemberDuePlanMapper;
+    @Autowired
+    private IDjPartyOrgService djPartyOrgService;
 
     @Override
     public List<DjPartyMember> selectDueMemberList(DjPartyMemberDue djPartyMemberDue){
@@ -69,7 +75,15 @@ public class DjPartyMemberDueServiceImpl implements IDjPartyMemberDueService
     @Override
     public List<DjPartyMemberDue> selectDjPartyMemberDueList(DjPartyMemberDue djPartyMemberDue)
     {
-        return djPartyMemberDueMapper.selectDjPartyMemberDueList(djPartyMemberDue);
+        List<DjPartyMemberDue> memberDueList = djPartyMemberDueMapper.selectDjPartyMemberDueList(djPartyMemberDue);
+
+        memberDueList.stream().forEach(partyMemberDue ->{
+            DjPartyMemberDueOrg partyMemberDueOrg = djPartyMemberDueOrgMapper.selectDjPartyMemberDueOrgById(partyMemberDue.getDueOrgId());
+            partyMemberDue.setDuePlan(djPartyMemberDuePlanMapper.selectDjPartyMemberDuePlanByUuid(partyMemberDueOrg.getDuePlanUuid()));
+            partyMemberDue.setPartyOrg(djPartyOrgService.selectDjPartyOrgById(partyMemberDueOrg.getPartyOrgId()));
+            partyMemberDue.setPartyMember(djPartyMemberMapper.selectDjPartyMemberById(partyMemberDue.getPartyMemberId()));
+        } );
+        return memberDueList;
     }
 
     /**

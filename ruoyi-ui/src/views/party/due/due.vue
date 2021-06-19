@@ -1,140 +1,69 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-      <el-form-item label="党费计划党组织关联id" prop="dueOrgId">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+      <el-form-item label="党员姓名" prop="partyMemberId">
         <el-input
-          v-model="queryParams.dueOrgId"
-          placeholder="请输入党费计划党组织关联id"
+          v-model="queryParams.partyMember.memberName"
+          placeholder="请输入党员姓名"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="党员ID" prop="partyMemberId">
-        <el-input
-          v-model="queryParams.partyMemberId"
-          placeholder="请输入党员ID"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
+      <el-form-item label="党组织名称" prop="partyOrgId">
+        <select-tree :value="queryParams.partyOrgId"
+                     style="width:100%;"
+                     :options="partyOrgOptions"
+                     vModel="partyOrgId"
+                     @selected="setVModelValue"
+                     placeholder="请选择党组织"
         />
+      </el-form-item>
+      <el-form-item label="年度" prop="year">
+        <el-date-picker
+          style="width:100%;"
+          v-model="queryParams.duePlan.year"
+          type="year"
+          format="yyyy"
+          value-format="yyyy"
+          @change="handleQuery"
+          placeholder="选择年度">
+        </el-date-picker>
       </el-form-item>
       <el-form-item label="月份" prop="month">
-        <el-input
-          v-model="queryParams.month"
-          placeholder="请输入月份"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.month"
+                   placeholder="请选择月份"
+                   style="width:100%;"
+                   @change="handleQuery"
+                   clearable size="small">
+          <el-option
+            v-for="dict in monthOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="工资" prop="salary">
-        <el-input
-          v-model="queryParams.salary"
-          placeholder="请输入工资"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="比列" prop="ratio">
-        <el-input
-          v-model="queryParams.ratio"
-          placeholder="请输入比列"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="党费" prop="due">
-        <el-input
-          v-model="queryParams.due"
-          placeholder="请输入党费"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['party:due:add']"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['party:due:edit']"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['party:due:remove']"
-        >删除
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['party:due:export']"
-        >导出
-        </el-button>
-      </el-col>
-    </el-row>
 
-    <el-table v-loading="loading" :data="dueList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="党费" align="center" prop="dueMemberId"/>
-      <el-table-column label="党费计划党组织关联id" align="center" prop="dueOrgId"/>
-      <el-table-column label="党员ID" align="center" prop="partyMemberId"/>
-      <el-table-column label="月份" align="center" prop="month"/>
-      <el-table-column label="工资" align="center" prop="salary"/>
+    <el-table :stripe="true"
+              :border="true"
+              v-loading="loading" :data="dueList" @selection-change="handleSelectionChange">
+      <el-table-column label="序号" align="center" type="index"/>
+      <el-table-column label="党员姓名" align="center" prop="partyMember.memberName"/>
+      <el-table-column label="党组织名称" align="center" prop="partyOrg.partyOrgFullName" width="350"
+                       :formatter="partyOrgFormat"/>
+      <el-table-column label="年度" align="center" prop="duePlan.year" :formatter="yearFormat"/>
+      <el-table-column label="月份" align="center" prop="month" :formatter="monthFormat"/>
+      <el-table-column label="工资" align="center" prop="salary" :formatter="salaryFormat"/>
       <el-table-column label="比列" align="center" prop="ratio"/>
-      <el-table-column label="党费" align="center" prop="due"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['party:due:edit']"
-          >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['party:due:remove']"
-          >删除
-          </el-button>
-        </template>
-      </el-table-column>
+      <el-table-column label="党费" align="center" prop="due" :formatter="dueFormat"/>
     </el-table>
 
     <pagination
@@ -145,45 +74,17 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改党员党费对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="80%" append-to-body
-               @open="getHeight" :close-on-click-modal="false">
-      <el-form ref="form" :model="form" :rules="rules" :style="bodyStyle" label-width="100px">
-        <el-form-item label="党费计划党组织关联id" prop="dueOrgId">
-          <el-input v-model="form.dueOrgId" placeholder="请输入党费计划党组织关联id"/>
-        </el-form-item>
-        <el-form-item label="党员ID" prop="partyMemberId">
-          <el-input v-model="form.partyMemberId" placeholder="请输入党员ID"/>
-        </el-form-item>
-        <el-form-item label="月份" prop="month">
-          <el-input v-model="form.month" placeholder="请输入月份"/>
-        </el-form-item>
-        <el-form-item label="工资" prop="salary">
-          <el-input v-model="form.salary" placeholder="请输入工资"/>
-        </el-form-item>
-        <el-form-item label="比列" prop="ratio">
-          <el-input v-model="form.ratio" placeholder="请输入比列"/>
-        </el-form-item>
-        <el-form-item label="党费" prop="due">
-          <el-input v-model="form.due" placeholder="请输入党费"/>
-        </el-form-item>
-        <el-form-item label="删除标志" prop="delFlag">
-          <el-input v-model="form.delFlag" placeholder="请输入删除标志"/>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
   import {addDue, delDue, exportDue, getDue, listDue, updateDue} from "@/api/party/due";
+  import {partyOrgTreeselect, getPartyOrg} from "@/api/party/org";
+  import selectTree from '../../components/selectTree';
 
   export default {
     name: "Due",
+    components: {selectTree},
     data() {
       return {
         // 遮罩层
@@ -212,6 +113,19 @@
           salary: undefined,
           ratio: undefined,
           due: undefined,
+          partyOrgId: undefined,
+          dueOrg:{
+            status:2
+          },
+          partyOrg: {
+            partyOrgId: undefined
+          },
+          partyMember: {
+            memberName: undefined
+          },
+          duePlan: {
+            year: undefined
+          }
         },
         // 表单参数
         form: {},
@@ -242,6 +156,10 @@
           marginLeft: '20%',
           paddingRight: '20%',
         },
+        //组织架构
+        partyOrgOptions: [],
+        //月份
+        monthOptions: [],
       };
     },
     mounted() {
@@ -249,8 +167,38 @@
     },
     created() {
       this.getList();
+      //组织架构树
+      this.getPartyOrgTreeSelect();
+      this.getDicts("month_type").then(response => {
+        this.monthOptions = response.data;
+      });
     },
     methods: {
+      // 年度字典翻译
+      yearFormat(row, column) {
+        return row.duePlan.year + "年";
+      },
+      monthFormat(row, column) {
+        return row.month + "月";
+      },
+      partyOrgFormat(row, column) {
+        let partyOrgFullName = row.partyOrg.partyOrgFullName;
+        return partyOrgFullName.substring(partyOrgFullName.indexOf("/") + 1);
+      },
+      salaryFormat(row, column) {
+        if (row.salary) {
+          return row.salary.toFixed(2) + " 元";
+        } else {
+          return '';
+        }
+      },
+      dueFormat(row, column) {
+        if (row.due) {
+          return row.due.toFixed(0) + " 元";
+        } else {
+          return '';
+        }
+      },
       /** 对话框自适应高度 */
       getHeight() {
         this.bodyStyle.height = window.innerHeight - 281 + 'px';
@@ -258,6 +206,7 @@
       /** 查询党员党费列表 */
       getList() {
         this.loading = true;
+        console.log(this.queryParams);
         listDue(this.queryParams).then(response => {
           this.dueList = response.rows;
           this.total = response.total;
@@ -287,6 +236,27 @@
         };
         this.resetForm("form");
       },
+      //获取组织架构树
+      getPartyOrgTreeSelect() {
+        partyOrgTreeselect().then(response => {
+          this.partyOrgOptions = this.treeInitData(response.data);
+        });
+      },
+      //下拉树选择后设置值
+      setVModelValue(vModel, val) {
+        if (val != null) {
+          this.queryParams[vModel] = val;
+          this.queryParams.partyOrg = {
+            partyOrgId:val
+          }
+        } else {
+          this.queryParams[vModel] = undefined;
+          this.queryParams.partyOrg = {
+            partyOrgId:val
+          }
+        }
+        this.handleQuery();
+      },
       /** 搜索按钮操作 */
       handleQuery() {
         this.queryParams.pageNum = 1;
@@ -295,7 +265,27 @@
       /** 重置按钮操作 */
       resetQuery() {
         this.resetForm("queryForm");
-        this.handleQuery();
+        this.queryParams = {
+          pageNum: 1,
+          pageSize: 10,
+          dueOrgId: undefined,
+          partyMemberId: undefined,
+          month: undefined,
+          salary: undefined,
+          ratio: undefined,
+          due: undefined,
+          partyOrgId: undefined,
+          partyOrg: {
+            partyOrgId: undefined
+          },
+          partyMember: {
+            memberName: undefined
+          },
+          duePlan: {
+            year: undefined
+          }
+        },
+          this.handleQuery();
       },
       // 多选框选中数据
       handleSelectionChange(selection) {
