@@ -192,14 +192,28 @@
         return this.selectDictLabel(this.statusOptions, row.status);
       },
 
-      /** 查看按钮操作 */
+      /** 换届提醒按钮操作 */
       handleRemind(row) {
-        remindPartyChange(row).then(response => {
-          if (response.code === 200) {
-            this.msgSuccess(response.msg);
-          } else {
-            this.msgError(response.msg);
-          }
+        let days = this.getDaysBetween(this.getNowFormatDate(),row.nextChangeTime).toFixed(0);
+        var msg =''
+        if(days == 0){
+          msg ='已到期';
+        }else{
+          msg = '还有'+days+'天';
+        }
+        this.$confirm('距下次换届'+msg+',是否确认发送党组织换届提醒?', "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "info"
+        }).then(() => {
+          remindPartyChange(row).then(response => {
+            if (response.code === 200) {
+              this.msgSuccess(response.msg);
+            } else {
+              this.msgError(response.msg);
+            }
+          });
+        }).catch(function () {
         });
       },
       /**行颜色*/
