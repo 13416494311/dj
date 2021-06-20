@@ -11,13 +11,15 @@
         />
       </el-form-item>
       <el-form-item label="分值" prop="score">
-        <el-input
+        <el-input-number
+          style="width:100%"
           v-model="queryParams.score"
+          controls-position="right"
           placeholder="请输入分值"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          :precision="0" :step="1" :min="1"
+          @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item label="是否启用" prop="status">
         <el-select v-model="queryParams.status"
@@ -32,15 +34,6 @@
           ></el-option>
         </el-select>
       </el-form-item>
-<!--      <el-form-item label="排序" prop="orderNum">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.orderNum"-->
-<!--          placeholder="请输入排序"-->
-<!--          clearable-->
-<!--          size="small"-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -58,63 +51,32 @@
         >新增
         </el-button>
       </el-col>
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['party:assessmentList:edit']"-->
-<!--        >修改-->
-<!--        </el-button>-->
-<!--      </el-col>-->
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['party:assessmentList:remove']"
-        >删除
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['party:assessmentList:export']"
-        >导出
-        </el-button>
-      </el-col>
+
     </el-row>
 
     <el-table :stripe="true"
-              :border="true" v-loading="loading" :data="assessmentListList" @selection-change="handleSelectionChange" :header-cell-style="{'text-align':'center'}">
-      <el-table-column type="selection" width="55" align="center"/>
-      <!--                                                                                <el-table-column label="id" align="center" prop="listId" />-->
-
+              :border="true"
+              v-loading="loading"
+              :data="assessmentListList"
+              @selection-change="handleSelectionChange" :header-cell-style="{'text-align':'center'}">
       <el-table-column label="序号" align="center" type="index"/>
       <el-table-column label="考核项目" align="center" prop="item"/>
-      <el-table-column label="考核内容" align="left" prop="content"  />
+      <el-table-column label="考核内容" align="left" prop="content"/>
       <el-table-column label="考核指标" align="left" prop="quota" width="300"/>
       <el-table-column label="分值" align="center" prop="score" width="55"/>
-      <el-table-column label="评分标准" align="left" prop="criteria" width="200"/>
+      <el-table-column label="评分标准" align="left" prop="criteria" width="300"/>
       <el-table-column label="排序" align="center" prop="orderNum" width="55"/>
       <el-table-column label="是否启用" align="center" prop="status" width="80">
-      <template slot-scope="scope">
-        <el-switch
-          v-model="scope.row.status"
-          active-value="0"
-          inactive-value="1"
-          @change="handleStatusChange(scope.row)"
-        ></el-switch>
-      </template>
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            active-value="0"
+            inactive-value="1"
+            @change="handleStatusChange(scope.row)"
+          ></el-switch>
+        </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="120" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -158,7 +120,11 @@
           <el-input v-model="form.quota" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" placeholder="请输入内容"/>
         </el-form-item>
         <el-form-item label="分值" prop="score">
-          <el-input v-model="form.score" placeholder="请输入分值"/>
+          <el-input-number style="width:100%"
+                           v-model="form.score"
+                           controls-position="right"
+                           placeholder="请输入分值"
+                           :precision="0" :step="1" :min="1"></el-input-number>
         </el-form-item>
         <el-form-item label="评分标准" prop="criteria">
           <el-input v-model="form.criteria" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" placeholder="请输入内容"/>
@@ -169,15 +135,16 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
+            >{{dict.dictLabel}}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="排序" prop="orderNum">
           <el-input v-model="form.orderNum" placeholder="请输入排序"/>
         </el-form-item>
-<!--        <el-form-item label="删除标志" prop="delFlag">-->
-<!--          <el-input v-model="form.delFlag" placeholder="请输入删除标志"/>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="删除标志" prop="delFlag">-->
+        <!--          <el-input v-model="form.delFlag" placeholder="请输入删除标志"/>-->
+        <!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -189,12 +156,12 @@
 
 <script>
   import {
-    listAssessmentList,
-    getAssessmentList,
-    delAssessmentList,
     addAssessmentList,
-    updateAssessmentList,
-    exportAssessmentList
+    delAssessmentList,
+    exportAssessmentList,
+    getAssessmentList,
+    listAssessmentList,
+    updateAssessmentList
   } from "@/api/party/assessmentList";
 
   export default {
@@ -234,7 +201,23 @@
         // 表单参数
         form: {},
         // 表单校验
-        rules: {},
+        rules: {
+          item: [
+            {required: true, message: "考核项目不能为空", trigger: "blur"}
+          ],
+          content: [
+            {required: true, message: "考核内容不能为空", trigger: "blur"}
+          ],
+          quota: [
+            {required: true, message: "考核指标不能为空", trigger: "blur"}
+          ],
+          score: [
+            {required: true, message: "分值不能为空", trigger: "blur"}
+          ],
+          criteria: [
+            {required: true, message: "评分标准不能为空", trigger: "blur"}
+          ],
+        },
         bodyStyle: {
           overflowY: 'auto',
           height: '',
@@ -260,11 +243,11 @@
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"
-        }).then(function() {
-          return updateAssessmentList({listId:row.listId,status:row.status});
+        }).then(function () {
+          return updateAssessmentList({listId: row.listId, status: row.status});
         }).then(() => {
           this.msgSuccess(text + "成功");
-        }).catch(function() {
+        }).catch(function () {
           row.status = row.status === "0" ? "1" : "0";
         });
       },

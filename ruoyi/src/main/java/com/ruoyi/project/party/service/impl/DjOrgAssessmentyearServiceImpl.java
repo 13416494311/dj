@@ -3,6 +3,8 @@ package com.ruoyi.project.party.service.impl;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.party.domain.DjOrgAssessment;
+import com.ruoyi.project.party.mapper.DjOrgAssessmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjOrgAssessmentyearMapper;
@@ -22,6 +24,9 @@ public class DjOrgAssessmentyearServiceImpl implements IDjOrgAssessmentyearServi
 {
     @Autowired
     private DjOrgAssessmentyearMapper djOrgAssessmentyearMapper;
+
+    @Autowired
+    private DjOrgAssessmentMapper assessmentMapper;
 
     /**
      * 查询党组织考核年
@@ -58,9 +63,22 @@ public class DjOrgAssessmentyearServiceImpl implements IDjOrgAssessmentyearServi
     {
         djOrgAssessmentyear.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djOrgAssessmentyear.setCreateTime(DateUtils.getNowDate());
-        return djOrgAssessmentyearMapper.insertDjOrgAssessmentyear(djOrgAssessmentyear);
+        int result = djOrgAssessmentyearMapper.insertDjOrgAssessmentyear(djOrgAssessmentyear);
+        publishYearAssessment(djOrgAssessmentyear);
+        return result;
     }
 
+    private void publishYearAssessment(DjOrgAssessmentyear djOrgAssessmentyear){
+        if("2".equals(djOrgAssessmentyear.getOrgAssessmentStatus())){
+            DjOrgAssessment djOrgAssessment =new DjOrgAssessment();
+            djOrgAssessment.setAssessmentyearUuid(djOrgAssessmentyear.getAssessmentyearUuid());
+            List<DjOrgAssessment> assessmentList = assessmentMapper.selectDjOrgAssessmentList(djOrgAssessment);
+            assessmentList.stream().forEach(assessment -> {
+                assessment.setOrgAssessmentStatus("1");
+                assessmentMapper.updateDjOrgAssessment(assessment);
+            });
+        }
+    }
     /**
      * 修改党组织考核年
      *
@@ -72,7 +90,9 @@ public class DjOrgAssessmentyearServiceImpl implements IDjOrgAssessmentyearServi
     {
         djOrgAssessmentyear.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djOrgAssessmentyear.setUpdateTime(DateUtils.getNowDate());
-        return djOrgAssessmentyearMapper.updateDjOrgAssessmentyear(djOrgAssessmentyear);
+        int result = djOrgAssessmentyearMapper.updateDjOrgAssessmentyear(djOrgAssessmentyear);
+        publishYearAssessment(djOrgAssessmentyear);
+        return result;
     }
 
     /**

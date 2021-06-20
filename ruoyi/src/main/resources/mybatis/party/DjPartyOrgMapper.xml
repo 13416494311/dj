@@ -13,6 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="orgType"    column="org_type"    />
         <result property="partyOrgType"    column="party_org_type"    />
         <result property="buildTime"    column="build_time"    />
+        <result property="performanceAppraisal"    column="performance_appraisal"    />
         <result property="leader"    column="leader"    />
         <result property="phone"    column="phone"    />
         <result property="email"    column="email"    />
@@ -36,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <sql id="selectDjPartyOrgVo">
         select party_org_id,party_org_uuid, parent_id, ancestors, party_org_name, org_type,party_org_type,
-        build_time, leader, phone,
+        build_time, leader, performance_appraisal,phone,
         email, region_code, address ,description, order_num, status, del_flag, create_by, create_time, update_by, update_time
         from dj_party_org
     </sql>
@@ -55,6 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partyOrgType != null  and partyOrgType != ''"> and party_org_type = #{partyOrgType}</if>
             <if test="buildTime != null "> and build_time = #{buildTime}</if>
             <if test="leader != null  and leader != ''"> and leader = #{leader}</if>
+            <if test="performanceAppraisal != null  and performanceAppraisal != ''"> and performance_appraisal = #{performanceAppraisal}</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="email != null  and email != ''"> and email = #{email}</if>
             <if test="regionCode != null  and regionCode != ''"> and region_code = #{regionCode}</if>
@@ -87,6 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partyOrgType != null  and partyOrgType != ''">party_org_type,</if>
             <if test="buildTime != null ">build_time,</if>
             <if test="leader != null  and leader != ''">leader,</if>
+            <if test="performanceAppraisal != null  and performanceAppraisal != ''">performance_appraisal,</if>
             <if test="phone != null  and phone != ''">phone,</if>
             <if test="email != null  and email != ''">email,</if>
             <if test="regionCode != null  and regionCode != ''">region_code,</if>
@@ -109,6 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partyOrgType != null  and partyOrgType != ''">#{partyOrgType},</if>
             <if test="buildTime != null ">#{buildTime},</if>
             <if test="leader != null  and leader != ''">#{leader},</if>
+            <if test="performanceAppraisal != null  and performanceAppraisal != ''">#{performanceAppraisal},</if>
             <if test="phone != null  and phone != ''">#{phone},</if>
             <if test="email != null  and email != ''">#{email},</if>
             <if test="regionCode != null  and regionCode != ''">#{regionCode},</if>
@@ -135,6 +139,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="partyOrgType != null  and partyOrgType != ''">party_org_type = #{partyOrgType},</if>
             <if test="buildTime != null ">build_time = #{buildTime},</if>
             <if test="leader != null  and leader != ''">leader = #{leader},</if>
+            <if test="performanceAppraisal != null  and performanceAppraisal != ''">performance_appraisal = #{performanceAppraisal},</if>
             <if test="phone != null  and phone != ''">phone = #{phone},</if>
             <if test="email != null  and email != ''">email = #{email},</if>
             <if test="regionCode != null  and regionCode != ''">region_code = #{regionCode},</if>

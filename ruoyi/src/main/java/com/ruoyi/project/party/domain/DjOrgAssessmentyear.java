@@ -45,6 +45,9 @@ public class DjOrgAssessmentyear extends BaseEntity {
     @Excel(name = "考核状态", readConverterExp = "0=：考核中、1：考核结束")
     private String orgAssessmentStatus;
 
+    /** 绩效考评状态 */
+    private String performanceAppraisalStatus;
+
     /**
      * 删除标志（0代表存在 2代表删除）
      */

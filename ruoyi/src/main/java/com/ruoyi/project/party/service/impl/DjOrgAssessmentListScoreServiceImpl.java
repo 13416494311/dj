@@ -3,6 +3,7 @@ package com.ruoyi.project.party.service.impl;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.project.party.mapper.DjOrgAssessmentListMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjOrgAssessmentListScoreMapper;
@@ -22,7 +23,8 @@ public class DjOrgAssessmentListScoreServiceImpl implements IDjOrgAssessmentList
 {
     @Autowired
     private DjOrgAssessmentListScoreMapper djOrgAssessmentListScoreMapper;
-
+    @Autowired
+    private DjOrgAssessmentListMapper assessmentListMapper;
     /**
      * 查询考核评价评分
      *
@@ -44,7 +46,8 @@ public class DjOrgAssessmentListScoreServiceImpl implements IDjOrgAssessmentList
     @Override
     public List<DjOrgAssessmentListScore> selectDjOrgAssessmentListScoreList(DjOrgAssessmentListScore djOrgAssessmentListScore)
     {
-        return djOrgAssessmentListScoreMapper.selectDjOrgAssessmentListScoreList(djOrgAssessmentListScore);
+        List<DjOrgAssessmentListScore> scoreList = djOrgAssessmentListScoreMapper.selectDjOrgAssessmentListScoreList(djOrgAssessmentListScore);
+        return scoreList;
     }
 
     /**

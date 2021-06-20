@@ -1,11 +1,20 @@
 import request from '@/utils/request'
 
 // 查询党组织考核列表
-export function listAssessment(query) {
+export function listAssessment(data) {
   return request({
     url: '/party/assessment/list',
-    method: 'get',
-    params: query
+    method: 'post',
+    data: data
+  })
+}
+
+// 查询党组织考核列表
+export function listAssessment1(data) {
+  return request({
+    url: '/party/assessment/list1',
+    method: 'post',
+    data: data
   })
 }
 

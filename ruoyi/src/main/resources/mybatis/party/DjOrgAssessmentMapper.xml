@@ -3,17 +3,20 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.party.mapper.DjOrgAssessmentMapper">
-    
+
     <resultMap type="DjOrgAssessment" id="DjOrgAssessmentResult">
         <result property="id"    column="id"    />
         <result property="assessmentUuid"    column="assessment_uuid"    />
         <result property="assessmentyearUuid"    column="assessmentYear_uuid"    />
         <result property="partyOrgId"    column="party_org_id"    />
-        <result property="assessment_year"    column="assessment_year"    />
-        <result property="assessmentName"    column="assessment_name"    />
         <result property="assessmentResult"    column="assessment_result"    />
         <result property="orgAssessmentStatus"    column="org_assessment_status"    />
         <result property="assessment_rank"    column="assessment_rank"    />
+
+        <result property="assessmentScore"    column="assessment_score"    />
+        <result property="performanceAppraisalStatus"    column="performance_appraisal_status"    />
+        <result property="performanceAppraisalScore"    column="performance_appraisal_score"    />
+
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -22,25 +25,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDjOrgAssessmentVo">
-        select id, assessment_uuid, assessmentYear_uuid, party_org_id, assessment_year, assessment_name, assessment_result, org_assessment_status, assessment_rank, del_flag, create_by, create_time, update_by, update_time from dj_org_assessment o
+        select doa.id, doa.assessment_uuid, doa.assessmentYear_uuid, doa.party_org_id, doa.assessment_result, doa.org_assessment_status,
+            doa.assessment_rank,doa.assessment_score,doa.performance_appraisal_status,doa.performance_appraisal_score,
+            doa.del_flag, doa.create_by, doa.create_time, doa.update_by, doa.update_time
+        from dj_org_assessment doa
     </sql>
 
     <select id="selectDjOrgAssessmentList" parameterType="DjOrgAssessment" resultMap="DjOrgAssessmentResult">
         <include refid="selectDjOrgAssessmentVo"/>
-        <where>  
-            <if test="assessmentUuid != null  and assessmentUuid != ''"> and assessment_uuid = #{assessmentUuid}</if>
-            <if test="assessmentyearUuid != null  and assessmentyearUuid != ''"> and assessmentYear_uuid = #{assessmentyearUuid}</if>
-            <if test="partyOrgId != null "> and party_org_id = #{partyOrgId}</if>
-            <if test="assessment_year != null  and assessment_year != ''"> and assessment_year = #{assessment_year}</if>
-            <if test="assessmentName != null  and assessmentName != ''"> and assessment_name like concat('%', #{assessmentName}, '%')</if>
-            <if test="assessmentResult != null  and assessmentResult != ''"> and assessment_result = #{assessmentResult}</if>
-            <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''"> and org_assessment_status = #{orgAssessmentStatus}</if>
-            <if test="assessment_rank != null "> and assessment_rank = #{assessment_rank}</if>
+        left join dj_org_assessmentyear doay on doay.assessmentYear_uuid = doa.assessmentYear_uuid
+        left join dj_party_org dpo on dpo.party_org_id = doa.party_org_id
+        <where>
+            <if test="assessmentyear != null  and assessmentyear.orgAssessmentStatus != null  and assessmentyear.orgAssessmentStatus != '' ">
+                 and doay.org_assessment_status = #{assessmentyear.orgAssessmentStatus}
+            </if>
+            <if test="assessmentyear != null  and assessmentyear.year != null  and assessmentyear.year != '' ">
+                and doay.year = #{assessmentyear.year}
+            </if>
+            <if test="assessmentyear != null  and assessmentyear.assessmentName != null  and assessmentyear.assessmentName != '' ">
+                and doay.assessment_name like  concat('%', #{assessmentyear.assessmentName}, '%')
+            </if>
+            <if test="djPartyOrg != null  and djPartyOrg.performanceAppraisal != null  and djPartyOrg.performanceAppraisal != '' ">
+                and dpo.performance_appraisal = #{djPartyOrg.performanceAppraisal}
+            </if>
+            <if test="assessmentUuid != null  and assessmentUuid != ''"> and doa.assessment_uuid = #{assessmentUuid}</if>
+            <if test="assessmentyearUuid != null  and assessmentyearUuid != ''"> and doa.assessmentYear_uuid = #{assessmentyearUuid}</if>
+            <if test="partyOrgId != null "> and doa.party_org_id = #{partyOrgId}</if>
+            <if test="assessmentResult != null  and assessmentResult != ''"> and doa.assessment_result = #{assessmentResult}</if>
+            <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''"> and doa.org_assessment_status = #{orgAssessmentStatus}</if>
+            <if test="assessmentScore != null  and assessmentScore != ''"> and doa.assessment_score = #{assessmentScore}</if>
+            <if test="performanceAppraisalStatus != null  and performanceAppraisalStatus != ''">
+               and doa.performance_appraisal_status = #{performanceAppraisalStatus}
+            </if>
+            <if test="performanceAppraisalScore != null  and performanceAppraisalScore != ''">
+               and doa.performance_appraisal_score = #{performanceAppraisalScore}</if>
+            <if test="assessment_rank != null "> and doa.assessment_rank = #{assessment_rank}</if>
             ${dataScope}
         </where>
-        order by assessment_year,party_org_id
+        order by  doa.party_org_id
     </select>
-    
+
     <select id="selectDjOrgAssessmentById" parameterType="Long" resultMap="DjOrgAssessmentResult">
         <include refid="selectDjOrgAssessmentVo"/>
         where id = #{id}
@@ -57,11 +81,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessmentUuid != null  and assessmentUuid != ''">assessment_uuid,</if>
             <if test="assessmentyearUuid != null  and assessmentyearUuid != ''">assessmentYear_uuid,</if>
             <if test="partyOrgId != null ">party_org_id,</if>
-            <if test="assessment_year != null  and assessment_year != ''">assessment_year,</if>
-            <if test="assessmentName != null  and assessmentName != ''">assessment_name,</if>
             <if test="assessmentResult != null  and assessmentResult != ''">assessment_result,</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''">org_assessment_status,</if>
             <if test="assessment_rank != null ">assessment_rank,</if>
+            <if test="assessmentScore != null ">assessment_score,</if>
+            <if test="performanceAppraisalStatus != null ">performance_appraisal_status,</if>
+            <if test="performanceAppraisalScore != null ">performance_appraisal_score,</if>
             <if test="delFlag != null  and delFlag != ''">del_flag,</if>
             <if test="createBy != null  and createBy != ''">create_by,</if>
             <if test="createTime != null ">create_time,</if>
@@ -72,11 +97,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessmentUuid != null  and assessmentUuid != ''">#{assessmentUuid},</if>
             <if test="assessmentyearUuid != null  and assessmentyearUuid != ''">#{assessmentyearUuid},</if>
             <if test="partyOrgId != null ">#{partyOrgId},</if>
-            <if test="assessment_year != null  and assessment_year != ''">#{assessment_year},</if>
-            <if test="assessmentName != null  and assessmentName != ''">#{assessmentName},</if>
             <if test="assessmentResult != null  and assessmentResult != ''">#{assessmentResult},</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''">#{orgAssessmentStatus},</if>
             <if test="assessment_rank != null ">#{assessment_rank},</if>
+            <if test="assessmentScore != null ">#{assessmentScore},</if>
+            <if test="performanceAppraisalStatus != null ">#{performanceAppraisalStatus},</if>
+            <if test="performanceAppraisalScore != null ">#{performanceAppraisalScore},</if>
             <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
             <if test="createBy != null  and createBy != ''">#{createBy},</if>
             <if test="createTime != null ">#{createTime},</if>
@@ -91,11 +117,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessmentUuid != null  and assessmentUuid != ''">assessment_uuid = #{assessmentUuid},</if>
             <if test="assessmentyearUuid != null  and assessmentyearUuid != ''">assessmentYear_uuid = #{assessmentyearUuid},</if>
             <if test="partyOrgId != null ">party_org_id = #{partyOrgId},</if>
-            <if test="assessment_year != null  and assessment_year != ''">assessment_year = #{assessment_year},</if>
-            <if test="assessmentName != null  and assessmentName != ''">assessment_name = #{assessmentName},</if>
             <if test="assessmentResult != null  and assessmentResult != ''">assessment_result = #{assessmentResult},</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''">org_assessment_status = #{orgAssessmentStatus},</if>
             <if test="assessment_rank != null ">assessment_rank = #{assessment_rank},</if>
+            <if test="assessmentScore != null ">assessment_score = #{assessmentScore},</if>
+            <if test="performanceAppraisalStatus != null ">performance_appraisal_status = #{performanceAppraisalStatus},</if>
+            <if test="performanceAppraisalScore != null ">performance_appraisal_score = #{performanceAppraisalScore},</if>
             <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
             <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
@@ -110,10 +137,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDjOrgAssessmentByIds" parameterType="String">
-        delete from dj_org_assessment where id in 
+        delete from dj_org_assessment where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

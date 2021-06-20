@@ -27,18 +27,6 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['party:assessmentyear:add']"
-        >新增
-        </el-button>
-      </el-col>
-    </el-row>
 
     <el-table :stripe="true"
               :border="true"
@@ -50,6 +38,8 @@
       <el-table-column label="考核名称" align="center" prop="assessmentName"/>
       <el-table-column label="考核状态" align="center" prop="orgAssessmentStatus"
                        :formatter="assessmentYearStatusFormat"/>
+      <el-table-column label="绩效考评状态" align="center" prop="performanceAppraisalStatus"
+                       :formatter="performanceAppraisalStatusFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -63,19 +53,10 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            v-if="scope.row.orgAssessmentStatus == 1"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['party:assessmentyear:edit']"
-          >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-if="scope.row.orgAssessmentStatus == 1"
-            v-hasPermi="['party:assessmentyear:remove']"
-          >删除
+            v-if="scope.row.performanceAppraisalStatus == 1"
+            v-hasPermi="['party:performanceScore:edit']"
+          >评分
           </el-button>
         </template>
       </el-table-column>
@@ -92,77 +73,16 @@
     <!-- 添加或修改党组织考核年对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="90%" append-to-body
                @open="getHeight" :close-on-click-modal="false">
-      <el-form ref="form" :model="form" :rules="rules" :style="bodyStyle" label-width="150px">
-        <el-card shadow="always" style="margin-bottom: 30px;">
-          <div slot="header" style="height: 25px">
-            <span style="font-weight: bold;font-size: 16px">基本信息</span>
-          </div>
-          <el-form-item label="考核年份" prop="year">
-            <el-date-picker
-              :disabled="disabled"
-              style="width: 50%;"
-              v-model="form.year"
-              type="year"
-              format="yyyy"
-              value-format="yyyy"
-              placeholder="选择年">
-            </el-date-picker>
-          </el-form-item>
-          <el-form-item label="考核名称" prop="assessmentName">
-            <el-input :disabled="disabled"
-                      v-model="form.assessmentName" type="textarea" :autosize="{ minRows: 3, maxRows: 6}"
-                      placeholder="请输入内容"/>
-          </el-form-item>
-        </el-card>
-
-        <el-card shadow="always" style="margin-bottom: 30px;">
-          <div slot="header" style="height: 25px">
-            <span style="font-weight: bold;font-size: 16px">考核党支部</span>
-            <el-button
-              v-if="!disabled"
-              type="primary"
-              icon="el-icon-plus"
-              size="mini"
-              @click="openOrgTransfer"
-              style="float: right;margin-top: -5px"
-            >新增
-            </el-button>
-          </div>
-
-          <el-table :stripe="true"
-                    :border="true"
-                    v-loading="orgLoading" :data="assessmentOrgList">
-            <el-table-column label="序号" align="center" type="index"/>
-            <el-table-column label="党组织名称" align="center"
-                             prop="djPartyOrg.partyOrgFullName" :formatter="partyOrgFormat"/>
-            <el-table-column label="党组织类型" align="center" prop="djPartyOrg.orgType"
-                             :formatter="orgTypeFormat"/>
-            <el-table-column label="党组织考核状态" align="center" prop="orgAssessmentStatus"
-                             :formatter="orgAssessmentStatusFormat"/>
-
-            <el-table-column label="操作" align="center"
-                             class-name="small-padding fixed-width">
-              <template slot-scope="scope">
-                <el-button
-                  v-if="!disabled"
-                  size="mini"
-                  type="text"
-                  icon="el-icon-delete"
-                  @click="handleArrangeDelete(scope.row)"
-                >删除
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-card>
-
-      </el-form>
+      <div :style="bodyStyle">
+        <performance-score-card ref="performanceScoreCard"
+                                :disabled="disabled" :assessmentyearId="assessmentyearId" @ok="cancel" ></performance-score-card>
+      </div>
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
         <el-button v-if="!disabled" type="primary" @click="submitForm(1)">保 存</el-button>
-        <el-button v-if="!disabled" type="primary" @click="submitForm(2)">发 布</el-button>
+        <el-button v-if="!disabled" type="primary" @click="submitForm(2)">提 交</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
-      <org-transfer ref="orgTransfer" @callbackOrg="getJoinOrgList"/>
+
     </el-dialog>
   </div>
 </template>
@@ -176,7 +96,6 @@
     updateAssessmentyear,
     exportAssessmentyear
   } from "@/api/party/assessmentyear";
-  import OrgTransfer from "./orgTransfer";
   import {
     listAssessment,
     getAssessment,
@@ -185,11 +104,12 @@
     updateAssessment,
     exportAssessment
   } from "@/api/party/assessment";
+  import PerformanceScoreCard from "./performanceScoreCard";
 
   export default {
-    name: "Assessmentyear",
+    name: "performanceScore",
     components: {
-      OrgTransfer,
+      PerformanceScoreCard
     },
     data() {
       return {
@@ -211,6 +131,7 @@
         orgAssessmentStatusOptions: [],
         //年度考核状态
         assessmentYearStatusOptions: [],
+        performanceAppraisalStatusOptions: [],
         // 党组织考核年表格数据
         assessmentyearList: [],
         //选择 参加的党组织数据
@@ -226,7 +147,7 @@
           assessmentyearUuid: undefined,
           year: undefined,
           assessmentName: undefined,
-          orgAssessmentStatus: undefined,
+          orgAssessmentStatus: 2,
         },
         // 表单参数
         form: {},
@@ -247,7 +168,7 @@
         },
 
         //uuid
-        assessmentyearUuid: undefined,
+        assessmentyearId: undefined,
         year: undefined,
         assessmentName: undefined,
         orgLoading: true,
@@ -267,6 +188,9 @@
       this.getDicts("activity_plan_status").then(response => {
         this.assessmentYearStatusOptions = response.data;
       });
+      this.getDicts("submit_status").then(response => {
+        this.performanceAppraisalStatusOptions = response.data;
+      });
       //党组织考核状态
       this.getDicts("org_assessment_status").then(response => {
         this.orgAssessmentStatusOptions = response.data;
@@ -281,6 +205,9 @@
       },
       assessmentYearStatusFormat(row, column) {
         return this.selectDictLabel(this.assessmentYearStatusOptions, row.orgAssessmentStatus);
+      },
+      performanceAppraisalStatusFormat(row, column) {
+        return this.selectDictLabel(this.performanceAppraisalStatusOptions, row.performanceAppraisalStatus);
       },
       orgAssessmentStatusFormat(row, column) {
         return this.selectDictLabel(this.orgAssessmentStatusOptions, row.orgAssessmentStatus);
@@ -384,25 +311,23 @@
       handleUpdate(row) {
         this.reset();
         this.disabled = false;
-        const id = row.id || this.ids
+        const id = row.id
         getAssessmentyear(id).then(response => {
           this.form = response.data;
+          this.assessmentyearId = id
           this.open = true;
-          this.title = "修改年度双项考评";
-        }).then(() => {
-          this.getJoinOrgList();
+          this.title = "项目绩效考核";
         });
       },
       handleSee(row) {
         this.reset();
         this.disabled = true;
-        const id = row.id || this.ids
+        const id = row.id
         getAssessmentyear(id).then(response => {
           this.form = response.data;
+          this.assessmentyearId = id
           this.open = true;
-          this.title = "年度双项考评结果";
-        }).then(() => {
-          this.getJoinOrgList();
+          this.title = "查看项目绩效考核";
         });
       },
       /** 提交按钮 */
@@ -415,10 +340,6 @@
         this.$refs["form"].validate(valid => {
           if (valid) {
             this.form.orgAssessmentStatus = orgAssessmentStatus;
-            console.log(orgAssessmentStatus==2)
-            if(orgAssessmentStatus==2){
-              this.form.performanceAppraisalStatus = 1
-            }
             if (this.form.id != undefined) {
               updateAssessmentyear(this.form).then(response => {
                 if (response.code === 200) {

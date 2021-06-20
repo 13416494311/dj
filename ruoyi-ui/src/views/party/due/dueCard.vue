@@ -30,7 +30,7 @@
               </el-form-item>
 
               <div v-if="disabled">
-                {{scope.row.memberDueList[index]['salary']}}
+                {{scope.row.memberDueList[index]['salary']==undefined?'':scope.row.memberDueList[index]['salary'].toFixed(2)}}
               </div>
 
             </template>
@@ -61,38 +61,6 @@
       </el-table>
 
     </el-form>
-    <!-- 添加或修改党员党费对话框
-    <el-dialog :title="title" :visible.sync="open" width="80%" append-to-body
-               @open="getHeight" :close-on-click-modal="false">
-      <el-form ref="form" :model="form" :rules="rules" :style="bodyStyle" label-width="100px">
-        <el-form-item label="党费计划党组织关联id" prop="dueOrgId">
-          <el-input v-model="form.dueOrgId" placeholder="请输入党费计划党组织关联id"/>
-        </el-form-item>
-        <el-form-item label="党员ID" prop="partyMemberId">
-          <el-input v-model="form.partyMemberId" placeholder="请输入党员ID"/>
-        </el-form-item>
-        <el-form-item label="月份" prop="month">
-          <el-input v-model="form.month" placeholder="请输入月份"/>
-        </el-form-item>
-        <el-form-item label="工资" prop="salary">
-          <el-input v-model="form.salary" placeholder="请输入工资"/>
-        </el-form-item>
-        <el-form-item label="比列" prop="ratio">
-          <el-input v-model="form.ratio" placeholder="请输入比列"/>
-        </el-form-item>
-        <el-form-item label="党费" prop="due">
-          <el-input v-model="form.due" placeholder="请输入党费"/>
-        </el-form-item>
-        <el-form-item label="删除标志" prop="delFlag">
-          <el-input v-model="form.delFlag" placeholder="请输入删除标志"/>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
-    -->
   </div>
 </template>
 

@@ -22,7 +22,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 考核评价评分Controller
- * 
+ *
  * @author admin
  * @date 2021-03-12
  */
@@ -88,6 +88,20 @@ public class DjOrgAssessmentListScoreController extends BaseController
     public AjaxResult edit(@RequestBody DjOrgAssessmentListScore djOrgAssessmentListScore)
     {
         return toAjax(djOrgAssessmentListScoreService.updateDjOrgAssessmentListScore(djOrgAssessmentListScore));
+    }
+
+    /**
+     * 修改考核评价评分
+     */
+    @PreAuthorize("@ss.hasPermi('party:assessmentScore:edit')")
+    @Log(title = "考核评价评分", businessType = BusinessType.UPDATE)
+    @PostMapping("/updateAssessmentScoreList")
+    public AjaxResult updateAssessmentScoreList(@RequestBody List<DjOrgAssessmentListScore> djOrgAssessmentListScoreList)
+    {
+        djOrgAssessmentListScoreList.stream().forEach(djOrgAssessmentListScore->{
+            djOrgAssessmentListScoreService.updateDjOrgAssessmentListScore(djOrgAssessmentListScore);
+        });
+        return AjaxResult.success();
     }
 
     /**

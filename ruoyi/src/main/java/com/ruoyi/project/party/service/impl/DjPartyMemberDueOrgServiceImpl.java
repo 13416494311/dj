@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -20,15 +21,15 @@ import java.util.List;
  * @date 2021-06-15
  */
 @Service
-@Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
-public class DjPartyMemberDueOrgServiceImpl implements IDjPartyMemberDueOrgService
-{
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+public class DjPartyMemberDueOrgServiceImpl implements IDjPartyMemberDueOrgService {
     @Autowired
     private DjPartyMemberDueOrgMapper djPartyMemberDueOrgMapper;
     @Autowired
     private IDjPartyOrgService djPartyOrgService;
     @Autowired
     private DjPartyMemberDuePlanMapper djPartyMemberDuePlanMapper;
+
     /**
      * 查询党组织党费
      *
@@ -36,8 +37,7 @@ public class DjPartyMemberDueOrgServiceImpl implements IDjPartyMemberDueOrgServi
      * @return 党组织党费
      */
     @Override
-    public DjPartyMemberDueOrg selectDjPartyMemberDueOrgById(Long dueOrgId)
-    {
+    public DjPartyMemberDueOrg selectDjPartyMemberDueOrgById(Long dueOrgId) {
 
         DjPartyMemberDueOrg partyMemberDueOrg = djPartyMemberDueOrgMapper.selectDjPartyMemberDueOrgById(dueOrgId);
         partyMemberDueOrg.setPartyOrg(djPartyOrgService.selectDjPartyOrgById(partyMemberDueOrg.getPartyOrgId()));
@@ -52,8 +52,7 @@ public class DjPartyMemberDueOrgServiceImpl implements IDjPartyMemberDueOrgServi
      * @return 党组织党费
      */
     @Override
-    public List<DjPartyMemberDueOrg> selectDjPartyMemberDueOrgList(DjPartyMemberDueOrg djPartyMemberDueOrg)
-    {
+    public List<DjPartyMemberDueOrg> selectDjPartyMemberDueOrgList(DjPartyMemberDueOrg djPartyMemberDueOrg) {
         List<DjPartyMemberDueOrg> partyMemberDueOrgList = djPartyMemberDueOrgMapper.selectDjPartyMemberDueOrgList(djPartyMemberDueOrg);
 
         partyMemberDueOrgList.stream().forEach(partyMemberDueOrg -> {
@@ -71,12 +70,11 @@ public class DjPartyMemberDueOrgServiceImpl implements IDjPartyMemberDueOrgServi
      * @return 结果
      */
     @Override
-    public int insertDjPartyMemberDueOrg(DjPartyMemberDueOrg djPartyMemberDueOrg)
-    {
+    public int insertDjPartyMemberDueOrg(DjPartyMemberDueOrg djPartyMemberDueOrg) {
 
         djPartyMemberDueOrg.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djPartyMemberDueOrg.setCreateTime(DateUtils.getNowDate());
-        return  djPartyMemberDueOrgMapper.insertDjPartyMemberDueOrg(djPartyMemberDueOrg);
+        return djPartyMemberDueOrgMapper.insertDjPartyMemberDueOrg(djPartyMemberDueOrg);
     }
 
     /**
@@ -86,8 +84,7 @@ public class DjPartyMemberDueOrgServiceImpl implements IDjPartyMemberDueOrgServi
      * @return 结果
      */
     @Override
-    public int updateDjPartyMemberDueOrg(DjPartyMemberDueOrg djPartyMemberDueOrg)
-    {
+    public int updateDjPartyMemberDueOrg(DjPartyMemberDueOrg djPartyMemberDueOrg) {
         djPartyMemberDueOrg.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djPartyMemberDueOrg.setUpdateTime(DateUtils.getNowDate());
         return djPartyMemberDueOrgMapper.updateDjPartyMemberDueOrg(djPartyMemberDueOrg);
@@ -100,8 +97,7 @@ public class DjPartyMemberDueOrgServiceImpl implements IDjPartyMemberDueOrgServi
      * @return 结果
      */
     @Override
-    public int deleteDjPartyMemberDueOrgByIds(Long[] dueOrgIds)
-    {
+    public int deleteDjPartyMemberDueOrgByIds(Long[] dueOrgIds) {
         return djPartyMemberDueOrgMapper.deleteDjPartyMemberDueOrgByIds(dueOrgIds);
     }
 
@@ -112,8 +108,7 @@ public class DjPartyMemberDueOrgServiceImpl implements IDjPartyMemberDueOrgServi
      * @return 结果
      */
     @Override
-    public int deleteDjPartyMemberDueOrgById(Long dueOrgId)
-    {
+    public int deleteDjPartyMemberDueOrgById(Long dueOrgId) {
         return djPartyMemberDueOrgMapper.deleteDjPartyMemberDueOrgById(dueOrgId);
     }
 }

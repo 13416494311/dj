@@ -42,4 +42,5 @@ public class DjPartyMemberDueOrg extends BaseEntity
     private String delFlag;
 
 
+
 }

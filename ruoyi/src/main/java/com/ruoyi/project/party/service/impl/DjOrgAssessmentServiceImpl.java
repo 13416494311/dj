@@ -4,6 +4,9 @@ import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.party.domain.DjOrgAssessmentPerformanceScore;
+import com.ruoyi.project.party.mapper.DjOrgAssessmentPerformanceScoreMapper;
+import com.ruoyi.project.party.mapper.DjOrgAssessmentyearMapper;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,10 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
     private DjOrgAssessmentMapper djOrgAssessmentMapper;
     @Autowired
     private IDjPartyOrgService djPartyOrgService;
+    @Autowired
+    private DjOrgAssessmentyearMapper djOrgAssessmentyearMapper;
+    @Autowired
+    private DjOrgAssessmentPerformanceScoreMapper djOrgAssessmentPerformanceScoreMapper;
 
     /**
      * 查询党组织考核
@@ -36,7 +43,17 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
     @Override
     public DjOrgAssessment selectDjOrgAssessmentById(Long id)
     {
-        return djOrgAssessmentMapper.selectDjOrgAssessmentById(id);
+        DjOrgAssessment assessment = djOrgAssessmentMapper.selectDjOrgAssessmentById(id);
+
+        if(assessment.getPartyOrgId()!=null){
+            assessment.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(assessment.getPartyOrgId()));
+        }
+
+        if(StringUtils.isNotNull(assessment.getAssessmentyearUuid())){
+            assessment.setAssessmentyear(djOrgAssessmentyearMapper.selectDjOrgAssessmentyearByUuid(assessment.getAssessmentyearUuid()));
+        }
+
+        return assessment;
     }
     /**
      * 查询党组织考核
@@ -47,7 +64,18 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
     @Override
     public DjOrgAssessment selectDjOrgAssessmentByUuid(String uuid)
     {
-        return djOrgAssessmentMapper.selectDjOrgAssessmentByUuid(uuid);
+        DjOrgAssessment assessment = djOrgAssessmentMapper.selectDjOrgAssessmentByUuid(uuid);
+
+        if(assessment.getPartyOrgId()!=null){
+            assessment.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(assessment.getPartyOrgId()));
+        }
+
+        if(StringUtils.isNotNull(assessment.getAssessmentyearUuid())){
+            assessment.setAssessmentyear(djOrgAssessmentyearMapper.selectDjOrgAssessmentyearByUuid(assessment.getAssessmentyearUuid()));
+        }
+
+        return assessment;
+
     }
 
     /**
@@ -61,10 +89,22 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
     {
         List<DjOrgAssessment> list = djOrgAssessmentMapper.selectDjOrgAssessmentList(djOrgAssessment);
 
-        list.stream().forEach(arrange->{
-            if(StringUtils.isNotNull(arrange.getPartyOrgId())){
-                arrange.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(arrange.getPartyOrgId()));
+        list.stream().forEach(assessment->{
+            if(assessment.getPartyOrgId()!=null){
+                assessment.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(assessment.getPartyOrgId()));
             }
+
+            if(StringUtils.isNotNull(assessment.getAssessmentyearUuid())){
+                assessment.setAssessmentyear(djOrgAssessmentyearMapper.selectDjOrgAssessmentyearByUuid(assessment.getAssessmentyearUuid()));
+            }
+
+            if(StringUtils.isNotNull(assessment.getAssessmentUuid())){
+                DjOrgAssessmentPerformanceScore performanceScore =new DjOrgAssessmentPerformanceScore();
+                performanceScore.setAssessmentUuid(assessment.getAssessmentUuid());
+                assessment.setPerformanceScoreList(djOrgAssessmentPerformanceScoreMapper.selectDjOrgAssessmentPerformanceScoreList(performanceScore));
+            }
+
+
         });
         return list;
     }

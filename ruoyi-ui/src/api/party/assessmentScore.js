@@ -34,6 +34,14 @@ export function updateAssessmentScore(data) {
     data: data
   })
 }
+// 修改考核评价评分
+export function updateAssessmentScoreList(data) {
+  return request({
+    url: '/party/assessmentScore/updateAssessmentScoreList',
+    method: 'post',
+    data: data
+  })
+}
 
 // 删除考核评价评分
 export function delAssessmentScore(id) {

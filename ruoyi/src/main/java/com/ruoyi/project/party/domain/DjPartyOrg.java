@@ -45,6 +45,9 @@ public class DjPartyOrg extends TreeEntity
     @Excel(name = "建立时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date buildTime;
 
+    /** 是否项目绩效考核 */
+    private String performanceAppraisal;
+
     /** 负责人 */
     @Excel(name = "负责人")
     private Long leader;

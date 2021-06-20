@@ -211,6 +211,21 @@
           </el-row>
           <el-row>
             <el-col :span="12">
+              <el-form-item label="是否项目绩效考核" prop="performanceAppraisal">
+                <el-radio-group v-model="form.performanceAppraisal">
+                  <el-radio
+                    :disabled="disabled"
+                    v-for="dict in performanceAppraisalOptions"
+                    :key="dict.dictValue"
+                    :label="dict.dictValue"
+                  >{{dict.dictLabel}}
+                  </el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
               <el-form-item label="联系电话" prop="phone">
                 <el-input :disabled="disabled" v-model="form.phone" placeholder="请输入联系电话"/>
               </el-form-item>
@@ -333,6 +348,8 @@
         partyOrgTypeOptions: [],
         // 党组织状态字典
         statusOptions: [],
+        // 是否字典
+        performanceAppraisalOptions:[],
         // 查询参数
         queryParams: {
           parentId: undefined,
@@ -381,7 +398,10 @@
             }
           ],
           status: [
-            {required: true, message: "党组织状态（0正常 1停用）不能为空", trigger: "blur"}
+            {required: true, message: "党组织状态不能为空", trigger: "blur"}
+          ],
+          performanceAppraisal: [
+            {required: true, message: "是否项目绩效考核不能为空", trigger: "blur"}
           ],
         },
         bodyStyle: {
@@ -424,6 +444,9 @@
       });
       this.getDicts("sys_normal_disable").then(response => {
         this.statusOptions = response.data;
+      });
+      this.getDicts("sys_yes_no").then(response => {
+        this.performanceAppraisalOptions = response.data;
       });
       listRegion().then(response => {
         this.regionOptions = this.cityTreeData(response.data);
@@ -535,6 +558,7 @@
           orgType: undefined,
           partyOrgType: undefined,
           buildTime: undefined,
+          performanceAppraisal: "Y",
           leader: undefined,
           leaderName: undefined,
           phone: undefined,

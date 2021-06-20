@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.party.mapper.DjOrgAssessmentListScoreMapper">
-    
+
     <resultMap type="DjOrgAssessmentListScore" id="DjOrgAssessmentListScoreResult">
         <result property="id"    column="id"    />
         <result property="assessmentUuid"    column="assessment_uuid"    />
@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectDjOrgAssessmentListScoreList" parameterType="DjOrgAssessmentListScore" resultMap="DjOrgAssessmentListScoreResult">
         <include refid="selectDjOrgAssessmentListScoreVo"/>
-        <where>  
+        <where>
             <if test="assessmentUuid != null  and assessmentUuid != ''"> and assessment_uuid = #{assessmentUuid}</if>
             <if test="item != null  and item != ''"> and item = #{item}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
@@ -39,14 +39,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessorScore != null "> and assessor_score = #{assessorScore}</if>
             <if test="orderNum != null "> and order_num = #{orderNum}</if>
         </where>
-        order by assessment_uuid desc, order_num
+        order by  order_num asc
     </select>
-    
+
     <select id="selectDjOrgAssessmentListScoreById" parameterType="Long" resultMap="DjOrgAssessmentListScoreResult">
         <include refid="selectDjOrgAssessmentListScoreVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertDjOrgAssessmentListScore" parameterType="DjOrgAssessmentListScore" useGeneratedKeys="true" keyProperty="id">
         insert into dj_org_assessment_list_score
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -109,10 +109,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDjOrgAssessmentListScoreByIds" parameterType="String">
-        delete from dj_org_assessment_list_score where id in 
+        delete from dj_org_assessment_list_score where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>

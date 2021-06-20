@@ -3,13 +3,14 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.party.mapper.DjOrgAssessmentyearMapper">
-    
+
     <resultMap type="DjOrgAssessmentyear" id="DjOrgAssessmentyearResult">
         <result property="id"    column="id"    />
         <result property="assessmentyearUuid"    column="assessmentYear_uuid"    />
         <result property="year"    column="year"    />
         <result property="assessmentName"    column="assessment_name"    />
         <result property="orgAssessmentStatus"    column="org_assessment_status"    />
+        <result property="performanceAppraisalStatus"    column="performance_appraisal_status"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -18,26 +19,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDjOrgAssessmentyearVo">
-        select id, assessmentYear_uuid, year, assessment_name, org_assessment_status, del_flag, create_by, create_time, update_by, update_time from dj_org_assessmentyear
+        select id, assessmentYear_uuid, year, assessment_name, org_assessment_status,performance_appraisal_status,
+           del_flag, create_by, create_time, update_by, update_time
+        from dj_org_assessmentyear
     </sql>
 
     <select id="selectDjOrgAssessmentyearList" parameterType="DjOrgAssessmentyear" resultMap="DjOrgAssessmentyearResult">
         <include refid="selectDjOrgAssessmentyearVo"/>
-        <where>  
+        <where>
             <if test="assessmentyearUuid != null  and assessmentyearUuid != ''"> and assessmentYear_uuid = #{assessmentyearUuid}</if>
             <if test="year != null  and year != ''"> and year = #{year}</if>
             <if test="assessmentName != null  and assessmentName != ''"> and assessment_name like concat('%', #{assessmentName}, '%')</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''"> and org_assessment_status = #{orgAssessmentStatus}</if>
+            <if test="performanceAppraisalStatus != null  and performanceAppraisalStatus != ''"> and performance_appraisal_status = #{performanceAppraisalStatus}</if>
         </where>
         order by year desc
     </select>
-    
+
     <select id="selectDjOrgAssessmentyearById" parameterType="Long" resultMap="DjOrgAssessmentyearResult">
         <include refid="selectDjOrgAssessmentyearVo"/>
         where id = #{id}
     </select>
 
-        
+    <select id="selectDjOrgAssessmentyearByUuid" parameterType="String" resultMap="DjOrgAssessmentyearResult">
+        <include refid="selectDjOrgAssessmentyearVo"/>
+        where assessmentYear_uuid = #{assessmentyearUuid}
+    </select>
+
     <insert id="insertDjOrgAssessmentyear" parameterType="DjOrgAssessmentyear" useGeneratedKeys="true" keyProperty="id">
         insert into dj_org_assessmentyear
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -45,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="year != null  and year != ''">year,</if>
             <if test="assessmentName != null  and assessmentName != ''">assessment_name,</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''">org_assessment_status,</if>
+            <if test="performanceAppraisalStatus != null  and performanceAppraisalStatus != ''">performance_appraisal_status,</if>
             <if test="delFlag != null  and delFlag != ''">del_flag,</if>
             <if test="createBy != null  and createBy != ''">create_by,</if>
             <if test="createTime != null ">create_time,</if>
@@ -56,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="year != null  and year != ''">#{year},</if>
             <if test="assessmentName != null  and assessmentName != ''">#{assessmentName},</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''">#{orgAssessmentStatus},</if>
+            <if test="performanceAppraisalStatus != null  and performanceAppraisalStatus != ''">#{performanceAppraisalStatus},</if>
             <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
             <if test="createBy != null  and createBy != ''">#{createBy},</if>
             <if test="createTime != null ">#{createTime},</if>
@@ -71,6 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="year != null  and year != ''">year = #{year},</if>
             <if test="assessmentName != null  and assessmentName != ''">assessment_name = #{assessmentName},</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''">org_assessment_status = #{orgAssessmentStatus},</if>
+            <if test="performanceAppraisalStatus != null  and performanceAppraisalStatus != ''">performance_appraisal_status = #{performanceAppraisalStatus},</if>
             <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
             <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
@@ -85,10 +96,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDjOrgAssessmentyearByIds" parameterType="String">
-        delete from dj_org_assessmentyear where id in 
+        delete from dj_org_assessmentyear where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
-    
+
 </mapper>
