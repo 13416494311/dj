@@ -53,14 +53,14 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-search"
             @click="handleSee(scope.row)"
           >查看
           </el-button>
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-edit"
             v-if="scope.row.orgAssessmentStatus == 1"
@@ -69,7 +69,7 @@
           >修改
           </el-button>
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
@@ -147,8 +147,12 @@
                              :formatter="performanceAppraisalFormat"/>
             <el-table-column label="绩效考核状态" align="center" prop="performanceAppraisalStatus"
                              :formatter="performanceAppraisalStatusFormat"/>
-            <el-table-column label="绩效得分" align="center" prop="performanceAppraisalScore"
-                             :formatter="scoreFormat"/>
+            <el-table-column label="绩效得分" align="center" prop="performanceAppraisalScore">
+              <template slot-scope="scope">
+                <el-button @click="performanceAppraisalScoreDataShow(scope.row)" type="text">
+                     {{ scoreFormat1(scope.row.performanceAppraisalScore)}}</el-button>
+              </template>
+            </el-table-column>
             <el-table-column label="总分" align="center" prop="score"
                              :formatter="scoreFormat"/>
 
@@ -156,7 +160,7 @@
                              class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
-                  size="mini"
+                  size="small"
                   type="text"
                   icon="el-icon-delete"
                   @click="handleArrangeDelete(scope.row)"
@@ -175,6 +179,9 @@
       </div>
       <org-transfer ref="orgTransfer" @callbackOrg="getJoinOrgList"/>
     </el-dialog>
+
+
+
   </div>
 </template>
 
@@ -296,6 +303,10 @@
       });
     },
     methods: {
+      performanceAppraisalScoreDataShow(row){
+
+        console.log(row)
+      },
       performanceAppraisalFormat(row, column) {
         return this.selectDictLabel(this.performanceAppraisalOptions, row.djPartyOrg.performanceAppraisal);
       },
@@ -303,6 +314,9 @@
         return this.selectDictLabel(this.performanceAppraisalStatusOptions, row.performanceAppraisalStatus);
       },
       scoreFormat(row, column,cellValue, index) {
+        return cellValue==undefined?'':cellValue.toFixed(1) + " 分";
+      },
+      scoreFormat1(cellValue) {
         return cellValue==undefined?'':cellValue.toFixed(1) + " 分";
       },
       yearFormat(row, column) {

@@ -18,6 +18,7 @@
 
           <template slot-scope="scope">
             <el-form-item v-if="!disabled"
+                          align="center"
                           :prop="createProp(scope.$index,index)"
                           :rules="[{validator: checkScore, trigger: 'blur'}]">
               <el-input-number style="width:150px"
@@ -34,6 +35,20 @@
             </div>
           </template>
 
+        </el-table-column>
+
+        <el-table-column label="加减分" align="center"  width="180"prop="addSubtractScore" >
+          <template slot-scope="scope">
+            <el-input-number v-if="!disabled" style="width:150px"
+                             v-model="scope.row['addSubtractScore']"
+                             size="small"
+                             @change="((val)=>{changeAddSubtractScore(val, scope.row)})"
+                             controls-position="right"
+                             :precision="1" :step="0.5"></el-input-number>
+            <div v-if="disabled">
+              {{scope.row['addSubtractScore']==undefined?'':scope.row['addSubtractScore'].toFixed(1)+' 分'}}
+            </div>
+          </template>
         </el-table-column>
 
         <el-table-column label="总分" align="center" prop="performanceAppraisalScore"  :formatter="scoreFormat"/>
@@ -187,6 +202,11 @@
       createProp(rowIndex,headIndex) {
         return "score-" + rowIndex + "-"+headIndex;
       },
+      changeAddSubtractScore(val, row){
+        row.performanceAppraisalScore = Number(row.performanceAppraisalScore==undefined?0:row.performanceAppraisalScore)
+          +Number(val==undefined?0:val);
+
+      },
       changePerformanceAppraisalScore(val, row, index) {
         let total = 0;
         for (let i in row.djOrgAssessmentListScoreList) {
@@ -229,6 +249,9 @@
           listAssessment1(params).then(response => {
             this.assessmentList = response.rows;
             for (let i in this.assessmentList) {
+              if(!this.assessmentList[i].addSubtractScore){
+                this.assessmentList[i].addSubtractScore = undefined
+              }
               let djOrgAssessmentListScoreList = this.assessmentList[i].djOrgAssessmentListScoreList
               for (let j in djOrgAssessmentListScoreList) {
                 if (!djOrgAssessmentListScoreList[j].performanceAppraisalScore) {

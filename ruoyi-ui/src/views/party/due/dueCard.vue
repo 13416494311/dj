@@ -49,7 +49,7 @@
         <el-table-column v-if="!disabled" label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
-              size="mini"
+              size="small"
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"

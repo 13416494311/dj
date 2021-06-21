@@ -60,6 +60,9 @@ public class DjOrgAssessment extends BaseEntity
     private String performanceAppraisalStatus;
 
     /** 绩效考评总分 */
+    private Double addSubtractScore;
+
+    /** 绩效考评总分 */
     private Double performanceAppraisalScore;
 
     /** 最终考评总分 */

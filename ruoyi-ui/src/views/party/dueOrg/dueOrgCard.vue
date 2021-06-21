@@ -23,7 +23,7 @@
         <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
-              size="mini"
+              size="small"
               type="text"
               icon="el-icon-search"
               @click="handleSee(scope.row)"
@@ -31,7 +31,7 @@
             </el-button>
             <el-button
               v-if="!disabled"
-              size="mini"
+              size="small"
               type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"

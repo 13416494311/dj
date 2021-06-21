@@ -49,7 +49,7 @@
       <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-search"
             @click="handleSee(scope.row)"
@@ -57,7 +57,7 @@
           </el-button>
           <el-button
             v-if="scope.row.orgAssessmentStatus =='2'"
-            size="mini"
+            size="small"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
@@ -124,7 +124,7 @@
             <el-table-column v-if="!scoreDisabled" label="操作" width="70" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
-                  size="mini"
+                  size="small"
                   type="text"
                   icon="el-icon-edit"
                   @click="handleDetailedUpdate(scope.row)"
