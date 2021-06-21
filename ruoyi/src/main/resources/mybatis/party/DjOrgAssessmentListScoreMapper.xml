@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="DjOrgAssessmentListScore" id="DjOrgAssessmentListScoreResult">
         <result property="id"    column="id"    />
         <result property="assessmentUuid"    column="assessment_uuid"    />
+        <result property="type"    column="type"    />
         <result property="item"    column="item"    />
         <result property="content"    column="content"    />
         <result property="quota"    column="quota"    />
@@ -14,6 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="criteria"    column="criteria"    />
         <result property="selfScore"    column="self_score"    />
         <result property="assessorScore"    column="assessor_score"    />
+        <result property="performanceAppraisalScore"    column="performance_appraisal_score"    />
         <result property="orderNum"    column="order_num"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
@@ -23,13 +25,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDjOrgAssessmentListScoreVo">
-        select id, assessment_uuid, item, content, quota, score, criteria, self_score, assessor_score, order_num, del_flag, create_by, create_time, update_by, update_time from dj_org_assessment_list_score
+        select id, assessment_uuid,type,  item, content, quota, score, criteria, self_score,
+        assessor_score,performance_appraisal_score, order_num, del_flag, create_by, create_time, update_by, update_time from dj_org_assessment_list_score
     </sql>
 
     <select id="selectDjOrgAssessmentListScoreList" parameterType="DjOrgAssessmentListScore" resultMap="DjOrgAssessmentListScoreResult">
         <include refid="selectDjOrgAssessmentListScoreVo"/>
         <where>
             <if test="assessmentUuid != null  and assessmentUuid != ''"> and assessment_uuid = #{assessmentUuid}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="item != null  and item != ''"> and item = #{item}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
             <if test="quota != null  and quota != ''"> and quota = #{quota}</if>
@@ -37,6 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="criteria != null  and criteria != ''"> and criteria = #{criteria}</if>
             <if test="selfScore != null "> and self_score = #{selfScore}</if>
             <if test="assessorScore != null "> and assessor_score = #{assessorScore}</if>
+            <if test="performanceAppraisalScore != null "> and performance_appraisal_score = #{performanceAppraisalScore}</if>
             <if test="orderNum != null "> and order_num = #{orderNum}</if>
         </where>
         order by  order_num asc
@@ -51,6 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into dj_org_assessment_list_score
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="assessmentUuid != null  and assessmentUuid != ''">assessment_uuid,</if>
+            <if test="type != null  and type != ''">type,</if>
             <if test="item != null  and item != ''">item,</if>
             <if test="content != null  and content != ''">content,</if>
             <if test="quota != null  and quota != ''">quota,</if>
@@ -58,6 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="criteria != null  and criteria != ''">criteria,</if>
             <if test="selfScore != null ">self_score,</if>
             <if test="assessorScore != null ">assessor_score,</if>
+            <if test="performanceAppraisalScore != null ">performance_appraisal_score,</if>
             <if test="orderNum != null ">order_num,</if>
             <if test="delFlag != null  and delFlag != ''">del_flag,</if>
             <if test="createBy != null  and createBy != ''">create_by,</if>
@@ -67,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="assessmentUuid != null  and assessmentUuid != ''">#{assessmentUuid},</if>
+            <if test="type != null  and type != ''">#{type},</if>
             <if test="item != null  and item != ''">#{item},</if>
             <if test="content != null  and content != ''">#{content},</if>
             <if test="quota != null  and quota != ''">#{quota},</if>
@@ -74,6 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="criteria != null  and criteria != ''">#{criteria},</if>
             <if test="selfScore != null ">#{selfScore},</if>
             <if test="assessorScore != null ">#{assessorScore},</if>
+            <if test="performanceAppraisalScore != null ">#{performanceAppraisalScore},</if>
             <if test="orderNum != null ">#{orderNum},</if>
             <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
             <if test="createBy != null  and createBy != ''">#{createBy},</if>
@@ -87,6 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update dj_org_assessment_list_score
         <trim prefix="SET" suffixOverrides=",">
             <if test="assessmentUuid != null  and assessmentUuid != ''">assessment_uuid = #{assessmentUuid},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
             <if test="item != null  and item != ''">item = #{item},</if>
             <if test="content != null  and content != ''">content = #{content},</if>
             <if test="quota != null  and quota != ''">quota = #{quota},</if>
@@ -94,6 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="criteria != null  and criteria != ''">criteria = #{criteria},</if>
             <if test="selfScore != null ">self_score = #{selfScore},</if>
             <if test="assessorScore != null ">assessor_score = #{assessorScore},</if>
+            <if test="performanceAppraisalScore != null ">performance_appraisal_score = #{performanceAppraisalScore},</if>
             <if test="orderNum != null ">order_num = #{orderNum},</if>
             <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
             <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
@@ -114,5 +125,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+
+    <select id="getScoreItem" parameterType="String" resultMap="DjOrgAssessmentListScoreResult">
+       SELECT doals.item ,doals.score,doals.order_num
+       FROM (select * from dj_org_assessment_list_score where type ='2')  doals
+	   LEFT JOIN dj_org_assessment doa ON doa.assessment_uuid = doals.assessment_uuid
+	   LEFT JOIN dj_org_assessmentyear doay on doay.assessmentYear_uuid = doa.assessmentYear_uuid
+	   where doay.assessmentYear_uuid =  #{assessmentYearUuid}
+	   GROUP BY doals.item
+	   ORDER BY doals.order_num asc
+    </select>
 
 </mapper>

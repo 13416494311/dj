@@ -300,6 +300,7 @@
         scoreDisabled: false,
         assessmentName:'',
         partyOrgFullName:'',
+        assessmentSelfScore:'',
       };
     },
     mounted() {
@@ -364,6 +365,7 @@
               }
             }, 0);
             if (sums[index] && sums[index] != 0) {
+              this.assessmentSelfScore = sums[index].toFixed(1);
               sums[index] = sums[index].toFixed(1) + ' 分';
             } else {
               sums[index] = '';
@@ -376,7 +378,7 @@
       getAssessmentScoreList() {
         this.orgLoading = true;
         this.assessmentScoreList = []
-        listAssessmentScore({"assessmentUuid": this.form.assessmentUuid}).then(response => {
+        listAssessmentScore({"assessmentUuid": this.form.assessmentUuid,type:'1'}).then(response => {
           this.assessmentScoreList = response.rows;
           for (let i in this.assessmentScoreList) {
             if (!this.assessmentScoreList[i].selfScore) {
@@ -557,6 +559,7 @@
               updateAssessmentScoreList(this.assessmentScoreList).then(response => {
                 if (response.code === 200) {
                   this.form.orgAssessmentStatus = "2";
+                  this.form.assessmentSelfScore = this.assessmentSelfScore;
                   updateAssessment(this.form).then(response => {
                     if (response.code === 200) {
                       this.msgSuccess("提交成功");

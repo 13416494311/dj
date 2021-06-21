@@ -3,9 +3,10 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.party.mapper.DjOrgAssessmentListMapper">
-    
+
     <resultMap type="DjOrgAssessmentList" id="DjOrgAssessmentListResult">
         <result property="listId"    column="list_id"    />
+        <result property="type"    column="type"    />
         <result property="item"    column="item"    />
         <result property="content"    column="content"    />
         <result property="quota"    column="quota"    />
@@ -21,13 +22,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectDjOrgAssessmentListVo">
-        select list_id, item, content, quota, score, criteria, status, order_num, del_flag, create_by, create_time, update_by, update_time from dj_org_assessment_list
+        select list_id, item,type, content, quota, score, criteria, status, order_num, del_flag, create_by, create_time, update_by, update_time from dj_org_assessment_list
     </sql>
 
     <select id="selectDjOrgAssessmentListList" parameterType="DjOrgAssessmentList" resultMap="DjOrgAssessmentListResult">
         <include refid="selectDjOrgAssessmentListVo"/>
-        <where>  
+        <where>
             <if test="item != null  and item != ''"> and item = #{item}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="content != null  and content != ''"> and content = #{content} </if>
             <if test="quota != null  and quota != ''"> and quota = #{quota}</if>
             <if test="score != null "> and score = #{score}</if>
@@ -37,16 +39,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         order by order_num
     </select>
-    
+
     <select id="selectDjOrgAssessmentListById" parameterType="Long" resultMap="DjOrgAssessmentListResult">
         <include refid="selectDjOrgAssessmentListVo"/>
         where list_id = #{listId}
     </select>
-        
+
     <insert id="insertDjOrgAssessmentList" parameterType="DjOrgAssessmentList" useGeneratedKeys="true" keyProperty="listId">
         insert into dj_org_assessment_list
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="item != null  and item != ''">item,</if>
+            <if test="type != null  and type != ''">type,</if>
             <if test="content != null  and content != ''">content,</if>
             <if test="quota != null  and quota != ''">quota,</if>
             <if test="score != null ">score,</if>
@@ -61,6 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="item != null  and item != ''">#{item},</if>
+            <if test="type != null  and type != ''">#{type},</if>
             <if test="content != null  and content != ''">#{content},</if>
             <if test="quota != null  and quota != ''">#{quota},</if>
             <if test="score != null ">#{score},</if>
@@ -79,6 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update dj_org_assessment_list
         <trim prefix="SET" suffixOverrides=",">
             <if test="item != null  and item != ''">item = #{item},</if>
+            <if test="type != null  and type != ''">type = #{type},</if>
             <if test="content != null  and content != ''">content = #{content},</if>
             <if test="quota != null  and quota != ''">quota = #{quota},</if>
             <if test="score != null ">score = #{score},</if>
@@ -99,10 +104,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteDjOrgAssessmentListByIds" parameterType="String">
-        delete from dj_org_assessment_list where list_id in 
+        delete from dj_org_assessment_list where list_id in
         <foreach item="listId" collection="array" open="(" separator="," close=")">
             #{listId}
         </foreach>
     </delete>
-    
+
 </mapper>

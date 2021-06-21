@@ -17,6 +17,14 @@ export function getAssessmentScore(id) {
   })
 }
 
+// 查询考核评价评分详细
+export function getScoreItem(assessmentYearUuid) {
+  return request({
+    url: '/party/assessmentScore/getScoreItem/' + assessmentYearUuid,
+    method: 'get'
+  })
+}
+
 // 新增考核评价评分
 export function addAssessmentScore(data) {
   return request({
@@ -42,6 +50,17 @@ export function updateAssessmentScoreList(data) {
     data: data
   })
 }
+
+// 修改考核评价评分
+export function updateAssessmentList(data) {
+  return request({
+    url: '/party/assessmentScore/updateAssessmentList',
+    method: 'post',
+    data: data
+  })
+}
+
+
 
 // 删除考核评价评分
 export function delAssessmentScore(id) {

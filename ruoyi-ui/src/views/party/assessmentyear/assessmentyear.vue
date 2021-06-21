@@ -117,7 +117,7 @@
 
         <el-card shadow="always" style="margin-bottom: 30px;">
           <div slot="header" style="height: 25px">
-            <span style="font-weight: bold;font-size: 16px">考核党支部</span>
+            <span style="font-weight: bold;font-size: 16px">党支部考评</span>
             <el-button
               v-if="!disabled"
               type="primary"
@@ -135,16 +135,27 @@
             <el-table-column label="序号" align="center" type="index"/>
             <el-table-column label="党组织名称" align="center"
                              prop="djPartyOrg.partyOrgFullName" :formatter="partyOrgFormat"/>
-            <el-table-column label="党组织类型" align="center" prop="djPartyOrg.orgType"
-                             :formatter="orgTypeFormat"/>
+            <!--<el-table-column label="党组织类型" align="center" prop="djPartyOrg.orgType"
+                             :formatter="orgTypeFormat"/>-->
             <el-table-column label="党组织考核状态" align="center" prop="orgAssessmentStatus"
                              :formatter="orgAssessmentStatusFormat"/>
+            <el-table-column label="自评得分" align="center" prop="assessmentSelfScore"
+                             :formatter="scoreFormat"/>
+            <el-table-column label="党委评分" align="center" prop="assessmentScore"
+                             :formatter="scoreFormat"/>
+            <el-table-column label="是否绩效考核项目" align="center" prop="djPartyOrg.performanceAppraisal"
+                             :formatter="performanceAppraisalFormat"/>
+            <el-table-column label="绩效考核状态" align="center" prop="performanceAppraisalStatus"
+                             :formatter="performanceAppraisalStatusFormat"/>
+            <el-table-column label="绩效得分" align="center" prop="performanceAppraisalScore"
+                             :formatter="scoreFormat"/>
+            <el-table-column label="总分" align="center" prop="score"
+                             :formatter="scoreFormat"/>
 
-            <el-table-column label="操作" align="center"
+            <el-table-column  v-if="!disabled" label="操作" align="center"
                              class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
-                  v-if="!disabled"
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
@@ -207,6 +218,10 @@
         total: 0,
         //党支部类型
         orgTypeOptions: [],
+        //绩效考核状态
+        performanceAppraisalStatusOptions: [],
+        // 是否字典
+        performanceAppraisalOptions:[],
         //党支部考核状态
         orgAssessmentStatusOptions: [],
         //年度考核状态
@@ -271,8 +286,25 @@
       this.getDicts("org_assessment_status").then(response => {
         this.orgAssessmentStatusOptions = response.data;
       });
+      //绩效考核状态
+      this.getDicts("submit_status").then(response => {
+        this.performanceAppraisalStatusOptions = response.data;
+      });
+      //系统是否
+      this.getDicts("sys_yes_no").then(response => {
+        this.performanceAppraisalOptions = response.data;
+      });
     },
     methods: {
+      performanceAppraisalFormat(row, column) {
+        return this.selectDictLabel(this.performanceAppraisalOptions, row.djPartyOrg.performanceAppraisal);
+      },
+      performanceAppraisalStatusFormat(row, column) {
+        return this.selectDictLabel(this.performanceAppraisalStatusOptions, row.performanceAppraisalStatus);
+      },
+      scoreFormat(row, column,cellValue, index) {
+        return cellValue==undefined?'':cellValue.toFixed(1) + " 分";
+      },
       yearFormat(row, column) {
         return row.year + "年";
       },

@@ -380,7 +380,7 @@
       getAssessmentScoreList() {
         this.orgLoading = true;
         this.assessmentScoreList = []
-        listAssessmentScore({"assessmentUuid": this.form.assessmentUuid}).then(response => {
+        listAssessmentScore({"assessmentUuid": this.form.assessmentUuid,type:'1'}).then(response => {
           this.assessmentScoreList = response.rows;
           for (let i in this.assessmentScoreList) {
             if (!this.assessmentScoreList[i].assessorScore) {

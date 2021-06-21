@@ -6,34 +6,47 @@
     <el-form ref="form" :model="form" :rules="rules" >
       <el-table :stripe="true"
                 :border="true"
-                :summary-method="getTotal"
-                :show-summary="showSum"
-                v-loading="loading" :data="assessmentList" @selection-change="handleSelectionChange">
+                v-loading="loading" :data="assessmentList" >
         <el-table-column label="序号" align="center" type="index"/>
-        <el-table-column label="党组织名称" align="center" prop="djPartyOrg.partyOrgFullName"/>
-        <el-table-column v-for="(item,index) in scoreItemList" :key="index" :label="item" align="center">
-          <template slot-scope="scope">
+        <el-table-column label="党组织名称" width="180" align="center"  :formatter="partyOrgFormat"
+                         prop="djPartyOrg.partyOrgFullName"/>
+        <el-table-column v-for="(item,index) in scoreItemList"
+                         :key="index"
+                         :label="item.item+'('+item.score+')'"
+                         width="180"
+                         align="center">
 
+          <template slot-scope="scope">
+            <el-form-item v-if="!disabled"
+                          :prop="createProp(scope.$index,index)"
+                          :rules="[{validator: checkScore, trigger: 'blur'}]">
+              <el-input-number style="width:150px"
+                               v-model="scope.row.djOrgAssessmentListScoreList[index]['performanceAppraisalScore']"
+                               size="small"
+                               @change="((val)=>{changePerformanceAppraisalScore(val, scope.row,index)})"
+                               controls-position="right"
+                               :precision="1" :step="0.5"
+                               :min="0"></el-input-number>
+            </el-form-item>
+
+            <div v-if="disabled">
+              {{scope.row.djOrgAssessmentListScoreList[index]['performanceAppraisalScore']==undefined?'':scope.row.djOrgAssessmentListScoreList[index]['performanceAppraisalScore'].toFixed(1)+' 分'}}
+            </div>
           </template>
 
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+
+        <el-table-column label="总分" align="center" prop="performanceAppraisalScore"  :formatter="scoreFormat"/>
+
+        <el-table-column v-if="!disabled" label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              v-hasPermi="['party:performanceScore:edit']"
-            >修改
-            </el-button>
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
-              v-hasPermi="['party:performanceScore:remove']"
-            >删除
+              v-hasPermi="['party:assessmentScore:edit']"
+            >保存
             </el-button>
           </template>
         </el-table-column>
@@ -45,14 +58,16 @@
 
 <script>
   import {
-    listPerformanceScore,
-    getPerformanceScore,
-    delPerformanceScore,
-    addPerformanceScore,
-    updatePerformanceScore,
-    exportPerformanceScore,
+    addAssessmentScore,
+    delAssessmentScore,
+    exportAssessmentScore,
+    getAssessmentScore,
+    listAssessmentScore,
+    updateAssessmentScore,
+    updateAssessmentScoreList,
+    updateAssessmentList,
     getScoreItem
-  } from "@/api/party/performanceScore";
+  } from "@/api/party/assessmentScore";
   import {
     listAssessmentyear,
     getAssessmentyear,
@@ -96,8 +111,6 @@
         multiple: true,
         // 总条数
         total: 0,
-        // 绩效考核评分表格数据
-        performanceScoreList: [],
         // 弹出层标题
         title: "",
         // 是否显示弹出层
@@ -137,7 +150,9 @@
         duePlanTitle: "",
         assessmentList: [],
         showSum: true,
-        scoreItemList:[]
+        scoreItemList:[],
+        performanceAppraisalScoreRequired: false,
+        performanceAppraisalScore:'',
       };
     },
     mounted() {
@@ -152,32 +167,46 @@
       this.getList();
     },
     methods: {
-      getTotal(param) {
-        const {columns, data} = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 1) {
-            sums[index] = '合计';
-            return;
+      //绩效评分验证
+      checkScore(rule, value, callback) {
+        let filed = rule.field
+        let fileds = filed.split("-");
+        let performanceAppraisalScore = this.assessmentList[fileds[1]].djOrgAssessmentListScoreList[fileds[2]].performanceAppraisalScore;
+        let score = this.scoreItemList[fileds[2]].score;
+        if(performanceAppraisalScore>score){
+          callback(new Error("评分不能大于"+score+"分!"));
+        }else{
+          if (!performanceAppraisalScore && this.performanceAppraisalScoreRequired) {
+            callback(new Error("评分不能为空!"));
+          } else {
+            callback()
           }
-          const values = data.map(item => Number(item[column.property]));
-          if (column.property === 'total') {
-            sums[index] = values.reduce((prev, curr) => {
-              const value = Number(curr);
-              if (!isNaN(value)) {
-                return prev + curr;
-              } else {
-                return prev;
-              }
-            }, 0);
-            if (sums[index] && sums[index] != 0) {
-              sums[index] = sums[index].toFixed(2) + ' 元';
-            } else {
-              sums[index] = '';
-            }
+        }
+
+      },
+      createProp(rowIndex,headIndex) {
+        return "score-" + rowIndex + "-"+headIndex;
+      },
+      changePerformanceAppraisalScore(val, row, index) {
+        let total = 0;
+        for (let i in row.djOrgAssessmentListScoreList) {
+          if (row.djOrgAssessmentListScoreList[i].performanceAppraisalScore) {
+            total = total + Number(row.djOrgAssessmentListScoreList[i].performanceAppraisalScore);
           }
-        });
-        return sums;
+        }
+        row.performanceAppraisalScore = total
+        if (total == 0) {
+          return ""
+        } else {
+          return total;
+        }
+      },
+      scoreFormat(row, column,cellValue, index) {
+        return cellValue==undefined?'':cellValue.toFixed(1) + " 分";
+      },
+      partyOrgFormat(row, column) {
+        let partyOrgFullName = row.djPartyOrg.partyOrgFullName;
+        return partyOrgFullName.substring(partyOrgFullName.indexOf("/") + 1);
       },
       /** 对话框自适应高度 */
       getHeight() {
@@ -192,7 +221,6 @@
             this.scoreItemList = response.data;
             this.loading = false;
           })
-
           let params={}
           params.assessmentyearUuid = response.data.assessmentyearUuid
           params.djPartyOrg ={
@@ -200,12 +228,19 @@
           }
           listAssessment1(params).then(response => {
             this.assessmentList = response.rows;
+            for (let i in this.assessmentList) {
+              let djOrgAssessmentListScoreList = this.assessmentList[i].djOrgAssessmentListScoreList
+              for (let j in djOrgAssessmentListScoreList) {
+                if (!djOrgAssessmentListScoreList[j].performanceAppraisalScore) {
+                  djOrgAssessmentListScoreList[j].performanceAppraisalScore = undefined
+                }
+              }
+            }
             this.total = response.total;
             this.loading = false;
           });
 
         })
-
       },
       // 取消按钮
       cancel() {
@@ -228,95 +263,55 @@
         };
         this.resetForm("form");
       },
-      /** 搜索按钮操作 */
-      handleQuery() {
-        this.queryParams.pageNum = 1;
-        this.getList();
-      },
-      /** 重置按钮操作 */
-      resetQuery() {
-        this.resetForm("queryForm");
-        this.handleQuery();
-      },
-      // 多选框选中数据
-      handleSelectionChange(selection) {
-        this.ids = selection.map(item => item.id)
-        this.single = selection.length != 1
-        this.multiple = !selection.length
-      },
-      /** 新增按钮操作 */
-      handleAdd() {
-        this.reset();
-        this.open = true;
-        this.title = "添加绩效考核评分";
-      },
+
       /** 修改按钮操作 */
       handleUpdate(row) {
-        this.reset();
-        const id = row.id || this.ids
-        getPerformanceScore(id).then(response => {
-          this.form = response.data;
-          this.open = true;
-          this.title = "修改绩效考核评分";
-        });
-      },
-      /** 提交按钮 */
-      submitForm: function () {
-        this.$refs["form"].validate(valid => {
-          if (valid) {
-            if (this.form.id != undefined) {
-              updatePerformanceScore(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess("修改成功");
-                  this.open = false;
-                  this.getList();
-                } else {
-                  this.msgError(response.msg);
-                }
-              });
-            } else {
-              addPerformanceScore(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess("新增成功");
-                  this.open = false;
-                  this.getList();
-                } else {
-                  this.msgError(response.msg);
-                }
-              });
-            }
+        let params = [];
+        params.push(row)
+        updateAssessmentList(params).then(response => {
+          if (response.code === 200) {
+            this.msgSuccess("保存成功");
+            this.getList();
+          } else {
+            this.msgError(response.msg);
           }
         });
       },
-      /** 删除按钮操作 */
-      handleDelete(row) {
-        const ids = row.id || this.ids;
-        this.$confirm('是否确认删除绩效考核评分编号为"' + ids + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function () {
-          return delPerformanceScore(ids);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        }).catch(function () {
-        });
+
+      submit(status) {
+        if (status == 2) {
+          this.performanceAppraisalScoreRequired = true;
+        } else {
+          this.performanceAppraisalScoreRequired = false;
+        }
+        this.$nextTick(()=>{
+          this.$refs["form"].validate((valid ,object)=> {
+            if (valid) {
+              for(let i in this.assessmentList){
+                this.assessmentList[i].performanceAppraisalStatus = status
+              }
+              updateAssessmentList(this.assessmentList).then(response => {
+                if (response.code === 200) {
+                  let params = {}
+                  params.id = this.assessmentyearId;
+                  params.performanceAppraisalStatus = status;
+                  updateAssessmentyear(params).then(response => {
+                    console.log(response)
+                    if (response.code === 200) {
+                      this.msgSuccess("操作成功");
+                      this.$emit("ok");
+                    } else {
+                      this.msgError(response.msg);
+                    }
+                  })
+                }
+              })
+            }
+          })
+        })
       },
-      /** 导出按钮操作 */
-      handleExport() {
-        const queryParams = this.queryParams;
-        this.$confirm('是否确认导出所有绩效考核评分数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function () {
-          return exportPerformanceScore(queryParams);
-        }).then(response => {
-          this.download(response.msg);
-        }).catch(function () {
-        });
-      }
+
+
     }
   };
 </script>

@@ -265,6 +265,7 @@
       cancel() {
         this.open = false;
         this.reset();
+        this.getList()
       },
       // 表单重置
       reset() {
@@ -331,38 +332,8 @@
         });
       },
       /** 提交按钮 */
-      submitForm: function (orgAssessmentStatus) {
-
-        if (orgAssessmentStatus== 2 && this.assessmentOrgList.length == 0) {
-          this.msgError("请选择考核党组织!");
-          return;
-        }
-        this.$refs["form"].validate(valid => {
-          if (valid) {
-            this.form.orgAssessmentStatus = orgAssessmentStatus;
-            if (this.form.id != undefined) {
-              updateAssessmentyear(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess("修改成功");
-                  this.open = false;
-                  this.getList();
-                } else {
-                  this.msgError(response.msg);
-                }
-              });
-            } else {
-              addAssessmentyear(this.form).then(response => {
-                if (response.code === 200) {
-                  this.msgSuccess("新增成功");
-                  this.open = false;
-                  this.getList();
-                } else {
-                  this.msgError(response.msg);
-                }
-              });
-            }
-          }
-        });
+      submitForm: function (statue) {
+        this.$refs.performanceScoreCard.submit(statue);
       },
       /** 删除按钮操作 */
       handleDelete(row) {

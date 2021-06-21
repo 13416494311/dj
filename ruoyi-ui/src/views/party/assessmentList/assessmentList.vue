@@ -60,11 +60,13 @@
               :data="assessmentListList"
               @selection-change="handleSelectionChange" :header-cell-style="{'text-align':'center'}">
       <el-table-column label="序号" align="center" type="index"/>
-      <el-table-column label="考核项目" align="center" prop="item"/>
+      <el-table-column label="考核类型" align="center" prop="type"   width="150"
+                       :formatter="typeFormat"/>
+      <el-table-column label="考核项目" align="center" prop="item" width="150"/>
       <el-table-column label="考核内容" align="left" prop="content"/>
-      <el-table-column label="考核指标" align="left" prop="quota" width="300"/>
+      <el-table-column label="考核指标" align="left" prop="quota" />
       <el-table-column label="分值" align="center" prop="score" width="55"/>
-      <el-table-column label="评分标准" align="left" prop="criteria" width="300"/>
+      <el-table-column label="评分标准" align="left" prop="criteria" />
       <el-table-column label="排序" align="center" prop="orderNum" width="55"/>
       <el-table-column label="是否启用" align="center" prop="status" width="80">
         <template slot-scope="scope">
@@ -110,6 +112,18 @@
     <el-dialog :title="title" :visible.sync="open" width="80%" append-to-body
                @open="getHeight" :close-on-click-modal="false">
       <el-form ref="form" :model="form" :rules="rules" :style="bodyStyle" label-width="100px">
+        <el-form-item label="考核类型" prop="type">
+          <el-select v-model="form.type"
+                     style="width: 100%"
+                     placeholder="请选择考核类型">
+            <el-option
+              v-for="dict in assessmentTypeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="考核项目" prop="item">
           <el-input v-model="form.item" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" placeholder="请输入内容"/>
         </el-form-item>
@@ -186,6 +200,8 @@
         open: false,
         // 状态数据字典
         statusOptions: [],
+        // 考核类型
+        assessmentTypeOptions: [],
         // 查询参数
         queryParams: {
           pageNum: 1,
@@ -205,18 +221,18 @@
           item: [
             {required: true, message: "考核项目不能为空", trigger: "blur"}
           ],
-          content: [
+          /*content: [
             {required: true, message: "考核内容不能为空", trigger: "blur"}
           ],
           quota: [
             {required: true, message: "考核指标不能为空", trigger: "blur"}
-          ],
+          ],*/
           score: [
             {required: true, message: "分值不能为空", trigger: "blur"}
           ],
-          criteria: [
+          /*criteria: [
             {required: true, message: "评分标准不能为空", trigger: "blur"}
-          ],
+          ],*/
         },
         bodyStyle: {
           overflowY: 'auto',
@@ -234,8 +250,15 @@
       this.getDicts("sys_normal_disable").then(response => {
         this.statusOptions = response.data;
       });
+      this.getDicts("assessment_type").then(response => {
+        this.assessmentTypeOptions = response.data;
+      });
     },
     methods: {
+      // 党员活动类型字典翻译
+      typeFormat(row, column) {
+        return this.selectDictLabel(this.assessmentTypeOptions, row.type);
+      },
       //改变启用状态
       handleStatusChange(row) {
         let text = row.status === "0" ? "启用" : "停用";

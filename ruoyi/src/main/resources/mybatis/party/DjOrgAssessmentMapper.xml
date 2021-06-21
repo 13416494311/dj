@@ -12,11 +12,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="assessmentResult"    column="assessment_result"    />
         <result property="orgAssessmentStatus"    column="org_assessment_status"    />
         <result property="assessment_rank"    column="assessment_rank"    />
-
+        <result property="assessmentSelfScore"    column="assessment_self_score"    />
         <result property="assessmentScore"    column="assessment_score"    />
         <result property="performanceAppraisalStatus"    column="performance_appraisal_status"    />
         <result property="performanceAppraisalScore"    column="performance_appraisal_score"    />
-
+        <result property="score"    column="score"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -26,8 +26,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <sql id="selectDjOrgAssessmentVo">
         select doa.id, doa.assessment_uuid, doa.assessmentYear_uuid, doa.party_org_id, doa.assessment_result, doa.org_assessment_status,
-            doa.assessment_rank,doa.assessment_score,doa.performance_appraisal_status,doa.performance_appraisal_score,
-            doa.del_flag, doa.create_by, doa.create_time, doa.update_by, doa.update_time
+            doa.assessment_rank,doa.assessment_self_score,doa.assessment_score,doa.performance_appraisal_status,doa.performance_appraisal_score,
+            doa.score,doa.del_flag, doa.create_by, doa.create_time, doa.update_by, doa.update_time
         from dj_org_assessment doa
     </sql>
 
@@ -54,11 +54,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessmentResult != null  and assessmentResult != ''"> and doa.assessment_result = #{assessmentResult}</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''"> and doa.org_assessment_status = #{orgAssessmentStatus}</if>
             <if test="assessmentScore != null  and assessmentScore != ''"> and doa.assessment_score = #{assessmentScore}</if>
+            <if test="assessmentSelfScore != null  and assessmentSelfScore != ''">
+                and doa.assessment_self_score = #{assessmentSelfScore}</if>
             <if test="performanceAppraisalStatus != null  and performanceAppraisalStatus != ''">
                and doa.performance_appraisal_status = #{performanceAppraisalStatus}
             </if>
             <if test="performanceAppraisalScore != null  and performanceAppraisalScore != ''">
                and doa.performance_appraisal_score = #{performanceAppraisalScore}</if>
+            <if test="score != null  and score != ''">
+                and doa.score = #{score}</if>
             <if test="assessment_rank != null "> and doa.assessment_rank = #{assessment_rank}</if>
             ${dataScope}
         </where>
@@ -84,9 +88,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessmentResult != null  and assessmentResult != ''">assessment_result,</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''">org_assessment_status,</if>
             <if test="assessment_rank != null ">assessment_rank,</if>
+            <if test="assessmentSelfScore != null ">assessment_self_score,</if>
             <if test="assessmentScore != null ">assessment_score,</if>
             <if test="performanceAppraisalStatus != null ">performance_appraisal_status,</if>
             <if test="performanceAppraisalScore != null ">performance_appraisal_score,</if>
+            <if test="score != null ">score,</if>
             <if test="delFlag != null  and delFlag != ''">del_flag,</if>
             <if test="createBy != null  and createBy != ''">create_by,</if>
             <if test="createTime != null ">create_time,</if>
@@ -100,9 +106,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessmentResult != null  and assessmentResult != ''">#{assessmentResult},</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''">#{orgAssessmentStatus},</if>
             <if test="assessment_rank != null ">#{assessment_rank},</if>
+            <if test="assessmentSelfScore != null ">#{assessmentSelfScore},</if>
             <if test="assessmentScore != null ">#{assessmentScore},</if>
             <if test="performanceAppraisalStatus != null ">#{performanceAppraisalStatus},</if>
             <if test="performanceAppraisalScore != null ">#{performanceAppraisalScore},</if>
+            <if test="score != null ">#{score},</if>
             <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
             <if test="createBy != null  and createBy != ''">#{createBy},</if>
             <if test="createTime != null ">#{createTime},</if>
@@ -120,9 +128,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessmentResult != null  and assessmentResult != ''">assessment_result = #{assessmentResult},</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''">org_assessment_status = #{orgAssessmentStatus},</if>
             <if test="assessment_rank != null ">assessment_rank = #{assessment_rank},</if>
+            <if test="assessmentSelfScore != null ">assessment_self_score = #{assessmentSelfScore},</if>
             <if test="assessmentScore != null ">assessment_score = #{assessmentScore},</if>
             <if test="performanceAppraisalStatus != null ">performance_appraisal_status = #{performanceAppraisalStatus},</if>
             <if test="performanceAppraisalScore != null ">performance_appraisal_score = #{performanceAppraisalScore},</if>
+            <if test="score != null ">score = #{score},</if>
             <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
             <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
             <if test="createTime != null ">create_time = #{createTime},</if>
