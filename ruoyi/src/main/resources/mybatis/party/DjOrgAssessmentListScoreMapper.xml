@@ -133,7 +133,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	   LEFT JOIN dj_org_assessment doa ON doa.assessment_uuid = doals.assessment_uuid
 	   LEFT JOIN dj_org_assessmentyear doay on doay.assessmentYear_uuid = doa.assessmentYear_uuid
 	   where doay.assessmentYear_uuid =  #{assessmentYearUuid}
-	   GROUP BY doals.item
+	   GROUP BY doals.item  ,doals.score, doals.order_num
 	   ORDER BY doals.order_num asc
     </select>
 

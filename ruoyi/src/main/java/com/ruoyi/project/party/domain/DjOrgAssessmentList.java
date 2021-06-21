@@ -22,6 +22,12 @@ public class DjOrgAssessmentList extends BaseEntity {
     private Long listId;
 
     /**
+     * 考核类型
+     */
+    @Excel(name = "考核类型")
+    private String type;
+
+    /**
      * 考核项目
      */
     @Excel(name = "考核项目")
@@ -69,9 +75,7 @@ public class DjOrgAssessmentList extends BaseEntity {
      */
     private String delFlag;
 
-    public void setListId(Long listId) {
-        this.listId = listId;
-    }
+
 
 
 }

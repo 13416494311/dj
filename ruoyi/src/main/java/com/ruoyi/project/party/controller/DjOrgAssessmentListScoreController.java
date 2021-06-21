@@ -1,6 +1,9 @@
 package com.ruoyi.project.party.controller;
 
 import java.util.List;
+
+import com.ruoyi.project.party.domain.DjOrgAssessment;
+import com.ruoyi.project.party.service.IDjOrgAssessmentService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +35,9 @@ public class DjOrgAssessmentListScoreController extends BaseController
 {
     @Autowired
     private IDjOrgAssessmentListScoreService djOrgAssessmentListScoreService;
+
+    @Autowired
+    private IDjOrgAssessmentService djOrgAssessmentService;
 
     /**
      * 查询考核评价评分列表
@@ -105,13 +111,40 @@ public class DjOrgAssessmentListScoreController extends BaseController
     }
 
     /**
+     * 修改考核评价评分
+     */
+    @PreAuthorize("@ss.hasPermi('party:assessmentScore:edit')")
+    @Log(title = "考核评价评分", businessType = BusinessType.UPDATE)
+    @PostMapping("/updateAssessmentList")
+    public AjaxResult updateAssessmentList(@RequestBody List<DjOrgAssessment> djOrgAssessmentList)
+    {
+        djOrgAssessmentList.stream().forEach(djOrgAssessment->{
+            djOrgAssessment.getDjOrgAssessmentListScoreList().stream().forEach(djOrgAssessmentListScore->{
+                djOrgAssessmentListScoreService.updateDjOrgAssessmentListScore(djOrgAssessmentListScore);
+            });
+            djOrgAssessmentService.updateDjOrgAssessment(djOrgAssessment);
+        });
+        return AjaxResult.success();
+    }
+
+    /**
      * 删除考核评价评分
      */
     @PreAuthorize("@ss.hasPermi('party:assessmentScore:remove')")
     @Log(title = "考核评价评分", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(djOrgAssessmentListScoreService.deleteDjOrgAssessmentListScoreByIds(ids));
+    }
+
+    /**
+     * 获取绩效考核评分详细信息ITEM
+     */
+    @PreAuthorize("@ss.hasPermi('party:assessmentScore:query')")
+    @GetMapping(value = "/getScoreItem/{assessmentYearUuid}")
+    public AjaxResult getScoreItem(@PathVariable("assessmentYearUuid") String assessmentYearUuid)
+    {
+        return AjaxResult.success(djOrgAssessmentListScoreService.getScoreItem(assessmentYearUuid));
     }
 }

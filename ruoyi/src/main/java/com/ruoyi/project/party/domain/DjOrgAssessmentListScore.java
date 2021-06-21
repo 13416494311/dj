@@ -24,6 +24,8 @@ public class DjOrgAssessmentListScore extends BaseEntity
     @Excel(name = "assessment_uuid")
     private String assessmentUuid;
 
+    private String type;
+
     /** 考核项目 */
     @Excel(name = "考核项目")
     private String item;
@@ -51,6 +53,10 @@ public class DjOrgAssessmentListScore extends BaseEntity
     /** 党委评分 */
     @Excel(name = "党委评分")
     private Double assessorScore;
+
+    @Excel(name = "绩效评分")
+    private Double performanceAppraisalScore;
+
 
     /** 排序 */
     @Excel(name = "排序")

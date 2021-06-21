@@ -5,15 +5,15 @@ import com.ruoyi.project.party.domain.DjOrgAssessmentListScore;
 
 /**
  * 考核评价评分Service接口
- * 
+ *
  * @author admin
  * @date 2021-03-12
  */
-public interface IDjOrgAssessmentListScoreService 
+public interface IDjOrgAssessmentListScoreService
 {
     /**
      * 查询考核评价评分
-     * 
+     *
      * @param id 考核评价评分ID
      * @return 考核评价评分
      */
@@ -21,7 +21,7 @@ public interface IDjOrgAssessmentListScoreService
 
     /**
      * 查询考核评价评分列表
-     * 
+     *
      * @param djOrgAssessmentListScore 考核评价评分
      * @return 考核评价评分集合
      */
@@ -29,7 +29,7 @@ public interface IDjOrgAssessmentListScoreService
 
     /**
      * 新增考核评价评分
-     * 
+     *
      * @param djOrgAssessmentListScore 考核评价评分
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface IDjOrgAssessmentListScoreService
 
     /**
      * 修改考核评价评分
-     * 
+     *
      * @param djOrgAssessmentListScore 考核评价评分
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface IDjOrgAssessmentListScoreService
 
     /**
      * 批量删除考核评价评分
-     * 
+     *
      * @param ids 需要删除的考核评价评分ID
      * @return 结果
      */
@@ -53,9 +53,11 @@ public interface IDjOrgAssessmentListScoreService
 
     /**
      * 删除考核评价评分信息
-     * 
+     *
      * @param id 考核评价评分ID
      * @return 结果
      */
     public int deleteDjOrgAssessmentListScoreById(Long id);
+
+    public List<DjOrgAssessmentListScore> getScoreItem(String assessmentYearUuid);
 }

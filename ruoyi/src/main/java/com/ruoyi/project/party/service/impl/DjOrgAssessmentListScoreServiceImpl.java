@@ -102,4 +102,10 @@ public class DjOrgAssessmentListScoreServiceImpl implements IDjOrgAssessmentList
     {
         return djOrgAssessmentListScoreMapper.deleteDjOrgAssessmentListScoreById(id);
     }
+
+
+    @Override
+    public List<DjOrgAssessmentListScore> getScoreItem(String assessmentYearUuid){
+        return djOrgAssessmentListScoreMapper.getScoreItem(assessmentYearUuid);
+    }
 }

@@ -27,7 +27,7 @@ public class DjOrgAssessment extends BaseEntity
     private String assessmentUuid;
 
     /** assessmentYear_uuid
- */
+     */
     @Excel(name = "assessmentYear_uuid ")
     private String assessmentyearUuid;
 
@@ -50,7 +50,10 @@ public class DjOrgAssessment extends BaseEntity
     @Excel(name = "排名")
     private Integer assessment_rank;
 
-    /** 考评总分 */
+    /** 自评总分 */
+    private Double assessmentSelfScore;
+
+    /** 党委考评总分 */
     private Double assessmentScore;
 
     /** 绩效考评状态 */
@@ -59,10 +62,13 @@ public class DjOrgAssessment extends BaseEntity
     /** 绩效考评总分 */
     private Double performanceAppraisalScore;
 
+    /** 最终考评总分 */
+    private Double score;
+
 
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
 
-    private List<DjOrgAssessmentPerformanceScore> performanceScoreList;
+    private List<DjOrgAssessmentListScore> djOrgAssessmentListScoreList;
 
 }

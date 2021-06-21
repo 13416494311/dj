@@ -4,8 +4,7 @@ import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.project.party.domain.DjOrgAssessmentPerformanceScore;
-import com.ruoyi.project.party.mapper.DjOrgAssessmentPerformanceScoreMapper;
+import com.ruoyi.project.party.mapper.DjOrgAssessmentListScoreMapper;
 import com.ruoyi.project.party.mapper.DjOrgAssessmentyearMapper;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
     @Autowired
     private DjOrgAssessmentyearMapper djOrgAssessmentyearMapper;
     @Autowired
-    private DjOrgAssessmentPerformanceScoreMapper djOrgAssessmentPerformanceScoreMapper;
+    private DjOrgAssessmentListScoreMapper djOrgAssessmentListScoreMapper;
 
     /**
      * 查询党组织考核
@@ -96,12 +95,6 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
 
             if(StringUtils.isNotNull(assessment.getAssessmentyearUuid())){
                 assessment.setAssessmentyear(djOrgAssessmentyearMapper.selectDjOrgAssessmentyearByUuid(assessment.getAssessmentyearUuid()));
-            }
-
-            if(StringUtils.isNotNull(assessment.getAssessmentUuid())){
-                DjOrgAssessmentPerformanceScore performanceScore =new DjOrgAssessmentPerformanceScore();
-                performanceScore.setAssessmentUuid(assessment.getAssessmentUuid());
-                assessment.setPerformanceScoreList(djOrgAssessmentPerformanceScoreMapper.selectDjOrgAssessmentPerformanceScoreList(performanceScore));
             }
 
 

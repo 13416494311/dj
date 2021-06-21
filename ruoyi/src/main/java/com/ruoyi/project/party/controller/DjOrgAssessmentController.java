@@ -40,15 +40,12 @@ public class DjOrgAssessmentController extends BaseController
     @Autowired
     private IDjOrgAssessmentService djOrgAssessmentService;
     @Autowired
-    private IDjOrgAssessmentPerformanceScoreService djOrgAssessmentPerformanceScoreService;
-    @Autowired
     private IDjOrgAssessmentListService djOrgAssessmentListService;
     @Autowired
     private IDjOrgAssessmentListScoreService djOrgAssessmentListScoreService;
     @Autowired
     private IDjPartyOrgService djPartyOrgService;
-    @Autowired
-    private ISysDictDataService dictDataService;
+
     /**
      * 查询党组织考核列表
      */
@@ -67,8 +64,16 @@ public class DjOrgAssessmentController extends BaseController
     public TableDataInfo list1(@RequestBody DjOrgAssessment djOrgAssessment)
     {
         startPage();
-        List<DjOrgAssessment> list = djOrgAssessmentService.selectDjOrgAssessmentList(djOrgAssessment);
-        return getDataTable(list);
+        List<DjOrgAssessment> assessmentList = djOrgAssessmentService.selectDjOrgAssessmentList(djOrgAssessment);
+
+        assessmentList.stream().forEach(assessment->{
+            DjOrgAssessmentListScore djOrgAssessmentListScore = new DjOrgAssessmentListScore();
+            djOrgAssessmentListScore.setAssessmentUuid(assessment.getAssessmentUuid());
+            djOrgAssessmentListScore.setType("2");
+            assessment.setDjOrgAssessmentListScoreList(djOrgAssessmentListScoreService.selectDjOrgAssessmentListScoreList(djOrgAssessmentListScore));
+        });
+
+        return getDataTable(assessmentList);
     }
 
     /**
@@ -114,21 +119,29 @@ public class DjOrgAssessmentController extends BaseController
     {
         DjOrgAssessmentList djOrgAssessmentList = new DjOrgAssessmentList();
         djOrgAssessmentList.setStatus("0");
+        djOrgAssessmentList.setType("1");
         List<DjOrgAssessmentList> djOrgAssessmentListAll = djOrgAssessmentListService.selectDjOrgAssessmentListList(djOrgAssessmentList);
 
-        List<SysDictData> sysDictDataList = dictDataService.selectDictDataByType("performance_appraisal_item");
+        djOrgAssessmentList.setType("2");
+        List<DjOrgAssessmentList> djOrgAssessmentListAl2 = djOrgAssessmentListService.selectDjOrgAssessmentListList(djOrgAssessmentList);
+
         for(String partyOrgId:partyOrgIds.split(",")){
-            DjOrgAssessmentListScore djOrgAssessmentListScore = new DjOrgAssessmentListScore();
             String uuid = UUID.randomUUID().toString();
+
             DjOrgAssessment djOrgAssessment =new DjOrgAssessment();
             djOrgAssessment.setAssessmentUuid(uuid);
             djOrgAssessment.setAssessmentyearUuid(assessmentyearUuid);
             djOrgAssessment.setPartyOrgId(Long.parseLong(partyOrgId));
             djOrgAssessment.setOrgAssessmentStatus("0");
-            djOrgAssessmentService.insertDjOrgAssessment(djOrgAssessment);
+            djOrgAssessment.setPerformanceAppraisalStatus("0");
+
+
+            DjOrgAssessmentListScore djOrgAssessmentListScore = new DjOrgAssessmentListScore();
+            djOrgAssessmentListScore.setAssessmentUuid(uuid);
 
             for (DjOrgAssessmentList djOrgAssessmentListOne:djOrgAssessmentListAll) {
                 djOrgAssessmentListScore.setAssessmentUuid(uuid);
+                djOrgAssessmentListScore.setType(djOrgAssessmentListOne.getType());
                 djOrgAssessmentListScore.setItem(djOrgAssessmentListOne.getItem());
                 djOrgAssessmentListScore.setContent(djOrgAssessmentListOne.getContent());
                 djOrgAssessmentListScore.setQuota(djOrgAssessmentListOne.getQuota());
@@ -141,14 +154,22 @@ public class DjOrgAssessmentController extends BaseController
 
             DjPartyOrg partyOrg = djPartyOrgService.selectDjPartyOrgById(Long.parseLong(partyOrgId));
             if("Y".equals(partyOrg.getPerformanceAppraisal())){
-                sysDictDataList.stream().forEach(sysDictData -> {
-                    DjOrgAssessmentPerformanceScore performanceScore = new DjOrgAssessmentPerformanceScore();
-                    performanceScore.setAssessmentUuid(uuid);
-                    performanceScore.setItem(sysDictData.getDictLabel());
-                    performanceScore.setOrderNum(sysDictData.getDictSort());
-                    djOrgAssessmentPerformanceScoreService.insertDjOrgAssessmentPerformanceScore(performanceScore);
+                djOrgAssessmentListAl2.stream().forEach(djOrgAssessmentListTwo -> {
+                    djOrgAssessmentListScore.setAssessmentUuid(uuid);
+                    djOrgAssessmentListScore.setType(djOrgAssessmentListTwo.getType());
+                    djOrgAssessmentListScore.setItem(djOrgAssessmentListTwo.getItem());
+                    djOrgAssessmentListScore.setContent(djOrgAssessmentListTwo.getContent());
+                    djOrgAssessmentListScore.setQuota(djOrgAssessmentListTwo.getQuota());
+                    djOrgAssessmentListScore.setScore(djOrgAssessmentListTwo.getScore());
+                    djOrgAssessmentListScore.setCriteria(djOrgAssessmentListTwo.getCriteria());
+                    djOrgAssessmentListScore.setOrderNum(djOrgAssessmentListTwo.getOrderNum());
+                    djOrgAssessmentListScoreService.insertDjOrgAssessmentListScore(djOrgAssessmentListScore);
+
+                    djOrgAssessment.setPerformanceAppraisalStatus("1");
                 });
             }
+
+            djOrgAssessmentService.insertDjOrgAssessment(djOrgAssessment);
         }
         return AjaxResult.success();
     }
@@ -164,12 +185,13 @@ public class DjOrgAssessmentController extends BaseController
         return toAjax(djOrgAssessmentService.updateDjOrgAssessment(djOrgAssessment));
     }
 
+
     /**
      * 删除党组织考核
      */
     @PreAuthorize("@ss.hasPermi('party:assessment:remove')")
     @Log(title = "党组织考核", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(djOrgAssessmentService.deleteDjOrgAssessmentByIds(ids));
