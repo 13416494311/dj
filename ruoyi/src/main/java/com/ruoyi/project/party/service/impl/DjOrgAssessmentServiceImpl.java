@@ -128,6 +128,19 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
     {
         djOrgAssessment.setUpdateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         djOrgAssessment.setUpdateTime(DateUtils.getNowDate());
+
+        if("3".equals(djOrgAssessment.getOrgAssessmentStatus())
+                &&"0".equals(djOrgAssessment.getPerformanceAppraisalStatus())){
+            Double score = djOrgAssessment.getAssessmentScore()*djOrgAssessment.getAssessmentScoreRatio();
+            djOrgAssessment.setScore(score);
+
+        }else if("3".equals(djOrgAssessment.getOrgAssessmentStatus())
+                &&"2".equals(djOrgAssessment.getPerformanceAppraisalStatus())){
+            Double score = djOrgAssessment.getAssessmentScore()*djOrgAssessment.getAssessmentScoreRatio() +
+                    djOrgAssessment.getPerformanceAppraisalScore()*djOrgAssessment.getPerformanceAppraisalScoreRatio();
+            djOrgAssessment.setScore(score);
+        }
+
         return djOrgAssessmentMapper.updateDjOrgAssessment(djOrgAssessment);
     }
 

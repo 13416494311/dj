@@ -36,8 +36,8 @@
       <el-table-column label="序号" align="center" type="index"/>
       <el-table-column label="考核年份" align="center" prop="year" :formatter="yearFormat"/>
       <el-table-column label="考核名称" align="center" prop="assessmentName"/>
-      <el-table-column label="考核状态" align="center" prop="orgAssessmentStatus"
-                       :formatter="assessmentYearStatusFormat"/>
+      <!--<el-table-column label="考核状态" align="center" prop="orgAssessmentStatus"
+                       :formatter="assessmentYearStatusFormat"/>-->
       <el-table-column label="绩效考评状态" align="center" prop="performanceAppraisalStatus"
                        :formatter="performanceAppraisalStatusFormat"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

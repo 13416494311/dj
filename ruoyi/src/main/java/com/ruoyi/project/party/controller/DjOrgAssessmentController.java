@@ -45,6 +45,8 @@ public class DjOrgAssessmentController extends BaseController
     private IDjOrgAssessmentListScoreService djOrgAssessmentListScoreService;
     @Autowired
     private IDjPartyOrgService djPartyOrgService;
+    @Autowired
+    private ISysDictDataService dictDataService;
 
     /**
      * 查询党组织考核列表
@@ -125,6 +127,8 @@ public class DjOrgAssessmentController extends BaseController
         djOrgAssessmentList.setType("2");
         List<DjOrgAssessmentList> djOrgAssessmentListAl2 = djOrgAssessmentListService.selectDjOrgAssessmentListList(djOrgAssessmentList);
 
+        Double assessmentScoreRatio= Double.parseDouble(dictDataService.selectDictLabel("assessment_ratio","1"));
+        Double performanceAppraisalScoreRatio= Double.parseDouble(dictDataService.selectDictLabel("assessment_ratio","2"));
         for(String partyOrgId:partyOrgIds.split(",")){
             String uuid = UUID.randomUUID().toString();
 
@@ -134,6 +138,7 @@ public class DjOrgAssessmentController extends BaseController
             djOrgAssessment.setPartyOrgId(Long.parseLong(partyOrgId));
             djOrgAssessment.setOrgAssessmentStatus("0");
             djOrgAssessment.setPerformanceAppraisalStatus("0");
+
 
 
             DjOrgAssessmentListScore djOrgAssessmentListScore = new DjOrgAssessmentListScore();
@@ -164,9 +169,12 @@ public class DjOrgAssessmentController extends BaseController
                     djOrgAssessmentListScore.setCriteria(djOrgAssessmentListTwo.getCriteria());
                     djOrgAssessmentListScore.setOrderNum(djOrgAssessmentListTwo.getOrderNum());
                     djOrgAssessmentListScoreService.insertDjOrgAssessmentListScore(djOrgAssessmentListScore);
-
-                    djOrgAssessment.setPerformanceAppraisalStatus("1");
                 });
+                djOrgAssessment.setAssessmentScoreRatio(assessmentScoreRatio);
+                djOrgAssessment.setPerformanceAppraisalScoreRatio(performanceAppraisalScoreRatio);
+                djOrgAssessment.setPerformanceAppraisalStatus("1");
+            }else{
+                djOrgAssessment.setAssessmentScoreRatio((double) 1);
             }
 
             djOrgAssessmentService.insertDjOrgAssessment(djOrgAssessment);

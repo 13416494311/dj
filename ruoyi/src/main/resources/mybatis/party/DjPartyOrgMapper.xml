@@ -232,7 +232,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="getOrgCount" resultType="Integer">
 	    select count(1)
 	    from dj_party_org
-		where del_flag = '0'
+		where del_flag = '0' and org_type = '3'
 	</select>
 
     <select id="getOrgMemberChartData" resultType="java.util.HashMap">

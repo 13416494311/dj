@@ -157,8 +157,7 @@
                   {{ scoreFormat1(scope.row.performanceAppraisalScore)}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column label="总分" align="center" prop="score"
-                             :formatter="scoreFormat"/>
+            <el-table-column label="总分" align="center" prop="score"/>
 
             <el-table-column  v-if="!disabled" label="操作" align="center"
                               class-name="small-padding fixed-width">

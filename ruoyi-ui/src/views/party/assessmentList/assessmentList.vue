@@ -1,6 +1,23 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
+      <el-form-item label="考核类型" prop="type">
+        <el-select
+          v-model="queryParams.type"
+          style="width: 100%"
+          placeholder="请选择考核类型"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery">
+          <el-option
+            v-for="dict in assessmentTypeOptions"
+            :key="dict.dictValue"
+            :label="dict.dictLabel"
+            :value="dict.dictValue"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="考核项目" prop="item">
         <el-input
           v-model="queryParams.item"
@@ -60,13 +77,13 @@
               :data="assessmentListList"
               @selection-change="handleSelectionChange" :header-cell-style="{'text-align':'center'}">
       <el-table-column label="序号" align="center" type="index"/>
-      <el-table-column label="考核类型" align="center" prop="type"   width="150"
+      <el-table-column label="考核类型" align="center" prop="type" width="150"
                        :formatter="typeFormat"/>
       <el-table-column label="考核项目" align="center" prop="item" width="150"/>
       <el-table-column label="考核内容" align="left" prop="content"/>
-      <el-table-column label="考核指标" align="left" prop="quota" />
+      <el-table-column label="考核指标" align="left" prop="quota"/>
       <el-table-column label="分值" align="center" prop="score" width="55"/>
-      <el-table-column label="评分标准" align="left" prop="criteria" />
+      <el-table-column label="评分标准" align="left" prop="criteria"/>
       <el-table-column label="排序" align="center" prop="orderNum" width="55"/>
       <el-table-column label="是否启用" align="center" prop="status" width="80">
         <template slot-scope="scope">

@@ -37,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="orderNum != null "> and order_num = #{orderNum}</if>
         </where>
-        order by order_num
+        order by type, order_num
     </select>
 
     <select id="selectDjOrgAssessmentListById" parameterType="Long" resultMap="DjOrgAssessmentListResult">
