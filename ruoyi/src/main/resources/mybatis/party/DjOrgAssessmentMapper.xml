@@ -23,6 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="performanceAppraisalScoreRatio"    column="performance_appraisal_score_ratio"    />
 
         <result property="score"    column="score"    />
+        <result property="rankNum"    column="rank_num"    />
 
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
@@ -78,6 +79,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ${dataScope}
         </where>
         order by  doa.party_org_id
+    </select>
+
+
+    <select id="selectDjOrgAssessmentListRank" parameterType="DjOrgAssessment" resultMap="DjOrgAssessmentResult">
+       SELECT dos.*,temp.rank_num
+       FROM (
+	      SELECT @curRank := IF ( @prevRank = A.score, @curRank, @incRank ) AS rank_num,
+		         @incRank := @incRank + 1 AS temp_rank,
+		         @prevRank := A.score AS total,
+		         A.*
+	      FROM ( SELECT tm.id AS id,
+	                   (case when tm.score is null then 0 else tm.score end ) AS score
+	              FROM dj_org_assessment tm
+	              WHERE tm.assessmentYear_uuid = #{assessmentyearUuid}
+	              ORDER BY tm.score DESC ) A,
+		       ( SELECT @curRank := 0, @prevRank := NULL, @incRank := 1  ) B
+	    ) temp
+	    LEFT JOIN dj_org_assessment dos on dos.id = temp.id
     </select>
 
     <select id="selectDjOrgAssessmentById" parameterType="Long" resultMap="DjOrgAssessmentResult">

@@ -71,6 +71,9 @@ public class DjOrgAssessment extends BaseEntity
     /** 最终考评总分 */
     private Double score;
 
+    /** 最终考评总分排名 */
+    private Integer rankNum;
+
 
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;

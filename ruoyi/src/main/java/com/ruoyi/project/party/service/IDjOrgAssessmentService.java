@@ -5,15 +5,15 @@ import com.ruoyi.project.party.domain.DjOrgAssessment;
 
 /**
  * 党组织考核Service接口
- * 
+ *
  * @author admin
  * @date 2021-03-10
  */
-public interface IDjOrgAssessmentService 
+public interface IDjOrgAssessmentService
 {
     /**
      * 查询党组织考核
-     * 
+     *
      * @param id 党组织考核ID
      * @return 党组织考核
      */
@@ -29,15 +29,19 @@ public interface IDjOrgAssessmentService
     public DjOrgAssessment selectDjOrgAssessmentByUuid(String uuid);
     /**
      * 查询党组织考核列表
-     * 
+     *
      * @param djOrgAssessment 党组织考核
      * @return 党组织考核集合
      */
     public List<DjOrgAssessment> selectDjOrgAssessmentList(DjOrgAssessment djOrgAssessment);
 
+
+    public List<DjOrgAssessment> selectDjOrgAssessmentListRank(DjOrgAssessment djOrgAssessment);
+
+
     /**
      * 新增党组织考核
-     * 
+     *
      * @param djOrgAssessment 党组织考核
      * @return 结果
      */
@@ -45,7 +49,7 @@ public interface IDjOrgAssessmentService
 
     /**
      * 修改党组织考核
-     * 
+     *
      * @param djOrgAssessment 党组织考核
      * @return 结果
      */
@@ -53,7 +57,7 @@ public interface IDjOrgAssessmentService
 
     /**
      * 批量删除党组织考核
-     * 
+     *
      * @param ids 需要删除的党组织考核ID
      * @return 结果
      */
@@ -61,7 +65,7 @@ public interface IDjOrgAssessmentService
 
     /**
      * 删除党组织考核信息
-     * 
+     *
      * @param id 党组织考核ID
      * @return 结果
      */

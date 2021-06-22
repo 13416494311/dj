@@ -1,5 +1,15 @@
 import request from '@/utils/request'
 
+
+// 查询党组织考核列表
+export function listAssessmentRank(data) {
+  return request({
+    url: '/party/assessment/listRank',
+    method: 'post',
+    data: data
+  })
+}
+
 // 查询党组织考核列表
 export function listAssessment(data) {
   return request({

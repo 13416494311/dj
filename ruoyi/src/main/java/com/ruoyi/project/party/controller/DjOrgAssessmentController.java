@@ -62,6 +62,16 @@ public class DjOrgAssessmentController extends BaseController
     }
 
     @PreAuthorize("@ss.hasPermi('party:assessment:list')")
+    @PostMapping("/listRank")
+    @DataScope(partyOrgAlias = "dos")
+    public TableDataInfo listRank(@RequestBody DjOrgAssessment djOrgAssessment)
+    {
+        startPage();
+        List<DjOrgAssessment> list = djOrgAssessmentService.selectDjOrgAssessmentListRank(djOrgAssessment);
+        return getDataTable(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('party:assessment:list')")
     @PostMapping("/list1")
     public TableDataInfo list1(@RequestBody DjOrgAssessment djOrgAssessment)
     {

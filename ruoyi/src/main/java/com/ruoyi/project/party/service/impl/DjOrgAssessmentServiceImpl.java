@@ -102,6 +102,25 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
         return list;
     }
 
+    @Override
+    public List<DjOrgAssessment> selectDjOrgAssessmentListRank(DjOrgAssessment djOrgAssessment)
+    {
+        List<DjOrgAssessment> list = djOrgAssessmentMapper.selectDjOrgAssessmentListRank(djOrgAssessment);
+
+        list.stream().forEach(assessment->{
+            if(assessment.getPartyOrgId()!=null){
+                assessment.setDjPartyOrg(djPartyOrgService.selectDjPartyOrgById(assessment.getPartyOrgId()));
+            }
+
+            if(StringUtils.isNotNull(assessment.getAssessmentyearUuid())){
+                assessment.setAssessmentyear(djOrgAssessmentyearMapper.selectDjOrgAssessmentyearByUuid(assessment.getAssessmentyearUuid()));
+            }
+
+
+        });
+        return list;
+    }
+
     /**
      * 新增党组织考核
      *

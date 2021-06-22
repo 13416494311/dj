@@ -133,10 +133,11 @@
                     v-loading="orgLoading" :data="assessmentOrgList">
             <el-table-column label="序号" align="center" type="index"/>
             <el-table-column label="党组织名称" align="center"
+                             width="200"
                              prop="djPartyOrg.partyOrgFullName" :formatter="partyOrgFormat"/>
             <!--<el-table-column label="党组织类型" align="center" prop="djPartyOrg.orgType"
                              :formatter="orgTypeFormat"/>-->
-            <el-table-column label="党组织考核状态" align="center" prop="orgAssessmentStatus"
+            <el-table-column label="考评状态" align="center" prop="orgAssessmentStatus"
                              :formatter="orgAssessmentStatusFormat"/>
             <!--<el-table-column label="自评得分" align="center" prop="assessmentSelfScore"
                              :formatter="scoreFormat"/>-->
@@ -147,17 +148,22 @@
                   {{ scoreFormat1(scope.row.assessmentScore)}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column label="是否绩效考核项目" align="center" prop="djPartyOrg.performanceAppraisal"
+            <el-table-column label="是否项目绩效考核" align="center" prop="djPartyOrg.performanceAppraisal"
                              :formatter="performanceAppraisalFormat"/>
-            <el-table-column label="绩效考核状态" align="center" prop="performanceAppraisalStatus"
+            <el-table-column label="项目绩效状态" align="center" prop="performanceAppraisalStatus"
                              :formatter="performanceAppraisalStatusFormat"/>
-            <el-table-column label="绩效得分" align="center" prop="performanceAppraisalScore">
+            <el-table-column label="项目绩效得分" align="center" prop="performanceAppraisalScore">
               <template slot-scope="scope">
                 <el-button @click="performanceAppraisalScoreDataShow(scope.row)" type="text">
                   {{ scoreFormat1(scope.row.performanceAppraisalScore)}}</el-button>
               </template>
             </el-table-column>
-            <el-table-column label="总分" align="center" prop="score"/>
+            <el-table-column label="总分" align="center" prop="score">
+              <template slot-scope="scope">
+                {{ scope.row.score==undefined?'':scope.row.score+' 分'}}
+              </template>
+            </el-table-column>
+            <el-table-column label="排名" align="center" prop="rankNum" :formatter="rankNumFormat"/>
 
             <el-table-column  v-if="!disabled" label="操作" align="center"
                               class-name="small-padding fixed-width">
@@ -205,6 +211,7 @@
   import OrgTransfer from "./orgTransfer";
   import {
     listAssessment,
+    listAssessmentRank,
     getAssessment,
     delAssessment,
     addAssessment,
@@ -333,6 +340,13 @@
       performanceAppraisalFormat(row, column) {
         return this.selectDictLabel(this.performanceAppraisalOptions, row.djPartyOrg.performanceAppraisal);
       },
+      rankNumFormat(row, column,cellValue, index) {
+         if(row.score && row.score !== 0){
+           return row.rankNum;
+         }else{
+           return '';
+         }
+      },
       performanceAppraisalStatusFormat(row, column) {
         return this.selectDictLabel(this.performanceAppraisalStatusOptions, row.performanceAppraisalStatus);
       },
@@ -361,7 +375,7 @@
       //调用组织架构返回的参加审核的党支部列表
       getJoinOrgList() {
         this.orgLoading = true;
-        listAssessment({"assessmentyearUuid": this.form.assessmentyearUuid}).then(response => {
+        listAssessmentRank({"assessmentyearUuid": this.form.assessmentyearUuid}).then(response => {
           this.assessmentOrgList = response.rows;
           this.orgLoading = false;
         });
