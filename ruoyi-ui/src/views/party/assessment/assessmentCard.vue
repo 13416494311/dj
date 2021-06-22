@@ -1,163 +1,104 @@
 <template>
-  <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
-      <el-form-item label="党组织名称" prop="partyOrgId">
-        <select-tree :value="queryParams.partyOrgId"
-                     style="width:100%;"
-                     :options="partyOrgOptions"
-                     vModel="partyOrgId"
-                     @selected="setVModelValue"
-                     placeholder="请选择党组织"
-        />
-      </el-form-item>
-      <el-form-item label="考核年份" prop="year">
-        <el-date-picker
-          style="width:100%;"
-          v-model="queryParams.assessmentyear.year"
-          type="year"
-          format="yyyy"
-          value-format="yyyy"
-          @change="handleQuery"
-          placeholder="选择考核年份">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="考核名称" prop="assessmentName">
-        <el-input
-          v-model="queryParams.assessmentyear.assessmentName"
-          placeholder="请输入考核名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
+  <div>
+    <div style="text-align: center;font-size: 24px;padding: 8px;">
+      {{assessmentName}}
+    </div>
+    <div style="padding: 0px 0px 8px 0px;">
+      党组织名称：{{partyOrgFullName.substring(partyOrgFullName.indexOf("/") + 1)}}
+    </div>
+    <el-form ref="form" :model="form" :rules="rules">
+      <el-table :stripe="true"
+                :border="true"
+                :summary-method="getTotal"
+                :show-summary="showSum"
+                v-loading="orgLoading" :data="assessmentScoreList"
+                :header-cell-style="{'text-align':'center'}">
+        <el-table-column label="序号" align="center" type="index"/>
+        <el-table-column label="考核项目" width="150" align="center" prop="item"/>
+        <el-table-column label="考核内容" width="150" align="left" prop="content"/>
+        <el-table-column label="考核指标" align="left" prop="quota"/>
+        <el-table-column label="分值" width="70" align="center" prop="score"
+                         :formatter="scoreFormat"/>
+        <el-table-column label="评分标准" align="left" prop="criteria"/>
+        <el-table-column label="自评分数" width="180" align="center" prop="selfScore">
+          <template slot-scope="scope">
+            <el-form-item v-if="!disabled"
+                          :prop="createSelfProp(scope.$index)"
+                          :rules="[{validator: checkSelfScore, trigger: 'blur'}]">
+              <el-input-number style="width:150px"
+                               v-model="scope.row['selfScore']"
+                               size="small"
+                               @change="refreshTotal"
+                               controls-position="right"
+                               :precision="1" :step="0.5"
+                               :min="0"></el-input-number>
+            </el-form-item>
+
+            <div v-if="disabled">
+              {{scope.row['selfScore']==undefined?'':scope.row['selfScore'].toFixed(1)+' 分'}}
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="党委评分" width="180" align="center" prop="assessorScore">
+          <template slot-scope="scope">
+            <el-form-item v-if="!disabled"
+                          :prop="createAssessorProp(scope.$index)"
+                          :rules="[{validator: checkAssessorScore, trigger: 'blur'}]">
+              <el-input-number style="width:150px"
+                               v-model="scope.row['assessorScore']"
+                               size="small"
+                               @change="refreshTotal"
+                               controls-position="right"
+                               :precision="1" :step="0.5"
+                               :min="0"></el-input-number>
+            </el-form-item>
+
+            <div v-if="disabled">
+              {{scope.row['assessorScore']==undefined?'':scope.row['assessorScore'].toFixed(1)+' 分'}}
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column v-if="!disabled" label="操作" width="100" align="center"
+                         class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button
+              size="small"
+              type="text"
+              icon="el-icon-edit"
+              @click="handleDetailedUpdate(scope.row)"
+              v-hasPermi="['party:assessmentScore:edit']"
+            >保存
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-form>
+    <el-card shadow="always" style="margin: 30px 0px;">
+      <div slot="header" style="height: 25px">
+        <span style="font-weight: bold;font-size: 16px">自评资料</span>
+      </div>
+      <el-upload
+        action="#"
+        list-type="picture-card"
+        :file-list="fileList"
+        multiple
+        :http-request="uploadFile"
+        :class="{hide:disabled}"
+        class="upload"
+        accept="image/*,.doc,.docx,.xls,.xlsx,.pdf,.ppt,.zip,.txt">
+        <i slot="default" class="el-icon-plus"></i>
+        <div slot="file" slot-scope="{file}" style="display: inline">
+          <div class="upload-file">
+            <img v-if="'jpeg,jpg,gif,png,JPEG,JPG,GIF,PNG'.indexOf(file.name.split('.')[1]) != -1"
+                 class="el-upload-list__item-thumbnail"
 
-    <el-table :stripe="true" :border="true" v-loading="loading" :data="assessmentList"
-              :header-cell-style="{'text-align':'center'}">
-      <el-table-column label="序号" align="center" type="index"/>
-      <el-table-column label="党组织" width="300" align="left"
-                       prop="djPartyOrg.partyOrgFullName" :formatter="partyOrgFormat"/>
-      <el-table-column label="考核年份" width="120" align="center" prop="assessmentyear.year" :formatter="yearFormat"/>
-      <el-table-column label="考核名称" align="center" prop="assessmentyear.assessmentName"/>
-      <el-table-column label="考核状态" width="120"align="center" prop="orgAssessmentStatus"
-                       :formatter="orgAssessmentStatusFormat"/>
-      <el-table-column label="操作" align="center" width="180"  class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="small"
-            type="text"
-            icon="el-icon-search"
-            @click="handleSee(scope.row)"
-          >查看
-          </el-button>
-          <el-button
-            v-if="scope.row.orgAssessmentStatus =='1'"
-            size="small"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['party:assessment:edit']"
-          >自评
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
-
-    <!-- 添加或修改党组织考核对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="90%" append-to-body
-               @open="getHeight" :close-on-click-modal="false">
-      <div :style="bodyStyle">
-        <div style="text-align: center;font-size: 24px;padding: 8px;">
-          {{assessmentName}}
-        </div>
-        <div style="padding: 0px 0px 8px 0px;">
-          党组织名称：{{partyOrgFullName.substring(partyOrgFullName.indexOf("/") + 1)}}
-        </div>
-        <el-form ref="form" :model="form" :rules="rules">
-          <el-table :stripe="true"
-                    :border="true"
-                    :summary-method="getTotal"
-                    :show-summary="showSum"
-                    v-loading="orgLoading" :data="assessmentScoreList"
-                    :header-cell-style="{'text-align':'center'}">
-            <el-table-column label="序号" align="center" type="index"/>
-            <el-table-column label="考核项目" width="150" align="center" prop="item"/>
-            <el-table-column label="考核内容" width="150" align="left" prop="content"/>
-            <el-table-column label="考核指标" align="left" prop="quota"/>
-            <el-table-column label="分值" width="70" align="center" prop="score"
-                             :formatter="scoreFormat"/>
-            <el-table-column label="评分标准" align="left" prop="criteria"/>
-            <el-table-column label="自评分数" width="180" align="center" prop="selfScore">
-              <template slot-scope="scope">
-                <el-form-item v-if="!scoreDisabled"
-                              :prop="createProp(scope.$index)"
-                              :rules="[{validator: checkSelfScore, trigger: 'blur'}]">
-                  <el-input-number style="width:150px"
-                                   v-model="scope.row['selfScore']"
-                                   size="small"
-                                   @change="refreshTotal"
-                                   controls-position="right"
-                                   :precision="1" :step="0.5"
-                                   :min="0"></el-input-number>
-                </el-form-item>
-
-                <div v-if="scoreDisabled">
-                  {{scope.row['selfScore']==undefined?'':scope.row['selfScore'].toFixed(1)+' 分'}}
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column v-if="!scoreDisabled" label="操作" width="100" align="center"
-                             class-name="small-padding fixed-width">
-              <template slot-scope="scope">
-                <el-button
-                  size="small"
-                  type="text"
-                  icon="el-icon-edit"
-                  @click="handleDetailedUpdate(scope.row)"
-                  v-hasPermi="['party:assessmentScore:edit']"
-                >保存
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-form>
-
-        <el-card shadow="always" style="margin: 30px 0px;">
-          <div slot="header" style="height: 25px">
-            <span style="font-weight: bold;font-size: 16px">自评资料</span>
-          </div>
-          <el-upload
-            action="#"
-            list-type="picture-card"
-            :file-list="fileList"
-            multiple
-            :http-request="uploadFile"
-            :class="{hide:scoreDisabled}"
-            class="upload"
-            accept="image/*,.doc,.docx,.xls,.xlsx,.pdf,.ppt,.zip,.txt">
-            <i slot="default" class="el-icon-plus"></i>
-            <div slot="file" slot-scope="{file}" style="display: inline">
-              <div class="upload-file">
-                <img v-if="'jpeg,jpg,gif,png,JPEG,JPG,GIF,PNG'.indexOf(file.name.split('.')[1]) != -1"
-                     class="el-upload-list__item-thumbnail"
-
-                     :src="file.url" :alt="file.name"/>
-                <img v-else
-                     class="el-upload-list__item-thumbnail"
-                     :src="defaultFilePicUrl" :alt="file.name"/>
-                <span class="el-upload-list__item-actions">
+                 :src="file.url" :alt="file.name"/>
+            <img v-else
+                 class="el-upload-list__item-thumbnail"
+                 :src="defaultFilePicUrl" :alt="file.name"/>
+            <span class="el-upload-list__item-actions">
                     <span v-if="'jpeg,jpg,gif,png,JPEG,JPG,GIF,PNG'.indexOf(file.name.split('.')[1]) != -1"
                           class="el-upload-list__item-preview"
                           @click="handlePictureCardPreview(file)">
@@ -169,38 +110,29 @@
                       <i class="el-icon-download"></i>
                     </span>
                     <span
-                      v-if="!scoreDisabled"
+                      v-if="!disabled"
                       class="el-upload-list__item-delete"
                       @click="handleRemove(file)">
                       <i class="el-icon-delete"></i>
                     </span>
                   </span>
-              </div>
-              <div class="upload-text">
-                <el-tooltip class="item" effect="dark" :content="setFileNameTip(file)" placement="top">
-                  <span>{{file.name}}</span>
-                </el-tooltip>
-              </div>
-            </div>
-          </el-upload>
+          </div>
+          <div class="upload-text">
+            <el-tooltip class="item" effect="dark" :content="setFileNameTip(file)" placement="top">
+              <span>{{file.name}}</span>
+            </el-tooltip>
+          </div>
+        </div>
+      </el-upload>
 
-          <el-image-viewer
-            v-if="dialogVisible"
-            :on-close="closeViewer"
-            :url-list="srcList"/>
+      <el-image-viewer
+        v-if="dialogVisible"
+        :on-close="closeViewer"
+        :url-list="srcList"/>
 
-        </el-card>
-      </div>
-
-
-      <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button v-if="!scoreDisabled" type="primary" @click="submitForAssessor">提交党委审核
-        </el-button>
-        <el-button v-if="!scoreDisabled" type="primary" @click="allSave">保 存</el-button>
-        <el-button @click="cancel">关 闭</el-button>
-      </div>
-    </el-dialog>
+    </el-card>
   </div>
+
 </template>
 
 <script>
@@ -230,11 +162,22 @@
   import selectTree from '../../components/selectTree';
 
   export default {
-    name: "Assessment",
+    name: "AssessmentCard",
     components: {
       UploadAllFile,
       ElImageViewer,
       selectTree
+    },
+    props: {
+      disabled: {
+        type: Boolean,
+        default: () => {
+          return true
+        }
+      },
+      assessmentId: {
+        type: Number,
+      },
     },
     data() {
       return {
@@ -291,24 +234,23 @@
         partyOrgOptions: [],
         fileList: [],
         assessmentScoreListSelections: [],
-        disabled: false,
         dialogVisible: false,
         srcList: [],
         defaultFilePicUrl: undefined,
         showSum: true,
         orgLoading: true,
         selfScoreRequired: false,
-        scoreDisabled: false,
         assessmentName:'',
         partyOrgFullName:'',
         assessmentSelfScore:'',
+        assessmentScore:'',
       };
     },
     mounted() {
       window.addEventListener('resize', this.getHeight);
     },
     created() {
-      this.getList();
+      this.show();
       //组织架构树
       this.getPartyOrgTreeSelect();
       //党组织考核状态
@@ -317,11 +259,16 @@
       });
       this.defaultFilePicUrl = require("@/assets/image/file.png");
     },
+    watch: {
+      'assessmentId'(val) {
+        this.show();
+      },
+    },
     methods: {
       scoreFormat(row, column) {
         return row.score + " 分";
       },
-      createProp(rowIndex) {
+      createSelfProp(rowIndex) {
         return "selfScore-" + rowIndex;
       },
       //自评验证
@@ -341,6 +288,28 @@
         }
 
       },
+
+      createAssessorProp(rowIndex) {
+        return "assessorScore-" + rowIndex;
+      },
+      //党委评分验证
+      checkAssessorScore(rule, value, callback) {
+        let filed = rule.field
+        let fileds = filed.split("-");
+        let assessorScore = this.assessmentScoreList[fileds[1]].assessorScore;
+        let score = this.assessmentScoreList[fileds[1]].score;
+        if(assessorScore>score){
+          callback(new Error("党委评分不能大于"+score+"分!"));
+        }else{
+          if (!assessorScore && this.assessorScoreRequired) {
+            callback(new Error("党委评分不能为空!"));
+          } else {
+            callback()
+          }
+        }
+
+      },
+
       refreshTotal() {
         this.showSum = false;
         this.$nextTick().then(() => {
@@ -356,7 +325,7 @@
             return;
           }
           const values = data.map(item => Number(item[column.property]));
-          if (column.property === 'selfScore') {
+          if (column.property === 'assessorScore' ||column.property === 'selfScore') {
             sums[index] = values.reduce((prev, curr) => {
               const value = Number(curr);
               if (!isNaN(value)) {
@@ -367,6 +336,7 @@
             }, 0);
             if (sums[index] && sums[index] != 0) {
               this.assessmentSelfScore = sums[index].toFixed(1);
+              this.assessmentScore = sums[index].toFixed(1);
               sums[index] = sums[index].toFixed(1) + ' 分';
             } else {
               sums[index] = '';
@@ -487,6 +457,20 @@
         this.single = selection.length != 1;
         this.multiple = !selection.length;
         this.assessmentScoreListSelections = selection;
+      },
+      show() {
+        this.reset()
+        this.scoreDisabled = this.disabled
+        getAssessment(this.assessmentId).then(response => {
+          this.form = response.data;
+          this.assessmentName = response.data.assessmentyear.assessmentName
+          this.partyOrgFullName = response.data.djPartyOrg.partyOrgFullName
+          this.open = true;
+          this.title = "党支部考评";
+        }).then(() => {
+          this.getAssessmentScoreList();
+          this.getFileList();
+        });
       },
       // 查看按钮操作
       handleSee(row) {

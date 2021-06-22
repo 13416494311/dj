@@ -165,6 +165,7 @@
           height: '',
           marginLeft: '2%',
           paddingRight: '2%',
+          padding:'20px',
         },
 
         //uuid

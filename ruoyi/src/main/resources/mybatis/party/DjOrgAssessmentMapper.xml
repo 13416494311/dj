@@ -10,14 +10,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="assessmentyearUuid"    column="assessmentYear_uuid"    />
         <result property="partyOrgId"    column="party_org_id"    />
         <result property="assessmentResult"    column="assessment_result"    />
-        <result property="orgAssessmentStatus"    column="org_assessment_status"    />
         <result property="assessment_rank"    column="assessment_rank"    />
+
+        <result property="orgAssessmentStatus"    column="org_assessment_status"    />
         <result property="assessmentSelfScore"    column="assessment_self_score"    />
         <result property="assessmentScore"    column="assessment_score"    />
+        <result property="assessmentScoreRatio"    column="assessment_score_ratio"    />
+
         <result property="performanceAppraisalStatus"    column="performance_appraisal_status"    />
         <result property="addSubtractScore"    column="add_subtract_score"    />
         <result property="performanceAppraisalScore"    column="performance_appraisal_score"    />
+        <result property="performanceAppraisalScoreRatio"    column="performance_appraisal_score_ratio"    />
+
         <result property="score"    column="score"    />
+
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -27,7 +33,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <sql id="selectDjOrgAssessmentVo">
         select doa.id, doa.assessment_uuid, doa.assessmentYear_uuid, doa.party_org_id, doa.assessment_result, doa.org_assessment_status,
-            doa.assessment_rank,doa.assessment_self_score,doa.assessment_score,doa.performance_appraisal_status,doa.performance_appraisal_score,
+            doa.assessment_rank,doa.assessment_self_score,doa.assessment_score,doa.assessment_score_ratio,
+            doa.performance_appraisal_status,doa.performance_appraisal_score,doa.performance_appraisal_score_ratio,
             doa.add_subtract_score,doa.score,doa.del_flag, doa.create_by, doa.create_time, doa.update_by, doa.update_time
         from dj_org_assessment doa
     </sql>
@@ -49,6 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="djPartyOrg != null  and djPartyOrg.performanceAppraisal != null  and djPartyOrg.performanceAppraisal != '' ">
                 and dpo.performance_appraisal = #{djPartyOrg.performanceAppraisal}
             </if>
+            <if test="id != null "> and doa.id = #{id}</if>
             <if test="assessmentUuid != null  and assessmentUuid != ''"> and doa.assessment_uuid = #{assessmentUuid}</if>
             <if test="assessmentyearUuid != null  and assessmentyearUuid != ''"> and doa.assessmentYear_uuid = #{assessmentyearUuid}</if>
             <if test="partyOrgId != null "> and doa.party_org_id = #{partyOrgId}</if>
@@ -93,9 +101,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessment_rank != null ">assessment_rank,</if>
             <if test="assessmentSelfScore != null ">assessment_self_score,</if>
             <if test="assessmentScore != null ">assessment_score,</if>
+            <if test="assessmentScoreRatio != null ">assessment_score_ratio,</if>
             <if test="performanceAppraisalStatus != null ">performance_appraisal_status,</if>
             <if test="addSubtractScore != null ">add_subtract_score,</if>
             <if test="performanceAppraisalScore != null ">performance_appraisal_score,</if>
+            <if test="performanceAppraisalScoreRatio != null ">performance_appraisal_score_ratio,</if>
             <if test="score != null ">score,</if>
             <if test="delFlag != null  and delFlag != ''">del_flag,</if>
             <if test="createBy != null  and createBy != ''">create_by,</if>
@@ -112,9 +122,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessment_rank != null ">#{assessment_rank},</if>
             <if test="assessmentSelfScore != null ">#{assessmentSelfScore},</if>
             <if test="assessmentScore != null ">#{assessmentScore},</if>
+            <if test="assessmentScoreRatio != null ">#{assessmentScoreRatio},</if>
             <if test="performanceAppraisalStatus != null ">#{performanceAppraisalStatus},</if>
             <if test="addSubtractScore != null ">#{addSubtractScore},</if>
             <if test="performanceAppraisalScore != null ">#{performanceAppraisalScore},</if>
+            <if test="performanceAppraisalScoreRatio != null ">#{performanceAppraisalScoreRatio},</if>
             <if test="score != null ">#{score},</if>
             <if test="delFlag != null  and delFlag != ''">#{delFlag},</if>
             <if test="createBy != null  and createBy != ''">#{createBy},</if>
@@ -135,9 +147,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessment_rank != null ">assessment_rank = #{assessment_rank},</if>
             <if test="assessmentSelfScore != null ">assessment_self_score = #{assessmentSelfScore},</if>
             <if test="assessmentScore != null ">assessment_score = #{assessmentScore},</if>
+            <if test="assessmentScoreRatio != null ">assessment_score_ratio = #{assessmentScoreRatio},</if>
             <if test="performanceAppraisalStatus != null ">performance_appraisal_status = #{performanceAppraisalStatus},</if>
             <if test="addSubtractScore != null ">add_subtract_score = #{addSubtractScore},</if>
             <if test="performanceAppraisalScore != null ">performance_appraisal_score = #{performanceAppraisalScore},</if>
+            <if test="performanceAppraisalScoreRatio != null ">performance_appraisal_score_ratio = #{performanceAppraisalScoreRatio},</if>
             <if test="score != null ">score = #{score},</if>
             <if test="delFlag != null  and delFlag != ''">del_flag = #{delFlag},</if>
             <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>

@@ -113,6 +113,9 @@
       assessmentyearId: {
         type: Number,
       },
+      assessmentId: {
+        type: Number,
+      },
     },
     data() {
       return {
@@ -176,6 +179,9 @@
     watch: {
       'assessmentyearId'(val) {
         this.getList();
+      },
+      'assessmentId'(val) {
+        this.getList();
       }
     },
     created() {
@@ -203,9 +209,14 @@
         return "score-" + rowIndex + "-"+headIndex;
       },
       changeAddSubtractScore(val, row){
-        row.performanceAppraisalScore = Number(row.performanceAppraisalScore==undefined?0:row.performanceAppraisalScore)
-          +Number(val==undefined?0:val);
-
+        let total = 0;
+        for (let i in row.djOrgAssessmentListScoreList) {
+          if (row.djOrgAssessmentListScoreList[i].performanceAppraisalScore) {
+            total = total + Number(row.djOrgAssessmentListScoreList[i].performanceAppraisalScore);
+          }
+        }
+        total= total +Number(val==undefined?0:val)
+        row.performanceAppraisalScore = total
       },
       changePerformanceAppraisalScore(val, row, index) {
         let total = 0;
@@ -243,6 +254,7 @@
           })
           let params={}
           params.assessmentyearUuid = response.data.assessmentyearUuid
+          params.id = this.assessmentId
           params.djPartyOrg ={
             performanceAppraisal:'Y'
           }

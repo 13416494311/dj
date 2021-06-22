@@ -97,7 +97,7 @@
             <el-table-column label="考核项目" width="150" align="center" prop="item"/>
             <el-table-column label="考核内容" width="150" align="left" prop="content"/>
             <el-table-column label="考核指标" align="left" prop="quota"/>
-            <el-table-column label="分值" width="50" align="center" prop="score"
+            <el-table-column label="分值" width="70" align="center" prop="score"
                              :formatter="scoreFormat"/>
             <el-table-column label="评分标准" align="left" prop="criteria"/>
             <el-table-column label="自评分数" width="80" align="center" prop="selfScore" :formatter="selfScoreFormat"/>
@@ -284,6 +284,7 @@
           height: '',
           marginLeft: '2%',
           paddingRight: '2%',
+          padding:'20px',
         },
         //组织架构
         partyOrgOptions: [],

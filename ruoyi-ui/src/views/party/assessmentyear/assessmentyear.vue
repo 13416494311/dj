@@ -128,7 +128,6 @@
             >新增
             </el-button>
           </div>
-
           <el-table :stripe="true"
                     :border="true"
                     v-loading="orgLoading" :data="assessmentOrgList">
@@ -139,10 +138,15 @@
                              :formatter="orgTypeFormat"/>-->
             <el-table-column label="党组织考核状态" align="center" prop="orgAssessmentStatus"
                              :formatter="orgAssessmentStatusFormat"/>
-            <el-table-column label="自评得分" align="center" prop="assessmentSelfScore"
-                             :formatter="scoreFormat"/>
+            <!--<el-table-column label="自评得分" align="center" prop="assessmentSelfScore"
+                             :formatter="scoreFormat"/>-->
             <el-table-column label="党委评分" align="center" prop="assessmentScore"
-                             :formatter="scoreFormat"/>
+                             :formatter="scoreFormat">
+              <template slot-scope="scope">
+                <el-button @click="assessmentScoreDataShow(scope.row)" type="text">
+                  {{ scoreFormat1(scope.row.assessmentScore)}}</el-button>
+              </template>
+            </el-table-column>
             <el-table-column label="是否绩效考核项目" align="center" prop="djPartyOrg.performanceAppraisal"
                              :formatter="performanceAppraisalFormat"/>
             <el-table-column label="绩效考核状态" align="center" prop="performanceAppraisalStatus"
@@ -150,14 +154,14 @@
             <el-table-column label="绩效得分" align="center" prop="performanceAppraisalScore">
               <template slot-scope="scope">
                 <el-button @click="performanceAppraisalScoreDataShow(scope.row)" type="text">
-                     {{ scoreFormat1(scope.row.performanceAppraisalScore)}}</el-button>
+                  {{ scoreFormat1(scope.row.performanceAppraisalScore)}}</el-button>
               </template>
             </el-table-column>
             <el-table-column label="总分" align="center" prop="score"
                              :formatter="scoreFormat"/>
 
             <el-table-column  v-if="!disabled" label="操作" align="center"
-                             class-name="small-padding fixed-width">
+                              class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
                   size="small"
@@ -181,6 +185,11 @@
     </el-dialog>
 
 
+    <assessment-dialog ref="assessmentDialog"
+                       :type="type"
+                       :assessmentId="assessmentId"
+                       :assessmentyearId="assessmentyearId"
+    ></assessment-dialog>
 
   </div>
 </template>
@@ -203,10 +212,12 @@
     updateAssessment,
     exportAssessment
   } from "@/api/party/assessment";
+  import AssessmentDialog from "./assessmnetDialog";
 
   export default {
     name: "Assessmentyear",
     components: {
+      AssessmentDialog,
       OrgTransfer,
     },
     data() {
@@ -273,7 +284,11 @@
         year: undefined,
         assessmentName: undefined,
         orgLoading: true,
-        disabled:false
+        disabled:false,
+        assessmentDialogOpen:false,
+        assessmentId:undefined,
+        assessmentyearId:undefined,
+        type:undefined,
       };
     },
     mounted() {
@@ -303,9 +318,18 @@
       });
     },
     methods: {
+      assessmentScoreDataShow(row){
+        this.assessmentId = row.id;
+        this.type = 1 ;
+        this.$refs.assessmentDialog.open = true
+        this.$refs.assessmentDialog.title = "党委评分"
+      },
       performanceAppraisalScoreDataShow(row){
-
-        console.log(row)
+        this.assessmentyearId = this.form.id
+        this.assessmentId = row.id;
+        this.type = 2 ;
+        this.$refs.assessmentDialog.open = true
+        this.$refs.assessmentDialog.title = "项目绩效考核"
       },
       performanceAppraisalFormat(row, column) {
         return this.selectDictLabel(this.performanceAppraisalOptions, row.djPartyOrg.performanceAppraisal);
