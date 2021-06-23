@@ -160,11 +160,12 @@
             </el-table-column>
             <el-table-column label="总分" align="center" prop="score">
               <template slot-scope="scope">
-                {{ scope.row.score==undefined?'':scope.row.score+' 分'}}
+                <el-tooltip :content="scoreTooltip(scope.row)" placement="top" effect="light">
+                  <el-button type="text">{{ scope.row.score==undefined?'':scope.row.score+' 分'}}</el-button>
+                </el-tooltip>
               </template>
             </el-table-column>
             <el-table-column label="排名" align="center" prop="rankNum" :formatter="rankNumFormat"/>
-
             <el-table-column  v-if="!disabled" label="操作" align="center"
                               class-name="small-padding fixed-width">
               <template slot-scope="scope">
@@ -340,6 +341,15 @@
       performanceAppraisalFormat(row, column) {
         return this.selectDictLabel(this.performanceAppraisalOptions, row.djPartyOrg.performanceAppraisal);
       },
+      scoreTooltip(row){
+        if(row.performanceAppraisalStatus && row.performanceAppraisalStatus === '0'){
+          return '党委评分*'+100*Number(row.assessmentScoreRatio)+'%';
+        }else if(row.performanceAppraisalStatus && row.performanceAppraisalStatus === '2'){
+          return '党委评分*'+100*Number(row.assessmentScoreRatio)+'% + 项目绩效得分*'+100*Number(row.performanceAppraisalScoreRatio)+'%';
+        }else{
+          return '';
+        }
+      },
       rankNumFormat(row, column,cellValue, index) {
          if(row.score && row.score !== 0){
            return row.rankNum;
@@ -498,9 +508,15 @@
         this.$refs["form"].validate(valid => {
           if (valid) {
             this.form.orgAssessmentStatus = orgAssessmentStatus;
-            console.log(orgAssessmentStatus==2)
+
             if(orgAssessmentStatus==2){
-              this.form.performanceAppraisalStatus = 1
+              this.form.performanceAppraisalStatus = 0
+              for(let i in this.assessmentOrgList){
+                if(this.assessmentOrgList[i].djPartyOrg.performanceAppraisal ==='Y'){
+                  this.form.performanceAppraisalStatus = 1;
+                  break;
+                }
+              }
             }
             if (this.form.id != undefined) {
               updateAssessmentyear(this.form).then(response => {

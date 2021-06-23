@@ -148,6 +148,9 @@
           year: undefined,
           assessmentName: undefined,
           orgAssessmentStatus: 2,
+          params:{
+            performanceAppraisalFlag:true
+          }
         },
         // 表单参数
         form: {},

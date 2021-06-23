@@ -1,10 +1,14 @@
 <template>
   <div style="padding: 30px">
-    <due-card ref="dueCard" :disabled="disabled" :dueOrgId="dueOrgId" @ok="cancel" ></due-card>
+
+    <performance-score-card ref="todoCard"
+                            :disabled="disabled"
+                            :assessmentyearId="assessmentyearId"
+                            @ok="cancel"  />
 
     <div :style="{textAlign:'center',paddingTop:'30px'}">
-      <el-button v-if="!disabled" type="primary" @click="submitDue(1)">保 存</el-button>
-      <el-button v-if="!disabled" type="primary" @click="submitDue(2)">提 交</el-button>
+      <el-button v-if="!disabled" type="primary" @click="submit(1)">保 存</el-button>
+      <el-button v-if="!disabled" type="primary" @click="submit(2)">提 交</el-button>
       <el-button @click="cancel">关 闭</el-button>
     </div>
 
@@ -18,18 +22,19 @@
 <script>
 
   import {listTodo, getTodo, delTodo, addTodo, updateTodo, exportTodo} from "@/api/sys/todo";
-  import DueCard from "../../party/due/dueCard";
+  import PerformanceScoreCard from "../../party/performanceScore/performanceScoreCard";
+
 
 
   export default {
-    name: "PartyMemberDue",
-    components: {DueCard },
+    name: "PerformanceAppraisal",
+    components: {PerformanceScoreCard },
     data() {
       return {
         todoId: undefined,
         todoStatus: undefined,
-        disabled: false,
-        dueOrgId:undefined,
+        disabled: true,
+        assessmentyearId:undefined,
         status:undefined,
       };
     },
@@ -52,21 +57,29 @@
           }
           this.todoStatus = response.data.status
           let params = eval('(' + response.data.urlParams + ')');
-          this.dueOrgId = Number(params.dueOrgId);
+          this.assessmentyearId = Number(params.assessmentyearId);
 
+          this.statusChange();
         });
       },
+      statusChange(){
+        if(this.todoStatus ==0){
+          this.disabled = false
+        }else{
+          this.disabled = true
+        }
+      },
       // 取消按钮
-      cancel() {
-        if(this.todoStatus==0){
+      cancel(status) {
+        if(this.status==2){
           updateTodo({"todoId": this.todoId, "status": "1"})
         }
         this.$store.dispatch('tagsView/delView', this.$route)
         this.$router.go(-1)
       },
-      submitDue(statue){
+      submit(statue){
         this.status = statue
-        this.$refs.dueCard.submit(statue);
+        this.$refs.todoCard.submit(statue);
       },
     }
   };

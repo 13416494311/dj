@@ -12,7 +12,7 @@
         </template>
       </el-table-column>
       <el-table-column label="待办类型" align="left" prop="type"
-                       width="80" :formatter="typeFormat"/>
+                       width="100" :formatter="typeFormat"/>
       <el-table-column label="创建人" align="left"  prop="createUser.userName"   width="80" class-name="small-padding fixed-width">
       </el-table-column>
       <el-table-column label="创建时间" align="left" prop="createTime"  width="100">

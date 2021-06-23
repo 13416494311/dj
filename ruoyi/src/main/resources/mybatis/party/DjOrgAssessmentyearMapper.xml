@@ -32,6 +32,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessmentName != null  and assessmentName != ''"> and assessment_name like concat('%', #{assessmentName}, '%')</if>
             <if test="orgAssessmentStatus != null  and orgAssessmentStatus != ''"> and org_assessment_status = #{orgAssessmentStatus}</if>
             <if test="performanceAppraisalStatus != null  and performanceAppraisalStatus != ''"> and performance_appraisal_status = #{performanceAppraisalStatus}</if>
+            <if test="params != null  and params.performanceAppraisalFlag ">
+                and performance_appraisal_status != '0'
+            </if>
         </where>
         order by year desc
     </select>

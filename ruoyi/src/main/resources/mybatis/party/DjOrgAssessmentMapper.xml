@@ -78,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assessment_rank != null "> and doa.assessment_rank = #{assessment_rank}</if>
             ${dataScope}
         </where>
-        order by  doa.party_org_id
+        order by  doay.year desc
     </select>
 
 

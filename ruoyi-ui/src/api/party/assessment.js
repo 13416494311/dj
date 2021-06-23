@@ -70,6 +70,15 @@ export function updateAssessment(data) {
   })
 }
 
+// 提交党委代办
+export function createAssessmentTodo(data) {
+  return request({
+    url: '/party/assessment/createAssessmentTodo',
+    method: 'post',
+    data: data
+  })
+}
+
 // 删除党组织考核
 export function delAssessment(id) {
   return request({

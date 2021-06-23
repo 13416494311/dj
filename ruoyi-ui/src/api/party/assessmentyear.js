@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 // 查询党组织考核年列表
-export function listAssessmentyear(query) {
+export function listAssessmentyear(data) {
   return request({
     url: '/party/assessmentyear/list',
-    method: 'get',
-    params: query
+    method: 'post',
+    data: data
   })
 }
 

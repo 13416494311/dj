@@ -194,8 +194,7 @@
 
 
       <div slot="footer" class="dialog-footer" :style="{textAlign:'center'}">
-        <el-button v-if="!scoreDisabled" type="primary" @click="submitForAssessor">提交党委审核
-        </el-button>
+        <el-button v-if="!scoreDisabled" type="primary" @click="submitForAssessor">提 交</el-button>
         <el-button v-if="!scoreDisabled" type="primary" @click="allSave">保 存</el-button>
         <el-button @click="cancel">关 闭</el-button>
       </div>
@@ -211,6 +210,7 @@
     getAssessment,
     listAssessment,
     updateAssessment,
+    createAssessmentTodo
   } from "@/api/party/assessment";
   import {
     addAssessmentScore,
@@ -562,12 +562,14 @@
                   this.form.orgAssessmentStatus = "2";
                   this.form.assessmentSelfScore = this.assessmentSelfScore;
                   updateAssessment(this.form).then(response => {
-                    if (response.code === 200) {
-                      this.msgSuccess("提交成功");
-                      this.cancel();
-                    } else {
-                      this.msgError(response.msg);
-                    }
+                    createAssessmentTodo(this.form).then(response => {
+                      if (response.code === 200) {
+                        this.msgSuccess("提交成功");
+                        this.cancel();
+                      } else {
+                        this.msgError(response.msg);
+                      }
+                    })
                   })
                 }
               })

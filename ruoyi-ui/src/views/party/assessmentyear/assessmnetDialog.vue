@@ -6,7 +6,6 @@
       <div :style="bodyStyle">
 
         <assessment-card v-if="type==1" ref="assessmentCard"
-                         :disabled="disabled"
                          :assessmentId="assessmentId" />
 
         <performance-score-card v-if="type==2" ref="performanceScoreCard"

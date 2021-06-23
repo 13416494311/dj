@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="text-align: center;font-size: 24px;padding: 8px;">
+    <div style="text-align: center;font-size: 24px;padding: 8px;margin-bottom: 20px">
       {{duePlanTitle}}
     </div>
     <el-form ref="form" :model="form" :rules="rules" >
@@ -245,6 +245,9 @@
       },
       /** 查询绩效考核评分列表 */
       getList() {
+        if(!this.assessmentyearId){
+          return ;
+        }
         this.loading = true;
         getAssessmentyear(this.assessmentyearId).then(response => {
           this.duePlanTitle = response.data.assessmentName;
@@ -274,7 +277,6 @@
             this.total = response.total;
             this.loading = false;
           });
-
         })
       },
       // 取消按钮

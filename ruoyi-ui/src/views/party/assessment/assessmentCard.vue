@@ -22,7 +22,7 @@
         <el-table-column label="评分标准" align="left" prop="criteria"/>
         <el-table-column label="自评分数" width="180" align="center" prop="selfScore">
           <template slot-scope="scope">
-            <el-form-item v-if="!disabled"
+            <el-form-item v-if="!disabled1"
                           :prop="createSelfProp(scope.$index)"
                           :rules="[{validator: checkSelfScore, trigger: 'blur'}]">
               <el-input-number style="width:150px"
@@ -34,15 +34,15 @@
                                :min="0"></el-input-number>
             </el-form-item>
 
-            <div v-if="disabled">
+            <div v-if="disabled1">
               {{scope.row['selfScore']==undefined?'':scope.row['selfScore'].toFixed(1)+' 分'}}
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column label="党委评分" width="180" align="center" prop="assessorScore">
+        <el-table-column v-if="disabled1" label="党委评分" width="180" align="center" prop="assessorScore">
           <template slot-scope="scope">
-            <el-form-item v-if="!disabled"
+            <el-form-item v-if="!disabled2"
                           :prop="createAssessorProp(scope.$index)"
                           :rules="[{validator: checkAssessorScore, trigger: 'blur'}]">
               <el-input-number style="width:150px"
@@ -54,13 +54,13 @@
                                :min="0"></el-input-number>
             </el-form-item>
 
-            <div v-if="disabled">
+            <div v-if="disabled2">
               {{scope.row['assessorScore']==undefined?'':scope.row['assessorScore'].toFixed(1)+' 分'}}
             </div>
           </template>
         </el-table-column>
 
-        <el-table-column v-if="!disabled" label="操作" width="100" align="center"
+        <el-table-column v-if="!disabled1 || !disabled2" label="操作" width="100" align="center"
                          class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
@@ -85,7 +85,7 @@
         :file-list="fileList"
         multiple
         :http-request="uploadFile"
-        :class="{hide:disabled}"
+        :class="{hide:disabled1}"
         class="upload"
         accept="image/*,.doc,.docx,.xls,.xlsx,.pdf,.ppt,.zip,.txt">
         <i slot="default" class="el-icon-plus"></i>
@@ -110,7 +110,7 @@
                       <i class="el-icon-download"></i>
                     </span>
                     <span
-                      v-if="!disabled"
+                      v-if="!disabled1"
                       class="el-upload-list__item-delete"
                       @click="handleRemove(file)">
                       <i class="el-icon-delete"></i>
@@ -143,6 +143,7 @@
     getAssessment,
     listAssessment,
     updateAssessment,
+    createAssessmentTodo
   } from "@/api/party/assessment";
   import {
     addAssessmentScore,
@@ -169,7 +170,13 @@
       selectTree
     },
     props: {
-      disabled: {
+      disabled1: {
+        type: Boolean,
+        default: () => {
+          return true
+        }
+      },
+      disabled2: {
         type: Boolean,
         default: () => {
           return true
@@ -240,6 +247,7 @@
         showSum: true,
         orgLoading: true,
         selfScoreRequired: false,
+        assessorScoreRequired: false,
         assessmentName:'',
         partyOrgFullName:'',
         assessmentSelfScore:'',
@@ -335,8 +343,11 @@
               }
             }, 0);
             if (sums[index] && sums[index] != 0) {
-              this.assessmentSelfScore = sums[index].toFixed(1);
-              this.assessmentScore = sums[index].toFixed(1);
+              if(column.property === 'assessorScore'){
+                this.assessmentScore = sums[index].toFixed(1);
+              }else if(column.property === 'selfScore'){
+                this.assessmentSelfScore = sums[index].toFixed(1);
+              }
               sums[index] = sums[index].toFixed(1) + ' 分';
             } else {
               sums[index] = '';
@@ -460,55 +471,18 @@
       },
       show() {
         this.reset()
-        this.scoreDisabled = this.disabled
-        getAssessment(this.assessmentId).then(response => {
-          this.form = response.data;
-          this.assessmentName = response.data.assessmentyear.assessmentName
-          this.partyOrgFullName = response.data.djPartyOrg.partyOrgFullName
-          this.open = true;
-          this.title = "党支部考评";
-        }).then(() => {
-          this.getAssessmentScoreList();
-          this.getFileList();
-        });
-      },
-      // 查看按钮操作
-      handleSee(row) {
-        this.reset()
-        this.scoreDisabled = true
-        const id = row.id || this.ids
-        getAssessment(id).then(response => {
-          this.form = response.data;
-          this.assessmentName = response.data.assessmentyear.assessmentName
-          this.partyOrgFullName = response.data.djPartyOrg.partyOrgFullName
-          this.open = true;
-          this.title = "党支部自评";
-        }).then(() => {
-          this.getAssessmentScoreList();
-          this.getFileList();
-        });
-      },
-      /** 新增按钮操作 */
-      handleAdd() {
-        this.reset();
-        this.open = true;
-        this.title = "添加党组织考核";
-      },
-      /** 自评按钮操作 */
-      handleUpdate(row) {
-        this.reset()
-        this.scoreDisabled = false
-        const id = row.id || this.ids
-        getAssessment(id).then(response => {
-          this.form = response.data;
-          this.assessmentName = response.data.assessmentyear.assessmentName
-          this.partyOrgFullName = response.data.djPartyOrg.partyOrgFullName
-          this.open = true;
-          this.title = "党支部自评";
-        }).then(() => {
-          this.getAssessmentScoreList();
-          this.getFileList();
-        });
+        if(this.assessmentId){
+          getAssessment(this.assessmentId).then(response => {
+            this.form = response.data;
+            this.assessmentName = response.data.assessmentyear.assessmentName
+            this.partyOrgFullName = response.data.djPartyOrg.partyOrgFullName
+            this.open = true;
+            this.title = "党支部考评";
+          }).then(() => {
+            this.getAssessmentScoreList();
+            this.getFileList();
+          });
+        }
       },
       /** 修改分数按钮操作 */
       handleDetailedUpdate(row) {
@@ -517,19 +491,26 @@
         updateAssessmentScoreList(params).then(response => {
           if (response.code === 200) {
             this.msgSuccess("保存成功");
-            this.getAssessmentScoreList();
           } else {
             this.msgError(response.msg);
           }
         });
       },
+      submit(statue){
+        if(statue==1){
+          this.allSave();
+        }else if(statue==2){
+          this.submitForAssessor();
+        }
+      },
       /** 全部保存操作 */
       allSave() {
-        this.selfScoreRequired = false;
+        this.selfScoreRequired = false
+        this.assessorScoreRequired = false
         updateAssessmentScoreList(this.assessmentScoreList).then(response => {
           if (response.code === 200) {
             this.msgSuccess("保存成功");
-            this.cancel();
+            this.$emit("ok");
           } else {
             this.msgError(response.msg);
           }
@@ -537,21 +518,29 @@
       },
       /** 提交党委评分 */
       submitForAssessor() {
-        this.selfScoreRequired = true;
+        this.selfScoreRequired = true
+        this.assessorScoreRequired = true
         this.$nextTick(() => {
           this.$refs["form"].validate((valid, object) => {
             if (valid) {
               updateAssessmentScoreList(this.assessmentScoreList).then(response => {
                 if (response.code === 200) {
-                  this.form.orgAssessmentStatus = "2";
-                  this.form.assessmentSelfScore = this.assessmentSelfScore;
+                  if(this.form.orgAssessmentStatus=="2"){
+                    this.form.orgAssessmentStatus = "3";
+                    this.form.assessmentScore = this.assessmentScore;
+                  }else if(this.form.orgAssessmentStatus=="1"){
+                    this.form.orgAssessmentStatus = "2";
+                    this.form.assessmentSelfScore = this.assessmentSelfScore;
+                  }
                   updateAssessment(this.form).then(response => {
-                    if (response.code === 200) {
-                      this.msgSuccess("提交成功");
-                      this.cancel();
-                    } else {
-                      this.msgError(response.msg);
-                    }
+                    createAssessmentTodo(this.form).then(response => {
+                      if (response.code === 200) {
+                        this.msgSuccess("提交成功");
+                        this.$emit("ok");
+                      } else {
+                        this.msgError(response.msg);
+                      }
+                    })
                   })
                 }
               })
