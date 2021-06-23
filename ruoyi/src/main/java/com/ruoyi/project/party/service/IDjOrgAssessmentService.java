@@ -70,4 +70,7 @@ public interface IDjOrgAssessmentService
      * @return 结果
      */
     public int deleteDjOrgAssessmentById(Long id);
+
+
+    public void addByOrg(String assessmentyearUuid,String partyOrgIds);
 }

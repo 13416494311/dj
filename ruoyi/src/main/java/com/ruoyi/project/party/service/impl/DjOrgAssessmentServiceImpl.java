@@ -1,12 +1,20 @@
 package com.ruoyi.project.party.service.impl;
 
 import java.util.List;
+import java.util.UUID;
+
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.project.party.domain.DjOrgAssessmentList;
+import com.ruoyi.project.party.domain.DjOrgAssessmentListScore;
+import com.ruoyi.project.party.domain.DjPartyOrg;
+import com.ruoyi.project.party.mapper.DjOrgAssessmentListMapper;
 import com.ruoyi.project.party.mapper.DjOrgAssessmentListScoreMapper;
 import com.ruoyi.project.party.mapper.DjOrgAssessmentyearMapper;
+import com.ruoyi.project.party.service.IDjOrgAssessmentListScoreService;
 import com.ruoyi.project.party.service.IDjPartyOrgService;
+import com.ruoyi.project.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.party.mapper.DjOrgAssessmentMapper;
@@ -31,8 +39,11 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
     @Autowired
     private DjOrgAssessmentyearMapper djOrgAssessmentyearMapper;
     @Autowired
-    private DjOrgAssessmentListScoreMapper djOrgAssessmentListScoreMapper;
-
+    private IDjOrgAssessmentListScoreService djOrgAssessmentListScoreService;
+    @Autowired
+    private DjOrgAssessmentListMapper djOrgAssessmentListMapper;
+    @Autowired
+    private ISysDictDataService dictDataService;
     /**
      * 查询党组织考核
      *
@@ -186,4 +197,68 @@ public class DjOrgAssessmentServiceImpl implements IDjOrgAssessmentService
     {
         return djOrgAssessmentMapper.deleteDjOrgAssessmentById(id);
     }
+
+    @Override
+    public void addByOrg(String assessmentyearUuid,String partyOrgIds){
+        DjOrgAssessmentList djOrgAssessmentList = new DjOrgAssessmentList();
+        djOrgAssessmentList.setStatus("0");
+        djOrgAssessmentList.setType("1");
+        //双项考评清单
+        List<DjOrgAssessmentList> djOrgAssessmentListAll = djOrgAssessmentListMapper.selectDjOrgAssessmentListList(djOrgAssessmentList);
+        djOrgAssessmentList.setType("2");
+        //项目绩效考评清单
+        List<DjOrgAssessmentList> djOrgAssessmentListAl2 = djOrgAssessmentListMapper.selectDjOrgAssessmentListList(djOrgAssessmentList);
+        //双项考评占比
+        Double assessmentScoreRatio= Double.parseDouble(dictDataService.selectDictLabel("assessment_ratio","1"));
+        //项目绩效考评占比
+        Double performanceAppraisalScoreRatio= Double.parseDouble(dictDataService.selectDictLabel("assessment_ratio","2"));
+        for(String partyOrgId:partyOrgIds.split(",")){
+            String uuid = UUID.randomUUID().toString();
+            //创建党组织考核主表
+            DjOrgAssessment djOrgAssessment =new DjOrgAssessment();
+            djOrgAssessment.setAssessmentUuid(uuid);
+            djOrgAssessment.setAssessmentyearUuid(assessmentyearUuid);
+            djOrgAssessment.setPartyOrgId(Long.parseLong(partyOrgId));
+            djOrgAssessment.setOrgAssessmentStatus("0");
+            djOrgAssessment.setPerformanceAppraisalStatus("0");
+            //创建党组织考核项打分表
+            DjOrgAssessmentListScore djOrgAssessmentListScore = new DjOrgAssessmentListScore();
+            djOrgAssessmentListScore.setAssessmentUuid(uuid);
+            //双项考评打分表
+            for (DjOrgAssessmentList djOrgAssessmentListOne:djOrgAssessmentListAll) {
+                djOrgAssessmentListScore.setAssessmentUuid(uuid);
+                djOrgAssessmentListScore.setType(djOrgAssessmentListOne.getType());
+                djOrgAssessmentListScore.setItem(djOrgAssessmentListOne.getItem());
+                djOrgAssessmentListScore.setContent(djOrgAssessmentListOne.getContent());
+                djOrgAssessmentListScore.setQuota(djOrgAssessmentListOne.getQuota());
+                djOrgAssessmentListScore.setScore(djOrgAssessmentListOne.getScore());
+                djOrgAssessmentListScore.setCriteria(djOrgAssessmentListOne.getCriteria());
+                djOrgAssessmentListScore.setOrderNum(djOrgAssessmentListOne.getOrderNum());
+                djOrgAssessmentListScoreService.insertDjOrgAssessmentListScore(djOrgAssessmentListScore);
+            }
+            //项目绩效考核打分表
+            DjPartyOrg partyOrg = djPartyOrgService.selectDjPartyOrgById(Long.parseLong(partyOrgId));
+            if("Y".equals(partyOrg.getPerformanceAppraisal())){
+                djOrgAssessmentListAl2.stream().forEach(djOrgAssessmentListTwo -> {
+                    djOrgAssessmentListScore.setAssessmentUuid(uuid);
+                    djOrgAssessmentListScore.setType(djOrgAssessmentListTwo.getType());
+                    djOrgAssessmentListScore.setItem(djOrgAssessmentListTwo.getItem());
+                    djOrgAssessmentListScore.setContent(djOrgAssessmentListTwo.getContent());
+                    djOrgAssessmentListScore.setQuota(djOrgAssessmentListTwo.getQuota());
+                    djOrgAssessmentListScore.setScore(djOrgAssessmentListTwo.getScore());
+                    djOrgAssessmentListScore.setCriteria(djOrgAssessmentListTwo.getCriteria());
+                    djOrgAssessmentListScore.setOrderNum(djOrgAssessmentListTwo.getOrderNum());
+                    djOrgAssessmentListScoreService.insertDjOrgAssessmentListScore(djOrgAssessmentListScore);
+                });
+                djOrgAssessment.setAssessmentScoreRatio(assessmentScoreRatio);
+                djOrgAssessment.setPerformanceAppraisalScoreRatio(performanceAppraisalScoreRatio);
+                djOrgAssessment.setPerformanceAppraisalStatus("1");
+            }else{
+                djOrgAssessment.setAssessmentScoreRatio((double) 1);
+            }
+            this.insertDjOrgAssessment(djOrgAssessment);
+        }
+    }
+
+
 }

@@ -22,7 +22,7 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 
 /**
  * 党组织考核年Controller
- * 
+ *
  * @author admin
  * @date 2021-03-10
  */
@@ -38,8 +38,8 @@ public class DjOrgAssessmentyearController extends BaseController
      * 查询党组织考核年列表
      */
     @PreAuthorize("@ss.hasPermi('party:assessmentyear:list')")
-    @GetMapping("/list")
-    public TableDataInfo list(DjOrgAssessmentyear djOrgAssessmentyear)
+    @PostMapping("/list")
+    public TableDataInfo list(@RequestBody DjOrgAssessmentyear djOrgAssessmentyear)
     {
         startPage();
         List<DjOrgAssessmentyear> list = djOrgAssessmentyearService.selectDjOrgAssessmentyearList(djOrgAssessmentyear);
@@ -98,7 +98,7 @@ public class DjOrgAssessmentyearController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('party:assessmentyear:remove')")
     @Log(title = "党组织考核年", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(djOrgAssessmentyearService.deleteDjOrgAssessmentyearByIds(ids));
