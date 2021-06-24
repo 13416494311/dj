@@ -1,17 +1,29 @@
 package com.ruoyi.project.party.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import com.alibaba.fastjson.JSON;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.DataScope;
 import com.ruoyi.project.party.domain.*;
+import com.ruoyi.project.party.mapper.DjPartyMemberMapper;
 import com.ruoyi.project.party.service.*;
+import com.ruoyi.project.sys.domain.DjSysMessage;
+import com.ruoyi.project.sys.domain.DjSysTodo;
+import com.ruoyi.project.sys.service.IDjSysMessageService;
+import com.ruoyi.project.sys.service.IDjSysTodoService;
 import com.ruoyi.project.system.domain.SysDictData;
+import com.ruoyi.project.system.domain.SysUser;
+import com.ruoyi.project.system.mapper.SysUserMapper;
 import com.ruoyi.project.system.service.ISysDictDataService;
+import com.ruoyi.project.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,13 +52,21 @@ public class DjOrgAssessmentController extends BaseController
     @Autowired
     private IDjOrgAssessmentService djOrgAssessmentService;
     @Autowired
-    private IDjOrgAssessmentListService djOrgAssessmentListService;
-    @Autowired
     private IDjOrgAssessmentListScoreService djOrgAssessmentListScoreService;
     @Autowired
-    private IDjPartyOrgService djPartyOrgService;
+    private IDjOrgAssessmentyearService djOrgAssessmentyearService;
+    @Autowired
+    private DjPartyMemberMapper djPartyMemberMapper;
+    @Autowired
+    private SysUserMapper userMapper;
+    @Autowired
+    private IDjSysTodoService djSysTodoService;
+    @Autowired
+    private IDjSysMessageService sysMessageService;
     @Autowired
     private ISysDictDataService dictDataService;
+    @Autowired
+    private ISysUserService userService;
 
     /**
      * 查询党组织考核列表
@@ -127,68 +147,9 @@ public class DjOrgAssessmentController extends BaseController
      */
     @Log(title = "党组织考核", businessType = BusinessType.INSERT)
     @PostMapping("/addByOrg")
-    public AjaxResult addByOrg(String assessmentyearUuid,String partyOrgIds,String year,String assessmentName)
+    public AjaxResult addByOrg(String assessmentyearUuid,String partyOrgIds)
     {
-        DjOrgAssessmentList djOrgAssessmentList = new DjOrgAssessmentList();
-        djOrgAssessmentList.setStatus("0");
-        djOrgAssessmentList.setType("1");
-        List<DjOrgAssessmentList> djOrgAssessmentListAll = djOrgAssessmentListService.selectDjOrgAssessmentListList(djOrgAssessmentList);
-
-        djOrgAssessmentList.setType("2");
-        List<DjOrgAssessmentList> djOrgAssessmentListAl2 = djOrgAssessmentListService.selectDjOrgAssessmentListList(djOrgAssessmentList);
-
-        Double assessmentScoreRatio= Double.parseDouble(dictDataService.selectDictLabel("assessment_ratio","1"));
-        Double performanceAppraisalScoreRatio= Double.parseDouble(dictDataService.selectDictLabel("assessment_ratio","2"));
-        for(String partyOrgId:partyOrgIds.split(",")){
-            String uuid = UUID.randomUUID().toString();
-
-            DjOrgAssessment djOrgAssessment =new DjOrgAssessment();
-            djOrgAssessment.setAssessmentUuid(uuid);
-            djOrgAssessment.setAssessmentyearUuid(assessmentyearUuid);
-            djOrgAssessment.setPartyOrgId(Long.parseLong(partyOrgId));
-            djOrgAssessment.setOrgAssessmentStatus("0");
-            djOrgAssessment.setPerformanceAppraisalStatus("0");
-
-
-
-            DjOrgAssessmentListScore djOrgAssessmentListScore = new DjOrgAssessmentListScore();
-            djOrgAssessmentListScore.setAssessmentUuid(uuid);
-
-            for (DjOrgAssessmentList djOrgAssessmentListOne:djOrgAssessmentListAll) {
-                djOrgAssessmentListScore.setAssessmentUuid(uuid);
-                djOrgAssessmentListScore.setType(djOrgAssessmentListOne.getType());
-                djOrgAssessmentListScore.setItem(djOrgAssessmentListOne.getItem());
-                djOrgAssessmentListScore.setContent(djOrgAssessmentListOne.getContent());
-                djOrgAssessmentListScore.setQuota(djOrgAssessmentListOne.getQuota());
-                djOrgAssessmentListScore.setScore(djOrgAssessmentListOne.getScore());
-                djOrgAssessmentListScore.setCriteria(djOrgAssessmentListOne.getCriteria());
-                djOrgAssessmentListScore.setOrderNum(djOrgAssessmentListOne.getOrderNum());
-                djOrgAssessmentListScoreService.insertDjOrgAssessmentListScore(djOrgAssessmentListScore);
-            }
-
-
-            DjPartyOrg partyOrg = djPartyOrgService.selectDjPartyOrgById(Long.parseLong(partyOrgId));
-            if("Y".equals(partyOrg.getPerformanceAppraisal())){
-                djOrgAssessmentListAl2.stream().forEach(djOrgAssessmentListTwo -> {
-                    djOrgAssessmentListScore.setAssessmentUuid(uuid);
-                    djOrgAssessmentListScore.setType(djOrgAssessmentListTwo.getType());
-                    djOrgAssessmentListScore.setItem(djOrgAssessmentListTwo.getItem());
-                    djOrgAssessmentListScore.setContent(djOrgAssessmentListTwo.getContent());
-                    djOrgAssessmentListScore.setQuota(djOrgAssessmentListTwo.getQuota());
-                    djOrgAssessmentListScore.setScore(djOrgAssessmentListTwo.getScore());
-                    djOrgAssessmentListScore.setCriteria(djOrgAssessmentListTwo.getCriteria());
-                    djOrgAssessmentListScore.setOrderNum(djOrgAssessmentListTwo.getOrderNum());
-                    djOrgAssessmentListScoreService.insertDjOrgAssessmentListScore(djOrgAssessmentListScore);
-                });
-                djOrgAssessment.setAssessmentScoreRatio(assessmentScoreRatio);
-                djOrgAssessment.setPerformanceAppraisalScoreRatio(performanceAppraisalScoreRatio);
-                djOrgAssessment.setPerformanceAppraisalStatus("1");
-            }else{
-                djOrgAssessment.setAssessmentScoreRatio((double) 1);
-            }
-
-            djOrgAssessmentService.insertDjOrgAssessment(djOrgAssessment);
-        }
+        djOrgAssessmentService.addByOrg(assessmentyearUuid,partyOrgIds);
         return AjaxResult.success();
     }
 
@@ -200,7 +161,54 @@ public class DjOrgAssessmentController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody DjOrgAssessment djOrgAssessment)
     {
+
         return toAjax(djOrgAssessmentService.updateDjOrgAssessment(djOrgAssessment));
+    }
+
+    @PreAuthorize("@ss.hasPermi('party:assessment:edit')")
+    @Log(title = "党组织考核", businessType = BusinessType.UPDATE)
+    @PostMapping("/createAssessmentTodo")
+    public AjaxResult createAssessmentTodo(@RequestBody DjOrgAssessment djOrgAssessment){
+
+        if(!"2".equals(djOrgAssessment.getOrgAssessmentStatus())){
+            return AjaxResult.success();
+        }
+        DjOrgAssessmentyear djOrgAssessmentyear =  djOrgAssessmentyearService.selectDjOrgAssessmentyearByUuid(djOrgAssessment.getAssessmentyearUuid());
+        SysUser user = null;
+        List<SysUser> userList = userService.selectUserByRoleId(5L);
+        if( !CollectionUtils.isEmpty(userList)){
+            user = userList.get(0);
+        }
+        if(user == null ){
+            return AjaxResult.error("未查询到拥有党委角色用户。");
+        }
+        DjSysTodo sysTodo = new DjSysTodo();
+        //sysTodo.setUuid(djPartyOrg.getPartyOrgUuid());
+        sysTodo.setType("15"); //双项考评
+        sysTodo.setTitle(djOrgAssessmentyear.getAssessmentName()+"("+djOrgAssessment.getDjPartyOrg().getPartyOrgName()+")");
+        sysTodo.setUrlName("OrgAssessment");
+        sysTodo.setUrlPath("todo/orgAssessment");
+        sysTodo.setUserId(user.getUserId());
+        sysTodo.setStatus("0");
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("assessmentId", String.valueOf(djOrgAssessment.getId()));
+        map.put("orgAssessmentStatus", djOrgAssessment.getOrgAssessmentStatus() );
+        sysTodo.setUrlParams(JSON.toJSONString(map));
+        sysTodo.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        djSysTodoService.insertDjSysTodo(sysTodo);
+
+        DjSysMessage sysMessage = new DjSysMessage();
+        sysMessage.setMessageUuid(sysTodo.getUuid());
+        sysMessage.setTitle(dictDataService.selectDictLabel("sys_todo_type",sysTodo.getType()));
+        sysMessage.setContent("您收到一条"+sysMessage.getTitle()+"，内容如下："+sysTodo.getTitle());
+        sysMessage.setType(2);
+        sysMessage.setPlatform(0);
+        sysMessage.setGroupName("");
+        sysMessage.setStatus("0");
+        sysMessage.setUserIds(sysTodo.getUserId().toString());
+        sysMessage.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
+        sysMessageService.insertDjSysMessage(sysMessage);
+        return AjaxResult.success();
     }
 
 
