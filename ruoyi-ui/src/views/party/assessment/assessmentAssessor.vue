@@ -44,6 +44,10 @@
       <el-table-column label="考核年份" width="120" align="center" prop="assessmentyear.year"
                        :formatter="yearFormat"/>
       <el-table-column label="考核名称" align="center" prop="assessmentyear.assessmentName"/>
+      <el-table-column label="自评分总分" width="120" align="center" prop="assessmentSelfScore"
+                       :formatter="scoreFormat"/>
+      <el-table-column label="公司党委评分总分" width="120" align="center" prop="assessmentScore"
+                       :formatter="scoreFormat"/>
       <el-table-column label="考核状态" width="120" align="center" prop="orgAssessmentStatus"
                        :formatter="orgAssessmentStatusFormat"/>
       <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
@@ -412,6 +416,9 @@
       partyOrgFormat(row, column) {
         let partyOrgFullName = row.djPartyOrg.partyOrgFullName;
         return partyOrgFullName.substring(partyOrgFullName.indexOf("/") + 1);
+      },
+      scoreFormat(row, column,cellValue, index) {
+        return cellValue==undefined?'':cellValue.toFixed(1) + " 分";
       },
       //获取党组织考核状态字典值
       orgAssessmentStatusFormat(row, column) {

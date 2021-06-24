@@ -55,7 +55,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-if="scope.row.performanceAppraisalStatus == 1"
-            v-hasPermi="['party:performanceScore:edit']"
+            v-hasPermi="['party:assessmentyear:edit']"
           >评分
           </el-button>
         </template>
