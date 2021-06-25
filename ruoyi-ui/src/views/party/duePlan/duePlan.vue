@@ -326,6 +326,7 @@
         const duePlanId = row.duePlanId || this.ids
         getDuePlan(duePlanId).then(response => {
           this.form = response.data;
+          this.duePlanUuid= this.form.duePlanUuid
           this.form.quarter = this.form.quarter +'';
           this.open = true;
           this.title = "修改党费管理";
@@ -337,6 +338,7 @@
         const duePlanId = row.duePlanId || this.ids
         getDuePlan(duePlanId).then(response => {
           this.form = response.data;
+          this.duePlanUuid= this.form.duePlanUuid
           this.form.quarter = this.form.quarter +'';
           this.open = true;
           this.title = "查看党费管理";

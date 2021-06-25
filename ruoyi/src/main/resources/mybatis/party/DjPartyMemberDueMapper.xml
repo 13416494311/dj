@@ -52,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="due != null "> and dpmd.due = #{due}</if>
             ${dataScope}
         </where>
-        order by dpmdp.year desc ,dpmd.month desc,
+        order by dpmdp.year desc ,dpmd.month asc,
         dpm.order_num is null || dpm.order_num='' asc,
         dpm.order_num asc,
         dpm.party_org_id ,

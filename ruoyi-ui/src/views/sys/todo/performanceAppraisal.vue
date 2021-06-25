@@ -70,7 +70,7 @@
         }
       },
       // 取消按钮
-      cancel(status) {
+      cancel() {
         if(this.status==2){
           updateTodo({"todoId": this.todoId, "status": "1"})
         }
