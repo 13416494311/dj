@@ -73,7 +73,7 @@ public class DjOrgAssessmentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('party:assessment:list')")
     @PostMapping("/list")
-    @DataScope(partyOrgAlias = "dos")
+    @DataScope(partyOrgAlias = "doa")
     public TableDataInfo list(@RequestBody DjOrgAssessment djOrgAssessment)
     {
         startPage();
@@ -83,7 +83,7 @@ public class DjOrgAssessmentController extends BaseController
 
     @PreAuthorize("@ss.hasPermi('party:assessment:list')")
     @PostMapping("/listRank")
-    @DataScope(partyOrgAlias = "dos")
+    @DataScope(partyOrgAlias = "doa")
     public TableDataInfo listRank(@RequestBody DjOrgAssessment djOrgAssessment)
     {
         startPage();

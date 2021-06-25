@@ -198,6 +198,9 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public String checkPhoneUnique(SysUser user)
     {
+        if(StringUtils.isEmpty(user.getPhonenumber())){
+            return UserConstants.UNIQUE;
+        }
         Long userId = StringUtils.isNull(user.getUserId()) ? -1L : user.getUserId();
         SysUser info = userMapper.checkPhoneUnique(user.getPhonenumber());
         if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue())
@@ -216,6 +219,9 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public String checkEmailUnique(SysUser user)
     {
+        if(StringUtils.isEmpty(user.getEmail())){
+            return UserConstants.UNIQUE;
+        }
         Long userId = StringUtils.isNull(user.getUserId()) ? -1L : user.getUserId();
         SysUser info = userMapper.checkEmailUnique(user.getEmail());
         if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue())

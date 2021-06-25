@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="selectDjOrgAssessmentListRank" parameterType="DjOrgAssessment" resultMap="DjOrgAssessmentResult">
-       SELECT dos.*,temp.rank_num
+       SELECT doa.*,temp.rank_num
        FROM (
 	      SELECT @curRank := IF ( @prevRank = A.score, @curRank, @incRank ) AS rank_num,
 		         @incRank := @incRank + 1 AS temp_rank,
@@ -96,7 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	              ORDER BY tm.score DESC ) A,
 		       ( SELECT @curRank := 0, @prevRank := NULL, @incRank := 1  ) B
 	    ) temp
-	    LEFT JOIN dj_org_assessment dos on dos.id = temp.id
+	    LEFT JOIN dj_org_assessment doa on doa.id = temp.id
     </select>
 
     <select id="selectDjOrgAssessmentById" parameterType="Long" resultMap="DjOrgAssessmentResult">
