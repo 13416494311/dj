@@ -81,7 +81,7 @@
           <el-table-column label="党组织" align="center" prop="partyOrgId" :formatter="partyOrgIdFormat" />
           <el-table-column label="党员类型" align="center" prop="memberType" :formatter="memberTypeFormat"/>
           <!--<el-table-column label="在岗状态" align="center" prop="memberStatus" :formatter="memberStatusFormat"/>-->
-          <el-table-column label="排序" align="center"  width="180" v-hasPermi="['party:member:order']">
+          <el-table-column label="排序" align="center"  width="180" v-if="checkPermi(['party:member:order'])">
             <template slot-scope="scope">
               <el-input-number style="width: 100px" v-model="scope.row.orderNum" size="small" controls-position="right"
                                :precision="0" :step="1" :min="0" ></el-input-number>
@@ -750,6 +750,7 @@
   import MemberPortrait from "./memberPortrait";
   import MemberEducation from "../memberEducation/memberEducation";
   import {downLoadZip} from "@/utils/zipdownload";
+  import { checkPermi, checkRole } from "@/utils/permission";
 
   export default {
     name: "PartyMember",
@@ -1095,6 +1096,8 @@
 
     },
     methods: {
+      checkPermi,
+      checkRole,
       //下拉树选择后设置值
       setVModelValue(vModel,val){
         if(val!=null){
@@ -1129,6 +1132,9 @@
                   this.msgError(response.msg);
                 }
               });
+            }else{
+              loading.close();
+              this.msgSuccess("上传成功！")
             }
           } else {
             loading.close();
