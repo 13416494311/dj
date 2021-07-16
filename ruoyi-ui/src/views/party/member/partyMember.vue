@@ -166,13 +166,11 @@
                     <el-input :disabled="disabled"v-model="form.memberName" placeholder="请输入党员姓名"/>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <!--<el-col :span="12">
                   <el-form-item label="手机号" prop="mobile">
                     <el-input :disabled="disabled"v-model="form.mobile" placeholder="请输入手机号"/>
                   </el-form-item>
-                </el-col>
-              </el-row>
-              <el-row>
+                </el-col>-->
                 <el-col :span="12">
                   <el-form-item label="性别" prop="sex">
                     <el-select :disabled="disabled"
@@ -187,18 +185,8 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
-                  <el-form-item label="工号" prop="workNo">
-                    <el-input :disabled="disabled"v-model="form.workNo" placeholder="请输入工号"/>
-                  </el-form-item>
-                </el-col>
               </el-row>
               <el-row>
-                <el-col :span="12">
-                  <el-form-item label="身份证号" prop="identityCard">
-                    <el-input :disabled="disabled" v-model="form.identityCard" placeholder="请输入身份证号"/>
-                  </el-form-item>
-                </el-col>
                 <el-col :span="12">
                   <el-form-item label="出生日期" prop="birthday">
                     <el-date-picker :disabled="disabled"
@@ -209,6 +197,37 @@
                                     :picker-options="afterTimeOption"
                                     placeholder="选择出生日期">
                     </el-date-picker>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="工号" prop="workNo">
+                    <el-input :disabled="disabled"v-model="form.workNo" placeholder="请输入工号"/>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <!--<el-row>
+                <el-col :span="12">
+                  <el-form-item label="身份证号" prop="identityCard">
+                    <el-input :disabled="disabled" v-model="form.identityCard" placeholder="请输入身份证号"/>
+                  </el-form-item>
+                </el-col>
+
+              </el-row>-->
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="所在单位" prop="companyName">
+                    <el-input :disabled="disabled" v-model="form.companyName" placeholder="请输入所在单位"/>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="部门" prop="deptId">
+                    <select-tree :value="form.deptId"
+                                 :disabled="disabled"
+                                 :options="deptOptions"
+                                 vModel="deptId"
+                                 @selected="setVModelValue"
+                                 placeholder="请选择部门"
+                    />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -231,22 +250,6 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <el-form-item label="所在单位" prop="companyName">
-                <el-input :disabled="disabled" v-model="form.companyName" placeholder="请输入所在单位"/>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item label="部门" prop="deptId">
-                <select-tree :value="form.deptId"
-                             :disabled="disabled"
-                             :options="deptOptions"
-                             vModel="deptId"
-                             @selected="setVModelValue"
-                             placeholder="请选择部门"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
               <el-form-item label="职务" prop="administrativePosition">
                 <el-select :disabled="disabled"
                            filterable
@@ -261,8 +264,6 @@
                 </el-select>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="岗位" prop="postId">
                 <el-select :disabled="disabled"
@@ -291,13 +292,13 @@
                 </el-date-picker>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="职称" prop="title">
                 <el-input :disabled="disabled" v-model="form.title" placeholder="请输入职称"/>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="民族" prop="nation">
                 <el-select :disabled="disabled"
@@ -326,6 +327,8 @@
                 </el-select>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="身份">
                 <el-select :disabled="disabled"
@@ -340,8 +343,6 @@
                 </el-select>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="学历" prop="education">
                 <el-select :disabled="disabled"
@@ -370,13 +371,13 @@
                 </el-select>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="籍贯" prop="nativePlace">
                 <el-input :disabled="disabled"v-model="form.nativePlace" placeholder="请输入籍贯"/>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="家庭住址" prop="homeAddress">
                 <el-input :disabled="disabled"v-model="form.homeAddress" placeholder="请输入家庭住址"/>
@@ -387,13 +388,13 @@
                 <el-input :disabled="disabled"v-model="form.housePhone" placeholder="请输入固定电话"/>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <el-form-item label="电子邮箱" prop="email">
                 <el-input :disabled="disabled" v-model="form.email" placeholder="请输入电子邮箱"/>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="8">
               <el-form-item label="QQ" prop="qq">
                 <el-input :disabled="disabled"v-model="form.qq" placeholder="请输入QQ"/>
@@ -934,11 +935,11 @@
             {required: true, message: "性别不能为空", trigger: "blur"},
           ],
           mobile: [
-            /*{required: true, message: "手机号不能为空", trigger: "blur"},*/
+            {required: false, message: "手机号不能为空", trigger: "blur"},
             { validator: checkMobile, trigger: "blur" }
           ],
           identityCard: [
-            { required: true, message: "身份证号不能为空", trigger: "blur" },
+            { required: false, message: "身份证号不能为空", trigger: "blur" },
             {validator: checkIdentityCard, trigger: 'blur'}
           ],
           birthday: [
