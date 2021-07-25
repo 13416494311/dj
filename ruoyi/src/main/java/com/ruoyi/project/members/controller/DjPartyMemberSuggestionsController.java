@@ -44,7 +44,7 @@ public class DjPartyMemberSuggestionsController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('members:suggestions:list')")
     @GetMapping("/list")
-    @DataScope(partyOrgAlias = "o")
+    @DataScope(partyOrgAlias = "o", userAlias = "u")
     public TableDataInfo list(DjPartyMemberSuggestions djPartyMemberSuggestions,String memberName)
     {
         startPage();
@@ -109,7 +109,7 @@ public class DjPartyMemberSuggestionsController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('members:suggestions:remove')")
     @Log(title = "党员建议", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{suggestionsIds}")
+    @DeleteMapping("/{suggestionsIds}")
     public AjaxResult remove(@PathVariable Long[] suggestionsIds)
     {
         return toAjax(djPartyMemberSuggestionsService.deleteDjPartyMemberSuggestionsByIds(suggestionsIds));

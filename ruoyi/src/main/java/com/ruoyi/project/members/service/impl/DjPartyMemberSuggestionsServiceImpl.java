@@ -114,6 +114,9 @@ public class DjPartyMemberSuggestionsServiceImpl implements IDjPartyMemberSugges
     @Override
     public int insertDjPartyMemberSuggestions(DjPartyMemberSuggestions djPartyMemberSuggestions)
     {
+        if(djPartyMemberSuggestions.getRecordTime()==null){
+            djPartyMemberSuggestions.setRecordTime(DateUtils.getNowDate());
+        }
         djPartyMemberSuggestions.setCreateTime(DateUtils.getNowDate());
         djPartyMemberSuggestions.setCreateBy(SecurityUtils.getLoginUser().getUser().getUserId().toString());
         if("2".equals(djPartyMemberSuggestions.getStatus())){
