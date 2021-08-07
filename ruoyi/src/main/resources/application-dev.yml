@@ -9,7 +9,7 @@ ruoyi:
   # 实例演示开关
   demoEnabled: true
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: H:/ruoyi/uploadPath
+  profile: D:/ruoyi/uploadPath
   # 获取ip地址开关
   addressEnabled: true
   envPre: /dev-api
@@ -19,7 +19,7 @@ app:
   appKey: B535493D-6C7B-487A-CEF0-20F08DD32A74
 
 logback:
-  logpath: H:/ruoyi/logs
+  logpath: D:/ruoyi/logs
 
 # 开发环境配置
 server:
@@ -36,7 +36,7 @@ server:
     # Tomcat启动初始化的线程数，默认值25
     min-spare-threads: 30
     # 临时文件目录
-    basedir: H:/ruoyi/uploadPath/temp/
+    basedir: D:/ruoyi/uploadPath/temp/
 
 # 日志配置
 logging:
