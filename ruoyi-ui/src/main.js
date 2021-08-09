@@ -24,7 +24,7 @@ import { parseTime, resetForm, addDateRange, selectDictLabel,
 import { getDifDate } from "@/utils/workHours";
 import Pagination from "@/components/Pagination";
 import Vue2OrgTree from 'vue2-org-tree';
-import 'vue2-org-tree/src/styles/org-tree.less';
+import 'vue2-org-tree/dist/style.css';
 import VueAMap from 'vue-amap'
 import uploader from 'vue-simple-uploader'
 import echarts from "echarts";
